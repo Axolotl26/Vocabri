@@ -1,0 +1,17 @@
+{
+  "name": "Vocabri",
+  "short_name": "Vocabri",
+  "description": "Domina frases en inglés.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F8F9FB",
+  "theme_color": "#FF6B35",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/330/330459.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
+
