@@ -1590,11 +1590,52 @@ function renderProfile(){
 
 const GOOGLE_CLIENT_ID = "430659633987-nthqks4o9il6pb2uvcj5p3oqgtqh0o0r.apps.googleusercontent.com";
 
+function updateUserProfileUI(userData) {
+  const userNameEl = document.getElementById("profileName");
+  const userEmailEl = document.getElementById("profileEmail");
+  const userBadgeEl = document.getElementById("profileBadge");
+  const userAvatarEl = document.getElementById("profileAvatar");
+
+  if (userNameEl && userData.name) userNameEl.textContent = userData.name;
+  if (userEmailEl && userData.email) userEmailEl.textContent = userData.email;
+  if (userBadgeEl) {
+    userBadgeEl.textContent = "🟢 Conectado con Google";
+    userBadgeEl.style.color = "#16A34A";
+  }
+  if (userAvatarEl && userData.picture) {
+    userAvatarEl.innerHTML = `<img src="${userData.picture}" alt="${userData.name || 'Usuario'}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+  }
+}
+
 function handleGoogleCredentialResponse(response) {
-  console.log("Encoded JWT ID token: " + response.credential);
+  try {
+    // Decodificar JWT
+    const base64Url = response.credential.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+    
+    const userData = JSON.parse(jsonPayload);
+    console.log("Usuario autenticado:", userData);
+
+    try {
+      localStorage.setItem('vocabri_user', JSON.stringify(userData));
+    } catch(e) {}
+
+    updateUserProfileUI(userData);
+  } catch (err) {
+    console.error("Error al procesar la credencial de Google:", err);
+  }
 }
 
 function initGoogleAuth() {
+  // Restaurar sesión guardada si existe
+  try {
+    const saved = localStorage.getItem('vocabri_user');
+    if (saved) updateUserProfileUI(JSON.parse(saved));
+  } catch(e) {}
+
   if (typeof google === "undefined" || !google.accounts || !google.accounts.id) {
     setTimeout(initGoogleAuth, 200);
     return;
@@ -1612,6 +1653,26 @@ function initGoogleAuth() {
 }
 document.getElementById('profileLogoutBtn').onclick = ()=>{
   const b = document.getElementById('profileLogoutBtn');
+  try {
+    if (localStorage.getItem('vocabri_user')) {
+      localStorage.removeItem('vocabri_user');
+      const userNameEl = document.getElementById("profileName");
+      const userEmailEl = document.getElementById("profileEmail");
+      const userBadgeEl = document.getElementById("profileBadge");
+      const userAvatarEl = document.getElementById("profileAvatar");
+      if (userNameEl) userNameEl.textContent = "Tu cuenta";
+      if (userEmailEl) userEmailEl.textContent = "sin vincular";
+      if (userBadgeEl) {
+        userBadgeEl.textContent = "⚪ Cuenta no vinculada";
+        userBadgeEl.style.color = "";
+      }
+      if (userAvatarEl) userAvatarEl.textContent = "O";
+      const original = b.textContent;
+      b.textContent = 'Sesión cerrada';
+      setTimeout(()=>{ b.textContent = original; }, 1800);
+      return;
+    }
+  } catch(e) {}
   const original = b.textContent;
   b.textContent = 'No hay sesión activa que cerrar';
   setTimeout(()=>{ b.textContent = original; }, 1800);
