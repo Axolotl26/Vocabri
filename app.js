@@ -2251,12 +2251,14 @@ setInterval(()=>{
 document.getElementById('welcomeStartBtn').onclick = ()=>{
   document.getElementById('welcome-screen').style.display = 'none';
 };
-document.getElementById('welcomeGoogleBtn').onclick = ()=>{
-  const b = document.getElementById('welcomeGoogleBtn');
-  const original = b.innerHTML;
-  b.innerHTML = 'Próximamente disponible';
-  setTimeout(()=>{ b.innerHTML = original; }, 1800);
-};
+const welcomeGoogleBtn = document.getElementById('welcomeGoogleBtn');
+if (welcomeGoogleBtn) {
+  welcomeGoogleBtn.onclick = ()=>{
+    const original = welcomeGoogleBtn.innerHTML;
+    welcomeGoogleBtn.innerHTML = 'Próximamente disponible';
+    setTimeout(()=>{ welcomeGoogleBtn.innerHTML = original; }, 1800);
+  };
+}
 
 // --- Translator (Claude-powered via the sample capability, no external API) ---
 let sampleFn = null;
