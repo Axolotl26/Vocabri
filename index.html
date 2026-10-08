@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Vocabri</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF6B35">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div id="welcome-screen">
+  <div class="welcomeInner">
+    <h1 class="welcomeTitle">Vocabri</h1>
+    <p class="welcomeTagline">Domina frases, no solo palabras.</p>
+    <button class="nav welcomeBtn" id="welcomeStartBtn" type="button">Comenzar</button>
+    <!-- Botón de Google comentado
+    <button class="welcomeGoogleBtn" id="welcomeGoogleBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg>
+      Iniciar sesión con Google
+    </button>
+    -->
+    <footer class="appFooter welcomeFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
+  </div>
+</div>
+<div class="wrap">
+  <header id="appHeader">
+    <div>
+      <h1>Vocabri</h1>
+      <p class="sub tagline">Domina frases, no solo palabras.</p>
+    </div>
+    <div class="headerRight">
+      <div class="catSelectWrap" id="headerCatWrap" style="display:none;">
+        <button class="catSelectBtn" id="catSelectBtn" type="button">📍 <span id="catSelectLabel">Casual</span> ▾</button>
+        <div class="catDropdown" id="catDropdown" hidden></div>
+      </div>
+      <div class="levelRing" id="levelRing">
+        <svg viewBox="0 0 40 40">
+          <circle class="lrBg" cx="20" cy="20" r="16"></circle>
+          <circle class="lrFg" id="lrFg" cx="20" cy="20" r="16"></circle>
+        </svg>
+        <div class="lrText" id="lrText">1</div>
+      </div>
+      <button class="gear" id="settingsBtn" aria-label="Configuración" aria-expanded="false">☰<span class="dot" id="syncDot"></span></button>
+    </div>
+    <div class="settingsPanel" id="settingsPanel" hidden>
+      <div class="setSec">
+        <div class="setTitle">Apariencia</div>
+        <button class="nav setBtn" id="themesBtn">🎨 Temas y modo</button>
+        <div id="themesBox" hidden>
+          <div class="modeRow">
+            <button class="modeBtn" data-mode="auto">Auto</button>
+            <button class="modeBtn" data-mode="light">☀️ Claro</button>
+            <button class="modeBtn" data-mode="dark">🌙 Oscuro</button>
+          </div>
+          <div id="themeList"></div>
+        </div>
+      </div>
+      <div class="setSec">
+        <div class="setTitle">Voz</div>
+        <div class="voiceRow">
+          <label>EN <select id="voiceEn"></select></label>
+          <label>ES <select id="voiceEs"></select></label>
+          <button class="nav" id="voiceTestBtn">Probar</button>
+        </div>
+      </div>
+      <div class="setSec">
+        <div class="setTitle">Tarjetas</div>
+        <button class="nav setBtn" id="editBtn">✏️ Editar tarjeta</button>
+      </div>
+      <div class="setSec">
+        <div class="setTitle">Meta diaria</div>
+        <div class="goalRow">
+          <button class="goalOpt" data-goal="30" type="button">Relajado<br><small>30 XP</small></button>
+          <button class="goalOpt" data-goal="50" type="button">Normal<br><small>50 XP</small></button>
+          <button class="goalOpt" data-goal="100" type="button">Serio<br><small>100 XP</small></button>
+          <button class="goalOpt" data-goal="150" type="button">Intenso<br><small>150 XP</small></button>
+        </div>
+      </div>
+      <div class="setSec">
+        <div class="setTitle">Datos y cuenta</div>
+        <p class="setStatus" id="syncStatus"></p>
+      </div>
+    </div>
+  </header>
+
+  <div class="goalToast" id="goalToast" style="display:none;">🎉 ¡Meta diaria cumplida! Has mantenido tu ritmo hoy.</div>
+
+  <div class="gModalOverlay" id="gModalOverlay" style="display:none;">
+    <div class="gModal">
+      <div class="gModalEmoji" id="gModalEmoji">🎉</div>
+      <h3 id="gModalTitle"></h3>
+      <p id="gModalMsg"></p>
+      <button class="nav" id="gModalClose">¡Genial!</button>
+    </div>
+  </div>
+
+  <div class="gModalOverlay" id="stageCompleteOverlay" style="display:none;">
+    <div class="gModal">
+      <div class="gModalEmoji">🏁</div>
+      <h3 id="stageCompleteTitle">¡Etapa Completada!</h3>
+      <p id="stageCompleteMsg"></p>
+      <button class="nav" id="stageCompleteBtn">Ver mapa</button>
+    </div>
+  </div>
+
+  <div class="gModalOverlay" id="cooldownModalOverlay" style="display:none;">
+    <div class="gModal">
+      <div class="gModalEmoji">⏳</div>
+      <h3>¡Excelente progreso!</h3>
+      <p id="cooldownModalMsg"></p>
+      <button class="nav" id="cooldownModalClose">Entendido</button>
+    </div>
+  </div>
+
+  <div class="stage" id="cardsView">
+    <div id="stageMapView">
+      <h2 class="mapTitle" id="mapCatName"></h2>
+      <p class="hint" id="mapSub" style="text-align:center;"></p>
+      <div class="pathWrap" id="pathWrap"></div>
+    </div>
+
+    <div id="lessonView" style="display:none;">
+      <button class="backToMapBtn" id="backToMapBtn" type="button">← Mapa</button>
+      <p class="hint" id="stageProgressText" style="text-align:left; margin:10px 0 10px;"></p>
+      <div class="progress" id="progress"></div>
+      <div class="progBarOuter"><div class="progBarFill" id="progBarFill"></div></div>
+      <div class="card" id="card">
+        <div class="card-inner">
+          <div class="face front">
+            <span class="tag">EN</span>
+            <button class="speakBtn" id="speakFront" aria-label="Escuchar en inglés">🔊</button>
+            <p id="frontText"></p>
+            <div class="exWrap" id="exWrap" style="display:none;">
+              <button class="exToggle" id="exToggle" type="button">Ver ejemplo ▾</button>
+              <p class="exText" id="exampleText"></p>
+            </div>
+          </div>
+          <div class="face back"><span class="tag">ES</span><button class="speakBtn" id="speakBack" aria-label="Escuchar en español">🔊</button><p id="backText"></p><p class="exTextEs" id="exampleTextEs"></p></div>
+        </div>
+        <div class="flipHint">↻</div>
+      </div>
+      <div class="rateRow" id="rateRow" style="display:none;">
+        <button class="rateBtn rateHard" id="rateHard" type="button">🔴 Difícil</button>
+        <button class="rateBtn rateGood" id="rateGood" type="button">🟡 Bien</button>
+        <button class="rateBtn rateEasy" id="rateEasy" type="button">🟢 Fácil</button>
+      </div>
+      <div class="controls">
+        <button class="nav" id="prevBtn">← Anterior</button>
+        <button class="nav" id="shuffleBtn">Mezclar</button>
+        <button class="nav" id="nextBtn">Siguiente →</button>
+      </div>
+      <p class="hint">Dominadas en esta sección: <span id="masteredCount">0</span>/<span id="totalCount">0</span></p>
+      <div id="editPanel" style="display:none;">
+        <p class="hint" id="editInfo" style="margin-top:0;"></p>
+        <div id="moveRows">
+          <div class="editRow">
+            <button class="nav" id="moveUpBtn">← Mover antes</button>
+            <button class="nav" id="moveDownBtn">Mover después →</button>
+          </div>
+          <div class="editRow">
+            <input type="number" id="movePos" class="search" min="1" placeholder="N.º">
+            <button class="nav" id="moveToBtn">Mover a esa posición</button>
+          </div>
+        </div>
+        <div class="editRow"><button class="nav dangerBtn" id="deleteBtn">🗑 Eliminar tarjeta</button></div>
+        <div class="editRow"><button class="nav" id="editDoneBtn">Listo</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="examView" style="display:none;">
+    <button class="backToMapBtn" id="examBackBtn" type="button">← Mapa</button>
+    <p class="hint" id="examProgressText" style="text-align:left; margin:10px 0;"></p>
+    <div class="progBarOuter"><div class="progBarFill" id="examProgBarFill"></div></div>
+    <div class="examCard">
+      <span class="tag">🏅 EXAMEN</span>
+      <p class="examPrompt" id="examPrompt"></p>
+      <div id="examMcOptions"></div>
+      <div id="examWriteBox" style="display:none;">
+        <input type="text" id="examWriteInput" class="search" placeholder="Escribe la traducción...">
+        <button class="nav" id="examCheckBtn" type="button" style="width:100%;">Verificar</button>
+      </div>
+      <p id="examFeedback" class="examFeedback" style="display:none;"></p>
+    </div>
+    <button class="nav" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
+  </div>
+
+  <div id="tableView" style="display:none;">
+    <button class="backToMapBtn" id="backFromTableBtn" type="button">← Progreso</button>
+    <input type="text" id="search" class="search" placeholder="Buscar en inglés o español...">
+    <p class="hint" id="tableCount" style="text-align:left;"></p>
+    <div class="tableWrap">
+      <table id="wordsTable">
+        <thead><tr><th>Categoría</th><th>Inglés</th><th>Español</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="progressView" style="display:none;">
+    <div class="gLevel" style="margin-bottom:14px;">
+      <div class="gLevelTop"><span id="gLevelNum">Nivel 1</span><span id="gXpText">0/100 XP</span></div>
+      <div class="gBarOuter"><div class="gBarFill" id="gLevelFill"></div></div>
+    </div>
+    <div class="gGoal" id="gGoal" style="margin-bottom:16px;">
+      <svg class="gGoalRing" viewBox="0 0 40 40">
+        <circle class="gGoalBg" cx="20" cy="20" r="16"></circle>
+        <circle class="gGoalFg" id="gGoalRingFg" cx="20" cy="20" r="16"></circle>
+      </svg>
+      <div class="gGoalText">Meta diaria: <span id="gGoalNum">0</span>/<span id="gGoalMax">50</span> XP<br><small id="gGoalPct">0%</small></div>
+    </div>
+    <div class="statsRow">
+      <div class="statBox"><div class="statNum" id="statStreak">0</div><div class="statLbl">🔥 Racha (días)</div></div>
+      <div class="statBox"><div class="statNum" id="statPct">0%</div><div class="statLbl">Completado</div></div>
+      <div class="statBox"><div class="statNum" id="statTime">0 min</div><div class="statLbl">Hoy</div></div>
+    </div>
+    <p class="progSummary" id="progSummary"></p>
+    <div id="chartWrap"></div>
+    <p class="hint" id="progEmpty" style="display:none;">Aún no has calificado ninguna tarjeta. Ve a "Aprender", voltéala y califica con 🔴 🟡 🟢 para empezar a ver tu progreso aquí.</p>
+    <button class="nav" id="openTableBtn" type="button" style="width:100%; margin-top:16px;">📋 Ver tabla completa</button>
+  </div>
+
+  <div id="myCardsView" style="display:none;">
+    <button class="nav" id="myCardsAddToggle" type="button" style="width:100%;">➕ Agregar nueva frase</button>
+    <div id="myCardsAddBox" style="display:none; margin-top:14px;">
+      <label class="fLabel">Frase en inglés</label>
+      <input type="text" id="addEn" class="search" placeholder="p. ej. I'll be right back">
+      <label class="fLabel">Traducción en español</label>
+      <input type="text" id="addEs" class="search" placeholder="p. ej. Ya vuelvo">
+      <label class="fLabel">Categoría</label>
+      <div class="catRow">
+        <select id="addCat" class="search"></select>
+        <button class="nav" id="newCatBtn" type="button">+ Nueva</button>
+      </div>
+      <div id="newCatBox" style="display:none;">
+        <input type="text" id="newCatInput" class="search" placeholder="Nombre de la nueva categoría">
+        <button class="nav" id="newCatSaveBtn" type="button" style="width:100%;">Crear categoría</button>
+      </div>
+      <label class="fLabel">Ejemplo de uso (opcional)</label>
+      <input type="text" id="addEx" class="search" placeholder="p. ej. una oración que use la frase">
+      <button class="nav" id="addBtn" style="width:100%;">Guardar palabra</button>
+      <p class="hint" id="addStatus" style="text-align:left;"></p>
+      <p class="hint" id="addSyncStatus" style="text-align:left;"></p>
+    </div>
+    <div id="myCardsCollection" style="margin-top:18px;">
+      <p class="hint" id="myCardsCount" style="text-align:left; margin-top:0;"></p>
+      <button class="nav" id="myCardsPracticeBtn" type="button" style="width:100%;">▶️ Practicar mis tarjetas</button>
+    </div>
+  </div>
+
+  <div id="translatorView" style="display:none;">
+    <div class="translatorDirRow">
+      <span id="trFromLabel">Inglés</span>
+      <button class="nav" id="trSwapBtn" type="button" aria-label="Invertir idiomas">⇄</button>
+      <span id="trToLabel">Español</span>
+    </div>
+    <textarea id="trInput" class="search trTextarea" placeholder="Escribe el texto a traducir..." rows="3"></textarea>
+    <button class="nav" id="trGoBtn" type="button" style="width:100%;">Traducir</button>
+    <p class="hint" id="trStatus" style="text-align:left;"></p>
+    <div id="trResultBox" style="display:none;">
+      <p class="fLabel" style="margin-top:16px;">Traducción</p>
+      <p class="trResultText" id="trResultText"></p>
+      <button class="nav" id="trSaveBtn" type="button" style="width:100%;">💾 Guardar a Mis Tarjetas</button>
+    </div>
+    <p class="hint" id="trUnavailable" style="display:none; text-align:left;">El traductor usa a Claude directamente desde esta página; en algunas vistas (fuera de un artefacto publicado) no está disponible.</p>
+  </div>
+
+  <div id="profileView" style="display:none;">
+    <div class="profileHead">
+      <div class="profileAvatar" id="profileAvatar">O</div>
+      <div class="profileWho">
+        <div class="profileName" id="profileName">Tu cuenta</div>
+        <div class="profileEmail" id="profileEmail">sin vincular</div>
+        <div class="profileBadge" id="profileBadge">⚪ Cuenta no vinculada</div>
+      </div>
+    </div>
+    <button class="nav" id="profileGoogleBtn" type="button" style="width:100%; margin:14px 0;">Vincular cuenta de Google</button>
+
+    <div class="setTitle" style="margin:18px 0 8px;">Nivel y experiencia</div>
+    <div class="gLevel" style="margin-bottom:6px;">
+      <div class="gLevelTop"><span id="pfLevelNum">Nivel 1</span><span id="pfXpText">0/100 XP</span></div>
+      <div class="gBarOuter"><div class="gBarFill" id="pfLevelFill"></div></div>
+    </div>
+    <p class="hint" id="pfXpDetail" style="text-align:left; margin-top:4px;"></p>
+
+    <div class="setTitle" style="margin:18px 0 8px;">Estadísticas</div>
+    <div class="statsRow">
+      <div class="statBox"><div class="statNum" id="pfStreak">0</div><div class="statLbl">🔥 Racha</div></div>
+      <div class="statBox"><div class="statNum" id="pfMastered">0</div><div class="statLbl">Frases dominadas</div></div>
+      <div class="statBox"><div class="statNum" id="pfActiveDays">0</div><div class="statLbl">Días activo</div></div>
+    </div>
+
+    <div class="setTitle" style="margin:18px 0 8px;">Recompensas</div>
+    <div class="rewardsGrid" id="rewardsGrid"></div>
+
+    <button class="nav dangerBtn" id="profileLogoutBtn" type="button" style="width:100%; margin-top:20px;">Cerrar sesión</button>
+  </div>
+
+  <footer class="appFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
+</div>
+
+<nav class="bottomNav" id="bottomNav"></nav>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('SW registrado:', reg.scope))
+        .catch(err => console.log('Error SW:', err));
+    });
+  }
+</script>
+</body>
+</html>
