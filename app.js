@@ -745,7 +745,7 @@ function sessionLayout(cat){
     });
   } else {
     etapaNames = [cat];
-    const total = itemsFor(cat).length;
+    const total = mapItemsFor(cat).length;
     const n = Math.max(1, Math.ceil(total / STAGE_SIZE));
     for(let k=0;k<n;k++){
       sessSizes.push(Math.min(STAGE_SIZE, total - k*STAGE_SIZE));
@@ -758,7 +758,7 @@ function sessionLayout(cat){
   return layout;
 }
 function sessionItemsBySessIdx(cat, sessIdx){
-  const items = itemsFor(cat);
+  const items = mapItemsFor(cat);
   const L = sessionLayout(cat);
   let start = 0;
   for(let i=0;i<sessIdx;i++) start += L.sessSizes[i];
@@ -769,7 +769,10 @@ function sessionItemsBySessIdx(cat, sessIdx){
 // what the map actually renders and what getUnlockedStage/getCurrentStage
 // index into — "stageIdx" everywhere below means a node index here.
 const MAX_CONSECUTIVE_NORMAL = 2;
-const EXAM_QUESTIONS = 12, EXAM_MC_COUNT = 7, EXAM_WRITE_COUNT = 5;
+// Exam: 12 questions = 6 multiple-choice + 4 writing + 2 pronunciation. 5 lives (hearts).
+const EXAM_QUESTIONS = 12, EXAM_MC_COUNT = 6, EXAM_WRITE_COUNT = 4, EXAM_SPEAK_COUNT = 2;
+const EXAM_LIVES = 5;
+const SPEAK_MATCH_THRESHOLD = 0.85; // 0..1 similarity needed between what was heard and the target phrase
 const _nodeLayoutCache = {};
 function nodeLayout(cat){
   if(_nodeLayoutCache[cat]) return _nodeLayoutCache[cat];
@@ -875,8 +878,8 @@ function buildPathMap(){
     row.appendChild(b);
     wrap.appendChild(row);
   }
-  const total_items = itemsFor(cat).length;
-  const masteredN = itemsFor(cat).filter(it=> isMastered(it[3])).length;
+  const total_items = mapItemsFor(cat).length;
+  const masteredN = mapItemsFor(cat).filter(it=> isMastered(it[3])).length;
   document.getElementById('mapSub').textContent =
     doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + total_items + ' tarjetas dominadas';
   requestAnimationFrame(()=>{
@@ -1028,36 +1031,25 @@ let suppressCardClick = false;
 
 let customWords = []; // {id, en, es, cat}
 
-let edits = {deleted:{}, order:{}};
-try{
-  const rawE = localStorage.getItem('ci_edits');
-  if(rawE){ const o = JSON.parse(rawE); edits = {deleted:o.deleted||{}, order:o.order||{}}; }
-}catch(e){}
-function saveEdits(){
-  try{ localStorage.setItem('ci_edits', JSON.stringify(edits)); }catch(e){}
-}
-
-function baseItems(c){
-  let out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+i, it[2]||null, it[3]||null]) : [];
-  customWords.filter(w=> w.cat===c).forEach(w=> out.push([w.en, w.es, c, 'custom|'+w.id, w.ex||null, w.exEs||null]));
-  out = out.filter(it=> !edits.deleted[it[3]]);
-  const ord = edits.order[c];
-  if(ord && ord.length){
-    const pos = {};
-    ord.forEach((k,i)=> pos[k] = i);
-    out = out.map((it,i)=> ({it:it, r:(it[3] in pos) ? pos[it[3]] : 1e9 + i}))
-             .sort((a,b)=> a.r - b.r).map(x=> x.it);
+// Built-in content only (what the stage map is made of). The map has no editing features.
+function baseItems(c, includeCustom){
+  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+i, it[2]||null, it[3]||null]) : [];
+  if(includeCustom !== false){
+    customWords.filter(w=> w.cat===c).forEach(w=> out.push([w.en, w.es, c, 'custom|'+w.id, w.ex||null, w.exEs||null]));
   }
   return out;
 }
-function itemsFor(cat){
+// All cards (built-in + the user's own from "Mis Tarjetas") — used by tables, stats and exam distractors.
+function itemsFor(cat, includeCustom){
   if(cat === "Todas"){
     let all = [];
-    allCats().forEach(c=> { all = all.concat(baseItems(c)); });
+    allCats().forEach(c=> { all = all.concat(baseItems(c, includeCustom)); });
     return all;
   }
-  return baseItems(cat);
+  return baseItems(cat, includeCustom);
 }
+// Cards that belong to the stage map: built-in only, so "Mis Tarjetas" never mixes into the route.
+function mapItemsFor(cat){ return itemsFor(cat, false); }
 
 function readStored(key){
   const dflt = {m:false, t:null, mt:null, lvl:0, next:null};
@@ -1142,6 +1134,7 @@ function getDailyGoalTarget(){
 function setDailyGoalTarget(v){
   try{ localStorage.setItem('vocabri_daily_goal_target', String(v)); }catch(e){}
   updateGameBar();
+  scheduleReminderStatePublish();
 }
 // Resets vocabri_xp_today to 0 whenever the stored last-study date isn't today.
 function checkDailyReset(){
@@ -1245,6 +1238,7 @@ function updateDailyGoalProgress(xpGained){
     markGoalCelebrated();
     showDailyGoalToast();
   }
+  scheduleReminderStatePublish();
 }
 function refreshGoalButtons(){
   const cur = getDailyGoalTarget();
@@ -1261,7 +1255,10 @@ function awardXp(amount){
   updateDailyGoalProgress(amount);
   const afterLevel = levelFromXp(getXpTotal());
   if(afterLevel > beforeLevel){
-    setTimeout(()=> enqueueModal(()=> showGameModal('🎉', '¡Subiste de nivel!', 'Ahora eres nivel ' + afterLevel + '. ¡Sigue así!')), 450);
+    setTimeout(()=> enqueueModal(()=>{
+      playSfx('levelup');
+      showGameModal('🎉', '¡Subiste de nivel!', 'Ahora eres nivel ' + afterLevel + '. ¡Sigue así!');
+    }), 450);
   }
 }
 function studyMinutesToday(){
@@ -1279,22 +1276,24 @@ function collectLocalProgress(){
 }
 function updateSyncStatus(){
   const el = document.getElementById('syncStatus');
-  const addEl = document.getElementById('addSyncStatus');
   const dot = document.getElementById('syncDot');
   if(el) el.textContent = '💾 Tu progreso se guarda en este dispositivo (localStorage).';
   if(dot) dot.style.background = '#22C55E';
-  if(addEl) addEl.textContent = '💾 Las palabras que agregues se guardan en este dispositivo.';
 }
 function loadCustomWords(){
   try{
     const raw = localStorage.getItem('ci_custom_words');
     customWords = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(customWords)) customWords = [];
   }catch(e){ customWords = []; }
 }
-function addWord(en, es, cat, ex){
-  en = en.trim(); es = es.trim(); ex = (ex||'').trim();
+loadCustomWords();
+function addWord(en, es, cat, ex, exEs){
+  en = en.trim(); es = es.trim(); ex = (ex||'').trim(); exEs = (exEs||'').trim();
   if(!en || !es || !cat) return Promise.resolve(false);
-  const item = ex ? {id: 'local_'+Date.now(), en, es, cat, ex} : {id: 'local_'+Date.now(), en, es, cat};
+  const item = {id: 'local_'+Date.now(), en, es, cat};
+  if(ex) item.ex = ex;
+  if(exEs) item.exEs = exEs;
   customWords.push(item);
   try{ localStorage.setItem('ci_custom_words', JSON.stringify(customWords)); }catch(e){}
   return Promise.resolve(true);
@@ -1331,7 +1330,7 @@ function buildCategoryDropdown(){
   const el = document.getElementById('catDropdown');
   if(!el) return;
   el.innerHTML = '';
-  allCats().forEach(c=>{
+  realCats.forEach(c=>{
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'catOpt' + (c===currentCat ? ' sel' : '');
@@ -1361,7 +1360,7 @@ function currentLessonItems(){
 function renderCards(){
   const cat = currentCat;
   const items = currentLessonItems();
-  const allItems = (studyMode === 'freeplay') ? items : itemsFor(cat);
+  const allItems = (studyMode === 'freeplay') ? items : mapItemsFor(cat);
   const backBtn = document.getElementById('backToMapBtn');
   if(studyMode === 'freeplay'){
     backBtn.textContent = '← Mis Tarjetas';
@@ -1414,8 +1413,6 @@ function renderCards(){
   let mastered = 0;
   allItems.forEach(x=>{ if(isMastered(x[3])) mastered++; });
   document.getElementById('masteredCount').textContent = mastered;
-  document.getElementById('totalCount').textContent = allItems.length;
-  if(document.getElementById('editPanel').style.display !== 'none') refreshEditInfo();
 }
 
 function renderTable(){
@@ -1526,20 +1523,255 @@ function renderProgress(){
   wrap.innerHTML = svg;
 }
 
+let editingCardId = null;
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function populateCardModalCats(selectVal){
+  const sel = document.getElementById('cardModalCat');
+  if(!sel) return;
+  sel.innerHTML = '';
+  allCats().forEach(c=>{
+    const o = document.createElement('option');
+    o.value = c;
+    o.textContent = c;
+    sel.appendChild(o);
+  });
+  if(selectVal) sel.value = selectVal;
+}
+
+function openCardModal(cardId){
+  editingCardId = cardId || null;
+  const overlay = document.getElementById('cardModalOverlay');
+  const title = document.getElementById('cardModalTitle');
+  const enInput = document.getElementById('cardModalEn');
+  const esInput = document.getElementById('cardModalEs');
+  const catSel = document.getElementById('cardModalCat');
+  const exInput = document.getElementById('cardModalEx');
+  const exEsInput = document.getElementById('cardModalExEs');
+  const status = document.getElementById('cardModalStatus');
+  const newCatBox = document.getElementById('cardModalNewCatBox');
+  if(newCatBox) newCatBox.style.display = 'none';
+  if(status) status.textContent = '';
+
+  populateCardModalCats();
+
+  if(editingCardId){
+    const card = customWords.find(w=> String(w.id) === String(editingCardId));
+    if(card){
+      title.textContent = 'Editar Tarjeta';
+      enInput.value = card.en || '';
+      esInput.value = card.es || '';
+      if(catSel && card.cat) catSel.value = card.cat;
+      exInput.value = card.ex || '';
+      exEsInput.value = card.exEs || '';
+    }
+  } else {
+    title.textContent = 'Crear Tarjeta';
+    enInput.value = '';
+    esInput.value = '';
+    if(catSel) catSel.value = allCats()[0] || 'Casual';
+    exInput.value = '';
+    exEsInput.value = '';
+  }
+  overlay.style.display = 'flex';
+  setTimeout(()=>{ enInput.focus(); }, 80);
+}
+
+function closeCardModal(){
+  const overlay = document.getElementById('cardModalOverlay');
+  if(overlay) overlay.style.display = 'none';
+  editingCardId = null;
+}
+
+async function saveCardFromModal(){
+  const en = document.getElementById('cardModalEn').value.trim();
+  const es = document.getElementById('cardModalEs').value.trim();
+  const cat = document.getElementById('cardModalCat').value;
+  const ex = document.getElementById('cardModalEx').value.trim();
+  const exEs = document.getElementById('cardModalExEs').value.trim();
+  const statusEl = document.getElementById('cardModalStatus');
+
+  if(!en || !es){
+    if(statusEl) statusEl.textContent = '⚠️ Escribe la frase en inglés y su traducción.';
+    return;
+  }
+
+  if(editingCardId){
+    const idx = customWords.findIndex(w=> String(w.id) === String(editingCardId));
+    if(idx >= 0){
+      customWords[idx] = {
+        id: editingCardId,
+        en: en,
+        es: es,
+        cat: cat,
+        ex: ex || undefined,
+        exEs: exEs || undefined
+      };
+      try{ localStorage.setItem('ci_custom_words', JSON.stringify(customWords)); }catch(e){}
+      if(statusEl) statusEl.textContent = '✅ Tarjeta actualizada con éxito.';
+      setTimeout(()=>{
+        closeCardModal();
+        renderMyCardsHome();
+      }, 350);
+    }
+  } else {
+    const ok = await addWord(en, es, cat, ex, exEs);
+    if(ok){
+      if(statusEl) statusEl.textContent = '✅ Tarjeta creada con éxito.';
+      setTimeout(()=>{
+        closeCardModal();
+        renderMyCardsHome();
+      }, 350);
+    } else {
+      if(statusEl) statusEl.textContent = '❌ No se pudo crear la tarjeta.';
+    }
+  }
+}
+
+function deleteCustomCard(id){
+  const card = customWords.find(w=> String(w.id) === String(id));
+  const name = card ? ('"' + card.en + '"') : 'esta tarjeta';
+  if(confirm('¿Eliminar ' + name + ' de Mis Tarjetas?')){
+    customWords = customWords.filter(w=> String(w.id) !== String(id));
+    try{
+      localStorage.setItem('ci_custom_words', JSON.stringify(customWords));
+      localStorage.removeItem('ci_master_custom|' + id);
+    }catch(e){}
+    renderMyCardsHome();
+  }
+}
+
 function renderMyCardsHome(){
   const n = customWords.length;
-  document.getElementById('myCardsCount').textContent =
-    n ? (n + ' tarjeta' + (n===1?'':'s') + ' guardada' + (n===1?'':'s')) : 'Aún no tienes tarjetas propias.';
-  document.getElementById('myCardsPracticeBtn').disabled = (n === 0);
-  document.getElementById('myCardsPracticeBtn').style.opacity = (n === 0) ? .5 : 1;
+  const countEl = document.getElementById('myCardsCount');
+  if(countEl){
+    countEl.textContent = n
+      ? (n + ' tarjeta' + (n===1?'':'s') + ' propia' + (n===1?'':'s') + ' en tu colección.')
+      : 'Aún no tienes tarjetas propias. ¡Crea la primera!';
+  }
+  const practiceBtn = document.getElementById('myCardsPracticeBtn');
+  if(practiceBtn){
+    practiceBtn.disabled = (n === 0);
+    practiceBtn.style.opacity = (n === 0) ? .5 : 1;
+  }
+
+  const listEl = document.getElementById('myCardsList');
+  if(!listEl) return;
+  listEl.innerHTML = '';
+
+  if(n === 0){
+    const empty = document.createElement('div');
+    empty.className = 'myCardsEmpty';
+    empty.innerHTML = '<div style="font-size:2.2rem; margin-bottom:8px;">🎴</div>' +
+      '<p style="margin:0 0 6px; font-weight:700; color:var(--ink);">Colección vacía</p>' +
+      '<p style="margin:0; font-size:.85rem;">Toca en <strong>"➕ Crear tarjeta"</strong> para agregar tus propias frases personalizadas.</p>';
+    listEl.appendChild(empty);
+    return;
+  }
+
+  customWords.forEach(w=>{
+    const item = document.createElement('div');
+    item.className = 'myCardItem';
+
+    const content = document.createElement('div');
+    content.className = 'myCardContent';
+
+    let exHtml = '';
+    if(w.ex){
+      exHtml = '<div class="myCardEx">💬 ' + escapeHtml(w.ex) + (w.exEs ? ' · ' + escapeHtml(w.exEs) : '') + '</div>';
+    }
+
+    content.innerHTML =
+      '<div class="myCardEn">' + escapeHtml(w.en) + '</div>' +
+      '<div class="myCardEs">' + escapeHtml(w.es) + '</div>' +
+      '<div class="myCardMeta">' +
+        '<span class="myCardCat">' + escapeHtml(w.cat || 'Personalizada') + '</span>' +
+        exHtml +
+      '</div>';
+
+    const actions = document.createElement('div');
+    actions.className = 'myCardActions';
+
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'myCardBtn';
+    editBtn.textContent = '✏️ Editar';
+    editBtn.onclick = ()=> openCardModal(w.id);
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'myCardBtn myCardDeleteBtn';
+    delBtn.textContent = '🗑️';
+    delBtn.title = 'Eliminar tarjeta';
+    delBtn.onclick = ()=> deleteCustomCard(w.id);
+
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    item.appendChild(content);
+    item.appendChild(actions);
+    listEl.appendChild(item);
+  });
 }
-document.getElementById('myCardsAddToggle').onclick = ()=>{
-  const box = document.getElementById('myCardsAddBox');
-  box.style.display = (box.style.display === 'none') ? '' : 'none';
-};
+
+document.getElementById('myCardsAddToggle').onclick = ()=> openCardModal();
 document.getElementById('myCardsPracticeBtn').onclick = ()=>{
   if(customWords.length) openMyCardsPractice();
 };
+
+const cardModalCloseBtn = document.getElementById('cardModalClose');
+if(cardModalCloseBtn) cardModalCloseBtn.onclick = closeCardModal;
+
+const cardModalSaveBtn = document.getElementById('cardModalSaveBtn');
+if(cardModalSaveBtn) cardModalSaveBtn.onclick = saveCardFromModal;
+
+const cardModalNewCatBtn = document.getElementById('cardModalNewCatBtn');
+if(cardModalNewCatBtn){
+  cardModalNewCatBtn.onclick = ()=>{
+    const box = document.getElementById('cardModalNewCatBox');
+    box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+    if(box.style.display !== 'none') document.getElementById('cardModalNewCatInput').focus();
+  };
+}
+
+const cardModalNewCatSaveBtn = document.getElementById('cardModalNewCatSaveBtn');
+if(cardModalNewCatSaveBtn){
+  cardModalNewCatSaveBtn.onclick = ()=>{
+    const input = document.getElementById('cardModalNewCatInput');
+    const name = input.value.trim();
+    if(addCategory(name)){
+      populateCardModalCats(name);
+      input.value = '';
+      document.getElementById('cardModalNewCatBox').style.display = 'none';
+    } else {
+      input.placeholder = 'Escribe un nombre válido y no repetido';
+    }
+  };
+}
+// Card modal keyboard support: Enter saves (or saves the new category), Escape closes.
+const cardModalFormEl = document.getElementById('cardModalForm');
+if(cardModalFormEl){
+  cardModalFormEl.addEventListener('keydown', (e)=>{
+    if(e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    e.preventDefault();
+    if(e.target.id === 'cardModalNewCatInput') document.getElementById('cardModalNewCatSaveBtn').click();
+    else saveCardFromModal();
+  });
+}
+document.addEventListener('keydown', (e)=>{
+  if(e.key !== 'Escape') return;
+  const ov = document.getElementById('cardModalOverlay');
+  if(ov && ov.style.display === 'flex') closeCardModal();
+});
 document.getElementById('openTableBtn').onclick = ()=>{
   document.getElementById('progressView').style.display = 'none';
   document.getElementById('tableView').style.display = '';
@@ -1725,17 +1957,78 @@ if('speechSynthesis' in window){
   loadVoices();
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
-document.getElementById('voiceEn').onchange = (e)=>{ try{ localStorage.setItem('ci_voice_en', e.target.value); }catch(err){} };
-document.getElementById('voiceEs').onchange = (e)=>{ try{ localStorage.setItem('ci_voice_es', e.target.value); }catch(err){} };
-document.getElementById('voiceTestBtn').onclick = ()=> speak("This is what the selected voice sounds like.", 'en-US');
+const voiceEnEl = document.getElementById('voiceEn');
+if(voiceEnEl) voiceEnEl.onchange = (e)=>{ try{ localStorage.setItem('ci_voice_en', e.target.value); }catch(err){} };
 
-function speak(text, lang){
+const voiceEsEl = document.getElementById('voiceEs');
+if(voiceEsEl) voiceEsEl.onchange = (e)=>{ try{ localStorage.setItem('ci_voice_es', e.target.value); }catch(err){} };
+
+const voiceTestBtnEl = document.getElementById('voiceTestBtn');
+if(voiceTestBtnEl) voiceTestBtnEl.onclick = ()=> speak("This is what the selected voice sounds like in English.", 'en-US');
+
+const voiceEsTestBtnEl = document.getElementById('voiceEsTestBtn');
+if(voiceEsTestBtnEl) voiceEsTestBtnEl.onclick = ()=> speak("Así es como suena la voz seleccionada en español.", 'es-ES');
+
+const voiceConfigBtnEl = document.getElementById('voiceConfigBtn');
+if(voiceConfigBtnEl){
+  voiceConfigBtnEl.onclick = ()=>{
+    closeSettings();
+    const ov = document.getElementById('voiceModalOverlay');
+    if(ov) ov.style.display = 'flex';
+  };
+}
+const voiceModalCloseEl = document.getElementById('voiceModalClose');
+if(voiceModalCloseEl) voiceModalCloseEl.onclick = ()=> document.getElementById('voiceModalOverlay').style.display = 'none';
+
+const voiceModalDoneEl = document.getElementById('voiceModalDoneBtn');
+if(voiceModalDoneEl) voiceModalDoneEl.onclick = ()=> document.getElementById('voiceModalOverlay').style.display = 'none';
+
+// --- Terms & Conditions modal ---
+let _termsOpener = null;
+function openTermsModal(){
+  closeSettings();
+  const ov = document.getElementById('termsModalOverlay');
+  if(!ov) return;
+  _termsOpener = document.getElementById('settingsBtn');
+  ov.style.display = 'flex';
+  const box = ov.querySelector('.legalModal');
+  if(box) box.scrollTop = 0;
+  const closeBtn = document.getElementById('termsModalClose');
+  if(closeBtn) closeBtn.focus();
+}
+function closeTermsModal(){
+  const ov = document.getElementById('termsModalOverlay');
+  if(!ov) return;
+  ov.style.display = 'none';
+  if(_termsOpener && _termsOpener.focus){ try{ _termsOpener.focus(); }catch(e){} }
+  _termsOpener = null;
+}
+const termsBtnEl = document.getElementById('termsBtn');
+if(termsBtnEl) termsBtnEl.onclick = openTermsModal;
+const termsModalCloseEl = document.getElementById('termsModalClose');
+if(termsModalCloseEl) termsModalCloseEl.onclick = closeTermsModal;
+const termsModalDoneEl = document.getElementById('termsModalDoneBtn');
+if(termsModalDoneEl) termsModalDoneEl.onclick = closeTermsModal;
+const termsOverlayEl = document.getElementById('termsModalOverlay');
+if(termsOverlayEl) termsOverlayEl.addEventListener('click', (e)=>{ if(e.target === termsOverlayEl) closeTermsModal(); });
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && termsOverlayEl && termsOverlayEl.style.display === 'flex') closeTermsModal();
+});
+
+const setExpBtn = document.getElementById('setExportBtn');
+if(setExpBtn) setExpBtn.onclick = exportBackup;
+
+const setImpBtn = document.getElementById('setImportBtn');
+if(setImpBtn) setImpBtn.onclick = ()=> document.getElementById('importFile').click();
+
+
+function speak(text, lang, rate){
   if(!('speechSynthesis' in window) || !text) return;
   try{
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang;
-    u.rate = 0.95;
+    u.rate = rate || 0.95;
     const selId = lang.startsWith('en') ? 'voiceEn' : 'voiceEs';
     const chosenURI = document.getElementById(selId).value;
     const v = voices.find(v=> v.voiceURI === chosenURI) || bestVoiceFor(lang.slice(0,2));
@@ -1751,6 +2044,64 @@ document.getElementById('speakBack').onclick = (e)=>{
   e.stopPropagation();
   speak(document.getElementById('backText').textContent, 'es-ES');
 };
+// 🐢 Slow playback of the English phrase (rate 0.6)
+document.getElementById('speakFrontSlow').onclick = (e)=>{
+  e.stopPropagation();
+  speak(document.getElementById('frontText').textContent, 'en-US', 0.6);
+};
+
+// --- Sound effects (Web Audio API, no audio files) and haptic feedback ---
+let sfxEnabled = true;
+try{ sfxEnabled = localStorage.getItem('vocabri_sfx') !== '0'; }catch(e){}
+let _audioCtx = null;
+function getAudioCtx(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!_audioCtx) _audioCtx = new AC();
+  if(_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+function tone(freq, start, dur, type, vol){
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime + start;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(vol || 0.18, t0 + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur + 0.03);
+}
+function playSfx(kind){
+  if(!sfxEnabled) return;
+  try{
+    if(kind === 'correct'){ tone(660, 0, .10, 'sine'); tone(880, .09, .18, 'sine'); }
+    else if(kind === 'levelup'){ [523.25, 659.25, 783.99, 1046.5].forEach((f,i)=> tone(f, i*.11, .22, 'triangle', .2)); }
+    else if(kind === 'wrong'){ tone(220, 0, .18, 'sawtooth', .14); tone(155, .14, .30, 'sawtooth', .14); }
+  }catch(e){}
+}
+function haptic(){
+  if(!sfxEnabled) return;
+  try{ if(navigator.vibrate) navigator.vibrate([40]); }catch(e){}
+}
+// Browsers only allow audio after a user gesture: unlock the context on the first touch.
+document.addEventListener('pointerdown', ()=>{ if(sfxEnabled) getAudioCtx(); }, {once:true});
+function updateSfxToggleUi(){
+  const b = document.getElementById('sfxToggleBtn');
+  if(b) b.textContent = sfxEnabled ? '🔊 Efectos y vibración: Activados' : '🔇 Efectos y vibración: Desactivados';
+}
+document.getElementById('sfxToggleBtn').onclick = ()=>{
+  sfxEnabled = !sfxEnabled;
+  try{ localStorage.setItem('vocabri_sfx', sfxEnabled ? '1' : '0'); }catch(e){}
+  updateSfxToggleUi();
+  if(sfxEnabled){ playSfx('correct'); haptic(); }
+};
+updateSfxToggleUi();
 
 function setFlipped(v){
   const c = document.getElementById('card');
@@ -1792,6 +2143,7 @@ function refreshStageProgressText(){
 }
 function rateAndAdvance(level){
   if(!curKey) return;
+  haptic();
   rateCard(curKey, level);
   if(level >= 2) awardXp(10);
   refreshStageProgressText();
@@ -1818,10 +2170,22 @@ document.getElementById('cooldownModalClose').onclick = ()=>{
   document.getElementById('cooldownModalOverlay').style.display = 'none';
 };
 
-// --- Exam view (7 multiple-choice + 5 writing questions) ---
+// --- Exam view (multiple-choice + writing + pronunciation, with 5 lives) ---
 let examState = null;
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SPEECH_REC_SUPPORTED = !!SpeechRec;
+let examRecognition = null;
+
 function normalizeAnswer(s){
   return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ ]/gi,'').trim();
+}
+// Written answers: ignore "(notes)" in the target and accept any "a / b" alternative.
+function writeAnswerOk(input, target){
+  const val = normalizeAnswer(input);
+  if(!val) return false;
+  if(val === normalizeAnswer(target)) return true;
+  const variants = target.replace(/\([^)]*\)/g, ' ').split('/').map(v=> normalizeAnswer(v)).filter(Boolean);
+  return variants.indexOf(val) >= 0;
 }
 function pickDistractors(correctEs, count){
   const all = itemsFor('Todas').map(it=> it[1]);
@@ -1840,33 +2204,126 @@ function shuffledCopy(arr){
   for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; }
   return a;
 }
+
+// --- Spoken-answer comparison: lowercase, no punctuation, contractions expanded on both sides ---
+const CONTRACTIONS = {
+  "i'm":"i am", "you're":"you are", "he's":"he is", "she's":"she is", "it's":"it is", "we're":"we are",
+  "they're":"they are", "that's":"that is", "what's":"what is", "there's":"there is", "here's":"here is",
+  "how's":"how is", "where's":"where is", "who's":"who is", "let's":"let us",
+  "i'll":"i will", "you'll":"you will", "we'll":"we will", "they'll":"they will",
+  "i've":"i have", "you've":"you have", "we've":"we have", "they've":"they have", "i'd":"i would",
+  "don't":"do not", "doesn't":"does not", "didn't":"did not", "can't":"cannot", "won't":"will not",
+  "isn't":"is not", "aren't":"are not", "wasn't":"was not", "weren't":"were not",
+  "haven't":"have not", "hasn't":"has not", "couldn't":"could not", "wouldn't":"would not", "shouldn't":"should not"
+};
+function normalizeSpeech(s){
+  let t = (s||'').toLowerCase().replace(/[’‘`]/g, "'");
+  t = t.replace(/\b[a-z]+'[a-z]+\b/g, w => CONTRACTIONS[w] || w);
+  return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/-/g,' ').replace(/[^a-z0-9 ]+/g,'').replace(/\s+/g,' ').trim();
+}
+function similarity(a, b){
+  if(a === b) return 1;
+  const m = a.length, n = b.length;
+  if(!m || !n) return 0;
+  let prev = [];
+  for(let j=0;j<=n;j++) prev[j] = j;
+  for(let i=1;i<=m;i++){
+    const cur = [i];
+    for(let j=1;j<=n;j++){
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return 1 - prev[n] / Math.max(m, n);
+}
+// A phrase can be read aloud if it has no [placeholders] or "..." gaps.
+function isSpeakable(it){ return !/[\[\]]|\.\.\./.test(it[0]); }
+function speakTargets(phrase){
+  return phrase.split('/').map(p=> normalizeSpeech(p)).filter(Boolean);
+}
+
+function stopExamRecognition(){
+  if(examRecognition){
+    try{
+      examRecognition.onresult = examRecognition.onerror = examRecognition.onend = null;
+      examRecognition.abort();
+    }catch(e){}
+    examRecognition = null;
+  }
+  const mic = document.getElementById('examMicBtn');
+  if(mic){ mic.classList.remove('listening'); mic.disabled = false; }
+}
+
+function renderExamLives(animate){
+  const el = document.getElementById('examLives');
+  if(!el || !examState) return;
+  let html = '';
+  for(let i=0;i<EXAM_LIVES;i++){
+    html += '<span class="heart' + (i < examState.lives ? '' : ' lost') + '">❤️</span>';
+  }
+  el.innerHTML = html;
+  el.setAttribute('aria-label', 'Vidas: ' + examState.lives + ' de ' + EXAM_LIVES);
+  if(animate){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+}
+
 function startExam(cat, stageIdx){
   const pool = examItemsFor(cat, stageIdx);
   if(!pool.length) return;
-  const shuffled = shuffledCopy(pool);
-  const chosen = [];
-  for(let i=0;i<EXAM_QUESTIONS;i++) chosen.push(shuffled[i % shuffled.length]);
-  const questions = shuffledCopy(chosen.map((it,i)=> ({it, mode: i < EXAM_MC_COUNT ? 'mc' : 'write'})));
-  examState = {cat, stageIdx, questions, idx:0, score:0};
+  stopExamRecognition();
+  const shuffledPool = shuffledCopy(pool);
+  // Pronunciation questions need speech recognition and phrases that can be read aloud.
+  const speakItems = [];
+  if(SPEECH_REC_SUPPORTED){
+    for(const it of shuffledPool){
+      if(speakItems.length >= EXAM_SPEAK_COUNT) break;
+      if(isSpeakable(it)) speakItems.push(it);
+    }
+  }
+  const rest = shuffledPool.filter(it=> speakItems.indexOf(it) < 0);
+  const source = rest.length ? rest : shuffledPool;
+  const needed = EXAM_QUESTIONS - speakItems.length;
+  // If a speaking slot can't be filled (no microphone API), it is covered by multiple-choice/writing.
+  const missingSpeak = EXAM_SPEAK_COUNT - speakItems.length;
+  const mcCount = EXAM_MC_COUNT + Math.ceil(missingSpeak / 2);
+  const questions = [];
+  speakItems.forEach(it=> questions.push({it, mode:'speak'}));
+  for(let i=0;i<needed;i++) questions.push({it: source[i % source.length], mode: i < mcCount ? 'mc' : 'write'});
+  examState = {
+    cat, stageIdx, questions: shuffledCopy(questions),
+    idx:0, score:0, lives:EXAM_LIVES, answered:false, failed:false
+  };
   currentCat = cat; setCurrentStage(cat, stageIdx);
   lessonHost = 'learn';
+  document.getElementById('examFailOverlay').style.display = 'none';
   document.getElementById('cardsView').style.display = 'none';
   document.getElementById('myCardsView').style.display = 'none';
   document.getElementById('examView').style.display = '';
+  renderExamLives(false);
   renderExamQuestion();
 }
 function renderExamQuestion(){
+  stopExamRecognition();
   const q = examState.questions[examState.idx];
+  examState.answered = false;
   document.getElementById('examProgressText').textContent = 'Pregunta ' + (examState.idx+1) + ' de ' + examState.questions.length;
   document.getElementById('examProgBarFill').style.width = Math.round((examState.idx/examState.questions.length)*100) + '%';
   document.getElementById('examPrompt').textContent = q.it[0];
+  document.getElementById('examInstruction').textContent =
+    q.mode === 'mc' ? 'Elige la traducción correcta' :
+    q.mode === 'write' ? 'Escribe la traducción en español' :
+    'Di esta frase en voz alta, en inglés';
   document.getElementById('examFeedback').style.display = 'none';
-  document.getElementById('examNextBtn').style.display = 'none';
+  const next = document.getElementById('examNextBtn');
+  next.style.display = 'none';
+  next.textContent = 'Siguiente →';
   const mcBox = document.getElementById('examMcOptions');
   const writeBox = document.getElementById('examWriteBox');
+  const speakBox = document.getElementById('examSpeakBox');
   mcBox.innerHTML = '';
+  mcBox.style.display = 'none';
+  writeBox.style.display = 'none';
+  speakBox.style.display = 'none';
   if(q.mode === 'mc'){
-    writeBox.style.display = 'none';
     mcBox.style.display = '';
     const options = shuffledCopy(pickDistractors(q.it[1], 3).concat([q.it[1]]));
     options.forEach(opt=>{
@@ -1875,40 +2332,178 @@ function renderExamQuestion(){
       b.onclick = ()=> answerMc(b, opt, q.it[1]);
       mcBox.appendChild(b);
     });
-  } else {
-    mcBox.style.display = 'none';
+  } else if(q.mode === 'write'){
     writeBox.style.display = '';
     document.getElementById('examWriteInput').value = '';
+  } else {
+    speakBox.style.display = '';
+    document.getElementById('examSpeakStatus').textContent = 'Toca el micrófono y di la frase';
   }
 }
-function showExamFeedback(ok, correctAnswer){
+function showExamFeedback(ok, failText){
   const el = document.getElementById('examFeedback');
   el.style.display = '';
   el.className = 'examFeedback ' + (ok ? 'ok' : 'bad');
-  el.textContent = ok ? '✅ ¡Correcto!' : ('❌ La traducción correcta era: ' + correctAnswer);
-  document.getElementById('examNextBtn').style.display = '';
+  el.textContent = ok ? '✅ ¡Correcto!' : ('❌ ' + failText);
+  const next = document.getElementById('examNextBtn');
+  next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
+  next.style.display = '';
+}
+// Single place where an answer is scored: sound, score, lives and feedback.
+function resolveExamAnswer(ok, failText){
+  if(!examState || examState.answered) return;
+  examState.answered = true;
+  if(ok){
+    examState.score++;
+    playSfx('correct');
+  } else {
+    playSfx('wrong');
+    examState.lives = Math.max(0, examState.lives - 1);
+    if(examState.lives <= 0) examState.failed = true;
+    renderExamLives(true);
+  }
+  showExamFeedback(ok, failText);
 }
 function answerMc(btn, chosen, correct){
+  if(!examState || examState.answered) return;
+  haptic();
   document.querySelectorAll('.examMcBtn').forEach(b=> b.disabled = true);
   const ok = chosen === correct;
   btn.classList.add(ok ? 'correct' : 'wrong');
   if(!ok){
     document.querySelectorAll('.examMcBtn').forEach(b=>{ if(b.textContent === correct) b.classList.add('correct'); });
   }
-  if(ok) examState.score++;
-  showExamFeedback(ok, correct);
+  resolveExamAnswer(ok, 'La traducción correcta era: ' + correct);
 }
 document.getElementById('examCheckBtn').onclick = ()=>{
+  if(!examState || examState.answered) return;
+  haptic();
   const q = examState.questions[examState.idx];
-  const ok = normalizeAnswer(document.getElementById('examWriteInput').value) === normalizeAnswer(q.it[1]);
-  if(ok) examState.score++;
+  const ok = writeAnswerOk(document.getElementById('examWriteInput').value, q.it[1]);
   document.getElementById('examWriteBox').style.display = 'none';
-  showExamFeedback(ok, q.it[1]);
+  resolveExamAnswer(ok, 'La traducción correcta era: ' + q.it[1]);
+};
+document.getElementById('examWriteInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('examCheckBtn').click(); }
+});
+
+// --- Pronunciation question (speech recognition, English) ---
+function finishExamSpeak(heardList){
+  if(!examState || examState.answered) return;
+  const q = examState.questions[examState.idx];
+  const targets = speakTargets(q.it[0]);
+  let ok = false;
+  for(const heard of heardList){
+    const h = normalizeSpeech(heard);
+    if(h && targets.some(t=> similarity(h, t) >= SPEAK_MATCH_THRESHOLD)){ ok = true; break; }
+  }
+  stopExamRecognition();
+  document.getElementById('examSpeakBox').style.display = 'none';
+  const heardText = heardList.length ? ('«' + heardList[0] + '»') : 'no se detectó tu voz';
+  resolveExamAnswer(ok, 'Esperábamos: «' + q.it[0] + '» — escuchamos: ' + heardText);
+}
+function startExamListening(){
+  if(!examState || examState.answered) return;
+  const q = examState.questions[examState.idx];
+  if(!q || q.mode !== 'speak') return;
+  const status = document.getElementById('examSpeakStatus');
+  const mic = document.getElementById('examMicBtn');
+  if(!SPEECH_REC_SUPPORTED){ status.textContent = 'Tu navegador no soporta reconocimiento de voz.'; return; }
+  stopExamRecognition();
+  try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
+  haptic();
+  const state = examState, qIdx = state.idx;
+  const rec = new SpeechRec();
+  rec.lang = 'en-US';
+  rec.interimResults = false;
+  rec.continuous = false;
+  rec.maxAlternatives = 3;
+  examRecognition = rec;
+  let settled = false;
+  const stillValid = ()=> examState === state && state.idx === qIdx && examRecognition === rec;
+  const resetMic = ()=>{ mic.classList.remove('listening'); mic.disabled = false; };
+  mic.classList.add('listening');
+  mic.disabled = true;
+  status.textContent = '🎤 Escuchando… di la frase en inglés';
+  rec.onresult = (ev)=>{
+    if(settled || !stillValid()) return;
+    settled = true;
+    const heard = [];
+    const res = ev.results && ev.results[0];
+    if(res){ for(let i=0;i<res.length;i++) heard.push(res[i].transcript); }
+    finishExamSpeak(heard);
+  };
+  rec.onerror = (ev)=>{
+    if(settled || !stillValid()) return;
+    settled = true;
+    const code = ev && ev.error;
+    const retry = {
+      'not-allowed': '🎤 Sin permiso para el micrófono. Actívalo en los ajustes del navegador y reintenta.',
+      'service-not-allowed': '🎤 Sin permiso para el reconocimiento de voz. Revisa los ajustes y reintenta.',
+      'audio-capture': '🎤 No se detectó ningún micrófono.',
+      'network': '📶 El reconocimiento de voz necesita internet. Revisa tu conexión y reintenta.',
+      'language-not-supported': 'Tu dispositivo no soporta reconocimiento de voz en inglés.',
+      'aborted': 'El reconocimiento se interrumpió. Toca el micrófono para reintentar.'
+    };
+    if(retry[code]){
+      // Not the player's fault: no life lost, they can retry or skip.
+      resetMic();
+      examRecognition = null;
+      status.textContent = retry[code];
+    } else {
+      finishExamSpeak([]); // no-speech / no-match → counts as a miss
+    }
+  };
+  rec.onend = ()=>{
+    if(!stillValid()){ resetMic(); return; }
+    if(settled) return;
+    settled = true;
+    finishExamSpeak([]); // ended without a result → no voice detected
+  };
+  try{
+    rec.start();
+  }catch(e){
+    settled = true;
+    resetMic();
+    examRecognition = null;
+    status.textContent = 'No se pudo iniciar el micrófono. Reintenta.';
+  }
+}
+document.getElementById('examMicBtn').onclick = startExamListening;
+document.getElementById('examSkipBtn').onclick = ()=>{
+  if(!examState || examState.answered) return;
+  const q = examState.questions[examState.idx];
+  haptic();
+  stopExamRecognition();
+  document.getElementById('examSpeakBox').style.display = 'none';
+  resolveExamAnswer(false, 'Pregunta omitida. La frase era: «' + q.it[0] + '»');
+};
+
+// --- Flow: next question / finish / out of lives ---
+function showExamFail(){
+  stopExamRecognition();
+  document.getElementById('examFailOverlay').style.display = 'flex';
+}
+document.getElementById('examRetryBtn').onclick = ()=>{
+  document.getElementById('examFailOverlay').style.display = 'none';
+  const cat = examState ? examState.cat : currentCat;
+  const stageIdx = examState ? examState.stageIdx : getCurrentStage(cat);
+  startExam(cat, stageIdx);
+};
+document.getElementById('examFailBackBtn').onclick = ()=>{
+  document.getElementById('examFailOverlay').style.display = 'none';
+  stopExamRecognition();
+  examState = null;
+  document.getElementById('examView').style.display = 'none';
+  showMap();
 };
 document.getElementById('examNextBtn').onclick = ()=>{
+  if(!examState) return;
+  if(examState.failed){ showExamFail(); return; }
   examState.idx++;
   if(examState.idx >= examState.questions.length){
     const score = examState.score, total = examState.questions.length;
+    stopExamRecognition();
     examState = null;
     document.getElementById('examView').style.display = 'none';
     document.getElementById('cardsView').style.display = '';
@@ -1919,6 +2514,7 @@ document.getElementById('examNextBtn').onclick = ()=>{
   }
 };
 document.getElementById('examBackBtn').onclick = ()=>{
+  stopExamRecognition();
   examState = null;
   document.getElementById('examView').style.display = 'none';
   showMap();
@@ -2003,140 +2599,18 @@ function switchView(v){
   else if(v==='profile') renderProfile();
 }
 
-const addCatSel = document.getElementById('addCat');
-function populateAddCatOptions(selectVal){
-  addCatSel.innerHTML = '';
-  allCats().forEach(c=>{ const o = document.createElement('option'); o.value=c; o.textContent=c; addCatSel.appendChild(o); });
-  if(selectVal) addCatSel.value = selectVal;
-}
-populateAddCatOptions();
-
+// Custom category labels (for Mis Tarjetas only; they never become map categories)
 function addCategory(name){
   name = name.trim();
   if(!name) return false;
   if(allCats().some(c=> c.toLowerCase() === name.toLowerCase())) return false;
   customCats.push(name);
   try{ localStorage.setItem('ci_custom_cats', JSON.stringify(customCats)); }catch(e){}
-  buildBottomNav();
-  populateAddCatOptions(name);
+  populateCardModalCats(name);
   return true;
 }
-document.getElementById('newCatBtn').onclick = ()=>{
-  const box = document.getElementById('newCatBox');
-  box.style.display = box.style.display === 'none' ? '' : 'none';
-  if(box.style.display !== 'none') document.getElementById('newCatInput').focus();
-};
-document.getElementById('newCatSaveBtn').onclick = ()=>{
-  const input = document.getElementById('newCatInput');
-  const ok = addCategory(input.value);
-  if(ok){
-    input.value = '';
-    document.getElementById('newCatBox').style.display = 'none';
-  } else {
-    input.placeholder = 'Escribe un nombre distinto a los existentes';
-  }
-};
+populateCardModalCats();
 
-document.getElementById('addBtn').onclick = async ()=>{
-  const en = document.getElementById('addEn').value;
-  const es = document.getElementById('addEs').value;
-  const ex = document.getElementById('addEx').value;
-  const cat = addCatSel.value;
-  const statusEl = document.getElementById('addStatus');
-  statusEl.textContent = 'Guardando...';
-  const ok = await addWord(en, es, cat, ex);
-  if(ok){
-    document.getElementById('addEn').value = '';
-    document.getElementById('addEs').value = '';
-    document.getElementById('addEx').value = '';
-    statusEl.textContent = '✅ Guardada en este dispositivo — ya aparece en Mis Tarjetas y Tabla.';
-    if(view === 'mycards') renderMyCardsHome();
-  } else {
-    statusEl.textContent = 'Escribe la frase en inglés y su traducción antes de guardar.';
-  }
-};
-
-function currentItem(){
-  const items = itemsFor(currentCat);
-  if(!items.length) return null;
-  if(order.length !== items.length) order = items.map((_,i)=>i);
-  idx = ((idx % items.length) + items.length) % items.length;
-  return {items:items, pos:order[idx], it:items[order[idx]]};
-}
-function refreshEditInfo(){
-  const c = currentItem();
-  const info = document.getElementById('editInfo');
-  const canMove = currentCat !== 'Todas';
-  document.getElementById('moveRows').style.display = canMove ? '' : 'none';
-  if(!c){ info.textContent = ''; return; }
-  info.textContent = canMove
-    ? 'Posición ' + (c.pos+1) + ' de ' + c.items.length + ' en ' + currentCat
-    : 'Para mover tarjetas, elige primero una categoría (no "Todas").';
-  document.getElementById('movePos').max = c.items.length;
-}
-function moveCardTo(newPos){
-  if(currentCat === 'Todas') return;
-  const c = currentItem(); if(!c) return;
-  newPos = Math.max(0, Math.min(c.items.length-1, newPos));
-  const keys = c.items.map(x=> x[3]);
-  const key = keys.splice(c.pos,1)[0];
-  keys.splice(newPos,0,key);
-  edits.order[currentCat] = keys;
-  saveEdits();
-  order = []; idx = newPos; renderCards();
-}
-function deleteCard(){
-  const c = currentItem(); if(!c) return;
-  const key = c.it[3];
-  if(key.indexOf('custom|') === 0){
-    const id = key.slice(7);
-    customWords = customWords.filter(w=> String(w.id) !== id);
-    try{ localStorage.setItem('ci_custom_words', JSON.stringify(customWords)); }catch(e){}
-  } else {
-    edits.deleted[key] = true;
-  }
-  saveEdits();
-  order = []; renderCards();
-}
-let delArmed = false, delTimer = null;
-function updateEditBtn(){
-  const open = document.getElementById('editPanel').style.display !== 'none' && view === 'cards';
-  document.getElementById('editBtn').textContent = open ? '✏️ Cerrar edición' : '✏️ Editar tarjeta';
-}
-document.getElementById('editBtn').onclick = ()=>{
-  const p = document.getElementById('editPanel');
-  const opening = p.style.display === 'none' || view !== 'cards' || cardsSubView !== 'lesson';
-  if(view !== 'cards') switchView('cards');
-  if(cardsSubView !== 'lesson') showLesson(currentCat, getCurrentStage(currentCat));
-  p.style.display = opening ? '' : 'none';
-  if(opening) refreshEditInfo();
-  updateEditBtn();
-  closeSettings();
-  if(opening) p.scrollIntoView({behavior:'smooth', block:'center'});
-};
-document.getElementById('editDoneBtn').onclick = ()=>{
-  document.getElementById('editPanel').style.display = 'none';
-  updateEditBtn();
-};
-document.getElementById('moveUpBtn').onclick = ()=>{ const c = currentItem(); if(c) moveCardTo(c.pos-1); };
-document.getElementById('moveDownBtn').onclick = ()=>{ const c = currentItem(); if(c) moveCardTo(c.pos+1); };
-document.getElementById('moveToBtn').onclick = ()=>{
-  const n = parseInt(document.getElementById('movePos').value, 10);
-  if(!isNaN(n)) moveCardTo(n-1);
-};
-document.getElementById('deleteBtn').onclick = ()=>{
-  const b = document.getElementById('deleteBtn');
-  if(!delArmed){
-    delArmed = true;
-    b.textContent = '¿Seguro? Toca otra vez para eliminar';
-    clearTimeout(delTimer);
-    delTimer = setTimeout(()=>{ delArmed = false; b.textContent = '🗑 Eliminar tarjeta'; }, 3500);
-  } else {
-    clearTimeout(delTimer); delArmed = false;
-    b.textContent = '🗑 Eliminar tarjeta';
-    deleteCard();
-  }
-};
 
 // --- Configuración y temas ---
 const THEMES = {
@@ -2211,7 +2685,6 @@ sBtn.onclick = (e)=>{
   const opening = sPanel.hidden;
   sPanel.hidden = !opening;
   sBtn.setAttribute('aria-expanded', String(opening));
-  if(opening) updateEditBtn();
 };
 document.getElementById('themesBtn').onclick = ()=>{
   const box = document.getElementById('themesBox');
@@ -2251,72 +2724,182 @@ setInterval(()=>{
 document.getElementById('welcomeStartBtn').onclick = ()=>{
   document.getElementById('welcome-screen').style.display = 'none';
 };
-const welcomeGoogleBtn = document.getElementById('welcomeGoogleBtn');
-if (welcomeGoogleBtn) {
-  welcomeGoogleBtn.onclick = ()=>{
-    const original = welcomeGoogleBtn.innerHTML;
-    welcomeGoogleBtn.innerHTML = 'Próximamente disponible';
-    setTimeout(()=>{ welcomeGoogleBtn.innerHTML = original; }, 1800);
-  };
-}
 
-// --- Translator (Claude-powered via the sample capability, no external API) ---
-let sampleFn = null;
-let trDir = 'en-es'; // 'en-es' | 'es-en'
-let trLastResult = null;
-async function initTranslator(){
-  try{
-    if(typeof claude === 'undefined' || !claude.use){ document.getElementById('trUnavailable').style.display=''; return; }
-    sampleFn = await claude.use('sample');
-    if(!sampleFn) document.getElementById('trUnavailable').style.display = '';
-  }catch(e){ document.getElementById('trUnavailable').style.display = ''; }
-}
+// --- Translator (free public APIs via fetch: MyMemory first, Lingva as fallback) ---
+const TR_MAX_CHARS = 500;      // MyMemory's per-request limit
+const TR_TIMEOUT_MS = 10000;
+let trDir = 'en-es';           // 'en-es' | 'es-en'
+let trLastResult = null;       // last successful translation (what "Guardar" stores)
+let trLastSource = null;
+let trLastDir = null;
+let trSaved = false;
+
 function updateTrLabels(){
   document.getElementById('trFromLabel').textContent = trDir === 'en-es' ? 'Inglés' : 'Español';
   document.getElementById('trToLabel').textContent = trDir === 'en-es' ? 'Español' : 'Inglés';
+}
+function fetchWithTimeout(url, ms){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=> ctrl.abort(), ms);
+  return fetch(url, {signal: ctrl.signal}).finally(()=> clearTimeout(timer));
+}
+function decodeHtmlEntities(str){
+  const t = document.createElement('textarea');
+  t.innerHTML = str;
+  return t.value;
+}
+async function translateMyMemory(text, from, to){
+  const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + from + '|' + to;
+  const res = await fetchWithTimeout(url, TR_TIMEOUT_MS);
+  if(!res.ok) throw new Error('http_' + res.status);
+  const data = await res.json();
+  // MyMemory reports quota problems inside the JSON, sometimes with HTTP 200.
+  if(Number(data.responseStatus) !== 200) throw new Error('mm_' + data.responseStatus);
+  const out = data.responseData && data.responseData.translatedText;
+  if(!out) throw new Error('mm_empty');
+  if(/MYMEMORY WARNING/i.test(out)) throw new Error('mm_quota');
+  return out;
+}
+async function translateLingva(text, from, to){
+  const url = 'https://lingva.ml/api/v1/' + from + '/' + to + '/' + encodeURIComponent(text);
+  const res = await fetchWithTimeout(url, TR_TIMEOUT_MS);
+  if(!res.ok) throw new Error('http_' + res.status);
+  const data = await res.json();
+  if(!data || !data.translation) throw new Error('lingva_empty');
+  return data.translation;
+}
+async function runTranslation(text, from, to){
+  let firstError;
+  try{
+    return decodeHtmlEntities(await translateMyMemory(text, from, to));
+  }catch(e1){
+    firstError = e1;
+  }
+  try{
+    return decodeHtmlEntities(await translateLingva(text, from, to));
+  }catch(e2){
+    const err = new Error('all_failed');
+    err.first = firstError;
+    err.second = e2;
+    throw err;
+  }
+}
+function translatorErrorMessage(err){
+  if(!navigator.onLine) return '📶 Sin conexión a internet. Conéctate para traducir.';
+  const e1 = err && err.first, e2 = err && err.second;
+  const timedOut = [e1, e2].some(e=> e && e.name === 'AbortError');
+  if(timedOut) return '⏱️ El servicio tardó demasiado en responder. Inténtalo de nuevo.';
+  const quota = e1 && (e1.message === 'mm_quota' || e1.message === 'mm_429' || e1.message === 'http_429');
+  if(quota) return '⚠️ Se alcanzó el límite gratuito del traductor por hoy. Prueba más tarde.';
+  return '⚠️ No se pudo traducir en este momento. Revisa tu conexión e inténtalo de nuevo.';
 }
 document.getElementById('trSwapBtn').onclick = ()=>{
   trDir = (trDir === 'en-es') ? 'es-en' : 'en-es';
   updateTrLabels();
 };
 document.getElementById('trGoBtn').onclick = async ()=>{
+  const btn = document.getElementById('trGoBtn');
+  if(btn.disabled) return;
   const text = document.getElementById('trInput').value.trim();
   const statusEl = document.getElementById('trStatus');
   if(!text){ statusEl.textContent = 'Escribe algo para traducir.'; return; }
-  if(!sampleFn){ statusEl.textContent = 'El traductor no está disponible en esta vista.'; return; }
-  const btn = document.getElementById('trGoBtn');
+  if(text.length > TR_MAX_CHARS){ statusEl.textContent = 'El texto es demasiado largo (máx. ' + TR_MAX_CHARS + ' caracteres).'; return; }
+  const dir = trDir;
+  const from = dir === 'en-es' ? 'en' : 'es';
+  const to = dir === 'en-es' ? 'es' : 'en';
   btn.disabled = true;
-  statusEl.textContent = 'Traduciendo...';
+  btn.textContent = 'Traduciendo…';
+  btn.setAttribute('aria-busy', 'true');
+  statusEl.textContent = '⏳ Traduciendo…';
   document.getElementById('trResultBox').style.display = 'none';
-  const fromLang = trDir === 'en-es' ? 'English' : 'Spanish';
-  const toLang = trDir === 'en-es' ? 'Spanish' : 'English';
   try{
-    const { text: out } = await sampleFn(
-      'Translate the following ' + fromLang + ' text to ' + toLang + '. ' +
-      'Reply with ONLY the translation, no quotes, no explanation.\n\nText: ' + text,
-      { modelTier: 'quick' }
-    );
-    trLastResult = out.trim();
-    document.getElementById('trResultText').textContent = trLastResult;
+    const out = (await runTranslation(text, from, to)).trim();
+    if(!out) throw new Error('empty');
+    trLastResult = out; trLastSource = text; trLastDir = dir; trSaved = false;
+    document.getElementById('trResultText').textContent = out;
     document.getElementById('trResultBox').style.display = '';
     statusEl.textContent = '';
   }catch(e){
-    statusEl.textContent = (e && e.code === 'not_granted')
-      ? 'Necesitas permitir que esta página use Claude para traducir.'
-      : 'No se pudo traducir. Intenta de nuevo.';
+    statusEl.textContent = translatorErrorMessage(e);
   }finally{
     btn.disabled = false;
+    btn.textContent = 'Traducir';
+    btn.removeAttribute('aria-busy');
   }
 };
 document.getElementById('trSaveBtn').onclick = async ()=>{
-  if(!trLastResult) return;
-  const original = document.getElementById('trInput').value.trim();
-  const en = trDir === 'en-es' ? original : trLastResult;
-  const es = trDir === 'en-es' ? trLastResult : original;
-  const ok = await addWord(en, es, realCats[0]);
   const statusEl = document.getElementById('trStatus');
+  if(!trLastResult) return;
+  if(trSaved){ statusEl.textContent = 'Esta traducción ya está en Mis Tarjetas.'; return; }
+  const en = trLastDir === 'en-es' ? trLastSource : trLastResult;
+  const es = trLastDir === 'en-es' ? trLastResult : trLastSource;
+  const ok = await addWord(en, es, realCats[0]);
+  if(ok){ trSaved = true; haptic(); }
   statusEl.textContent = ok ? '✅ Guardada en Mis Tarjetas.' : 'No se pudo guardar.';
   if(ok && view === 'mycards') renderMyCardsHome();
+};
+
+// --- Backup: export / import progress and custom cards (JSON) ---
+// Everything lives in localStorage under these prefixes. The Google session ("vocabri_user") is never exported.
+const BACKUP_PREFIXES = ['ci_', 'vocabri'];
+const BACKUP_EXCLUDE = ['vocabri_user'];
+function isBackupKey(k){
+  return BACKUP_PREFIXES.some(p=> k.indexOf(p) === 0) && BACKUP_EXCLUDE.indexOf(k) < 0;
+}
+function collectBackupData(){
+  const data = {};
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(isBackupKey(k)) data[k] = localStorage.getItem(k);
+  }
+  return data;
+}
+function setBackupStatus(msg){ document.getElementById('backupStatus').textContent = msg; }
+function exportBackup(){
+  try{
+    const payload = {app:'vocabri', version:1, exportedAt:new Date().toISOString(), data:collectBackupData()};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'vocabri-respaldo-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    setBackupStatus('✅ Respaldo exportado (' + Object.keys(payload.data).length + ' datos).');
+  }catch(e){
+    setBackupStatus('❌ No se pudo exportar el respaldo.');
+  }
+}
+async function importBackupFile(file){
+  const input = document.getElementById('importFile');
+  try{
+    const payload = JSON.parse(await file.text());
+    if(!payload || payload.app !== 'vocabri' || !payload.data || typeof payload.data !== 'object') throw new Error('format');
+    const keys = Object.keys(payload.data).filter(k=> isBackupKey(k) && typeof payload.data[k] === 'string');
+    if(!keys.length) throw new Error('empty');
+    if(!confirm('Esto reemplazará el progreso y las tarjetas de este dispositivo con las del respaldo (' + keys.length + ' datos). ¿Continuar?')){
+      setBackupStatus('Importación cancelada.');
+      return;
+    }
+    const current = [];
+    for(let i=0;i<localStorage.length;i++){ const k = localStorage.key(i); if(isBackupKey(k)) current.push(k); }
+    current.forEach(k=> localStorage.removeItem(k));
+    keys.forEach(k=> localStorage.setItem(k, payload.data[k]));
+    setBackupStatus('✅ Respaldo restaurado. Reiniciando…');
+    setTimeout(()=> location.reload(), 900);
+  }catch(e){
+    setBackupStatus('❌ El archivo no es un respaldo válido de Vocabri.');
+  }finally{
+    input.value = '';
+  }
+}
+document.getElementById('exportBtn').onclick = exportBackup;
+document.getElementById('importBtn').onclick = ()=> document.getElementById('importFile').click();
+document.getElementById('importFile').onchange = (e)=>{
+  const f = e.target.files && e.target.files[0];
+  if(f) importBackupFile(f);
 };
 
 applyTheme();
@@ -2325,7 +2908,6 @@ buildCategoryDropdown();
 document.getElementById('catSelectLabel').textContent = currentCat;
 document.getElementById('headerCatWrap').style.display = (view==='learn') ? '' : 'none';
 updateTrLabels();
-initTranslator();
 render(true);
 updateGameBar();
 
@@ -2347,9 +2929,238 @@ document.addEventListener('pointerdown', (e)=>{
   setTimeout(()=> ripple.remove(), 500);
 });
 
+// --- Daily reminders (local notifications through the Service Worker) ---
+// Web apps can't schedule an exact future alarm. We combine: (1) Periodic Background Sync, where the
+// browser supports it (installed Chrome/Android PWAs), and (2) an in-page check while the app is
+// open or backgrounded. Both read a small state file shared with sw.js (Cache Storage).
+const REMINDERS_KEY = 'vocabri_reminders';
+const REMINDER_TAG = 'vocabri-daily-reminder';          // periodicSync tag + notification tag (same as sw.js)
+const REMINDER_STATE_CACHE = 'vocabri-state';            // same as sw.js
+const REMINDER_STATE_URL = './vocabri-reminder-state.json';
+const REMINDER_START_HOUR = 10, REMINDER_END_HOUR = 22;  // keep in sync with sw.js
+const REMINDER_ICON = './icons/icon-192.png';
+const REMINDER_MESSAGES = [
+  '🔥 ¡No pierdas tu racha en Vocabri! Completa tu lección de hoy.',
+  '🎯 Tu meta diaria te está esperando en Vocabri. ¡Tú puedes!',
+  '📚 Unos minutos hoy hacen la diferencia. ¡Vamos con tu meta diaria!',
+  '💪 Un pequeño repaso hoy es un gran progreso mañana. ¡Entra a Vocabri!'
+];
+let _reminderPublishTimer = null;
+
+function localIsoDate(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function notificationsSupported(){ return ('Notification' in window) && ('serviceWorker' in navigator); }
+function remindersFlag(){ try{ return localStorage.getItem(REMINDERS_KEY) === '1'; }catch(e){ return false; } }
+// "Activated" = the user turned it on AND the browser permission is still granted.
+function remindersActive(){ return remindersFlag() && notificationsSupported() && Notification.permission === 'granted'; }
+function setNotifStatus(msg){
+  const el = document.getElementById('notifStatus');
+  if(el) el.textContent = msg || '';
+}
+function updateNotifToggleUi(){
+  const b = document.getElementById('notifToggleBtn');
+  if(!b) return;
+  const on = remindersActive();
+  b.textContent = on ? '🔔 Recordatorios diarios: Activados' : '🔔 Recordatorios diarios: Desactivados';
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+}
+async function readReminderState(){
+  try{
+    if(!('caches' in window)) return {};
+    const cache = await caches.open(REMINDER_STATE_CACHE);
+    const res = await cache.match(REMINDER_STATE_URL);
+    return res ? await res.json() : {};
+  }catch(e){ return {}; }
+}
+async function writeReminderState(state){
+  try{
+    if(!('caches' in window)) return;
+    const cache = await caches.open(REMINDER_STATE_CACHE);
+    await cache.put(REMINDER_STATE_URL, new Response(JSON.stringify(state), {headers:{'Content-Type':'application/json'}}));
+  }catch(e){}
+}
+// Tells the Service Worker whether reminders are on and whether today's goal is already done.
+async function publishReminderState(){
+  const prev = await readReminderState();
+  await writeReminderState({
+    enabled: remindersActive(),
+    date: localIsoDate(new Date()),
+    goalDone: getXpToday() >= getDailyGoalTarget(),
+    streak: computeStreak(),
+    lastReminderDate: prev.lastReminderDate || null
+  });
+}
+function scheduleReminderStatePublish(){
+  clearTimeout(_reminderPublishTimer);
+  _reminderPublishTimer = setTimeout(()=>{ publishReminderState(); }, 600);
+}
+function getSwRegistration(timeoutMs){
+  if(!('serviceWorker' in navigator)) return Promise.resolve(null);
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise(resolve=> setTimeout(()=> resolve(null), timeoutMs || 4000))
+  ]).catch(()=> null);
+}
+function pickReminderBody(){
+  const streak = computeStreak();
+  if(streak >= 2) return '🔥 Llevas ' + streak + ' días seguidos en Vocabri. ¡No pierdas tu racha! Completa tu lección de hoy.';
+  return REMINDER_MESSAGES[Math.floor(Date.now() / 86400000) % REMINDER_MESSAGES.length];
+}
+function showReminderNotification(reg, body, tag){
+  return reg.showNotification('Vocabri', {
+    body: body, tag: tag || REMINDER_TAG, icon: REMINDER_ICON, badge: REMINDER_ICON,
+    lang: 'es', data: {url: './'}
+  });
+}
+async function registerReminderSync(reg){
+  try{
+    if(!('periodicSync' in reg)) return false;
+    const perm = await navigator.permissions.query({name:'periodic-background-sync'});
+    if(perm.state !== 'granted') return false;
+    await reg.periodicSync.register(REMINDER_TAG, {minInterval: 12 * 60 * 60 * 1000});
+    return true;
+  }catch(e){ return false; }
+}
+async function unregisterReminderSync(){
+  try{
+    const reg = await navigator.serviceWorker.getRegistration();
+    if(reg && reg.periodicSync) await reg.periodicSync.unregister(REMINDER_TAG);
+  }catch(e){}
+}
+async function enableReminders(){
+  if(!notificationsSupported()){ setNotifStatus('Tu navegador no soporta notificaciones.'); return false; }
+  if(Notification.permission === 'denied'){
+    setNotifStatus('Las notificaciones están bloqueadas. Actívalas en los ajustes del navegador para este sitio.');
+    return false;
+  }
+  let perm = Notification.permission;
+  if(perm !== 'granted'){
+    try{ perm = await Notification.requestPermission(); }catch(e){ perm = 'denied'; }
+  }
+  if(perm !== 'granted'){
+    setNotifStatus('No se concedió el permiso. Los recordatorios siguen desactivados.');
+    return false;
+  }
+  const reg = await getSwRegistration(4000);
+  if(!reg){
+    setNotifStatus('El service worker aún no está activo. Recarga la app e inténtalo de nuevo.');
+    return false;
+  }
+  try{ localStorage.setItem(REMINDERS_KEY, '1'); }catch(e){}
+  await publishReminderState();
+  const background = await registerReminderSync(reg);
+  try{ await showReminderNotification(reg, '🔔 Recordatorios activados. Te avisaremos si aún falta tu meta del día.', 'vocabri-reminders-on'); }catch(e){}
+  setNotifStatus(background
+    ? '✅ Activados. Recibirás un aviso diario si aún no completas tu meta.'
+    : '✅ Activados. Tu dispositivo no permite avisos con la app cerrada: te recordaremos mientras Vocabri siga abierta en segundo plano.');
+  return true;
+}
+async function disableReminders(){
+  try{ localStorage.setItem(REMINDERS_KEY, '0'); }catch(e){}
+  await unregisterReminderSync();
+  await publishReminderState();
+  setNotifStatus('Recordatorios desactivados.');
+}
+// In-page fallback: runs only while the app is alive but in the background.
+async function maybeShowReminderFromPage(){
+  if(!remindersActive()) return;
+  const now = new Date();
+  const hour = now.getHours();
+  if(hour < REMINDER_START_HOUR || hour >= REMINDER_END_HOUR) return;
+  if(getXpToday() >= getDailyGoalTarget()) return;
+  const today = localIsoDate(now);
+  const state = await readReminderState();
+  if(state.lastReminderDate === today) return;
+  const reg = await getSwRegistration(1500);
+  if(!reg) return;
+  await showReminderNotification(reg, pickReminderBody());
+  state.lastReminderDate = today;
+  await writeReminderState(state);
+  publishReminderState();
+}
+document.getElementById('notifToggleBtn').onclick = async ()=>{
+  const btn = document.getElementById('notifToggleBtn');
+  btn.disabled = true;
+  try{
+    if(remindersActive()) await disableReminders();
+    else await enableReminders();
+  } finally {
+    btn.disabled = false;
+    updateNotifToggleUi();
+  }
+};
+function initReminders(){
+  updateNotifToggleUi();
+  if(remindersFlag() && !remindersActive()){
+    setNotifStatus('Los recordatorios necesitan el permiso de notificaciones. Vuelve a activarlos.');
+  }
+  publishReminderState();
+  if(remindersActive()){
+    getSwRegistration(2000).then(reg=>{ if(reg) registerReminderSync(reg); });
+  }
+  document.addEventListener('visibilitychange', ()=>{ if(document.hidden) publishReminderState(); });
+  setInterval(()=>{ if(document.hidden) maybeShowReminderFromPage(); }, 60 * 1000);
+}
+
+// --- PWA auto-update (works together with sw.js) ---
+let _waitingWorker = null;
+function showUpdateBanner(worker){
+  _waitingWorker = worker || _waitingWorker;
+  const banner = document.getElementById('updateBanner');
+  if(banner) banner.hidden = false;
+}
+function applyPwaUpdate(){
+  const btn = document.getElementById('updateNowBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Actualizando…'; }
+  let reloaded = false;
+  const reload = ()=>{ if(reloaded) return; reloaded = true; window.location.reload(); };
+  // Reload as soon as the new worker takes control.
+  navigator.serviceWorker.addEventListener('controllerchange', reload);
+  navigator.serviceWorker.getRegistration().then(reg=>{
+    const worker = (reg && reg.waiting) || _waitingWorker;
+    if(worker) worker.postMessage({type: 'SKIP_WAITING'});
+    else reload();
+  }).catch(reload);
+  // Fallback: never leave the user hanging if that event doesn't arrive.
+  setTimeout(reload, 2500);
+}
+function ensureServiceWorkerRegistered(){
+  if(!('serviceWorker' in navigator)) return;
+  const register = ()=> navigator.serviceWorker.getRegistration().then(reg=>{
+    if(!reg) return navigator.serviceWorker.register('./sw.js');
+  }).catch(()=>{});
+  if(document.readyState === 'complete') register();
+  else window.addEventListener('load', register);
+}
+function initPwaUpdates(){
+  if(!('serviceWorker' in navigator)) return;
+  ensureServiceWorkerRegistered();
+  const btn = document.getElementById('updateNowBtn');
+  if(btn) btn.onclick = applyPwaUpdate;
+  navigator.serviceWorker.ready.then(reg=>{
+    const watch = (worker)=>{
+      if(!worker) return;
+      worker.addEventListener('statechange', ()=>{
+        // "installed" with an existing controller = an update (not the very first install)
+        if(worker.state === 'installed' && navigator.serviceWorker.controller) showUpdateBanner(worker);
+      });
+    };
+    if(reg.waiting && navigator.serviceWorker.controller) showUpdateBanner(reg.waiting);
+    if(reg.installing) watch(reg.installing);
+    reg.addEventListener('updatefound', ()=> watch(reg.installing));
+    // Look for new versions while the app stays open.
+    const check = ()=>{ reg.update().catch(()=>{}); };
+    setInterval(check, 60 * 60 * 1000);
+    document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') check(); });
+  }).catch(()=>{});
+}
+
+initReminders();
+initPwaUpdates();
+
 // Inicializar al cargar el script
 window.onload = () => {
   initGoogleAuth();
-  // ... resto de tu lógica de carga inicial ...
 };
 

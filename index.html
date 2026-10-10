@@ -6,9 +6,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=3">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FF6B35">
+<meta name="theme-color" content="#0b0f19">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -17,10 +20,6 @@
     <h1 class="welcomeTitle">Vocabri</h1>
     <p class="welcomeTagline">Domina frases, no solo palabras.</p>
     <button class="nav welcomeBtn" id="welcomeStartBtn" type="button">Comenzar</button>
-    <button class="welcomeGoogleBtn" id="welcomeGoogleBtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6.4 7-6.4s7 2.8 7 6.4"/></svg>
-      Iniciar sesión con Google
-    </button>
     <footer class="appFooter welcomeFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
   </div>
 </div>
@@ -44,7 +43,7 @@
       </div>
       <button class="gear" id="settingsBtn" aria-label="Configuración" aria-expanded="false">☰<span class="dot" id="syncDot"></span></button>
     </div>
-    <div class="settingsPanel" id="settingsPanel" hidden>
+    <div class="settingsPanel" id="settingsPanel" data-testid="settings-dropdown" hidden>
       <div class="setSec">
         <div class="setTitle">Apariencia</div>
         <button class="nav setBtn" id="themesBtn">🎨 Temas y modo</button>
@@ -58,16 +57,11 @@
         </div>
       </div>
       <div class="setSec">
-        <div class="setTitle">Voz</div>
-        <div class="voiceRow">
-          <label>EN <select id="voiceEn"></select></label>
-          <label>ES <select id="voiceEs"></select></label>
-          <button class="nav" id="voiceTestBtn">Probar</button>
-        </div>
-      </div>
-      <div class="setSec">
-        <div class="setTitle">Tarjetas</div>
-        <button class="nav setBtn" id="editBtn">✏️ Editar tarjeta</button>
+        <div class="setTitle">Preferencias</div>
+        <button class="nav setBtn" id="sfxToggleBtn" type="button">🔊 Efectos y vibración: Activados</button>
+        <button class="nav setBtn" id="voiceConfigBtn" type="button" style="margin-top:8px;">🗣️ Configurar voces y traductor</button>
+        <button class="nav setBtn" id="notifToggleBtn" type="button" style="margin-top:8px;" aria-pressed="false">🔔 Recordatorios diarios: Desactivados</button>
+        <p class="setStatus notifStatus" id="notifStatus" role="status" aria-live="polite"></p>
       </div>
       <div class="setSec">
         <div class="setTitle">Meta diaria</div>
@@ -80,7 +74,14 @@
       </div>
       <div class="setSec">
         <div class="setTitle">Datos y cuenta</div>
+        <div class="backupRow" style="display:flex; gap:8px; margin-bottom:8px;">
+          <button class="nav setBtn" id="setExportBtn" type="button" style="flex:1;">⬇️ Exportar (.json)</button>
+          <button class="nav setBtn" id="setImportBtn" type="button" style="flex:1;">⬆️ Importar (.json)</button>
+        </div>
         <p class="setStatus" id="syncStatus"></p>
+      </div>
+      <div class="setSec" style="border-bottom:none; margin-bottom:0; padding-bottom:4px;">
+        <button class="nav setBtn" id="termsBtn" type="button" style="width:100%; text-align:center;">📄 Términos y Condiciones</button>
       </div>
     </div>
   </header>
@@ -131,6 +132,7 @@
           <div class="face front">
             <span class="tag">EN</span>
             <button class="speakBtn" id="speakFront" aria-label="Escuchar en inglés">🔊</button>
+            <button class="speakBtn speakSlow" id="speakFrontSlow" aria-label="Escuchar en inglés, despacio">🐢</button>
             <p id="frontText"></p>
             <div class="exWrap" id="exWrap" style="display:none;">
               <button class="exToggle" id="exToggle" type="button">Ver ejemplo ▾</button>
@@ -152,35 +154,39 @@
         <button class="nav" id="nextBtn">Siguiente →</button>
       </div>
       <p class="hint">Dominadas en esta sección: <span id="masteredCount">0</span>/<span id="totalCount">0</span></p>
-      <div id="editPanel" style="display:none;">
-        <p class="hint" id="editInfo" style="margin-top:0;"></p>
-        <div id="moveRows">
-          <div class="editRow">
-            <button class="nav" id="moveUpBtn">← Mover antes</button>
-            <button class="nav" id="moveDownBtn">Mover después →</button>
-          </div>
-          <div class="editRow">
-            <input type="number" id="movePos" class="search" min="1" placeholder="N.º">
-            <button class="nav" id="moveToBtn">Mover a esa posición</button>
-          </div>
-        </div>
-        <div class="editRow"><button class="nav dangerBtn" id="deleteBtn">🗑 Eliminar tarjeta</button></div>
-        <div class="editRow"><button class="nav" id="editDoneBtn">Listo</button></div>
-      </div>
+    </div>
+  </div>
+
+  <div class="gModalOverlay" id="examFailOverlay" style="display:none;">
+    <div class="gModal">
+      <div class="gModalEmoji">💔</div>
+      <h3>¡Te quedaste sin vidas!</h3>
+      <p>El examen se detuvo. Repasa las secciones anteriores y vuelve a intentarlo cuando quieras.</p>
+      <button class="nav" id="examRetryBtn" type="button">Reintentar examen</button>
+      <button class="nav examFailBack" id="examFailBackBtn" type="button">Volver al mapa</button>
     </div>
   </div>
 
   <div id="examView" style="display:none;">
     <button class="backToMapBtn" id="examBackBtn" type="button">← Mapa</button>
-    <p class="hint" id="examProgressText" style="text-align:left; margin:10px 0;"></p>
+    <div class="examTopRow">
+      <p class="hint" id="examProgressText" style="text-align:left; margin:0;"></p>
+      <div class="examLives" id="examLives" aria-label="Vidas restantes"></div>
+    </div>
     <div class="progBarOuter"><div class="progBarFill" id="examProgBarFill"></div></div>
     <div class="examCard">
       <span class="tag">🏅 EXAMEN</span>
+      <p class="examInstruction" id="examInstruction"></p>
       <p class="examPrompt" id="examPrompt"></p>
       <div id="examMcOptions"></div>
       <div id="examWriteBox" style="display:none;">
         <input type="text" id="examWriteInput" class="search" placeholder="Escribe la traducción...">
         <button class="nav" id="examCheckBtn" type="button" style="width:100%;">Verificar</button>
+      </div>
+      <div id="examSpeakBox" style="display:none;">
+        <button class="micBtn" id="examMicBtn" type="button" aria-label="Hablar">🎤</button>
+        <p class="hint" id="examSpeakStatus" style="text-align:center;"></p>
+        <button class="linkBtn" id="examSkipBtn" type="button">Omitir (cuenta como error)</button>
       </div>
       <p id="examFeedback" class="examFeedback" style="display:none;"></p>
     </div>
@@ -223,31 +229,18 @@
   </div>
 
   <div id="myCardsView" style="display:none;">
-    <button class="nav" id="myCardsAddToggle" type="button" style="width:100%;">➕ Agregar nueva frase</button>
-    <div id="myCardsAddBox" style="display:none; margin-top:14px;">
-      <label class="fLabel">Frase en inglés</label>
-      <input type="text" id="addEn" class="search" placeholder="p. ej. I'll be right back">
-      <label class="fLabel">Traducción en español</label>
-      <input type="text" id="addEs" class="search" placeholder="p. ej. Ya vuelvo">
-      <label class="fLabel">Categoría</label>
-      <div class="catRow">
-        <select id="addCat" class="search"></select>
-        <button class="nav" id="newCatBtn" type="button">+ Nueva</button>
+    <div class="myCardsHeader">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h2 style="margin:0; font-family:var(--font-ui); color:var(--ink);">Mis Tarjetas</h2>
+        <span class="catBadge" id="myCardsBadge" style="background:var(--primary-soft); color:var(--primary); font-size:.78rem; font-weight:700; padding:3px 10px; border-radius:999px;">Personalizadas</span>
       </div>
-      <div id="newCatBox" style="display:none;">
-        <input type="text" id="newCatInput" class="search" placeholder="Nombre de la nueva categoría">
-        <button class="nav" id="newCatSaveBtn" type="button" style="width:100%;">Crear categoría</button>
+      <p class="hint" id="myCardsCount" style="text-align:left; margin:2px 0 14px;">Crea, edita y organiza tus propias frases.</p>
+      <div class="myCardsActions" style="display:flex; gap:10px; margin-bottom:16px;">
+        <button class="nav" id="myCardsAddToggle" type="button" style="flex:1;">➕ Crear tarjeta</button>
+        <button class="nav" id="myCardsPracticeBtn" type="button" style="flex:1;">▶️ Practicar</button>
       </div>
-      <label class="fLabel">Ejemplo de uso (opcional)</label>
-      <input type="text" id="addEx" class="search" placeholder="p. ej. una oración que use la frase">
-      <button class="nav" id="addBtn" style="width:100%;">Guardar palabra</button>
-      <p class="hint" id="addStatus" style="text-align:left;"></p>
-      <p class="hint" id="addSyncStatus" style="text-align:left;"></p>
     </div>
-    <div id="myCardsCollection" style="margin-top:18px;">
-      <p class="hint" id="myCardsCount" style="text-align:left; margin-top:0;"></p>
-      <button class="nav" id="myCardsPracticeBtn" type="button" style="width:100%;">▶️ Practicar mis tarjetas</button>
-    </div>
+    <div id="myCardsList" class="myCardsList"></div>
   </div>
 
   <div id="translatorView" style="display:none;">
@@ -256,7 +249,7 @@
       <button class="nav" id="trSwapBtn" type="button" aria-label="Invertir idiomas">⇄</button>
       <span id="trToLabel">Español</span>
     </div>
-    <textarea id="trInput" class="search trTextarea" placeholder="Escribe el texto a traducir..." rows="3"></textarea>
+    <textarea id="trInput" class="search trTextarea" placeholder="Escribe el texto a traducir..." rows="3" maxlength="500"></textarea>
     <button class="nav" id="trGoBtn" type="button" style="width:100%;">Traducir</button>
     <p class="hint" id="trStatus" style="text-align:left;"></p>
     <div id="trResultBox" style="display:none;">
@@ -264,7 +257,7 @@
       <p class="trResultText" id="trResultText"></p>
       <button class="nav" id="trSaveBtn" type="button" style="width:100%;">💾 Guardar a Mis Tarjetas</button>
     </div>
-    <p class="hint" id="trUnavailable" style="display:none; text-align:left;">El traductor usa a Claude directamente desde esta página; en algunas vistas (fuera de un artefacto publicado) no está disponible.</p>
+    <p class="hint" id="trHint" style="text-align:left;">Traducción en línea (MyMemory, con respaldo en Lingva). Requiere conexión a internet · máx. 500 caracteres.</p>
   </div>
 
   <div id="profileView" style="display:none;">
@@ -295,7 +288,125 @@
     <div class="setTitle" style="margin:18px 0 8px;">Recompensas</div>
     <div class="rewardsGrid" id="rewardsGrid"></div>
 
+    <div class="setTitle" style="margin:22px 0 8px;">Respaldo</div>
+    <div class="backupRow">
+      <button class="nav" id="exportBtn" type="button">⬇️ Exportar Respaldo (.json)</button>
+      <button class="nav" id="importBtn" type="button">⬆️ Importar Respaldo (.json)</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+    <p class="hint" id="backupStatus" style="text-align:left;"></p>
+
     <button class="nav dangerBtn" id="profileLogoutBtn" type="button" style="width:100%; margin-top:20px;">Cerrar sesión</button>
+  </div>
+
+  <!-- Modal: Crear / Editar Tarjeta (Exclusivo de Mis Tarjetas) -->
+  <div class="gModalOverlay" id="cardModalOverlay" style="display:none;">
+    <div class="gModal gModalWide">
+      <div class="modalHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 id="cardModalTitle" style="margin:0; font-family:var(--font-ui);">Crear Tarjeta</h3>
+        <button class="modalCloseBtn" id="cardModalClose" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <form id="cardModalForm" onsubmit="return false;">
+        <input type="hidden" id="cardModalId" value="">
+        <label class="fLabel">Frase en inglés *</label>
+        <input type="text" id="cardModalEn" class="search" placeholder="p. ej. Break a leg" required>
+        <label class="fLabel">Traducción en español *</label>
+        <input type="text" id="cardModalEs" class="search" placeholder="p. ej. Buena suerte" required>
+        <label class="fLabel">Categoría</label>
+        <div class="catRow" style="display:flex; gap:8px; margin-bottom:10px;">
+          <select id="cardModalCat" class="search" style="margin-bottom:0;"></select>
+          <button class="nav" id="cardModalNewCatBtn" type="button" style="white-space:nowrap;">+ Nueva</button>
+        </div>
+        <div id="cardModalNewCatBox" style="display:none; margin-bottom:10px;">
+          <input type="text" id="cardModalNewCatInput" class="search" placeholder="Nombre de la nueva categoría" style="margin-bottom:6px;">
+          <button class="nav" id="cardModalNewCatSaveBtn" type="button" style="width:100%;">Guardar categoría</button>
+        </div>
+        <label class="fLabel">Ejemplo en inglés (opcional)</label>
+        <input type="text" id="cardModalEx" class="search" placeholder="p. ej. Break a leg on your test!">
+        <label class="fLabel">Traducción del ejemplo (opcional)</label>
+        <input type="text" id="cardModalExEs" class="search" placeholder="p. ej. ¡Buena suerte en tu examen!">
+        <button class="nav" id="cardModalSaveBtn" type="button" style="width:100%; margin-top:8px;">Guardar tarjeta</button>
+        <p class="hint" id="cardModalStatus" style="text-align:left; margin-top:8px; min-height:1.2em;"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Configuración de Voces y Traductor -->
+  <div class="gModalOverlay" id="voiceModalOverlay" style="display:none;">
+    <div class="gModal gModalWide">
+      <div class="modalHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="margin:0; font-family:var(--font-ui);">🗣️ Configurar voces y traductor</h3>
+        <button class="modalCloseBtn" id="voiceModalClose" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="voiceModalBody">
+        <label class="fLabel">Voz en Inglés (EN)</label>
+        <select id="voiceEn" class="search"></select>
+        <button class="nav" id="voiceTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en inglés</button>
+        
+        <label class="fLabel">Voz en Español (ES)</label>
+        <select id="voiceEs" class="search"></select>
+        <button class="nav" id="voiceEsTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en español</button>
+
+        <div class="infoBox" style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px; margin-top:10px;">
+          <h4 style="margin:0 0 6px; font-size:.9rem; color:var(--ink);">🌐 Motor del Traductor</h4>
+          <p style="margin:0; font-size:.8rem; color:var(--muted); line-height:1.4;">
+            Vocabri utiliza el motor MyMemory y respaldo en Lingva para traducir frases bidireccionalmente. Las traducciones guardadas van directo a tu sección de <strong>Mis Tarjetas</strong>.
+          </p>
+        </div>
+        <button class="nav" id="voiceModalDoneBtn" type="button" style="width:100%; margin-top:16px;">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Términos y Condiciones de Uso -->
+  <div class="gModalOverlay" id="termsModalOverlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+    <div class="gModal gModalWide legalModal">
+      <div class="modalHeader">
+        <h3 id="termsModalTitle">📜 Términos y Condiciones de Uso</h3>
+        <button class="modalCloseBtn" id="termsModalClose" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="legalContent">
+        <p class="legalIntro">
+          <span class="openBadge">🟢 Software libre · Código abierto</span>
+          Vocabri es un proyecto transparente: lo que ves aquí es lo que hace la aplicación.
+        </p>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">1</span>Licencia y Código Abierto (Open Source)</h4>
+          <p>Vocabri es una aplicación de <strong>código abierto</strong> y <strong>software libre</strong>. Su código fuente es público: puedes consultarlo, auditarlo, modificarlo y redistribuirlo conforme a los términos de la licencia incluida en el proyecto (archivo <code>LICENSE</code> del repositorio).</p>
+          <p class="legalRepo">📂 Repositorio oficial:<br><a href="https://github.com/tu-usuario/vocabri" target="_blank" rel="noopener noreferrer">https://github.com/tu-usuario/vocabri</a></p>
+        </section>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">2</span>Privacidad y Almacenamiento Local</h4>
+          <p>Vocabri <strong>no utiliza servidores centralizados</strong> y <strong>no recopila ni rastrea datos personales</strong>. No hay analíticas ni publicidad. Tu progreso, rachas, configuración y tarjetas personalizadas se guardan <strong>únicamente en tu dispositivo</strong>, en el <code>localStorage</code> del navegador.</p>
+          <p>Algunas funciones opcionales se apoyan en servicios externos solo cuando las usas: el traductor envía el texto a MyMemory o Lingva, el reconocimiento de voz lo procesa el proveedor de tu navegador, y la tipografía y el inicio de sesión con Google se cargan desde Google. Esos servicios se rigen por sus propias políticas; Vocabri no recibe ni almacena esa información.</p>
+        </section>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">3</span>Responsabilidad sobre Copias de Seguridad</h4>
+          <p>Como tus datos viven solo en tu dispositivo, <strong>eres responsable de exportar tu archivo JSON</strong> de respaldo (Ajustes → Datos y cuenta, o Perfil → Respaldo) <strong>antes de borrar la caché</strong> o los datos del navegador, desinstalar la app o <strong>cambiar de dispositivo</strong>. Sin servidores, Vocabri no puede recuperar un progreso que no hayas respaldado.</p>
+        </section>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">4</span>Uso de APIs del Sistema</h4>
+          <p>Vocabri utiliza las siguientes APIs de tu navegador o sistema, siempre bajo tu control:</p>
+          <ul class="legalList">
+            <li><strong>Web Speech API</strong> (reconocimiento de voz): evalúa tu pronunciación en los exámenes; requiere tu permiso de micrófono.</li>
+            <li><strong>SpeechSynthesis</strong>: lee en voz alta las frases, incluido el modo lento 🐢.</li>
+            <li><strong>Web Audio API</strong>: genera los efectos de sonido en tu dispositivo, sin archivos de audio.</li>
+            <li><strong>Notification API</strong>: envía recordatorios diarios opcionales; requiere tu permiso y puedes desactivarlos en Ajustes.</li>
+            <li><strong>Vibration API</strong>: respuesta háptica opcional al responder.</li>
+          </ul>
+        </section>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">5</span>Exención de Garantía</h4>
+          <p>El software se proporciona <strong>«tal cual» (<em>as is</em>)</strong>, sin garantías de ningún tipo, expresas o implícitas, incluidas las de comerciabilidad, idoneidad para un propósito particular y no infracción. En ningún caso los autores serán responsables de reclamaciones, daños u otras responsabilidades derivadas del uso del software, incluida la pérdida de datos de progreso.</p>
+        </section>
+      </div>
+      <button class="nav" id="termsModalDoneBtn" type="button" style="width:100%; margin-top:6px;">Aceptar y Cerrar</button>
+    </div>
   </div>
 
   <footer class="appFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
@@ -303,7 +414,11 @@
 
 <nav class="bottomNav" id="bottomNav"></nav>
 
-<script src="app.js"></script>
+<div class="updateBanner" id="updateBanner" role="status" aria-live="polite" hidden>
+  <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
+</div>
+
+<script src="app.js?v=3"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
