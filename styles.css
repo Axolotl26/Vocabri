@@ -754,3 +754,22 @@ input.search:focus-visible, textarea.search:focus-visible, select.search:focus-v
 }
 .miniBtn:active{ background:var(--primary-soft); }
 .miniBtn:focus-visible{ outline:2px solid var(--secondary); outline-offset:2px; }
+
+/* ===== Borrar progreso ===== */
+button.nav.setResetBtn{ width:100%; margin-top:10px; background:transparent; color:var(--danger);
+  border:1.5px solid var(--danger); box-shadow:none; }
+.resetModal{ text-align:center; }
+.resetModal .resetDesc{ color:var(--ink); font-size:.88rem; line-height:1.45; margin:0 0 12px; }
+.resetOpt{ display:flex; align-items:center; gap:10px; text-align:left; margin:0 0 6px; padding:12px;
+  background:var(--bg); border-radius:var(--radius); font-size:.84rem; color:var(--ink); font-family:var(--font-ui); cursor:pointer; }
+.resetOpt input{ width:20px; height:20px; flex:0 0 auto; accent-color:var(--danger); }
+.resetModal .resetKeep{ color:var(--muted); font-size:.76rem; margin:0 0 14px; }
+.resetModal .resetBackupBtn{ background:var(--paper); color:var(--ink); border:1.5px solid var(--line); box-shadow:var(--elev1); }
+.resetStatus{ min-height:0; margin:6px 0 10px !important; font-size:.78rem !important; color:var(--muted); }
+.resetStatus:empty{ display:none; }
+.resetConfirmLabel{ display:block; text-align:left; font-size:.82rem; color:var(--ink); font-family:var(--font-ui); margin:8px 0 6px; }
+.resetModal #resetConfirmInput{ margin-bottom:10px; text-transform:uppercase; letter-spacing:.08em; text-align:center; font-weight:800; }
+.resetModal #resetConfirmInput::placeholder{ text-transform:none; letter-spacing:0; font-weight:400; }
+button.nav.dangerSolid{ background:var(--danger); color:#fff; border:none; }
+button.nav.dangerSolid:disabled{ opacity:.4; cursor:not-allowed; box-shadow:none; }
+.resetModal .resetCancel{ margin-top:8px; background:transparent; color:var(--ink); border:1.5px solid var(--line); box-shadow:none; }

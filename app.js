@@ -2860,6 +2860,7 @@ document.addEventListener('click', e=>{
 document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeSettings(); });
 
 setInterval(()=>{
+  if(appResetting) return;
   if(document.visibilityState === 'visible'){
     try{
       const k = 'ci_time_'+todayKeyStr();
@@ -3029,8 +3030,10 @@ function exportBackup(){
     a.remove();
     setTimeout(()=> URL.revokeObjectURL(url), 2000);
     setBackupStatus('✅ Respaldo exportado (' + Object.keys(payload.data).length + ' datos).');
+    return true;
   }catch(e){
     setBackupStatus('❌ No se pudo exportar el respaldo.');
+    return false;
   }
 }
 async function importBackupFile(file){
@@ -3062,6 +3065,96 @@ document.getElementById('importFile').onchange = (e)=>{
   const f = e.target.files && e.target.files[0];
   if(f) importBackupFile(f);
 };
+
+// --- Borrar progreso ---
+// "Progress" = study data. Preferences (theme, voices, sound, reminders, daily-goal size) and the
+// Google session are always kept. The user's own cards are only deleted if they opt in.
+const RESET_PROGRESS_KEYS = [
+  'ci_xp_total', 'vocabri_xp_today', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date',
+  'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits'
+];
+const RESET_PROGRESS_PREFIXES = ['ci_master_', 'ci_time_', 'vocabri_exam_'];   // per-card progress, study minutes, exam results
+const RESET_CARD_KEYS = ['ci_custom_words', 'ci_custom_cats'];                  // only with the checkbox
+const RESET_CONFIRM_WORD = 'BORRAR';
+let appResetting = false;   // also tells the study-time timer to stop writing while we reset
+
+function isResetKey(k, includeCards){
+  if(RESET_PROGRESS_KEYS.indexOf(k) >= 0) return true;
+  if(RESET_PROGRESS_PREFIXES.some(p=> k.indexOf(p) === 0)) return true;
+  return !!includeCards && RESET_CARD_KEYS.indexOf(k) >= 0;
+}
+function resetAppData(includeCards){
+  const doomed = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && isResetKey(k, includeCards)) doomed.push(k);
+  }
+  doomed.forEach(k=> localStorage.removeItem(k));
+  return doomed.length;
+}
+function resetConfirmMatches(){
+  return document.getElementById('resetConfirmInput').value.trim().toUpperCase() === RESET_CONFIRM_WORD;
+}
+function refreshResetConfirm(){
+  document.getElementById('resetConfirmBtn').disabled = !resetConfirmMatches();
+}
+function openResetModal(){
+  closeSettings();
+  const ov = document.getElementById('resetModalOverlay');
+  document.getElementById('resetCardsChk').checked = false;
+  document.getElementById('resetConfirmInput').value = '';
+  document.getElementById('resetStatus').textContent = '';
+  refreshResetConfirm();
+  ov.style.display = 'flex';
+  const box = ov.querySelector('.resetModal');
+  if(box) box.scrollTop = 0;
+  document.getElementById('resetCancelBtn').focus();    // the safest control gets the focus
+}
+function closeResetModal(){
+  if(appResetting) return;
+  const ov = document.getElementById('resetModalOverlay');
+  ov.style.display = 'none';
+  document.getElementById('resetConfirmInput').value = '';
+  const opener = document.getElementById('settingsBtn');
+  if(opener && opener.focus){ try{ opener.focus(); }catch(e){} }
+}
+function confirmResetProgress(){
+  if(appResetting || !resetConfirmMatches()) return;
+  const includeCards = document.getElementById('resetCardsChk').checked;
+  const status = document.getElementById('resetStatus');
+  appResetting = true;
+  try{
+    resetAppData(includeCards);
+  }catch(e){
+    appResetting = false;
+    status.textContent = '❌ No se pudo borrar el progreso. Inténtalo de nuevo.';
+    return;
+  }
+  document.getElementById('resetConfirmBtn').disabled = true;
+  document.getElementById('resetCancelBtn').disabled = true;
+  document.getElementById('resetBackupBtn').disabled = true;
+  status.textContent = '✅ Progreso borrado. Reiniciando…';
+  setTimeout(()=> location.reload(), 600);   // reload so every screen starts from a clean state
+}
+document.getElementById('setResetBtn').onclick = openResetModal;
+document.getElementById('resetCancelBtn').onclick = closeResetModal;
+document.getElementById('resetConfirmBtn').onclick = confirmResetProgress;
+document.getElementById('resetConfirmInput').addEventListener('input', refreshResetConfirm);
+document.getElementById('resetConfirmInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); confirmResetProgress(); }
+});
+document.getElementById('resetBackupBtn').onclick = ()=>{
+  const ok = exportBackup();
+  document.getElementById('resetStatus').textContent = ok
+    ? '✅ Respaldo descargado. Guárdalo en un lugar seguro.'
+    : '❌ No se pudo exportar el respaldo.';
+};
+const resetOverlayEl = document.getElementById('resetModalOverlay');
+resetOverlayEl.addEventListener('click', (e)=>{ if(e.target === resetOverlayEl) closeResetModal(); });
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && resetOverlayEl.style.display === 'flex') closeResetModal();
+});
+
 
 applyTheme();
 updateSyncStatus();

@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=1.0.1">
+<link rel="stylesheet" href="styles.css?v=1.0.2">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
@@ -78,6 +78,7 @@
           <button class="nav setBtn" id="setImportBtn" type="button" style="flex:1;">⬆️ Importar (.json)</button>
         </div>
         <p class="setStatus" id="syncStatus"></p>
+        <button class="nav setBtn dangerBtn setResetBtn" id="setResetBtn" type="button">🗑️ Borrar progreso</button>
       </div>
       <div class="setSec" style="border-bottom:none; margin-bottom:0; padding-bottom:4px;">
         <button class="nav setBtn" id="termsBtn" type="button" style="width:100%; text-align:center;">📄 Términos y Condiciones</button>
@@ -422,6 +423,26 @@
     </div>
   </div>
 
+  <!-- Modal: Borrar progreso (confirmación) -->
+  <div class="gModalOverlay" id="resetModalOverlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle" aria-describedby="resetModalDesc">
+    <div class="gModal gModalWide resetModal">
+      <div class="gModalEmoji">⚠️</div>
+      <h3 id="resetModalTitle">¿Borrar todo tu progreso?</h3>
+      <p id="resetModalDesc" class="resetDesc">Se borrarán tu <strong>XP, nivel, racha, secciones desbloqueadas, exámenes y tarjetas dominadas</strong>. <strong>Esta acción no se puede deshacer.</strong></p>
+      <label class="resetOpt" for="resetCardsChk">
+        <input type="checkbox" id="resetCardsChk">
+        <span>También borrar mis tarjetas propias (Mis Tarjetas)</span>
+      </label>
+      <p class="resetKeep">Se conservan tus preferencias (tema, voces, sonido, recordatorios) y tu sesión.</p>
+      <button class="nav resetBackupBtn" id="resetBackupBtn" type="button">⬇️ Exportar respaldo primero</button>
+      <p class="resetStatus" id="resetStatus" role="status" aria-live="polite"></p>
+      <label class="resetConfirmLabel" for="resetConfirmInput">Para confirmar, escribe <strong>BORRAR</strong></label>
+      <input type="text" id="resetConfirmInput" class="search" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="BORRAR" inputmode="text">
+      <button class="nav dangerSolid" id="resetConfirmBtn" type="button" disabled>Borrar progreso</button>
+      <button class="nav resetCancel" id="resetCancelBtn" type="button">Cancelar</button>
+    </div>
+  </div>
+
 </div>
 
 <nav class="bottomNav" id="bottomNav"></nav>
@@ -430,7 +451,7 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.0.1"></script>
+<script src="app.js?v=1.0.2"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
