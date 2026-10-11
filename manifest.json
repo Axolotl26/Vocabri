@@ -13,7 +13,7 @@
   "description": "Domina frases, no solo palabras. Aplicación de aprendizaje de idiomas con tarjetas interactivas, práctica diaria y seguimiento de progreso.",
   "icons": [
     {
-      "src": "./icon_Vb",
+      "src": "./icon_Vb.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
