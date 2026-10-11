@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=1.0.1">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
@@ -142,15 +142,21 @@
         </div>
         <div class="flipHint">↻</div>
       </div>
-      <div class="rateRow" id="rateRow" style="display:none;">
-        <button class="rateBtn rateHard" id="rateHard" type="button">🔴 Difícil</button>
-        <button class="rateBtn rateGood" id="rateGood" type="button">🟡 Bien</button>
-        <button class="rateBtn rateEasy" id="rateEasy" type="button">🟢 Fácil</button>
+      <div class="actionZone" id="actionZone">
+        <button class="showAnswerBtn" id="showAnswerBtn" type="button">Mostrar respuesta</button>
+        <p class="flipCoach" id="flipCoach" style="display:none;">👆 Toca la tarjeta o el botón para ver la respuesta</p>
+        <div class="rateBlock" id="rateBlock" style="display:none;">
+          <p class="ratePrompt" id="ratePrompt">¿Qué tan bien la sabías?</p>
+          <div class="rateRow" id="rateRow">
+            <button class="rateBtn rateHard" id="rateHard" type="button"><span class="rateIcon" aria-hidden="true">😕</span><span class="rateLabel">Repasar</span><span class="rateCaption">Volverá a salir</span></button>
+            <button class="rateBtn rateGood" id="rateGood" type="button"><span class="rateIcon" aria-hidden="true">🙂</span><span class="rateLabel">Bien</span><span class="rateCaption">+10 XP</span></button>
+            <button class="rateBtn rateEasy" id="rateEasy" type="button"><span class="rateIcon" aria-hidden="true">⚡</span><span class="rateLabel">Fácil</span><span class="rateCaption">+10 XP · dominada</span></button>
+          </div>
+        </div>
       </div>
-      <div class="controls">
-        <button class="nav" id="prevBtn">← Anterior</button>
-        <button class="nav" id="shuffleBtn">Mezclar</button>
-        <button class="nav" id="nextBtn">Siguiente →</button>
+      <div class="lessonMiniRow">
+        <button class="miniBtn" id="prevBtn" type="button" aria-label="Volver a la tarjeta anterior">↩ Anterior</button>
+        <button class="miniBtn" id="shuffleBtn" type="button" style="display:none;">🔀 Mezclar</button>
       </div>
       <p class="hint">Dominadas en esta sección: <span id="masteredCount">0</span>/<span id="totalCount">0</span></p>
     </div>
@@ -381,7 +387,7 @@
         <section class="legalSection">
           <h4><span class="legalNum">1</span>Licencia y Código Abierto (Open Source)</h4>
           <p>Vocabri es una aplicación de <strong>código abierto</strong> y <strong>software libre</strong>. Su código fuente es público: puedes consultarlo, auditarlo, modificarlo y redistribuirlo conforme a los términos de la licencia incluida en el proyecto (archivo <code>LICENSE</code> del repositorio).</p>
-          <p class="legalRepo">📂 Repositorio oficial:<br><a href="https://github.com/Axolotl26/Vocabri" target="_blank" rel="noopener noreferrer">https://github.com/Axolotl26/Vocabri</a></p>
+          <p class="legalRepo">📂 Repositorio oficial:<br><a href="https://github.com/tu-usuario/vocabri" target="_blank" rel="noopener noreferrer">https://github.com/tu-usuario/vocabri</a></p>
         </section>
 
         <section class="legalSection">
@@ -424,7 +430,7 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1"></script>
+<script src="app.js?v=1.0.1"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

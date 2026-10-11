@@ -712,3 +712,45 @@ input.search:focus-visible, textarea.search:focus-visible, select.search:focus-v
 .myCardsIO .myCardsIOBtn:disabled{ opacity:.5; cursor:default; }
 .myCardsIOStatus{ text-align:left; margin:4px 0 12px; min-height:0; }
 .myCardsIOStatus:empty{ display:none; }
+
+/* ===== Study flow: one action at a time (Mostrar respuesta → calificar) ===== */
+.actionZone{ width:100%; max-width:420px; margin:14px auto 0; min-height:120px; }  /* fits both steps, so nothing below jumps */
+.showAnswerBtn{
+  position:relative; overflow:hidden; display:block; width:100%; min-height:72px;
+  border:none; border-radius:var(--radius); background:var(--primary); color:var(--on-primary);
+  font-family:var(--font-ui); font-size:1.05rem; font-weight:800; cursor:pointer;
+  box-shadow:var(--elev2); transition:transform .12s ease, box-shadow .12s ease;
+}
+.showAnswerBtn:active{ transform:scale(.98); box-shadow:none; }
+.showAnswerBtn:focus-visible{ outline:2px solid var(--secondary); outline-offset:3px; }
+.flipCoach{
+  margin:8px 0 0; text-align:center; font-size:.8rem; font-weight:700; color:var(--secondary);
+  animation:coachPulse 1.8s ease-in-out infinite;
+}
+@keyframes coachPulse{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+.rateBlock{ width:100%; }
+.ratePrompt{
+  margin:0 0 8px; text-align:center; font-size:.74rem; font-weight:800;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--muted);
+}
+.rateRow{ margin-top:0; }
+.rateBtn{
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:2px;
+  min-height:72px; padding:10px 4px 8px; line-height:1.15;   /* icons and labels line up even when a caption wraps */
+}
+.rateHard{ background:color-mix(in srgb, #EF4444 9%, var(--paper)); }
+.rateGood{ background:color-mix(in srgb, #F59E0B 11%, var(--paper)); }
+.rateEasy{ background:color-mix(in srgb, #22C55E 11%, var(--paper)); }
+.rateIcon{ font-size:1.45rem; line-height:1; }
+.rateLabel{ font-size:.9rem; font-weight:800; color:var(--ink); }
+.rateCaption{ font-size:.64rem; font-weight:700; color:var(--muted); text-align:center; }
+.lessonMiniRow{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  width:100%; max-width:420px; margin:10px auto 0;
+}
+.miniBtn{
+  background:none; border:none; padding:10px 8px; min-height:44px; border-radius:12px; cursor:pointer;
+  color:var(--muted); font-family:var(--font-ui); font-size:.82rem; font-weight:700;
+}
+.miniBtn:active{ background:var(--primary-soft); }
+.miniBtn:focus-visible{ outline:2px solid var(--secondary); outline-offset:2px; }

@@ -1360,7 +1360,6 @@ function currentLessonItems(){
 function renderCards(){
   const cat = currentCat;
   const items = currentLessonItems();
-  const allItems = (studyMode === 'freeplay') ? items : mapItemsFor(cat);
   const backBtn = document.getElementById('backToMapBtn');
   if(studyMode === 'freeplay'){
     backBtn.textContent = '← Mis Tarjetas';
@@ -1380,7 +1379,11 @@ function renderCards(){
     document.getElementById('backText').textContent = '—';
     document.getElementById('progress').textContent = 'Sin tarjetas en esta sección';
     document.getElementById('progBarFill').style.width = '0%';
-    document.getElementById('rateRow').style.display = 'none';
+    setRateUi(false);
+    document.getElementById('masteredCount').textContent = '0';
+    document.getElementById('totalCount').textContent = '0';
+    document.getElementById('showAnswerBtn').style.display = 'none';
+    document.getElementById('prevBtn').style.visibility = 'hidden';
     document.getElementById('exWrap').style.display = 'none';
     card.classList.remove('flipped');
     curKey = null;
@@ -1389,7 +1392,10 @@ function renderCards(){
   if(order.length !== items.length) order = items.map((_,i)=>i);
   idx = ((idx % items.length) + items.length) % items.length;
   card.classList.remove('flipped');
-  document.getElementById('rateRow').style.display = 'none';
+  setRateUi(false);
+  // "Mezclar" only makes sense when practising your own cards; lessons follow their fixed order.
+  document.getElementById('shuffleBtn').style.display = (studyMode === 'freeplay') ? '' : 'none';
+  document.getElementById('prevBtn').style.visibility = (idx > 0) ? 'visible' : 'hidden';
   const pos = order[idx];
   const it = items[pos];
   curKey = it[3];
@@ -1410,9 +1416,11 @@ function renderCards(){
   }
   const exEsEl = document.getElementById('exampleTextEs');
   exEsEl.textContent = it[5] ? '💬 ' + it[5] : '';
+  // "Dominadas en esta sección": progress of the section (or of your own cards in Mis Tarjetas)
   let mastered = 0;
-  allItems.forEach(x=>{ if(isMastered(x[3])) mastered++; });
+  items.forEach(x=>{ if(isMastered(x[3])) mastered++; });
   document.getElementById('masteredCount').textContent = mastered;
+  document.getElementById('totalCount').textContent = items.length;
 }
 
 function renderTable(){
@@ -2241,11 +2249,31 @@ document.getElementById('sfxToggleBtn').onclick = ()=>{
 };
 updateSfxToggleUi();
 
+// Step 1: only "Mostrar respuesta". Step 2 (card flipped): "¿Qué tan bien la sabías?" + 3 buttons.
+const FLIP_COACH_KEY = 'vocabri_flip_coach_done';
+function flipCoachSeen(){ try{ return localStorage.getItem(FLIP_COACH_KEY) === '1'; }catch(e){ return true; } }
+function setRateUi(flipped){
+  const block = document.getElementById('rateBlock');
+  const showBtn = document.getElementById('showAnswerBtn');
+  const coach = document.getElementById('flipCoach');
+  // keep keyboard focus useful when the rating buttons disappear
+  const hadFocus = block.contains(document.activeElement);
+  block.style.display = flipped ? '' : 'none';
+  showBtn.style.display = flipped ? 'none' : '';
+  coach.style.display = (!flipped && !flipCoachSeen()) ? '' : 'none';
+  if(!flipped && hadFocus) showBtn.focus({preventScroll:true});
+}
 function setFlipped(v){
   const c = document.getElementById('card');
   c.classList.toggle('flipped', v);
-  document.getElementById('rateRow').style.display = v ? 'flex' : 'none';
+  if(v){ try{ localStorage.setItem(FLIP_COACH_KEY, '1'); }catch(e){} }
+  setRateUi(v);
 }
+document.getElementById('showAnswerBtn').onclick = ()=>{
+  if(!curKey) return;
+  haptic();
+  setFlipped(true);
+};
 document.getElementById('card').onclick = ()=>{
   if(suppressCardClick){ suppressCardClick = false; return; }
   setFlipped(!document.getElementById('card').classList.contains('flipped'));
@@ -2698,12 +2726,7 @@ document.getElementById('examBackBtn').onclick = ()=>{
 document.getElementById('prevBtn').onclick = ()=>{
   const items = currentLessonItems();
   if(!items.length) return;
-  idx = (idx - 1 + items.length) % items.length; renderCards();
-};
-document.getElementById('nextBtn').onclick = ()=>{
-  const items = currentLessonItems();
-  if(!items.length) return;
-  idx = (idx + 1) % items.length; renderCards();
+  if(idx > 0){ idx -= 1; renderCards(); }
 };
 document.getElementById('shuffleBtn').onclick = ()=>{
   const items = currentLessonItems();
@@ -3051,7 +3074,7 @@ updateGameBar();
 
 // --- Material You ripple feedback (lightweight, event-delegated) ---
 document.addEventListener('pointerdown', (e)=>{
-  const el = e.target.closest('button.nav, .rateBtn, .pathNode, .examMcBtn, .navItem');
+  const el = e.target.closest('button.nav, .rateBtn, .showAnswerBtn, .pathNode, .examMcBtn, .navItem');
   if(!el) return;
   const rect = el.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height);
