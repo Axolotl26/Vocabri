@@ -1663,6 +1663,8 @@ function renderMyCardsHome(){
     practiceBtn.disabled = (n === 0);
     practiceBtn.style.opacity = (n === 0) ? .5 : 1;
   }
+  const exportCardsBtn = document.getElementById('myCardsExportBtn');
+  if(exportCardsBtn) exportCardsBtn.disabled = (n === 0);
 
   const listEl = document.getElementById('myCardsList');
   if(!listEl) return;
@@ -1757,6 +1759,142 @@ if(cardModalNewCatSaveBtn){
     }
   };
 }
+// --- Mis Tarjetas: export / import ONLY the user's own cards (.json) ---
+// File shape: { app:'vocabri', type:'custom-cards', version:1, exportedAt, count, cards:[{en, es, cat, ex?, exEs?}] }
+const MYCARDS_FILE_TYPE = 'custom-cards';
+const MYCARDS_MAX_IMPORT_BYTES = 1024 * 1024;   // 1 MB per file
+const MYCARDS_MAX_IMPORT_CARDS = 1000;          // cards per file
+const MYCARD_MAX_LEN = 300;                     // en / es / ex / exEs
+const MYCARD_MAX_CAT_LEN = 40;
+
+function setMyCardsIOStatus(msg){
+  const el = document.getElementById('myCardsIOStatus');
+  if(el) el.textContent = msg || '';
+}
+function cleanCardText(v){
+  if(typeof v !== 'string') return '';
+  return v.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function cardDedupKey(en, es){ return (en + '\u0001' + es).toLowerCase(); }
+// Returns a clean {en, es, cat, ex, exEs} or null when the entry isn't a usable card.
+function validateImportedCard(raw){
+  if(!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  if((raw.ex != null && typeof raw.ex !== 'string') || (raw.exEs != null && typeof raw.exEs !== 'string')) return null;
+  if(raw.cat != null && typeof raw.cat !== 'string') return null;
+  const en = cleanCardText(raw.en), es = cleanCardText(raw.es);
+  if(!en || !es || en.length > MYCARD_MAX_LEN || es.length > MYCARD_MAX_LEN) return null;
+  const ex = cleanCardText(raw.ex), exEs = cleanCardText(raw.exEs), cat = cleanCardText(raw.cat);
+  if(ex.length > MYCARD_MAX_LEN || exEs.length > MYCARD_MAX_LEN || cat.length > MYCARD_MAX_CAT_LEN) return null;
+  return {en, es, cat, ex, exEs};
+}
+// Existing category (case-insensitive) or a new custom label; empty → the first category.
+function resolveImportCategory(name){
+  if(!name) return allCats()[0] || 'Casual';
+  const found = allCats().find(c=> c.toLowerCase() === name.toLowerCase());
+  if(found) return found;
+  customCats.push(name);
+  try{ localStorage.setItem('ci_custom_cats', JSON.stringify(customCats)); }catch(e){}
+  return name;
+}
+function exportMyCards(){
+  if(!customWords.length){
+    setMyCardsIOStatus('Aún no tienes tarjetas propias para exportar.');
+    return;
+  }
+  try{
+    const cards = customWords.map(w=>{
+      const c = {en: w.en, es: w.es, cat: w.cat || ''};
+      if(w.ex) c.ex = w.ex;
+      if(w.exEs) c.exEs = w.exEs;
+      return c;
+    });
+    const payload = {app:'vocabri', type:MYCARDS_FILE_TYPE, version:1, exportedAt:new Date().toISOString(), count:cards.length, cards};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'vocabri-mis-tarjetas-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    setMyCardsIOStatus('✅ Se exportaron ' + cards.length + ' tarjeta' + (cards.length === 1 ? '' : 's') + '.');
+  }catch(e){
+    setMyCardsIOStatus('❌ No se pudieron exportar las tarjetas.');
+  }
+}
+async function importMyCardsFile(file){
+  const input = document.getElementById('myCardsImportFile');
+  try{
+    if(file.size > MYCARDS_MAX_IMPORT_BYTES){
+      setMyCardsIOStatus('❌ El archivo es demasiado grande (máx. 1 MB).');
+      return;
+    }
+    let payload;
+    try{ payload = JSON.parse(await file.text()); }
+    catch(e){ setMyCardsIOStatus('❌ El archivo no es un JSON válido.'); return; }
+
+    const list = Array.isArray(payload) ? payload : (payload && Array.isArray(payload.cards) ? payload.cards : null);
+    if(!list){
+      setMyCardsIOStatus(payload && payload.app === 'vocabri' && payload.data
+        ? 'ℹ️ Ese archivo es un respaldo completo de la app. Impórtalo desde Ajustes → Datos y cuenta.'
+        : '❌ El archivo no contiene una lista de tarjetas.');
+      return;
+    }
+    if(list.length > MYCARDS_MAX_IMPORT_CARDS){
+      setMyCardsIOStatus('❌ Demasiadas tarjetas en un archivo (máx. ' + MYCARDS_MAX_IMPORT_CARDS + ').');
+      return;
+    }
+
+    const seen = new Set(customWords.map(w=> cardDedupKey(w.en, w.es)));
+    const stamp = Date.now();
+    const fresh = [];
+    let duplicates = 0, invalid = 0;
+    list.forEach(raw=>{
+      const c = validateImportedCard(raw);
+      if(!c){ invalid++; return; }
+      const key = cardDedupKey(c.en, c.es);
+      if(seen.has(key)){ duplicates++; return; }
+      seen.add(key);
+      const item = {id: 'local_' + stamp + '_' + (fresh.length + 1), en: c.en, es: c.es, cat: resolveImportCategory(c.cat)};
+      if(c.ex) item.ex = c.ex;
+      if(c.exEs) item.exEs = c.exEs;
+      fresh.push(item);
+    });
+
+    if(fresh.length){
+      const merged = customWords.concat(fresh);
+      try{ localStorage.setItem('ci_custom_words', JSON.stringify(merged)); }
+      catch(e){ setMyCardsIOStatus('❌ No se pudieron guardar las tarjetas (almacenamiento lleno).'); return; }
+      customWords = merged;
+      populateCardModalCats();
+      renderMyCardsHome();
+    }
+
+    const notes = [];
+    if(duplicates) notes.push(duplicates + ' repetida' + (duplicates === 1 ? '' : 's'));
+    if(invalid) notes.push(invalid + ' inválida' + (invalid === 1 ? '' : 's'));
+    const tail = notes.length ? ' Omitidas: ' + notes.join(', ') + '.' : '';
+    if(fresh.length){
+      setMyCardsIOStatus('✅ Se importaron ' + fresh.length + ' tarjeta' + (fresh.length === 1 ? '' : 's') + '.' + tail);
+    } else if(invalid && !duplicates){
+      setMyCardsIOStatus('❌ No se encontraron tarjetas válidas (cada una necesita «en» y «es»).');
+    } else {
+      setMyCardsIOStatus('⚠️ No se agregó ninguna tarjeta nueva.' + tail);
+    }
+  }catch(e){
+    setMyCardsIOStatus('❌ No se pudo leer el archivo.');
+  }finally{
+    if(input) input.value = '';
+  }
+}
+document.getElementById('myCardsExportBtn').onclick = exportMyCards;
+document.getElementById('myCardsImportBtn').onclick = ()=> document.getElementById('myCardsImportFile').click();
+document.getElementById('myCardsImportFile').onchange = (e)=>{
+  const f = e.target.files && e.target.files[0];
+  if(f) importMyCardsFile(f);
+};
+
 // Card modal keyboard support: Enter saves (or saves the new category), Escape closes.
 const cardModalFormEl = document.getElementById('cardModalForm');
 if(cardModalFormEl){

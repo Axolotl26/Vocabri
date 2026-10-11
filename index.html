@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=1">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
@@ -20,7 +20,6 @@
     <h1 class="welcomeTitle">Vocabri</h1>
     <p class="welcomeTagline">Domina frases, no solo palabras.</p>
     <button class="nav welcomeBtn" id="welcomeStartBtn" type="button">Comenzar</button>
-    <footer class="appFooter welcomeFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
   </div>
 </div>
 <div class="wrap">
@@ -239,6 +238,12 @@
         <button class="nav" id="myCardsAddToggle" type="button" style="flex:1;">➕ Crear tarjeta</button>
         <button class="nav" id="myCardsPracticeBtn" type="button" style="flex:1;">▶️ Practicar</button>
       </div>
+      <div class="myCardsIO" role="group" aria-label="Importar o exportar tus tarjetas">
+        <button class="nav myCardsIOBtn" id="myCardsExportBtn" type="button">⬇️ Exportar tarjetas (.json)</button>
+        <button class="nav myCardsIOBtn" id="myCardsImportBtn" type="button">⬆️ Importar tarjetas (.json)</button>
+      </div>
+      <input type="file" id="myCardsImportFile" accept="application/json,.json" style="display:none;">
+      <p class="hint myCardsIOStatus" id="myCardsIOStatus" role="status" aria-live="polite"></p>
     </div>
     <div id="myCardsList" class="myCardsList"></div>
   </div>
@@ -297,6 +302,8 @@
     <p class="hint" id="backupStatus" style="text-align:left;"></p>
 
     <button class="nav dangerBtn" id="profileLogoutBtn" type="button" style="width:100%; margin-top:20px;">Cerrar sesión</button>
+
+    <footer class="appFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
   </div>
 
   <!-- Modal: Crear / Editar Tarjeta (Exclusivo de Mis Tarjetas) -->
@@ -409,7 +416,6 @@
     </div>
   </div>
 
-  <footer class="appFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
 </div>
 
 <nav class="bottomNav" id="bottomNav"></nav>
@@ -418,7 +424,7 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=1"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
