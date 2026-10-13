@@ -769,10 +769,11 @@ function sessionItemsBySessIdx(cat, sessIdx){
 // what the map actually renders and what getUnlockedStage/getCurrentStage
 // index into — "stageIdx" everywhere below means a node index here.
 const MAX_CONSECUTIVE_NORMAL = 2;
-// Exam: 12 questions = 6 multiple-choice + 4 writing + 2 pronunciation. 5 lives (hearts).
-const EXAM_QUESTIONS = 12, EXAM_MC_COUNT = 6, EXAM_WRITE_COUNT = 4, EXAM_SPEAK_COUNT = 2;
+// Exam: 12 questions = 5 multiple-choice + 3 writing + 2 dictation + 2 pronunciation. 5 lives (hearts).
+const EXAM_QUESTIONS = 12, EXAM_MC_COUNT = 5, EXAM_WRITE_COUNT = 3, EXAM_DICTATION_COUNT = 2, EXAM_SPEAK_COUNT = 2;
 const EXAM_LIVES = 5;
 const SPEAK_MATCH_THRESHOLD = 0.85; // 0..1 similarity needed between what was heard and the target phrase
+const WRITE_FUZZY_THRESHOLD = 0.85; // 0..1 similarity (Levenshtein) that still counts a typed answer as correct
 const _nodeLayoutCache = {};
 function nodeLayout(cat){
   if(_nodeLayoutCache[cat]) return _nodeLayoutCache[cat];
@@ -2341,17 +2342,170 @@ let examState = null;
 const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SPEECH_REC_SUPPORTED = !!SpeechRec;
 let examRecognition = null;
+const TTS_SUPPORTED = ('speechSynthesis' in window) && (typeof SpeechSynthesisUtterance !== 'undefined');
 
 function normalizeAnswer(s){
-  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ ]/gi,'').trim();
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ ]/gi,' ').replace(/\s+/g,' ').trim();
 }
-// Written answers: ignore "(notes)" in the target and accept any "a / b" alternative.
-function writeAnswerOk(input, target){
-  const val = normalizeAnswer(input);
-  if(!val) return false;
-  if(val === normalizeAnswer(target)) return true;
-  const variants = target.replace(/\([^)]*\)/g, ' ').split('/').map(v=> normalizeAnswer(v)).filter(Boolean);
-  return variants.indexOf(val) >= 0;
+// Levenshtein edit distance (insertions, deletions, substitutions), plain JS, O(len(a)·len(b)) time, O(min) memory.
+function calcularDistanciaLevenshtein(a, b){
+  a = String(a); b = String(b);
+  if(a === b) return 0;
+  if(!a.length) return b.length;
+  if(!b.length) return a.length;
+  if(a.length < b.length){ const t = a; a = b; b = t; }          // keep the rows as short as possible
+  let prev = new Array(b.length + 1), cur = new Array(b.length + 1);
+  for(let j=0;j<=b.length;j++) prev[j] = j;
+  for(let i=1;i<=a.length;i++){
+    cur[0] = i;
+    const ca = a.charCodeAt(i-1);
+    for(let j=1;j<=b.length;j++){
+      const cost = (ca === b.charCodeAt(j-1)) ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + cost);
+    }
+    const t = prev; prev = cur; cur = t;
+  }
+  return prev[b.length];
+}
+// Typed text → comparable text. Spanish: no accents/punctuation. English: also expands contractions (I'm = I am).
+function normalizeForCompare(s, lang){
+  return lang === 'en' ? normalizeSpeech(s) : normalizeAnswer(s);
+}
+// Every answer the target allows: each "a / b" alternative, with and without its "(notes)", and the whole text.
+function writtenVariants(target, lang){
+  const out = [], seen = new Set();
+  const add = (display, source)=>{
+    const norm = normalizeForCompare(source, lang);
+    if(norm && !seen.has(norm)){ seen.add(norm); out.push({display: display, norm: norm}); }
+  };
+  String(target).split('/').forEach(part=>{
+    const original = part.trim();
+    if(!original) return;
+    const clean = original.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').replace(/\s+([.,;:!?])/g, '$1').trim();
+    if(clean) add(clean, clean);
+    add(original, original);
+  });
+  add(String(target).trim(), target);
+  return out;
+}
+function digitsOf(s){ return (s.match(/\d+/g) || []).join(','); }
+
+// ---- Strictness layer: a TYPO is a slip inside a word; a different word is a listening / grammar error ----
+// The 85 % similarity bar alone lets "She is a doctor" pass for "He is a doctor" (93 %). On top of it,
+// every word that differs must look like a typo of the expected word, never like another word.
+const TYPO_EXACT_UP_TO = 4;      // words of up to 4 letters must be exact (he/she, ship/shop, bear/beer, gato/gata…)
+const TYPO_ONE_EDIT_UP_TO = 7;   // 5–7 letters: one slip allowed; 8+ letters: two
+const GRAMMAR_SUFFIXES = ['s', 'es', 'd', 'ed', 'ing', 'ly', 'er', 'est', 'as', 'os'];
+// Edit distance between two WORDS where swapping two neighbouring letters counts as one slip (freind → friend).
+function distanciaEdicionPalabra(a, b){
+  const m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  const d = [];
+  for(let i=0;i<=m;i++) d[i] = [i];
+  for(let j=1;j<=n;j++) d[0][j] = j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = (a[i-1] === b[j-1]) ? 0 : 1;
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + cost);
+      if(i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) d[i][j] = Math.min(d[i][j], d[i-2][j-2] + 1);
+    }
+  }
+  return d[m][n];
+}
+// plural / tense / gender endings change the meaning: apple↔apples, walk↔walked, amigo↔amiga
+function isGrammaticalVariant(a, b){
+  if(a.length > b.length){ const t = a; a = b; b = t; }           // a = the shorter one
+  if(b.startsWith(a)){
+    const suffix = b.slice(a.length);
+    if(suffix.length === 1 && a.charAt(a.length - 1) === suffix) return false;   // doubled last letter (graciass) = typing slip
+    if(GRAMMAR_SUFFIXES.indexOf(suffix) >= 0) return true;
+  }
+  if(a.length === b.length && a.length > 2){
+    const ends = a.slice(-1) + b.slice(-1);
+    if(a.slice(0, -1) === b.slice(0, -1) && (ends === 'ao' || ends === 'oa')) return true;
+    const ends2 = a.slice(-2) + '|' + b.slice(-2);
+    if(a.slice(0, -2) === b.slice(0, -2) && (ends2 === 'os|as' || ends2 === 'as|os')) return true;
+  }
+  return false;
+}
+// Every word that appears in the phrases (and the player's own cards): a typed word that IS one of
+// them but isn't the expected word is another real word, not a typo.
+const _knownWordsCache = {en:null, es:null, size:-1};
+function knownWords(lang){
+  const key = (lang === 'en') ? 'en' : 'es';
+  if(_knownWordsCache.size !== customWords.length){ _knownWordsCache.en = null; _knownWordsCache.es = null; _knownWordsCache.size = customWords.length; }
+  if(!_knownWordsCache[key]){
+    const set = new Set();
+    const col = (key === 'en') ? 0 : 1;
+    itemsFor('Todas').forEach(it=>{
+      normalizeForCompare(String(it[col] || ''), key).split(' ').forEach(w=>{ if(w) set.add(w); });
+    });
+    _knownWordsCache[key] = set;
+  }
+  return _knownWordsCache[key];
+}
+function isTypoOf(typedWord, expectedWord, lang){
+  if(typedWord === expectedWord) return true;
+  const longest = Math.max(typedWord.length, expectedWord.length);
+  if(longest <= TYPO_EXACT_UP_TO) return false;                       // short words: any change is another word
+  if(isGrammaticalVariant(typedWord, expectedWord)) return false;     // plural / tense / gender
+  if(knownWords(lang).has(typedWord)) return false;                   // it is a real, different word
+  const limit = (longest <= TYPO_ONE_EDIT_UP_TO) ? 1 : 2;
+  return distanciaEdicionPalabra(typedWord, expectedWord) <= limit;
+}
+// Same number of words, each one equal or a typo. A missing / extra word is an error; only a spacing slip
+// ("goodmorning") is forgiven.
+function wordsMatchLikeTypos(typed, expected, lang){
+  const a = typed.split(' '), b = expected.split(' ');
+  if(a.length !== b.length) return typed.replace(/ /g, '') === expected.replace(/ /g, '');
+  for(let i=0;i<a.length;i++){
+    if(!isTypoOf(a[i], b[i], lang)) return false;
+  }
+  return true;
+}
+// For very close answers that were still refused: say which word to look at.
+function describeWordDiffs(typed, expected){
+  const a = typed.split(' '), b = expected.split(' ');
+  if(a.length !== b.length) return 'falta o sobra una palabra';
+  const diffs = [];
+  for(let i=0;i<a.length;i++) if(a[i] !== b[i]) diffs.push(a[i] + ' → ' + b[i]);
+  return (diffs.length && diffs.length <= 3) ? 'revisa: ' + diffs.join(', ') : '';
+}
+
+// → { ok, exact, similarity (0..1), match (the allowed variant it was compared with, as written), hint }
+// ok = exact, or ALL of: similarity ≥ 0.85 · same numbers · every differing word is a typo (see above).
+function evaluateWrittenAnswer(input, target, lang){
+  const result = {ok:false, exact:false, similarity:0, match:null, hint:''};
+  const typed = normalizeForCompare(input, lang);
+  if(!typed) return result;
+  let best = null, bestSim = -1, accepted = null, acceptedSim = -1;
+  for(const v of writtenVariants(target, lang)){
+    if(v.norm === typed) return {ok:true, exact:true, similarity:1, match:v.display, hint:''};
+    const sim = similarity(typed, v.norm);
+    if(sim > bestSim){ bestSim = sim; best = v; }
+    if(sim + 1e-9 >= WRITE_FUZZY_THRESHOLD && sim > acceptedSim &&
+       digitsOf(typed) === digitsOf(v.norm) && wordsMatchLikeTypos(typed, v.norm, lang)){
+      accepted = v; acceptedSim = sim;
+    }
+  }
+  if(accepted){
+    result.ok = true; result.similarity = acceptedSim; result.match = accepted.display;
+  } else if(best){
+    result.similarity = bestSim; result.match = best.display;
+    if(bestSim + 1e-9 >= WRITE_FUZZY_THRESHOLD) result.hint = describeWordDiffs(typed, best.norm);
+  }
+  return result;
+}
+// Failure text with the "which word?" hint when the answer was almost right.
+function closeCallSuffix(r){ return r.hint ? ' (' + r.hint + ')' : ''; }
+// Written answers: normalise, exact match (incl. "a / b" and "(notes)"), otherwise ≥ 85 % similar AND only typos (no other word).
+function writeAnswerOk(input, target, lang){
+  return evaluateWrittenAnswer(input, target, lang || 'es').ok;
+}
+// Gentle hint when a slightly different spelling was accepted.
+function nearMissNote(r){
+  return (r.ok && !r.exact && r.match) ? '(Nota la escritura exacta: "' + r.match + '")' : '';
 }
 function pickDistractors(correctEs, count){
   const all = itemsFor('Todas').map(it=> it[1]);
@@ -2382,25 +2536,23 @@ const CONTRACTIONS = {
   "isn't":"is not", "aren't":"are not", "wasn't":"was not", "weren't":"were not",
   "haven't":"have not", "hasn't":"has not", "couldn't":"could not", "wouldn't":"would not", "shouldn't":"should not"
 };
+// Common contractions typed WITHOUT the apostrophe (phones with autocorrect off): only unambiguous forms.
+const CONTRACTIONS_NO_APOSTROPHE = {
+  "dont":"do not", "doesnt":"does not", "didnt":"did not", "cant":"cannot", "isnt":"is not", "arent":"are not",
+  "wasnt":"was not", "werent":"were not", "havent":"have not", "hasnt":"has not", "couldnt":"could not",
+  "wouldnt":"would not", "shouldnt":"should not", "im":"i am", "ive":"i have", "youre":"you are",
+  "theyre":"they are", "weve":"we have", "thats":"that is", "whats":"what is", "hows":"how is", "wheres":"where is"
+};
 function normalizeSpeech(s){
   let t = (s||'').toLowerCase().replace(/[’‘`]/g, "'");
   t = t.replace(/\b[a-z]+'[a-z]+\b/g, w => CONTRACTIONS[w] || w);
+  t = t.replace(/\b[a-z]+\b/g, w => CONTRACTIONS_NO_APOSTROPHE[w] || w);
   return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/-/g,' ').replace(/[^a-z0-9 ]+/g,'').replace(/\s+/g,' ').trim();
 }
 function similarity(a, b){
   if(a === b) return 1;
-  const m = a.length, n = b.length;
-  if(!m || !n) return 0;
-  let prev = [];
-  for(let j=0;j<=n;j++) prev[j] = j;
-  for(let i=1;i<=m;i++){
-    const cur = [i];
-    for(let j=1;j<=n;j++){
-      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
-    }
-    prev = cur;
-  }
-  return 1 - prev[n] / Math.max(m, n);
+  if(!a.length || !b.length) return 0;
+  return 1 - calcularDistanciaLevenshtein(a, b) / Math.max(a.length, b.length);
 }
 // A phrase can be read aloud if it has no [placeholders] or "..." gaps.
 function isSpeakable(it){ return !/[\[\]]|\.\.\./.test(it[0]); }
@@ -2445,14 +2597,24 @@ function startExam(cat, stageIdx){
       if(isSpeakable(it)) speakItems.push(it);
     }
   }
-  const rest = shuffledPool.filter(it=> speakItems.indexOf(it) < 0);
+  // Dictation ("Escucha y Escribe") needs speech synthesis and phrases that can be read aloud.
+  const dictationItems = [];
+  if(TTS_SUPPORTED){
+    for(const it of shuffledPool){
+      if(dictationItems.length >= EXAM_DICTATION_COUNT) break;
+      if(isSpeakable(it) && speakItems.indexOf(it) < 0) dictationItems.push(it);
+    }
+  }
+  const used = speakItems.concat(dictationItems);
+  const rest = shuffledPool.filter(it=> used.indexOf(it) < 0);
   const source = rest.length ? rest : shuffledPool;
-  const needed = EXAM_QUESTIONS - speakItems.length;
-  // If a speaking slot can't be filled (no microphone API), it is covered by multiple-choice/writing.
-  const missingSpeak = EXAM_SPEAK_COUNT - speakItems.length;
-  const mcCount = EXAM_MC_COUNT + Math.ceil(missingSpeak / 2);
+  const needed = EXAM_QUESTIONS - used.length;
+  // Slots that can't be filled (no microphone / no speech synthesis / tiny pool) become multiple-choice and writing.
+  const missing = (EXAM_SPEAK_COUNT - speakItems.length) + (EXAM_DICTATION_COUNT - dictationItems.length);
+  const mcCount = EXAM_MC_COUNT + Math.ceil(missing / 2);
   const questions = [];
   speakItems.forEach(it=> questions.push({it, mode:'speak'}));
+  dictationItems.forEach(it=> questions.push({it, mode:'dictation'}));
   for(let i=0;i<needed;i++) questions.push({it: source[i % source.length], mode: i < mcCount ? 'mc' : 'write'});
   examState = {
     cat, stageIdx, questions: shuffledCopy(questions),
@@ -2469,15 +2631,19 @@ function startExam(cat, stageIdx){
 }
 function renderExamQuestion(){
   stopExamRecognition();
+  try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
   const q = examState.questions[examState.idx];
   examState.answered = false;
   document.getElementById('examProgressText').textContent = 'Pregunta ' + (examState.idx+1) + ' de ' + examState.questions.length;
   document.getElementById('examProgBarFill').style.width = Math.round((examState.idx/examState.questions.length)*100) + '%';
-  document.getElementById('examPrompt').textContent = q.it[0];
+  // Dictation never shows the English text: the player has to listen.
+  document.getElementById('examPrompt').textContent = (q.mode === 'dictation') ? '🎧 ¿Qué dice?' : q.it[0];
   document.getElementById('examInstruction').textContent =
     q.mode === 'mc' ? 'Elige la traducción correcta' :
     q.mode === 'write' ? 'Escribe la traducción en español' :
+    q.mode === 'dictation' ? 'Escucha y escribe lo que oigas, en inglés' :
     'Di esta frase en voz alta, en inglés';
+  showExamInputHint('');
   document.getElementById('examFeedback').style.display = 'none';
   const next = document.getElementById('examNextBtn');
   next.style.display = 'none';
@@ -2485,10 +2651,12 @@ function renderExamQuestion(){
   const mcBox = document.getElementById('examMcOptions');
   const writeBox = document.getElementById('examWriteBox');
   const speakBox = document.getElementById('examSpeakBox');
+  const dictBox = document.getElementById('examDictationBox');
   mcBox.innerHTML = '';
   mcBox.style.display = 'none';
   writeBox.style.display = 'none';
   speakBox.style.display = 'none';
+  dictBox.style.display = 'none';
   if(q.mode === 'mc'){
     mcBox.style.display = '';
     const options = shuffledCopy(pickDistractors(q.it[1], 3).concat([q.it[1]]));
@@ -2501,22 +2669,31 @@ function renderExamQuestion(){
   } else if(q.mode === 'write'){
     writeBox.style.display = '';
     document.getElementById('examWriteInput').value = '';
+  } else if(q.mode === 'dictation'){
+    dictBox.style.display = '';
+    document.getElementById('examDictInput').value = '';
   } else {
     speakBox.style.display = '';
     document.getElementById('examSpeakStatus').textContent = 'Toca el micrófono y di la frase';
   }
 }
-function showExamFeedback(ok, failText){
+function showExamInputHint(msg){
+  const el = document.getElementById('examInputHint');
+  if(!el) return;
+  el.textContent = msg || '';
+  el.style.display = msg ? '' : 'none';
+}
+function showExamFeedback(ok, failText, okNote){
   const el = document.getElementById('examFeedback');
   el.style.display = '';
   el.className = 'examFeedback ' + (ok ? 'ok' : 'bad');
-  el.textContent = ok ? '✅ ¡Correcto!' : ('❌ ' + failText);
+  el.textContent = ok ? ('✅ ¡Correcto!' + (okNote ? ' ' + okNote : '')) : ('❌ ' + failText);
   const next = document.getElementById('examNextBtn');
   next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
   next.style.display = '';
 }
 // Single place where an answer is scored: sound, score, lives and feedback.
-function resolveExamAnswer(ok, failText){
+function resolveExamAnswer(ok, failText, okNote){
   if(!examState || examState.answered) return;
   examState.answered = true;
   if(ok){
@@ -2528,7 +2705,7 @@ function resolveExamAnswer(ok, failText){
     if(examState.lives <= 0) examState.failed = true;
     renderExamLives(true);
   }
-  showExamFeedback(ok, failText);
+  showExamFeedback(ok, failText, okNote);
 }
 function answerMc(btn, chosen, correct){
   if(!examState || examState.answered) return;
@@ -2543,15 +2720,58 @@ function answerMc(btn, chosen, correct){
 }
 document.getElementById('examCheckBtn').onclick = ()=>{
   if(!examState || examState.answered) return;
+  const input = document.getElementById('examWriteInput');
+  if(!input.value.trim()){ showExamInputHint('Escribe tu respuesta antes de verificar.'); input.focus(); return; }
   haptic();
   const q = examState.questions[examState.idx];
-  const ok = writeAnswerOk(document.getElementById('examWriteInput').value, q.it[1]);
+  const r = evaluateWrittenAnswer(input.value, q.it[1], 'es');
   document.getElementById('examWriteBox').style.display = 'none';
-  resolveExamAnswer(ok, 'La traducción correcta era: ' + q.it[1]);
+  showExamInputHint('');
+  resolveExamAnswer(r.ok, 'La traducción correcta era: ' + q.it[1] + closeCallSuffix(r), nearMissNote(r));
 };
 document.getElementById('examWriteInput').addEventListener('keydown', (e)=>{
   if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('examCheckBtn').click(); }
 });
+
+// --- Dictation question: "Escucha y Escribe" ---
+// Plays the English phrase (first alternative if it has "a / b"); the player types it and the same
+// flexible check used for typed translations decides.
+function dictationText(q){ return (String(q.it[0]).split('/')[0] || q.it[0]).trim(); }
+function playDictation(rate){
+  if(!examState) return;
+  const q = examState.questions[examState.idx];
+  if(!q || q.mode !== 'dictation') return;
+  haptic();
+  speak(dictationText(q), 'en-US', rate);
+}
+document.getElementById('examDictPlayBtn').onclick = ()=> playDictation();
+document.getElementById('examDictSlowBtn').onclick = ()=> playDictation(0.6);
+document.getElementById('examDictCheckBtn').onclick = ()=>{
+  if(!examState || examState.answered) return;
+  const q = examState.questions[examState.idx];
+  if(!q || q.mode !== 'dictation') return;
+  const input = document.getElementById('examDictInput');
+  if(!input.value.trim()){ showExamInputHint('Escribe lo que escuchaste antes de verificar.'); input.focus(); return; }
+  haptic();
+  try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
+  const r = evaluateWrittenAnswer(input.value, q.it[0], 'en');
+  document.getElementById('examDictationBox').style.display = 'none';
+  showExamInputHint('');
+  resolveExamAnswer(r.ok, 'La frase correcta era: «' + q.it[0] + '»' + closeCallSuffix(r), nearMissNote(r));
+};
+document.getElementById('examDictInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('examDictCheckBtn').click(); }
+});
+document.getElementById('examDictSkipBtn').onclick = ()=>{
+  if(!examState || examState.answered) return;
+  const q = examState.questions[examState.idx];
+  if(!q || q.mode !== 'dictation') return;
+  haptic();
+  try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
+  document.getElementById('examDictationBox').style.display = 'none';
+  showExamInputHint('');
+  resolveExamAnswer(false, 'Pregunta omitida. La frase era: «' + q.it[0] + '»');
+};
 
 // --- Pronunciation question (speech recognition, English) ---
 function finishExamSpeak(heardList){

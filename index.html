@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=1.0.2">
+<link rel="stylesheet" href="styles.css?v=1.0.3">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
@@ -194,6 +194,16 @@
         <p class="hint" id="examSpeakStatus" style="text-align:center;"></p>
         <button class="linkBtn" id="examSkipBtn" type="button">Omitir (cuenta como error)</button>
       </div>
+      <div id="examDictationBox" style="display:none;">
+        <div style="display:flex; gap:10px; margin:4px 0 14px;">
+          <button class="nav" id="examDictPlayBtn" type="button" style="flex:1;" aria-label="Escuchar la frase">🔊 Escuchar</button>
+          <button class="nav" id="examDictSlowBtn" type="button" style="flex:1;" aria-label="Escuchar la frase más lento">🐢 Más lento</button>
+        </div>
+        <input type="text" id="examDictInput" class="search" placeholder="Escribe lo que escuchaste, en inglés..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="en">
+        <button class="nav" id="examDictCheckBtn" type="button" style="width:100%;">Verificar</button>
+        <button class="linkBtn" id="examDictSkipBtn" type="button">Omitir (cuenta como error)</button>
+      </div>
+      <p class="hint" id="examInputHint" role="status" aria-live="polite" style="text-align:center; display:none;"></p>
       <p id="examFeedback" class="examFeedback" style="display:none;"></p>
     </div>
     <button class="nav" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
@@ -451,7 +461,7 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.0.2"></script>
+<script src="app.js?v=1.0.3"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
