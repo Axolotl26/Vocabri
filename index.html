@@ -4,19 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=1.0.3">
+<link rel="stylesheet" href="styles.css?v=1.1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <div id="welcome-screen">
   <div class="welcomeInner">
+    <img class="mascot mascot-hero" src="./assets/ajolote-hero.png" alt="Ajolote, la mascota de Vocabri" width="150" height="150">
     <h1 class="welcomeTitle">Vocabri</h1>
     <p class="welcomeTagline">Domina frases, no solo palabras.</p>
     <button class="nav welcomeBtn" id="welcomeStartBtn" type="button">Comenzar</button>
@@ -24,8 +25,11 @@
 </div>
 <div class="wrap">
   <header id="appHeader">
-    <div>
-      <h1>Vocabri</h1>
+    <div class="brand">
+      <div class="brandRow">
+        <img class="mascot mascot-brand" src="./assets/ajolote-hero.png" alt="" width="34" height="34">
+        <h1>Vocabri</h1>
+      </div>
       <p class="sub tagline">Domina frases, no solo palabras.</p>
     </div>
     <div class="headerRight">
@@ -99,7 +103,7 @@
 
   <div class="gModalOverlay" id="stageCompleteOverlay" style="display:none;">
     <div class="gModal">
-      <div class="gModalEmoji">🏁</div>
+      <div class="gModalEmoji" id="stageCompleteEmoji">🏁</div>
       <h3 id="stageCompleteTitle">¡Etapa Completada!</h3>
       <p id="stageCompleteMsg"></p>
       <button class="nav" id="stageCompleteBtn">Ver mapa</button>
@@ -165,7 +169,7 @@
 
   <div class="gModalOverlay" id="examFailOverlay" style="display:none;">
     <div class="gModal">
-      <div class="gModalEmoji">💔</div>
+      <div class="gModalEmoji" id="examFailEmoji">💔</div>
       <h3>¡Te quedaste sin vidas!</h3>
       <p>El examen se detuvo. Repasa las secciones anteriores y vuelve a intentarlo cuando quieras.</p>
       <button class="nav" id="examRetryBtn" type="button">Reintentar examen</button>
@@ -204,6 +208,7 @@
         <button class="linkBtn" id="examDictSkipBtn" type="button">Omitir (cuenta como error)</button>
       </div>
       <p class="hint" id="examInputHint" role="status" aria-live="polite" style="text-align:center; display:none;"></p>
+      <img class="mascot mascot-exam" id="examMascot" src="./assets/ajolote-happy.png" alt="" width="96" height="96" hidden>
       <p id="examFeedback" class="examFeedback" style="display:none;"></p>
     </div>
     <button class="nav" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
@@ -284,14 +289,20 @@
 
   <div id="profileView" style="display:none;">
     <div class="profileHead">
-      <div class="profileAvatar" id="profileAvatar">O</div>
+      <div class="profileAvatar" id="profileAvatar"><img class="mascot mascot-avatar" src="./assets/ajolote-hero.png" alt="" width="56" height="56"></div>
       <div class="profileWho">
         <div class="profileName" id="profileName">Tu cuenta</div>
         <div class="profileEmail" id="profileEmail">sin vincular</div>
         <div class="profileBadge" id="profileBadge">⚪ Cuenta no vinculada</div>
       </div>
     </div>
-    <button class="nav" id="profileGoogleBtn" type="button" style="width:100%; margin:14px 0;">Vincular cuenta de Google</button>
+    <button class="nav googleBtn" id="profileGoogleBtn" type="button">
+      <svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      <span id="profileGoogleBtnLabel">Iniciar sesión con Google</span>
+    </button>
+    <button class="nav cloudSyncBtn" id="cloudSyncNowBtn" type="button" hidden>☁️ Sincronizar ahora</button>
+    <p class="hint cloudStatus" id="cloudStatus" role="status" aria-live="polite"></p>
+    <p class="hint cloudHint" id="cloudHint">La sincronización es opcional: sin iniciar sesión todo se guarda solo en este dispositivo.</p>
 
     <div class="setTitle" style="margin:18px 0 8px;">Nivel y experiencia</div>
     <div class="gLevel" style="margin-bottom:6px;">
@@ -403,13 +414,14 @@
 
         <section class="legalSection">
           <h4><span class="legalNum">2</span>Privacidad y Almacenamiento Local</h4>
-          <p>Vocabri <strong>no utiliza servidores centralizados</strong> y <strong>no recopila ni rastrea datos personales</strong>. No hay analíticas ni publicidad. Tu progreso, rachas, configuración y tarjetas personalizadas se guardan <strong>únicamente en tu dispositivo</strong>, en el <code>localStorage</code> del navegador.</p>
-          <p>Algunas funciones opcionales se apoyan en servicios externos solo cuando las usas: el traductor envía el texto a MyMemory o Lingva, el reconocimiento de voz lo procesa el proveedor de tu navegador, y la tipografía y el inicio de sesión con Google se cargan desde Google. Esos servicios se rigen por sus propias políticas; Vocabri no recibe ni almacena esa información.</p>
+          <p>Vocabri <strong>no tiene servidor propio</strong> y <strong>no recopila ni rastrea datos personales</strong>. No hay analíticas ni publicidad. Por defecto, tu progreso, rachas, configuración y tarjetas personalizadas se guardan <strong>únicamente en tu dispositivo</strong>, en el <code>localStorage</code> del navegador.</p>
+          <p><strong>Sincronización opcional:</strong> solo si decides iniciar sesión con Google, tu progreso y tus tarjetas se copian a <strong>tu propia cuenta</strong> en Firebase (Google Cloud), junto con tu nombre, correo y foto de perfil, y solo tú puedes leerlos. Si no inicias sesión, no se envía nada. Al cerrar sesión se detiene la sincronización.</p>
+          <p>Otras funciones se apoyan en servicios externos solo cuando las usas: el traductor envía el texto a MyMemory o Lingva, el reconocimiento de voz lo procesa el proveedor de tu navegador y la tipografía se carga desde Google Fonts. Esos servicios se rigen por sus propias políticas; Vocabri no recibe ni almacena esa información.</p>
         </section>
 
         <section class="legalSection">
           <h4><span class="legalNum">3</span>Responsabilidad sobre Copias de Seguridad</h4>
-          <p>Como tus datos viven solo en tu dispositivo, <strong>eres responsable de exportar tu archivo JSON</strong> de respaldo (Ajustes → Datos y cuenta, o Perfil → Respaldo) <strong>antes de borrar la caché</strong> o los datos del navegador, desinstalar la app o <strong>cambiar de dispositivo</strong>. Sin servidores, Vocabri no puede recuperar un progreso que no hayas respaldado.</p>
+          <p>Si no usas la sincronización, tus datos viven solo en tu dispositivo, así que <strong>eres responsable de exportar tu archivo JSON</strong> de respaldo (Ajustes → Datos y cuenta, o Perfil → Respaldo) <strong>antes de borrar la caché</strong> o los datos del navegador, desinstalar la app o <strong>cambiar de dispositivo</strong>. Vocabri no puede recuperar un progreso que no hayas respaldado ni sincronizado; aun con sincronización activa, te recomendamos conservar un respaldo.</p>
         </section>
 
         <section class="legalSection">
@@ -457,11 +469,13 @@
 
 <nav class="bottomNav" id="bottomNav"></nav>
 
+<div class="mascotToast" id="mascotToast" aria-hidden="true"><img id="mascotToastImg" class="mascot" src="./assets/ajolote-happy.png" alt="" width="74" height="74"></div>
+
 <div class="updateBanner" id="updateBanner" role="status" aria-live="polite" hidden>
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.0.3"></script>
+<script src="app.js?v=1.1.0"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -470,6 +484,115 @@
         .catch(err => console.log('Error SW:', err));
     });
   }
+</script>
+<script type="module">
+/* =====================================================================
+   Firebase (Auth + Firestore) — sincronización en la nube OPCIONAL
+   ---------------------------------------------------------------------
+   Proyecto: vocabri-9571e
+   Completa los 3 valores "PEGA_AQUI_…" con los de tu app web:
+   Firebase Console → ⚙ Configuración del proyecto → Tus apps → SDK (Config).
+   La apiKey de Firebase Web no es un secreto: la seguridad la dan las reglas
+   de Firestore (archivo firestore.rules) y los dominios autorizados de Auth.
+   Mientras haya valores "PEGA_AQUI_…" la app funciona igual, solo con localStorage.
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "PEGA_AQUI_TU_API_KEY",
+  authDomain: "vocabri-9571e.firebaseapp.com",
+  projectId: "vocabri-9571e",
+  messagingSenderId: "PEGA_AQUI_TU_MESSAGING_SENDER_ID",
+  appId: "PEGA_AQUI_TU_APP_ID"
+};
+const FIREBASE_VERSION = '10.14.1';
+const CDN = 'https://www.gstatic.com/firebasejs/' + FIREBASE_VERSION + '/';
+let loading = null;
+
+function configIsReady(cfg){
+  return !!cfg.apiKey && !!cfg.appId && !/^PEGA_AQUI/.test(cfg.apiKey) && !/^PEGA_AQUI/.test(cfg.appId);
+}
+
+async function loadFirebase(){
+  if(window.VocabriFirebase) return window.VocabriFirebase;
+  if(loading) return loading;
+  loading = (async ()=>{
+    if(!configIsReady(firebaseConfig)){
+      throw Object.assign(new Error('Firebase sin configurar'), {code: 'vocabri/not-configured'});
+    }
+    // Offline: don't even try. A failed import() is remembered by the browser for the whole page session,
+    // so we wait for the 'online' event (app.js calls vocabriLoadFirebase again) to make the first real attempt.
+    if(navigator.onLine === false){
+      throw Object.assign(new Error('Sin conexión'), {code: 'vocabri/offline'});
+    }
+    const [appMod, authMod, fsMod] = await Promise.all([
+      import(CDN + 'firebase-app.js'),
+      import(CDN + 'firebase-auth.js'),
+      import(CDN + 'firebase-firestore.js')
+    ]);
+    const app = appMod.initializeApp(firebaseConfig);
+    const auth = authMod.getAuth(app);
+    const db = fsMod.getFirestore(app);
+    // Offline-first: Firestore keeps a local copy in IndexedDB and queues writes while offline.
+    try{ await fsMod.enableIndexedDbPersistence(db); }
+    catch(e){ console.warn('[Vocabri] Firestore sin caché offline:', e && e.code); }   // e.g. several tabs open
+
+    const provider = new authMod.GoogleAuthProvider();
+    provider.setCustomParameters({prompt: 'select_account'});
+
+    const api = {
+      auth, db,
+      onAuthStateChanged: (cb)=> authMod.onAuthStateChanged(auth, cb),
+      currentUser: ()=> auth.currentUser,
+      async signIn(){
+        try{
+          return await authMod.signInWithPopup(auth, provider);
+        }catch(e){
+          // Some embedded browsers cannot open popups: fall back to a full-page redirect.
+          if(e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')){
+            await authMod.signInWithRedirect(auth, provider);
+            return null;
+          }
+          throw e;
+        }
+      },
+      async redirectResult(){ try{ return await authMod.getRedirectResult(auth); }catch(e){ return null; } },
+      signOut: ()=> authMod.signOut(auth),
+
+      // users/{uid}  → profile of the signed-in user
+      async upsertUser(uid, profile){
+        const ref = fsMod.doc(db, 'users', uid);
+        let isNew = false;
+        try{ isNew = !(await fsMod.getDoc(ref)).exists(); }catch(e){ isNew = false; }   // offline: don't claim "new"
+        const data = Object.assign({}, profile, {app: 'vocabri', lastLoginAt: fsMod.serverTimestamp()});
+        if(isNew) data.createdAt = fsMod.serverTimestamp();
+        await fsMod.setDoc(ref, data, {merge: true});
+      },
+      // users/{uid}/progress/data → the synced progress
+      async getProgress(uid){
+        const snap = await fsMod.getDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'));
+        return snap.exists() ? snap.data() : null;
+      },
+      async setProgress(uid, payload){
+        await fsMod.setDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'),
+          Object.assign({}, payload, {updatedAt: fsMod.serverTimestamp()}));
+      },
+      async deleteProgress(uid){
+        await fsMod.deleteDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'));
+      }
+    };
+    window.VocabriFirebase = api;
+    window.dispatchEvent(new CustomEvent('vocabri-firebase-ready'));
+    return api;
+  })();
+  try{
+    return await loading;
+  }catch(e){
+    loading = null;
+    window.dispatchEvent(new CustomEvent('vocabri-firebase-unavailable', {detail: {code: (e && e.code) || '', message: String((e && e.message) || e)}}));
+    throw e;
+  }
+}
+window.vocabriLoadFirebase = loadFirebase;      // app.js retries this when the connection comes back
+loadFirebase().catch((e)=> console.warn('[Vocabri] Sincronización en la nube no disponible:', (e && e.code) || (e && e.message)));
 </script>
 </body>
 </html>

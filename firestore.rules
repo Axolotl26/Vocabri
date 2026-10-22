@@ -1,0 +1,18 @@
+rules_version = '2';
+
+// Vocabri — reglas de seguridad de Firestore (proyecto vocabri-9571e)
+// Cada usuario solo puede leer y escribir SUS propios documentos:
+//   users/{uid}                → perfil
+//   users/{uid}/progress/data  → progreso sincronizado
+// Cualquier otra ruta queda cerrada.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      match /{subcollection=**} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}

@@ -971,6 +971,7 @@ function isEtapaComplete(cat, etapaIdx){
   return true;
 }
 function showStageCompleteScreen(stageIdx, hasNext, bonus, etapaJustFinished, wasExam){
+  setMascotIn(document.getElementById('stageCompleteEmoji'), 'happy');
   const cat = currentCat;
   const L = nodeLayout(cat);
   if(wasExam){
@@ -1209,7 +1210,9 @@ function showXpFloat(amount){
   setTimeout(()=> el.remove(), 1050);
 }
 function showGameModal(emoji, title, msg){
-  document.getElementById('gModalEmoji').textContent = emoji;
+  // 'mascot:happy' shows the axolotl sticker instead of an emoji
+  if(typeof emoji === 'string' && emoji.indexOf('mascot:') === 0) setMascotIn(document.getElementById('gModalEmoji'), emoji.slice(7));
+  else document.getElementById('gModalEmoji').textContent = emoji;
   document.getElementById('gModalTitle').textContent = title;
   document.getElementById('gModalMsg').textContent = msg;
   document.getElementById('gModalOverlay').style.display = 'flex';
@@ -1258,7 +1261,7 @@ function awardXp(amount){
   if(afterLevel > beforeLevel){
     setTimeout(()=> enqueueModal(()=>{
       playSfx('levelup');
-      showGameModal('🎉', '¡Subiste de nivel!', 'Ahora eres nivel ' + afterLevel + '. ¡Sigue así!');
+      showGameModal('mascot:happy', '¡Subiste de nivel!', 'Ahora eres nivel ' + afterLevel + '. ¡Sigue así!');
     }), 450);
   }
 }
@@ -1274,12 +1277,6 @@ function collectLocalProgress(){
     if(raw) out[it[3]] = readStored(it[3]);
   });
   return out;
-}
-function updateSyncStatus(){
-  const el = document.getElementById('syncStatus');
-  const dot = document.getElementById('syncDot');
-  if(el) el.textContent = '💾 Tu progreso se guarda en este dispositivo (localStorage).';
-  if(dot) dot.style.background = '#22C55E';
 }
 function loadCustomWords(){
   try{
@@ -1967,96 +1964,6 @@ function renderProfile(){
   });
 }
 
-const GOOGLE_CLIENT_ID = "430659633987-nthqks4o9il6pb2uvcj5p3oqgtqh0o0r.apps.googleusercontent.com";
-
-function updateUserProfileUI(userData) {
-  const userNameEl = document.getElementById("profileName");
-  const userEmailEl = document.getElementById("profileEmail");
-  const userBadgeEl = document.getElementById("profileBadge");
-  const userAvatarEl = document.getElementById("profileAvatar");
-
-  if (userNameEl && userData.name) userNameEl.textContent = userData.name;
-  if (userEmailEl && userData.email) userEmailEl.textContent = userData.email;
-  if (userBadgeEl) {
-    userBadgeEl.textContent = "🟢 Conectado con Google";
-    userBadgeEl.style.color = "#16A34A";
-  }
-  if (userAvatarEl && userData.picture) {
-    userAvatarEl.innerHTML = `<img src="${userData.picture}" alt="${userData.name || 'Usuario'}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-  }
-}
-
-function handleGoogleCredentialResponse(response) {
-  try {
-    // Decodificar JWT
-    const base64Url = response.credential.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-    ).join(''));
-    
-    const userData = JSON.parse(jsonPayload);
-    console.log("Usuario autenticado:", userData);
-
-    try {
-      localStorage.setItem('vocabri_user', JSON.stringify(userData));
-    } catch(e) {}
-
-    updateUserProfileUI(userData);
-  } catch (err) {
-    console.error("Error al procesar la credencial de Google:", err);
-  }
-}
-
-function initGoogleAuth() {
-  // Restaurar sesión guardada si existe
-  try {
-    const saved = localStorage.getItem('vocabri_user');
-    if (saved) updateUserProfileUI(JSON.parse(saved));
-  } catch(e) {}
-
-  if (typeof google === "undefined" || !google.accounts || !google.accounts.id) {
-    setTimeout(initGoogleAuth, 200);
-    return;
-  }
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCredentialResponse
-  });
-  
-  // Renderizar el botón en el contenedor que ya tienes (ID: profileGoogleBtn)
-  google.accounts.id.renderButton(
-    document.getElementById("profileGoogleBtn"),
-    { theme: "outline", size: "large" }
-  );
-}
-document.getElementById('profileLogoutBtn').onclick = ()=>{
-  const b = document.getElementById('profileLogoutBtn');
-  try {
-    if (localStorage.getItem('vocabri_user')) {
-      localStorage.removeItem('vocabri_user');
-      const userNameEl = document.getElementById("profileName");
-      const userEmailEl = document.getElementById("profileEmail");
-      const userBadgeEl = document.getElementById("profileBadge");
-      const userAvatarEl = document.getElementById("profileAvatar");
-      if (userNameEl) userNameEl.textContent = "Tu cuenta";
-      if (userEmailEl) userEmailEl.textContent = "sin vincular";
-      if (userBadgeEl) {
-        userBadgeEl.textContent = "⚪ Cuenta no vinculada";
-        userBadgeEl.style.color = "";
-      }
-      if (userAvatarEl) userAvatarEl.textContent = "O";
-      const original = b.textContent;
-      b.textContent = 'Sesión cerrada';
-      setTimeout(()=>{ b.textContent = original; }, 1800);
-      return;
-    }
-  } catch(e) {}
-  const original = b.textContent;
-  b.textContent = 'No hay sesión activa que cerrar';
-  setTimeout(()=>{ b.textContent = original; }, 1800);
-};
-
 function render(rebuildNav){
   if(rebuildNav){ buildBottomNav(); buildCategoryDropdown(); }
   order = [];
@@ -2312,6 +2219,7 @@ function rateAndAdvance(level){
   if(!curKey) return;
   haptic();
   rateCard(curKey, level);
+  showMascotToast(level >= 2 ? 'happy' : 'thinking');
   if(level >= 2) awardXp(10);
   refreshStageProgressText();
   const stageJustCompleted = (level >= 2 && studyMode === 'lesson') ? checkStageCompletion() : false;
@@ -2631,6 +2539,7 @@ function startExam(cat, stageIdx){
 }
 function renderExamQuestion(){
   stopExamRecognition();
+  hideExamMascot();
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
   const q = examState.questions[examState.idx];
   examState.answered = false;
@@ -2688,6 +2597,7 @@ function showExamFeedback(ok, failText, okNote){
   el.style.display = '';
   el.className = 'examFeedback ' + (ok ? 'ok' : 'bad');
   el.textContent = ok ? ('✅ ¡Correcto!' + (okNote ? ' ' + okNote : '')) : ('❌ ' + failText);
+  showExamMascot(examMascotKind(ok, okNote));
   const next = document.getElementById('examNextBtn');
   next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
   next.style.display = '';
@@ -2868,6 +2778,7 @@ document.getElementById('examSkipBtn').onclick = ()=>{
 // --- Flow: next question / finish / out of lives ---
 function showExamFail(){
   stopExamRecognition();
+  setMascotIn(document.getElementById('examFailEmoji'), 'sad');
   document.getElementById('examFailOverlay').style.display = 'flex';
 }
 document.getElementById('examRetryBtn').onclick = ()=>{
@@ -3224,7 +3135,7 @@ document.getElementById('trSaveBtn').onclick = async ()=>{
 // --- Backup: export / import progress and custom cards (JSON) ---
 // Everything lives in localStorage under these prefixes. The Google session ("vocabri_user") is never exported.
 const BACKUP_PREFIXES = ['ci_', 'vocabri'];
-const BACKUP_EXCLUDE = ['vocabri_user'];
+const BACKUP_EXCLUDE = ['vocabri_user', 'vocabri_cloud_uid', 'vocabri_cloud_rev', 'vocabri_cloud_last_sync', 'vocabri_cloud_pending_reset', 'vocabri_cloud_signout_pending'];
 function isBackupKey(k){
   return BACKUP_PREFIXES.some(p=> k.indexOf(p) === 0) && BACKUP_EXCLUDE.indexOf(k) < 0;
 }
@@ -3354,7 +3265,17 @@ function confirmResetProgress(){
   document.getElementById('resetCancelBtn').disabled = true;
   document.getElementById('resetBackupBtn').disabled = true;
   status.textContent = '✅ Progreso borrado. Reiniciando…';
-  setTimeout(()=> location.reload(), 600);   // reload so every screen starts from a clean state
+  const reloadSoon = ()=> setTimeout(()=> location.reload(), 500);   // reload so every screen starts from a clean state
+  if(cloudUser || cloudMirrorUser()){
+    // the account copy is reset too: the next sync overwrites it instead of merging the old progress back
+    try{ localStorage.setItem(CLOUD_PENDING_RESET_KEY, '1'); }catch(e){}
+    if(cloudApi && cloudUser){
+      status.textContent = '✅ Progreso borrado. Actualizando tu cuenta…';
+      Promise.race([cloudSync({reason: 'reset'}), new Promise(r=> setTimeout(r, 6000))]).then(reloadSoon, reloadSoon);
+      return;
+    }
+  }
+  setTimeout(()=> location.reload(), 600);
 }
 document.getElementById('setResetBtn').onclick = openResetModal;
 document.getElementById('resetCancelBtn').onclick = closeResetModal;
@@ -3377,7 +3298,6 @@ document.addEventListener('keydown', (e)=>{
 
 
 applyTheme();
-updateSyncStatus();
 buildCategoryDropdown();
 document.getElementById('catSelectLabel').textContent = currentCat;
 document.getElementById('headerCatWrap').style.display = (view==='learn') ? '' : 'none';
@@ -3633,8 +3553,505 @@ function initPwaUpdates(){
 initReminders();
 initPwaUpdates();
 
-// Inicializar al cargar el script
-window.onload = () => {
-  initGoogleAuth();
+// =====================================================================
+// Mascota: Ajolote Kawaii
+// =====================================================================
+const MASCOT = {
+  happy: './assets/ajolote-happy.png', thinking: './assets/ajolote-thinking.png',
+  sad: './assets/ajolote-sad.png', scared: './assets/ajolote-scared.png', hero: './assets/ajolote-hero.png'
 };
+(function preloadMascot(){
+  Object.keys(MASCOT).forEach(k=>{ const i = new Image(); i.src = MASCOT[k]; });   // so the stickers appear instantly (and are cached offline)
+})();
+function mascotImg(kind, cls){
+  const img = document.createElement('img');
+  img.src = MASCOT[kind] || MASCOT.happy;
+  img.alt = '';
+  img.decoding = 'async';
+  img.className = 'mascot' + (cls ? ' ' + cls : '');
+  return img;
+}
+// Replaces the emoji of a modal with a sticker.
+function setMascotIn(el, kind){
+  if(!el) return;
+  el.textContent = '';
+  const img = mascotImg(kind, 'mascot-modal mascot-pop');
+  el.appendChild(img);
+}
+// Exam: one sticker per answer — correct / almost (accepted with a typo) / wrong / wrong with a single life left.
+function examMascotKind(ok, okNote){
+  if(ok) return okNote ? 'thinking' : 'happy';
+  return (examState && examState.lives === 1) ? 'scared' : 'sad';
+}
+function showExamMascot(kind){
+  const img = document.getElementById('examMascot');
+  if(!img) return;
+  img.src = MASCOT[kind] || MASCOT.happy;
+  img.hidden = false;
+  img.classList.remove('mascot-pop'); void img.offsetWidth; img.classList.add('mascot-pop');
+}
+function hideExamMascot(){
+  const img = document.getElementById('examMascot');
+  if(img){ img.hidden = true; img.classList.remove('mascot-pop'); }
+}
+// Flashcards: a quick sticker after rating (never blocks taps).
+let _mascotToastTimer = null;
+function showMascotToast(kind){
+  const box = document.getElementById('mascotToast'), img = document.getElementById('mascotToastImg');
+  if(!box || !img) return;
+  img.src = MASCOT[kind] || MASCOT.happy;
+  box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
+  clearTimeout(_mascotToastTimer);
+  _mascotToastTimer = setTimeout(()=> box.classList.remove('show'), 1150);
+}
 
+// =====================================================================
+// Cloud sync (Firebase Auth + Firestore) — OPTIONAL
+// The app is local-first: with no account, no connection or no Firebase configuration everything
+// keeps working with localStorage only.
+//   Firestore:  users/{uid}                  → profile of the signed-in user
+//               users/{uid}/progress/data    → { schema, rev, data (JSON string), count, clientUpdatedAt, updatedAt }
+// =====================================================================
+const CLOUD_UID_KEY = 'vocabri_cloud_uid';                 // account this device was last synced with
+const CLOUD_REV_KEY = 'vocabri_cloud_rev';                 // revision of the cloud document this device last saw / wrote
+const CLOUD_LAST_SYNC_KEY = 'vocabri_cloud_last_sync';
+const CLOUD_PENDING_RESET_KEY = 'vocabri_cloud_pending_reset';
+const CLOUD_SIGNOUT_PENDING_KEY = 'vocabri_cloud_signout_pending';
+// Never synced (they describe THIS device or this session)
+const CLOUD_LOCAL_ONLY_KEYS = ['vocabri_user', CLOUD_UID_KEY, CLOUD_REV_KEY, CLOUD_LAST_SYNC_KEY, CLOUD_PENDING_RESET_KEY,
+  CLOUD_SIGNOUT_PENDING_KEY, 'vocabri_reminders', 'ci_voice_en', 'ci_voice_es'];
+const CLOUD_NO_TRIGGER_PREFIXES = ['ci_time_'];             // written every 10 s: they ride along, they don't trigger a sync
+const CLOUD_DEBOUNCE_MS = 15000;
+const CLOUD_TIMEOUT_MS = 12000;
+const CLOUD_RESUME_MIN_GAP_MS = 60000;
+const CLOUD_MAX_PAYLOAD_CHARS = 900000;                     // a Firestore document holds ~1 MiB
+
+let cloudApi = null;          // window.VocabriFirebase once the SDK has loaded
+let cloudUser = null;         // { uid, name, email, picture }
+let cloudState = 'local';     // local | connecting | syncing | synced | offline | unavailable | error
+let cloudDetail = '';
+let cloudBusy = false, cloudDirty = false, cloudApplying = false, cloudTimer = null, cloudLastRun = 0;
+let cloudMessage = {text:'', cls:'', until:0};
+
+function isCloudKey(k){
+  return !!k && (k.indexOf('ci_') === 0 || k.indexOf('vocabri') === 0) && CLOUD_LOCAL_ONLY_KEYS.indexOf(k) < 0;
+}
+function collectCloudData(){
+  const out = {};
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(isCloudKey(k)) out[k] = localStorage.getItem(k);
+  }
+  return out;
+}
+function cloudWithTimeout(promise, ms){
+  return new Promise((resolve, reject)=>{
+    const t = setTimeout(()=> reject(Object.assign(new Error('timeout'), {code:'vocabri/timeout'})), ms);
+    Promise.resolve(promise).then(v=>{ clearTimeout(t); resolve(v); }, e=>{ clearTimeout(t); reject(e); });
+  });
+}
+function cloudParse(s, fallback){
+  try{ const v = JSON.parse(s); return (v === null || v === undefined) ? fallback : v; }catch(e){ return fallback; }
+}
+function cloudNum(s){ const n = parseFloat(s); return isFinite(n) ? n : 0; }
+function dayKeyNum(s){
+  const p = String(s || '').split('-').map(Number);
+  return (p.length === 3 && p.every(isFinite)) ? p[0]*10000 + p[1]*100 + p[2] : 0;
+}
+// Only plain strings under our own key prefixes are accepted from the cloud
+function sanitizeCloudObject(obj){
+  const out = {};
+  if(obj && typeof obj === 'object' && !Array.isArray(obj)){
+    Object.keys(obj).forEach(k=>{ if(isCloudKey(k) && typeof obj[k] === 'string') out[k] = obj[k]; });
+  }
+  return out;
+}
+
+// ---------- merging two copies of the progress (nothing is ever lost) ----------
+function mergeCardRecord(a, b){            // ci_master_*  {m, t, mt, lvl, next}: the most recently studied wins
+  const A = cloudParse(a, null), B = cloudParse(b, null);
+  if(!A || typeof A !== 'object') return b;
+  if(!B || typeof B !== 'object') return a;
+  const ta = Number(A.t) || 0, tb = Number(B.t) || 0;
+  if(ta !== tb) return ta > tb ? a : b;
+  return (Number(A.lvl) || 0) >= (Number(B.lvl) || 0) ? a : b;
+}
+function mergeStageMaps(a, b){             // vocabri_unlocked_stage {category: index}: the furthest one
+  const A = cloudParse(a, {}), B = cloudParse(b, {}), out = {};
+  Object.keys(A).concat(Object.keys(B)).forEach(c=>{ out[c] = Math.max(Number(A[c]) || 0, Number(B[c]) || 0); });
+  return JSON.stringify(out);
+}
+function mergeExamResult(a, b){            // vocabri_exam_*  {done, score, total, t}
+  const A = cloudParse(a, null), B = cloudParse(b, null);
+  if(!A || typeof A !== 'object') return b;
+  if(!B || typeof B !== 'object') return a;
+  const ta = Number(A.t) || 0, tb = Number(B.t) || 0;
+  if(ta !== tb) return ta > tb ? a : b;
+  return (Number(A.score) || 0) >= (Number(B.score) || 0) ? a : b;
+}
+function mergeCustomWords(a, b){           // ci_custom_words: union (by id and by text), this device first
+  const out = [], seenId = new Set(), seenText = new Set();
+  [cloudParse(a, []), cloudParse(b, [])].forEach(list=>{
+    if(!Array.isArray(list)) return;
+    list.forEach(w=>{
+      if(!w || typeof w !== 'object' || !w.en || !w.es) return;
+      const id = String(w.id), key = cardDedupKey(String(w.en).trim(), String(w.es).trim());
+      if(seenId.has(id) || seenText.has(key)) return;
+      seenId.add(id); seenText.add(key); out.push(w);
+    });
+  });
+  return JSON.stringify(out);
+}
+function mergeCustomCats(a, b){            // ci_custom_cats: union, case-insensitive
+  const out = [], seen = new Set();
+  [cloudParse(a, []), cloudParse(b, [])].forEach(list=>{
+    if(!Array.isArray(list)) return;
+    list.forEach(c=>{
+      const name = String(c || '').trim(), key = name.toLowerCase();
+      if(name && !seen.has(key)){ seen.add(key); out.push(name); }
+    });
+  });
+  return JSON.stringify(out);
+}
+function mergeCooldownState(a, b){         // vocabriProgress: the most recent cool-down wins
+  const A = cloudParse(a, null), B = cloudParse(b, null);
+  if(!A || typeof A !== 'object') return b;
+  if(!B || typeof B !== 'object') return a;
+  return (Number(A.ultimoTimestamp) || 0) >= (Number(B.ultimoTimestamp) || 0) ? a : b;
+}
+function mergeProgressData(local, cloud){
+  const out = {};
+  Object.keys(local).concat(Object.keys(cloud)).forEach(k=>{
+    if(k in out) return;
+    const a = local[k], b = cloud[k];
+    if(a === undefined){ out[k] = b; return; }
+    if(b === undefined || a === b){ out[k] = a; return; }
+    if(k === 'ci_xp_total' || k.indexOf('ci_time_') === 0) out[k] = String(Math.max(cloudNum(a), cloudNum(b)));
+    else if(k.indexOf('ci_master_') === 0) out[k] = mergeCardRecord(a, b);
+    else if(k === 'vocabri_unlocked_stage') out[k] = mergeStageMaps(a, b);
+    else if(k.indexOf('vocabri_exam_') === 0) out[k] = mergeExamResult(a, b);
+    else if(k === 'ci_custom_words') out[k] = mergeCustomWords(a, b);
+    else if(k === 'ci_custom_cats') out[k] = mergeCustomCats(a, b);
+    else if(k === 'vocabriProgress') out[k] = mergeCooldownState(a, b);
+    else if(k === 'vocabri_flip_coach_done') out[k] = (a === '1' || b === '1') ? '1' : a;
+    else out[k] = a;                       // preferences and anything else: this device wins
+  });
+  // The daily-goal counters belong together: keep the ones of the most recent study day
+  const la = local.vocabri_last_study_date, lb = cloud.vocabri_last_study_date;
+  if(la !== undefined && lb !== undefined && la !== lb){
+    const src = dayKeyNum(la) >= dayKeyNum(lb) ? local : cloud;
+    ['vocabri_last_study_date', 'vocabri_xp_today', 'vocabri_goal_celebrated_date'].forEach(k=>{
+      if(src[k] !== undefined) out[k] = src[k]; else delete out[k];
+    });
+  } else if(la !== undefined && la === lb){
+    out.vocabri_xp_today = String(Math.max(cloudNum(local.vocabri_xp_today), cloudNum(cloud.vocabri_xp_today)));
+    const ca = local.vocabri_goal_celebrated_date, cb = cloud.vocabri_goal_celebrated_date;
+    if(ca !== undefined || cb !== undefined) out.vocabri_goal_celebrated_date = (dayKeyNum(ca) >= dayKeyNum(cb)) ? ca : cb;
+  }
+  return out;
+}
+function cloudDataEqual(a, b){
+  const ka = Object.keys(a), kb = Object.keys(b);
+  return ka.length === kb.length && ka.every(k=> a[k] === b[k]);
+}
+function applyCloudData(finalData, localBefore, replaceAll){
+  let changed = false;
+  cloudApplying = true;                    // our own writes must not trigger another sync
+  try{
+    Object.keys(finalData).forEach(k=>{
+      if(localBefore[k] !== finalData[k]){ localStorage.setItem(k, finalData[k]); changed = true; }
+    });
+    if(replaceAll){
+      Object.keys(localBefore).forEach(k=>{ if(finalData[k] === undefined){ localStorage.removeItem(k); changed = true; } });
+    }
+  } finally { cloudApplying = false; }
+  return changed;
+}
+// Re-read the state the app keeps in memory (no page reload, the welcome screen doesn't come back)
+function reloadStateFromStorage(){
+  try{ const u = JSON.parse(localStorage.getItem('vocabri_unlocked_stage') || '{}'); unlockedStage = (u && typeof u === 'object') ? u : {}; }catch(e){ unlockedStage = {}; }
+  try{ vocabriProgress = Object.assign(defaultVocabriProgress(), JSON.parse(localStorage.getItem('vocabriProgress')) || {}); }catch(e){}
+  loadCustomWords();
+  try{ const c = JSON.parse(localStorage.getItem('ci_custom_cats') || '[]'); if(Array.isArray(c)) customCats = c; }catch(e){}
+  populateCardModalCats();
+  try{ sfxEnabled = localStorage.getItem('vocabri_sfx') !== '0'; updateSfxToggleUi(); }catch(e){}
+  try{
+    const t = localStorage.getItem('ci_theme') || 'vitality', m = localStorage.getItem('ci_mode') || 'auto';
+    if(THEMES[t] && (t !== themeKey || m !== modeSel)){ themeKey = t; modeSel = m; applyTheme(); }
+  }catch(e){}
+  updateGameBar();
+  if(examState) return;                    // a running exam keeps its own state; the rest refreshes on its next render
+  if(view === 'learn' && cardsSubView === 'map') buildPathMap();
+  else if(view === 'mycards') renderMyCardsHome();
+  else if(view === 'progress') renderProgress();
+  else if(view === 'profile') renderProfile();
+}
+
+// ---------- status / account UI ----------
+function relativeTime(ms){
+  const m = Math.floor(Math.max(0, Date.now() - ms) / 60000);
+  if(m < 1) return 'ahora';
+  if(m < 60) return 'hace ' + m + ' min';
+  const h = Math.floor(m / 60);
+  if(h < 24) return 'hace ' + h + ' h';
+  return 'hace ' + Math.floor(h / 24) + ' d';
+}
+function cloudMirrorUser(){
+  try{
+    const u = JSON.parse(localStorage.getItem('vocabri_user') || 'null');
+    return (u && typeof u === 'object' && (u.email || u.name)) ? u : null;
+  }catch(e){ return null; }
+}
+function cloudStatusInfo(){
+  if(cloudMessage.until > Date.now()) return {text: cloudMessage.text, cls: cloudMessage.cls};
+  if(!cloudUser && !cloudMirrorUser()) return {text:'', cls:''};
+  const state = (!cloudUser && cloudState === 'local') ? 'unavailable' : cloudState;
+  switch(state){
+    case 'connecting': return {text:'🔄 Conectando…', cls:''};
+    case 'syncing': return {text:'🔄 Sincronizando…', cls:''};
+    case 'synced': { const t = Number(localStorage.getItem(CLOUD_LAST_SYNC_KEY)) || 0; return {text:'☁️ Sincronizado ' + (t ? relativeTime(t) : 'ahora'), cls:'ok'}; }
+    case 'offline': return {text:'📴 Sin conexión · tus cambios se enviarán cuando vuelva internet', cls:'warn'};
+    case 'unavailable': return {text:'📴 Sincronización en pausa (sin conexión)', cls:'warn'};
+    case 'error': return {text:'⚠️ No se pudo sincronizar' + (cloudDetail ? ' · ' + cloudDetail : ''), cls:'bad'};
+    default: return {text:'', cls:''};
+  }
+}
+function setCloudMessage(text, cls){
+  cloudMessage = {text: text, cls: cls || '', until: Date.now() + 7000};
+  renderAccountUi();
+  setTimeout(renderAccountUi, 7100);
+}
+function setCloudState(state, detail){
+  cloudState = state; cloudDetail = detail || '';
+  renderAccountUi();
+}
+function updateSyncStatus(){
+  const el = document.getElementById('syncStatus');
+  const dot = document.getElementById('syncDot');
+  const signedIn = !!(cloudUser || cloudMirrorUser());
+  const info = cloudStatusInfo();
+  if(el) el.textContent = signedIn
+    ? ((info.text || '☁️ Cuenta vinculada') + ' · también se guarda en este dispositivo.')
+    : '💾 Tu progreso se guarda en este dispositivo (localStorage).';
+  if(dot) dot.style.background = (signedIn && info.cls === 'bad') ? '#EF4444' : (signedIn && info.cls === 'warn') ? '#F59E0B' : '#22C55E';
+}
+function renderAccountUi(){
+  const user = cloudUser || cloudMirrorUser();
+  const signedIn = !!user;
+  const set = (id, fn)=>{ const el = document.getElementById(id); if(el) fn(el); };
+  set('profileName', el=> el.textContent = signedIn ? (user.name || 'Tu cuenta') : 'Tu cuenta');
+  set('profileEmail', el=> el.textContent = signedIn ? (user.email || '') : 'sin vincular');
+  set('profileBadge', el=>{
+    el.textContent = signedIn ? '🟢 Cuenta vinculada (Google)' : '⚪ Cuenta no vinculada';
+    el.classList.toggle('linked', signedIn);
+    el.style.color = '';
+  });
+  set('profileAvatar', el=>{
+    el.textContent = '';
+    if(signedIn && user.picture && /^https:\/\//.test(user.picture)){
+      const img = document.createElement('img');
+      img.className = 'googlePhoto'; img.alt = ''; img.referrerPolicy = 'no-referrer'; img.src = user.picture;
+      img.onerror = ()=>{ el.textContent = ''; el.appendChild(mascotImg('hero', 'mascot-avatar')); };
+      el.appendChild(img);
+    } else {
+      el.appendChild(mascotImg('hero', 'mascot-avatar'));
+    }
+  });
+  set('profileGoogleBtn', el=> el.hidden = signedIn);
+  set('cloudSyncNowBtn', el=> el.hidden = !signedIn);
+  set('cloudHint', el=> el.hidden = signedIn);
+  const info = cloudStatusInfo();
+  set('cloudStatus', el=>{ el.textContent = info.text; el.className = 'hint cloudStatus' + (info.cls ? ' ' + info.cls : ''); });
+  updateSyncStatus();
+}
+
+// ---------- when something fails ----------
+function cloudFail(e){
+  const code = (e && e.code) || '';
+  if(!navigator.onLine || code === 'unavailable' || code === 'vocabri/timeout') return setCloudState('offline');
+  if(code === 'permission-denied' || code === 'unauthenticated') return setCloudState('error', 'sin permiso (revisa las reglas de Firestore)');
+  if(code === 'resource-exhausted') return setCloudState('error', 'cuota de Firebase agotada');
+  if(code === 'vocabri/too-large') return setCloudState('error', 'demasiados datos');
+  setCloudState('error', code || 'error desconocido');
+}
+
+// ---------- the sync itself ----------
+async function cloudSync(opts){
+  opts = opts || {};
+  if(!cloudApi || !cloudUser || cloudBusy) return false;
+  if(!navigator.onLine){ setCloudState('offline'); return false; }
+  cloudBusy = true; cloudDirty = false; clearTimeout(cloudTimer); cloudLastRun = Date.now();
+  setCloudState('syncing');
+  const syncBtn = document.getElementById('cloudSyncNowBtn');
+  if(syncBtn) syncBtn.disabled = true;
+  try{
+    const uid = cloudUser.uid;
+    const local = collectCloudData();
+    let remote = null;
+    try{ remote = await cloudWithTimeout(cloudApi.getProgress(uid), CLOUD_TIMEOUT_MS); }
+    catch(e){ cloudFail(e); return false; }
+
+    const pendingReset = localStorage.getItem(CLOUD_PENDING_RESET_KEY) === '1';
+    const lastUid = localStorage.getItem(CLOUD_UID_KEY), lastRev = localStorage.getItem(CLOUD_REV_KEY);
+    let finalData = local, replaceAll = false;
+    const cloudData = remote ? sanitizeCloudObject(cloudParse(remote.data, {})) : null;
+    if(remote && !pendingReset){
+      if(lastUid && lastUid !== uid && Object.keys(local).length){
+        // Another Google account on a device that already holds data
+        const combine = window.confirm('Este dispositivo ya tiene datos de otra cuenta de Vocabri.\n\nAceptar: combinarlos con la cuenta que acabas de iniciar.\nCancelar: usar solo los datos de esta cuenta (se reemplazan los de este dispositivo).');
+        if(combine) finalData = mergeProgressData(local, cloudData);
+        else { finalData = cloudData; replaceAll = true; }
+      } else if(lastUid === uid && remote.rev && remote.rev === lastRev){
+        finalData = local;                 // nobody else wrote since our last sync: this device is up to date (deletions and resets propagate)
+      } else {
+        finalData = mergeProgressData(local, cloudData);
+      }
+    }
+    const changed = applyCloudData(finalData, local, replaceAll);
+
+    const json = JSON.stringify(finalData);
+    if(json.length > CLOUD_MAX_PAYLOAD_CHARS){ cloudFail(Object.assign(new Error('too large'), {code:'vocabri/too-large'})); return false; }
+    let rev = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+    let queued = false;
+    if(remote && remote.rev && !pendingReset && cloudDataEqual(finalData, cloudData)){
+      rev = remote.rev;                                            // the account already has exactly this: no write needed
+    } else {
+      try{
+        await cloudWithTimeout(cloudApi.setProgress(uid, {schema: 1, app: 'vocabri', rev: rev, data: json, count: Object.keys(finalData).length, clientUpdatedAt: Date.now()}), CLOUD_TIMEOUT_MS);
+      }catch(e){
+        if(e && e.code === 'vocabri/timeout') queued = true;       // Firestore keeps the write and sends it when the connection returns
+        else { cloudFail(e); return false; }
+      }
+    }
+    localStorage.setItem(CLOUD_UID_KEY, uid);
+    localStorage.setItem(CLOUD_REV_KEY, rev);
+    localStorage.removeItem(CLOUD_PENDING_RESET_KEY);
+    localStorage.setItem(CLOUD_LAST_SYNC_KEY, String(Date.now()));
+    if(changed) reloadStateFromStorage();
+    setCloudState(queued ? 'offline' : 'synced');
+    return true;
+  } finally {
+    cloudBusy = false;
+    const b = document.getElementById('cloudSyncNowBtn'); if(b) b.disabled = false;
+    if(cloudDirty) scheduleCloudPush();
+  }
+}
+function scheduleCloudPush(){
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(()=>{ cloudSync({reason: 'change'}); }, CLOUD_DEBOUNCE_MS);
+}
+function cloudNoteChange(k){
+  if(cloudApplying || !cloudUser || !cloudApi || !isCloudKey(k)) return;
+  if(CLOUD_NO_TRIGGER_PREFIXES.some(p=> k.indexOf(p) === 0)) return;
+  cloudDirty = true;
+  scheduleCloudPush();
+}
+// Every write to localStorage (there are many call sites) marks the data as changed.
+function installCloudStorageHook(){
+  if(Storage.prototype.__vocabriCloudHooked) return;
+  const origSet = Storage.prototype.setItem, origRemove = Storage.prototype.removeItem;
+  Storage.prototype.setItem = function(k){ const r = origSet.apply(this, arguments); if(this === window.localStorage) cloudNoteChange(k); return r; };
+  Storage.prototype.removeItem = function(k){ const r = origRemove.apply(this, arguments); if(this === window.localStorage) cloudNoteChange(k); return r; };
+  Storage.prototype.__vocabriCloudHooked = true;
+}
+
+// ---------- authentication ----------
+function cloudUserFrom(fb){ return {uid: fb.uid, name: fb.displayName || '', email: fb.email || '', picture: fb.photoURL || ''}; }
+async function onCloudAuthChanged(fbUser){
+  if(!fbUser){
+    cloudUser = null;
+    try{ localStorage.removeItem('vocabri_user'); }catch(e){}
+    setCloudState('local');
+    return;
+  }
+  cloudUser = cloudUserFrom(fbUser);
+  try{ localStorage.setItem('vocabri_user', JSON.stringify(cloudUser)); }catch(e){}
+  setCloudState('connecting');
+  // users/{uid}: created / refreshed in the background (queued by Firestore when offline)
+  cloudApi.upsertUser(cloudUser.uid, {displayName: cloudUser.name, email: cloudUser.email, photoURL: cloudUser.picture}).catch(()=>{});
+  await cloudSync({reason: 'login'});
+}
+async function onFirebaseReady(){
+  if(cloudApi || !window.VocabriFirebase) return;
+  cloudApi = window.VocabriFirebase;
+  if(localStorage.getItem(CLOUD_SIGNOUT_PENDING_KEY) === '1'){      // the user signed out while offline
+    try{ await cloudApi.signOut(); }catch(e){}
+    try{ localStorage.removeItem(CLOUD_SIGNOUT_PENDING_KEY); }catch(e){}
+  }
+  cloudApi.redirectResult().catch(()=>{});                          // finishes a redirect-based sign-in, if there was one
+  cloudApi.onAuthStateChanged(onCloudAuthChanged);
+}
+async function cloudSignInClick(){
+  const btn = document.getElementById('profileGoogleBtn'), label = document.getElementById('profileGoogleBtnLabel');
+  const busy = (b)=>{ btn.disabled = b; label.textContent = b ? 'Conectando…' : 'Iniciar sesión con Google'; };
+  if(!cloudApi){
+    if(!navigator.onLine){ setCloudMessage('📴 Necesitas conexión a internet para iniciar sesión.', 'warn'); return; }
+    if(typeof window.vocabriLoadFirebase !== 'function'){ setCloudMessage('⚠️ El servicio de sincronización no está disponible.', 'warn'); return; }
+    busy(true);
+    try{ await window.vocabriLoadFirebase(); }
+    catch(e){
+      busy(false);
+      setCloudMessage((e && e.code === 'vocabri/not-configured')
+        ? '⚙️ La sincronización aún no está configurada en esta versión de la app.'
+        : '⚠️ No se pudo cargar el servicio de sincronización. Revisa tu conexión o reinicia la app.', 'warn');
+      return;
+    }
+    await onFirebaseReady();
+  }
+  busy(true);
+  try{ await cloudApi.signIn(); }
+  catch(e){
+    const code = (e && e.code) || '';
+    if(code !== 'auth/popup-closed-by-user' && code !== 'auth/cancelled-popup-request'){
+      setCloudMessage('⚠️ No se pudo iniciar sesión' + (code ? ' (' + code + ')' : '') + '.', 'bad');
+    }
+  } finally { busy(false); }
+}
+async function cloudLogoutClick(){
+  const b = document.getElementById('profileLogoutBtn');
+  const flash = (t)=>{ const o = b.textContent; b.textContent = t; setTimeout(()=>{ b.textContent = o; }, 1800); };
+  if(!cloudUser && !cloudMirrorUser()){ flash('No hay sesión activa que cerrar'); return; }
+  if(cloudApi && cloudUser){
+    try{ await cloudWithTimeout(cloudSync({reason: 'logout'}), 4000); }catch(e){}        // last push, best effort
+    try{ await cloudApi.signOut(); }catch(e){}
+  } else {
+    try{ localStorage.setItem(CLOUD_SIGNOUT_PENDING_KEY, '1'); }catch(e){}           // signed out offline: finish it when Firebase loads
+  }
+  cloudUser = null;
+  try{ localStorage.removeItem('vocabri_user'); }catch(e){}
+  setCloudState('local');
+  flash('Sesión cerrada');
+}
+function initCloud(){
+  installCloudStorageHook();
+  document.getElementById('profileGoogleBtn').onclick = cloudSignInClick;
+  document.getElementById('cloudSyncNowBtn').onclick = ()=> cloudSync({reason: 'manual'});
+  document.getElementById('profileLogoutBtn').onclick = cloudLogoutClick;
+  window.addEventListener('vocabri-firebase-ready', onFirebaseReady);
+  window.addEventListener('vocabri-firebase-unavailable', (e)=>{
+    cloudApi = null;
+    if(e && e.detail && e.detail.code === 'vocabri/not-configured'){
+      // No Firebase config: a leftover session copy is meaningless
+      try{ localStorage.removeItem('vocabri_user'); }catch(err){}
+      setCloudState('local');
+    } else {
+      setCloudState('unavailable');
+    }
+  });
+  if(window.VocabriFirebase) onFirebaseReady();
+  window.addEventListener('online', ()=>{
+    if(!cloudApi && typeof window.vocabriLoadFirebase === 'function') window.vocabriLoadFirebase().catch(()=>{});
+    else if(cloudUser) cloudSync({reason: 'online'});
+  });
+  window.addEventListener('offline', ()=>{ if(cloudUser) setCloudState('offline'); });
+  document.addEventListener('visibilitychange', ()=>{
+    if(!cloudUser) return;
+    if(document.hidden){ if(cloudDirty) cloudSync({reason: 'hidden'}); }
+    else if(Date.now() - cloudLastRun > CLOUD_RESUME_MIN_GAP_MS) cloudSync({reason: 'resume'});
+  });
+  setInterval(()=>{ if(cloudState === 'synced') renderAccountUi(); }, 60000);     // refreshes "hace X min"
+  renderAccountUi();
+}
+
+
+initCloud();
