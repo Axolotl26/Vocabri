@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="icon_Vb.png" alt="Vocabri Logo" width="120" height="120" />
+  <img src="ajolote-hero.png" alt="Vocabri Logo" width="120" height="120" />
 
   # Vocabri
 
