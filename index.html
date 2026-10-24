@@ -486,22 +486,17 @@
   }
 </script>
 <script type="module">
+
 /* =====================================================================
-   Firebase (Auth + Firestore) — sincronización en la nube OPCIONAL
-   ---------------------------------------------------------------------
-   Proyecto: vocabri-9571e
-   Completa los 3 valores "PEGA_AQUI_…" con los de tu app web:
-   Firebase Console → ⚙ Configuración del proyecto → Tus apps → SDK (Config).
-   La apiKey de Firebase Web no es un secreto: la seguridad la dan las reglas
-   de Firestore (archivo firestore.rules) y los dominios autorizados de Auth.
-   Mientras haya valores "PEGA_AQUI_…" la app funciona igual, solo con localStorage.
-   ===================================================================== */
+Firebase (Auth + Firestore) — sincronización en la nube OPCIONAL*/
+
 const firebaseConfig = {
-  apiKey: "PEGA_AQUI_TU_API_KEY",
+  apiKey: "AIzaSyBwLMVuzgjDmIF892N55ZI2RhdyI2k75nU",
   authDomain: "vocabri-9571e.firebaseapp.com",
   projectId: "vocabri-9571e",
-  messagingSenderId: "PEGA_AQUI_TU_MESSAGING_SENDER_ID",
-  appId: "PEGA_AQUI_TU_APP_ID"
+  storageBucket: "vocabri-9571e.appspot.com",
+  messagingSenderId: "718289834673",
+  appId: "1:718289834673:web:caa9c068ce7b27fa85c890"
 };
 const FIREBASE_VERSION = '10.14.1';
 const CDN = 'https://www.gstatic.com/firebasejs/' + FIREBASE_VERSION + '/';
