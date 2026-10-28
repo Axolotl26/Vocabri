@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.0';
+const CACHE_VERSION = '1.1.2';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -20,18 +20,18 @@ const STATE_URL = './vocabri-reminder-state.json';
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './styles.css?v=1.1.0',
-  './app.js?v=1.1.0',
+  './styles.css?v=1.1.2',
+  './app.js?v=1.1.2',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
+  './assets/origin-logo.png',
   // mascot (exam stickers, welcome screen, header) — so they also show offline
-  './assets/ajolote-hero.png',
-  './assets/ajolote-happy.png',
-  './assets/ajolote-thinking.png',
-  './assets/ajolote-sad.png',
-  './assets/ajolote-scared.png'
+  './assets/stickers/ajolotes_emociones/feliz_brazos_arriba.png',
+  './assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png',
+  './assets/stickers/ajolotes_emociones/triste_llorando.png',
+  './assets/stickers/ajolotes_emociones/asustado_manos_en_mejillas.png'
 ];
 
 // ---- Reminders (keep in sync with app.js) ----

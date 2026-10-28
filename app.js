@@ -825,25 +825,57 @@ function stageName(cat, stageIdx){
 function etapaNameForSession(cat, stageIdx){
   const n = nodeAt(cat, stageIdx);
   const L = nodeLayout(cat);
-  return (n && L.etapaNames[n.etapaIdx]) || cat;
+  const etapaName = (n && L.etapaNames[n.etapaIdx]) || cat;
+  // Si es el nombre de la categoría (sin módulos nombrados), usar label bonito
+  if (etapaName === cat && window.VocabriCategories) {
+    return window.VocabriCategories.getCategoryLabel(cat);
+  }
+  return etapaName;
 }
 function isStageComplete(cat, stageIdx){
   const n = nodeAt(cat, stageIdx);
   if(!n) return false;
   if(n.type === 'exam') return !!getExamResult(cat, stageIdx);
   const items = stageItems(cat, stageIdx);
-  return items.length > 0 && items.every(it=> readStored(it[3]).lvl >= 2);
+  // Etapa completa si TODAS las tarjetas han sido calificadas al menos una vez (lvl >= 1)
+  // El mastery (lvl >= 2) es para el SRS de repaso
+  return items.length > 0 && items.every(it=> (readStored(it[3]).lvl || 0) >= 1);
 }
+
 function buildPathMap(){
   const wrap = document.getElementById('pathWrap');
   if(!wrap) return;
+
+  // Esperar a que los datos de frases estén cargados
+  if (!window.VocabriPhraseData || !window.VocabriPhraseData.loaded) {
+    console.log('[buildPathMap] Esperando datos de frases...');
+    // Escuchar evento de carga completada
+    const waitForData = () => {
+      window.removeEventListener('vocabri:phrasesLoaded', waitForData);
+      buildPathMap(); // Reintentar
+    };
+    window.addEventListener('vocabri:phrasesLoaded', waitForData);
+    // También intentar de nuevo en 100ms por si el evento ya pasó
+    setTimeout(() => {
+      if (window.VocabriPhraseData && window.VocabriPhraseData.loaded) {
+        window.removeEventListener('vocabri:phrasesLoaded', waitForData);
+        buildPathMap();
+      }
+    }, 100);
+    return;
+  }
+
   const cat = currentCat;
   const NL = nodeLayout(cat);
   const total = stageCountFor(cat);
   const unlocked = getUnlockedStage(cat);
   const cooldownMs = cooldownRemainingMs();
   let doneCount = 0, lastEtapa = null;
-  document.getElementById('mapCatName').textContent = cat;
+  // Usar label bonito de la categoría maestra
+  const catLabel = (window.VocabriCategories && window.VocabriCategories.getCategoryLabel)
+    ? window.VocabriCategories.getCategoryLabel(cat)
+    : cat;
+  document.getElementById('mapCatName').textContent = catLabel;
   wrap.innerHTML = '';
   const posCycle = ['pos-l','pos-c','pos-r','pos-c'];
   // Iterate from the highest node down to node 1 so the DOM (and the page's
@@ -865,6 +897,7 @@ function buildPathMap(){
     const active = !locked && !done && !isCooldownNode;
     const row = document.createElement('div');
     row.className = 'pathRow ' + posCycle[i % posCycle.length];
+
     const b = document.createElement('button');
     b.type = 'button';
     const isExam = node.type === 'exam';
@@ -877,6 +910,21 @@ function buildPathMap(){
     b.disabled = locked;
     b.onclick = ()=> showLesson(cat, i);
     row.appendChild(b);
+
+    // Botón "Repasar" para secciones completadas (flotante al lado del nodo)
+    if(done && !isExam){
+      const reviewBtn = document.createElement('button');
+      reviewBtn.type = 'button';
+      reviewBtn.className = 'nodeReviewBtn';
+      reviewBtn.innerHTML = '<img class="nodeReviewIcon" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="Repasar" width="24" height="24">';
+      reviewBtn.title = 'Repasar esta sección';
+      reviewBtn.onclick = (e) => {
+        e.stopPropagation();
+        startStageReview(cat, i);
+      };
+      row.appendChild(reviewBtn);
+    }
+
     wrap.appendChild(row);
   }
   const total_items = mapItemsFor(cat).length;
@@ -919,6 +967,21 @@ function showLesson(cat, stageIdx){
   document.getElementById('myCardsView').style.display = 'none';
   document.getElementById('examView').style.display = 'none';
   renderCardsSubView();
+}
+
+// Iniciar repaso de una sección específica del mapa
+function startStageReview(cat, stageIdx){
+  // Obtener las tarjetas de esa sección
+  const items = stageItems(cat, stageIdx);
+  if(!items.length) return;
+
+  // Guardar la sección actual para el repaso
+  window.currentReviewStage = {cat, stageIdx, items};
+
+  // Cambiar a vista de repaso
+  switchView('review');
+
+  // El renderReviewView usará window.currentReviewStage si existe
 }
 function openMyCardsPractice(){
   lessonHost = 'mycards';
@@ -1024,7 +1087,7 @@ function finishExam(score, total){
   enqueueModal(()=> showStageCompleteScreen(stageIdx, hasNext, bonus, false, true));
 }
 
-let currentCat = "Casual";
+let currentCat = "general";
 let view = "learn";
 let order = [];
 let idx = 0;
@@ -1112,6 +1175,73 @@ function computeStreak(){
 }
 function todayKeyStr(){ return dayKey(new Date()); }
 const GOAL_PRESETS = {relajado:30, normal:50, serio:100, intenso:150};
+
+// ==================== REPASAR HOY (SRS) ====================
+const REVIEW_GAPS = {1:10*60*1000, 2:2*24*3600*1000, 3:10*24*3600*1000};
+
+// Obtener todas las cartas vencidas para repasar (SRS)
+function getDueCards(){
+  const now = Date.now();
+  const todayStart = new Date();
+  todayStart.setHours(0,0,0,0);
+  const todayStartMs = todayStart.getTime();
+
+  const due = [];
+  const recentlyLearned = [];
+
+  itemsFor("Todas").forEach(it=>{
+    const s = readStored(it[3]);
+    // Cartas vencidas (SRS normal)
+    if(!s.m && s.next && s.next <= now){
+      due.push({
+        ...it,
+        lvl: s.lvl,
+        next: s.next,
+        source: 'due'
+      });
+    }
+    // Cartas aprendidas hoy (lvl >= 2, rated today) - para repasar inmediatamente
+    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs){
+      recentlyLearned.push({
+        ...it,
+        lvl: s.lvl,
+        next: s.next,
+        source: 'recent'
+      });
+    }
+  });
+
+  // Ordenar: vencidas primero (más urgentes), luego recientes
+  due.sort((a,b)=> a.next - b.next);
+  recentlyLearned.sort((a,b)=> (b.t || 0) - (a.t || 0)); // más recientes primero
+
+  return [...due, ...recentlyLearned];
+}
+
+// Obtener tarjetas que vencen hoy (para badge contador)
+function getDueTodayCount(){
+  const now = Date.now();
+  const todayStart = new Date();
+  todayStart.setHours(0,0,0,0);
+  const todayStartMs = todayStart.getTime();
+  const endOfDay = new Date();
+  endOfDay.setHours(23,59,59,999);
+  const endOfDayMs = endOfDay.getTime();
+
+  let count = 0;
+  itemsFor("Todas").forEach(it=>{
+    const s = readStored(it[3]);
+    // Vencidas hoy
+    if(!s.m && s.next && s.next <= endOfDayMs){
+      count++;
+    }
+    // Aprendidas hoy (lvl >= 2, rated today)
+    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs && s.t <= endOfDayMs){
+      count++;
+    }
+  });
+  return count;
+}
 function getXpTotal(){ try{ return parseInt(localStorage.getItem('ci_xp_total')||'0',10); }catch(e){ return 0; } }
 function setXpTotal(v){ try{ localStorage.setItem('ci_xp_total', String(v)); }catch(e){} }
 // Progressive XP curve: the XP needed to clear level n (go from n to n+1)
@@ -1130,11 +1260,11 @@ function xpIntoLevel(xp){
 }
 
 function getDailyGoalTarget(){
-  try{ const v = parseInt(localStorage.getItem('vocabri_daily_goal_target')||'0',10); return v>0 ? v : 50; }
-  catch(e){ return 50; }
+  try{ const v = parseInt(localStorage.getItem('ci_daily_goal_xp')||'0',10); return v>0 ? v : 200; }
+  catch(e){ return 200; }
 }
 function setDailyGoalTarget(v){
-  try{ localStorage.setItem('vocabri_daily_goal_target', String(v)); }catch(e){}
+  try{ localStorage.setItem('ci_daily_goal_xp', String(v)); }catch(e){}
   updateGameBar();
   scheduleReminderStatePublish();
 }
@@ -1230,6 +1360,100 @@ function showDailyGoalToast(){
     setTimeout(()=>{ t.style.display = 'none'; }, 400);
   }, 3500);
 }
+
+/**
+ * Show a toast notification with optional icon
+ * @param {string} message - The message to display
+ * @param {string} [icon] - Optional emoji or mascot:state icon
+ * @param {number} [duration=3000] - Duration in ms
+ */
+function showToast(message, icon, duration = 3000){
+  const toast = document.createElement('div');
+  toast.className = 'toast toast-enter';
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    box-shadow: var(--elev2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--ink);
+    max-width: 90vw;
+  `;
+
+  if (icon) {
+    const iconEl = document.createElement('span');
+    if (icon.startsWith('mascot:')) {
+      setMascotIn(iconEl, icon.slice(7));
+      iconEl.style.width = '24px';
+      iconEl.style.height = '24px';
+      iconEl.style.flexShrink = '0';
+      // Arreglar el img interno para que no se estire
+      const img = iconEl.querySelector('img');
+      if (img) {
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        img.style.borderRadius = '0';
+      }
+    } else {
+      iconEl.textContent = icon;
+      iconEl.style.fontSize = '1.2rem';
+    }
+    toast.appendChild(iconEl);
+  }
+
+  const msgEl = document.createElement('span');
+  msgEl.textContent = message;
+  toast.appendChild(msgEl);
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('toast-enter');
+    toast.classList.add('toast-exit');
+    toast.addEventListener('animationend', () => toast.remove());
+  }, duration);
+}
+
+/**
+ * Apply button press animations to all buttons in the app
+ */
+function applyButtonAnimations() {
+  document.querySelectorAll('button:not(.no-anim)').forEach(btn => {
+    btn.addEventListener('mousedown', () => btn.classList.add('btn-press'));
+    btn.addEventListener('mouseup', () => btn.classList.remove('btn-press'));
+    btn.addEventListener('mouseleave', () => btn.classList.remove('btn-press'));
+    btn.addEventListener('touchstart', () => btn.classList.add('btn-tap'), {passive: true});
+    btn.addEventListener('touchend', () => btn.classList.remove('btn-tap'));
+    btn.addEventListener('touchcancel', () => btn.classList.remove('btn-tap'));
+  });
+}
+
+/**
+ * Apply staggered entrance animation to a container's children
+ * @param {HTMLElement} container - Container element
+ * @param {string} [selector='*'] - Selector for children to animate
+ */
+function applyStaggerAnimation(container, selector = '*') {
+  if (!container) return;
+  container.classList.add('stagger-enter');
+  // Re-apply to trigger animation on content changes
+  requestAnimationFrame(() => {
+    container.classList.remove('stagger-enter');
+    requestAnimationFrame(() => container.classList.add('stagger-enter'));
+  });
+}
+
 // Call this with the XP just earned (e.g. from your "mark card as mastered" handler).
 // Handles today's XP bookkeeping, the daily reset, and the once-per-day completion toast.
 function updateDailyGoalProgress(xpGained){
@@ -1297,20 +1521,27 @@ function addWord(en, es, cat, ex, exEs){
   return Promise.resolve(true);
 }
 
-const CAT_ICONS = {
-  'Casual': '💬', 'Universidad': '🎓', 'Programación': '💻',
-  'Inmobiliaria': '🏢', 'Espacio': '🚀'
+// Mapeo categoría → sticker representativo (carpeta: ajolotes_emociones / ajolotes_de_colores)
+const CAT_STICKERS = {
+  'Casual': { file: 'feliz_nadando_saludando.png', folder: 'ajolotes_emociones' },
+  'Universidad': { file: 'lector_con_gafas_y_estrellas.png', folder: 'ajolotes_emociones' },
+  'Programación': { file: 'detective_lupa_sonriente.png', folder: 'ajolotes_emociones' },
+  'Inmobiliaria': { file: 'brazos_abiertos_para_abrazo.png', folder: 'ajolotes_emociones' },
+  'Espacio': { file: 'ajolote_azul_marino_con_estrella.png', folder: 'ajolotes_de_colores' }
 };
-function iconFor(cat){ return CAT_ICONS[cat] || '⭐'; }
+function iconFor(cat){
+  const info = CAT_STICKERS[cat] || { file: 'ajolote_arcoiris_holografico.png', folder: 'ajolotes_de_colores' };
+  return '<img class="catSticker" src="./assets/stickers/' + info.folder + '/' + info.file + '" alt="' + cat + '" width="28" height="28">';
+}
 function selectCategory(cat){
+  // Legacy function for DATA categories (used by custom categories, etc.)
   currentCat = cat;
   idx = 0; order = [];
-  buildCategoryDropdown();
-  document.getElementById('catSelectLabel').textContent = cat;
-  document.getElementById('catDropdown').hidden = true;
+  selectFocusCategory(cat);
   cardsSubView = 'map';
   renderCardsSubView();
 }
+
 function buildBottomNav(){
   const el = document.getElementById('bottomNav');
   if(!el) return;
@@ -1319,34 +1550,83 @@ function buildBottomNav(){
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'navItem' + (it.id===view ? ' active' : '');
-    b.innerHTML = '<span class="navIcon">' + it.icon + '</span><span>' + it.label + '</span>';
+
+    // Render sticker image instead of emoji
+    const iconHtml = it.icon.startsWith('./')
+      ? '<img class="navIcon navSticker" src="' + it.icon + '" alt="" width="28" height="28">'
+      : '<span class="navIcon">' + it.icon + '</span>';
+
+    b.innerHTML = iconHtml + '<span>' + it.label + '</span>';
+    if (it.id === 'review') {
+      const badge = document.createElement('span');
+      badge.className = 'navBadge';
+      badge.id = 'reviewNavBadge';
+      b.appendChild(badge);
+    }
     b.onclick = ()=> switchView(it.id);
     el.appendChild(b);
   });
+  // Update review badge after building
+  updateReviewBadge();
 }
-function buildCategoryDropdown(){
-  const el = document.getElementById('catDropdown');
-  if(!el) return;
-  el.innerHTML = '';
-  realCats.forEach(c=>{
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'catOpt' + (c===currentCat ? ' sel' : '');
-    b.innerHTML = '<span>' + iconFor(c) + '</span><span>' + c + '</span>';
-    b.onclick = ()=> selectCategory(c);
-    el.appendChild(b);
-  });
+// ============================================================
+// NUEVO SISTEMA: 5 CATEGORÍAS MAESTRAS
+// ============================================================
+
+// Obtiene las categorías maestras válidas desde localStorage o usa todas
+function getMasterCategories() {
+  try {
+    const stored = localStorage.getItem('ci_master_categories');
+    if (stored) return JSON.parse(stored);
+  } catch (e) {}
+  // Fallback: todas las 5 categorías
+  return ['general', 'travel', 'academic', 'business', 'pop'];
 }
-document.getElementById('catSelectBtn').onclick = (e)=>{
-  e.stopPropagation();
-  const dd = document.getElementById('catDropdown');
-  dd.hidden = !dd.hidden;
-};
-document.addEventListener('click', (e)=>{
-  const dd = document.getElementById('catDropdown');
-  if(!dd || dd.hidden) return;
-  if(!dd.contains(e.target) && e.target.id !== 'catSelectBtn') dd.hidden = true;
-});
+
+// Guarda las categorías maestras en localStorage
+function setMasterCategories(cats) {
+  localStorage.setItem('ci_master_categories', JSON.stringify(cats));
+}
+
+// Selecciona una categoría maestra directamente (sin mapeo intermedio)
+function selectFocusCategory(masterCatId) {
+  // Validar que sea una categoría maestra válida
+  if (!window.VocabriCategories || !window.VocabriCategories.isValidCategory(masterCatId)) {
+    console.warn('[selectFocusCategory] Categoría no válida:', masterCatId);
+    masterCatId = 'general';
+  }
+
+  currentCat = masterCatId;
+  idx = 0; order = [];
+
+  // Mostrar el label de la categoría maestra en el botón del panel de ajustes
+  let label = masterCatId;
+  if (window.VocabriCategories) {
+    label = window.VocabriCategories.getCategoryShortLabel(masterCatId);
+  }
+  const selectorLabel = document.getElementById('catSelectorLabel');
+  if (selectorLabel) selectorLabel.textContent = label;
+
+  // Actualizar selección visual en el panel de ajustes
+  updateCatSelector();
+
+  // Cerrar el selector de categorías
+  const catSelector = document.getElementById('catSelector');
+  if (catSelector) catSelector.hidden = true;
+
+  // Persistir la categoría elegida
+  localStorage.setItem('ci_current_master_category', masterCatId);
+
+  // Establecer el nodo inicial si es la primera vez (ci_start_node se aplica una sola vez)
+  const startNode = parseInt(localStorage.getItem('ci_start_node') || '0', 10);
+  if (startNode > 0) {
+    setUnlockedStage(currentCat, startNode);
+    localStorage.removeItem('ci_start_node'); // Solo aplicar una vez
+  }
+
+  cardsSubView = 'map';
+  renderCardsSubView();
+}
 
 function freeplayItems(){
   return customWords.map(w=> [w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]);
@@ -1449,6 +1729,182 @@ function dayLabel(d){
 }
 function dayKey(d){
   return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+}
+
+// ==================== VISTA REPASAR HOY ====================
+let reviewCards = [];
+let reviewIdx = 0;
+let reviewOrder = [];
+
+function renderReviewView(){
+  // Verificar si hay una sección específica para repasar (desde el mapa)
+  const stageReview = window.currentReviewStage;
+
+  if(stageReview && stageReview.items && stageReview.items.length > 0){
+    // Usar las tarjetas de esa sección específica
+    reviewCards = stageReview.items.map(it => [...it]);
+    reviewOrder = reviewCards.map((_,i)=>i);
+    reviewIdx = 0;
+
+    // Limpiar para que no se repita
+    window.currentReviewStage = null;
+  } else {
+    // Repaso general (SRS + aprendidas hoy)
+    reviewCards = getDueCards();
+    reviewOrder = reviewCards.map((_,i)=>i);
+    reviewIdx = 0;
+  }
+
+  const emptyEl = document.getElementById('reviewEmpty');
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progressEl = document.getElementById('reviewProgress');
+  const progFill = document.getElementById('reviewProgBarFill');
+
+  if(reviewCards.length === 0){
+    emptyEl.style.display = '';
+    cardEl.style.display = 'none';
+    actionZone.style.display = 'none';
+    progressEl.style.display = 'none';
+    document.getElementById('reviewCount').textContent = '0 tarjetas para repasar';
+    // Back button handler for empty state
+    document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
+    document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  cardEl.style.display = '';
+  actionZone.style.display = '';
+  progressEl.style.display = '';
+
+  // Mostrar indicador si es repaso de sección específica
+  const countEl = document.getElementById('reviewCount');
+  if(stageReview){
+    countEl.textContent = `Repasando: ${stageReview.items.length} tarjetas de la sección`;
+  } else {
+    countEl.textContent = reviewCards.length + ' tarjetas para repasar';
+  }
+
+  // Back button handler
+  document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
+  document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+
+  showReviewCard();
+  updateReviewBadge();
+}
+
+function showReviewCard(){
+  if(reviewIdx >= reviewOrder.length){
+    // Sesión terminada
+    finishReviewSession();
+    return;
+  }
+
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progFill = document.getElementById('reviewProgBarFill');
+
+  cardEl.classList.remove('flipped');
+  document.getElementById('reviewRateBlock').style.display = 'none';
+  document.getElementById('reviewShowAnswerBtn').style.display = '';
+
+  progFill.style.width = Math.round((reviewIdx / reviewOrder.length) * 100) + '%';
+
+  const orderIdx = reviewOrder[reviewIdx];
+  const item = reviewCards[orderIdx];
+  const key = item[3];
+
+  // Actualizar textos
+  document.getElementById('reviewFrontText').textContent = item[0]; // EN
+  document.getElementById('reviewBackText').textContent = item[1]; // ES
+
+  // Guardar key actual
+  window.currentReviewKey = key;
+
+  // Botón mostrar respuesta
+  document.getElementById('reviewShowAnswerBtn').onclick = () => {
+    cardEl.classList.add('flipped');
+    document.getElementById('reviewShowAnswerBtn').style.display = 'none';
+    document.getElementById('reviewRateBlock').style.display = '';
+  };
+
+  // Botones de rating
+  setupReviewRateButtons();
+}
+
+function setupReviewRateButtons(){
+  const buttons = [
+    {id: 'reviewRateGood', level: 2},
+    {id: 'reviewRateEasy', level: 3}
+  ];
+
+  buttons.forEach(btn => {
+    const el = document.getElementById(btn.id);
+    if(el) el.onclick = () => rateReviewCard(btn.level);
+  });
+}
+
+function rateReviewCard(level){
+  const key = window.currentReviewKey;
+  if(!key) return;
+
+  // Actualizar SRS
+  rateCard(key, level);
+
+  // XP
+  const xpGain = level === 1 ? 0 : (level === 2 ? 10 : 10);
+  if(xpGain > 0) awardXp(xpGain);
+
+  // Siguiente carta
+  reviewIdx++;
+  showReviewCard();
+}
+
+function finishReviewSession(){
+  const emptyEl = document.getElementById('reviewEmpty');
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progressEl = document.getElementById('reviewProgress');
+
+  emptyEl.style.display = '';
+  cardEl.style.display = 'none';
+  actionZone.style.display = 'none';
+  progressEl.style.display = 'none';
+  document.getElementById('reviewCount').textContent = 'Sesión completada';
+
+  emptyEl.querySelector('p').textContent = '¡Repaso completado!';
+  emptyEl.querySelector('.hint').textContent = 'Has repasado todas las tarjetas pendientes.';
+
+  // Botón volver al mapa
+  document.getElementById('reviewEmptyLearnBtn').onclick = () => {
+    switchView('learn');
+  };
+
+  // Actualizar badge del navbar
+  updateReviewBadge();
+}
+
+function updateReviewBadge(){
+  const count = getDueTodayCount();
+  const badge = document.getElementById('reviewNavBadge');
+  if(badge){
+    if(count > 0){
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.style.display = '';
+    }else{
+      badge.style.display = 'none';
+    }
+  }
+}
+
+// Actualizar badge al cambiar vista
+const originalSwitchView = switchView;
+function switchView(v){
+  originalSwitchView(v);
+  if(v === 'review'){
+    updateReviewBadge();
+  }
 }
 
 function renderProgress(){
@@ -1686,9 +2142,11 @@ function renderMyCardsHome(){
     return;
   }
 
-  customWords.forEach(w=>{
+  customWords.forEach((w, idx)=>{
     const item = document.createElement('div');
     item.className = 'myCardItem';
+    // Stagger index for entrance animation
+    item.style.setProperty('--i', idx + 1);
 
     const content = document.createElement('div');
     content.className = 'myCardContent';
@@ -1953,10 +2411,11 @@ function renderProfile(){
 
   const grid = document.getElementById('rewardsGrid');
   grid.innerHTML = '';
-  REWARDS.forEach(r=>{
+  REWARDS.forEach((r, idx)=>{
     const unlocked = lvl >= r.lvl;
     const el = document.createElement('div');
     el.className = 'rewardItem' + (unlocked ? '' : ' locked');
+    el.style.setProperty('--i', idx + 1);
     el.innerHTML = '<div class="rewardIcon">' + (unlocked ? r.icon : '🔒') + '</div>' +
       '<div class="rewardName">' + r.name + '</div>' +
       '<div class="rewardLvl">Niv. ' + r.lvl + '</div>';
@@ -1964,8 +2423,79 @@ function renderProfile(){
   });
 }
 
+function renderProfileThemeGrid(){
+  const themeGrid = document.getElementById('profileThemeGrid');
+  if(!themeGrid) return;
+
+  const currentTheme = themeKey;
+  const currentMode = modeSel;
+
+  themeGrid.innerHTML = '';
+
+  Object.entries(THEMES).forEach(([key, theme])=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'themeOpt' + (key === currentTheme ? ' sel' : '');
+    btn.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 8px; border-radius:var(--radius); border:2px solid var(--line); background:var(--paper); cursor:pointer; transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;';
+
+    // Theme sticker
+    const stickerPath = getThemeStickerPath(key);
+    const stickerHtml = '<img class="themeSticker" src="'+stickerPath+'" alt="'+theme.name+'" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">';
+
+    btn.innerHTML = stickerHtml + '<span style="font-size:var(--text-xs); font-weight:700; color:var(--ink); text-align:center;">' + theme.name + '</span>';
+
+    if(key === currentTheme){
+      btn.style.borderColor = 'var(--primary)';
+      btn.style.boxShadow = '0 0 0 2px var(--primary-soft)';
+    }
+
+    btn.onclick = () => {
+      themeKey = key;
+      try{ localStorage.setItem('ci_theme', key); }catch(e){}
+      applyTheme();
+      renderProfileThemeGrid(); // re-render to update selection
+    };
+
+    themeGrid.appendChild(btn);
+  });
+
+  // Add mode selector (light/dark/auto)
+  const modeContainer = document.createElement('div');
+  modeContainer.style.cssText = 'grid-column:1/-1; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:8px;';
+
+  const modes = [
+    { key: 'auto', label: 'Auto', emoji: '🤖' },
+    { key: 'light', label: 'Claro', emoji: '☀️' },
+    { key: 'dark', label: 'Oscuro', emoji: '🌙' }
+  ];
+
+  modes.forEach(m => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'themeOpt' + (m.key === currentMode ? ' sel' : '');
+    btn.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 16px; border-radius:var(--radius); border:2px solid var(--line); background:var(--paper); cursor:pointer; transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;';
+    btn.innerHTML = '<span style="font-size:20px;">' + m.emoji + '</span>' + '<span style="font-size:var(--text-sm); font-weight:700; color:var(--ink);">' + m.label + '</span>';
+
+    if(m.key === currentMode){
+      btn.style.borderColor = 'var(--primary)';
+      btn.style.boxShadow = '0 0 0 2px var(--primary-soft)';
+    }
+
+    btn.onclick = () => {
+      modeSel = m.key;
+      try{ localStorage.setItem('ci_mode', m.key); }catch(e){}
+      applyTheme();
+      renderProfileThemeGrid(); // re-render to update selection
+    };
+
+    modeContainer.appendChild(btn);
+  });
+
+  themeGrid.appendChild(modeContainer);
+}
+
 function render(rebuildNav){
-  if(rebuildNav){ buildBottomNav(); buildCategoryDropdown(); }
+  if(rebuildNav){ buildBottomNav(); updateCatSelector(); }
   order = [];
   idx = 0;
   if(view === "learn"){ renderCardsSubView(); }
@@ -2196,7 +2726,36 @@ document.getElementById('exToggle').onclick = (e)=>{
 
 function afterRate(){
   const items = currentLessonItems();
-  if(items.length){ idx = (idx + 1) % items.length; }
+  if(!items.length) return;
+
+  // Verificar si estamos en la última tarjeta
+  const atEnd = idx >= items.length - 1;
+
+  if(atEnd){
+    // Al final de la lección: verificar si la etapa está completa
+    const cat = currentCat;
+    const stageIdx = getCurrentStage(cat);
+
+    if(isStageComplete(cat, stageIdx)){
+      // Etapa completa - checkStageCompletion ya se encarga del modal
+      // (se llama desde rateAndAdvance cuando level >= 2)
+      // Pero si llegamos aquí con level=1, forzar la verificación
+      if(studyMode === 'lesson'){
+        checkStageCompletion();
+      }
+      return;
+    } else {
+      // Etapa NO completa - parar en la última tarjeta
+      // Mostrar indicador de que hay tarjetas pendientes
+      idx = items.length - 1;
+      renderCards();
+      showToast('Algunas tarjetas necesitan más práctica. Repasa las marcadas como "Repasar".', 'mascot:thinking');
+      return;
+    }
+  }
+
+  // No estamos al final: avanzar normalmente
+  idx = (idx + 1) % items.length;
   renderCards();
 }
 // Single entry point for rating a card: only this path (button press or a
@@ -2867,28 +3426,74 @@ document.getElementById('shuffleBtn').onclick = ()=>{
 };
 document.getElementById('search').oninput = renderTable;
 
+// Sticker paths for navbar icons (fresh stickers, correct folders)
+const NAV_STICKERS = {
+  learn: './assets/stickers/ajolotes_emociones/detective_investigando.png',           // 🔍 Investigando/Aprendiendo
+  review: './assets/stickers/ajolotes_emociones/sonriendo_sentado.png',                // 😊 Repaso tranquilo
+  mycards: './assets/stickers/ajolotes_emociones/chef_probando_la_receta.png',         // 👨‍🍳 Colección de recetas
+  translator: './assets/stickers/ajolotes_de_colores/ajolote_amarillo_flotando_sonriente.png', // 🌊 Fluyendo entre idiomas
+  progress: './assets/stickers/ajolotes_emociones/tranquilo_meditando.png',            // 🧘 Progreso/calma
+  profile: './assets/stickers/ajolotes_emociones/enamorado_ojos_de_corazon.png'        // 😍 Perfil/identidad
+};
+
 const MAIN_NAV_ITEMS = [
-  {id:'learn', icon:'🗺️', label:'Aprender'},
-  {id:'mycards', icon:'🎴', label:'Mis Tarjetas'},
-  {id:'translator', icon:'🌐', label:'Traductor'},
-  {id:'progress', icon:'📊', label:'Progreso'},
-  {id:'profile', icon:'👤', label:'Perfil'}
+  {id:'learn', icon: NAV_STICKERS.learn, label:'Aprender'},
+  {id:'review', icon: NAV_STICKERS.review, label:'Repasar'},
+  {id:'mycards', icon: NAV_STICKERS.mycards, label:'Mis Tarjetas'},
+  {id:'translator', icon: NAV_STICKERS.translator, label:'Traductor'},
+  {id:'progress', icon: NAV_STICKERS.progress, label:'Progreso'},
+  {id:'profile', icon: NAV_STICKERS.profile, label:'Perfil'}
 ];
+
 function switchView(v){
-  view = v;
-  const panels = {learn:'cardsView', mycards:'myCardsView', translator:'translatorView', progress:'progressView', profile:'profileView'};
-  Object.keys(panels).forEach(k=>{
-    document.getElementById(panels[k]).style.display = (k===v) ? '' : 'none';
-  });
-  document.getElementById('lessonView').style.display = 'none';
-  document.getElementById('tableView').style.display = 'none';
-  document.getElementById('examView').style.display = 'none';
-  document.getElementById('headerCatWrap').style.display = (v==='learn') ? '' : 'none';
-  buildBottomNav();
-  if(v==='learn'){ cardsSubView='map'; renderCardsSubView(); }
-  else if(v==='mycards') renderMyCardsHome();
-  else if(v==='progress') renderProgress();
-  else if(v==='profile') renderProfile();
+  const panels = {learn:'cardsView', review:'reviewView', mycards:'myCardsView', translator:'translatorView', progress:'progressView', profile:'profileView'};
+  const currentPanel = panels[view];
+  const nextPanel = panels[v];
+
+  // Core DOM switch — instant, sin animaciones, sin colas
+  const doSwitch = () => {
+    // 1) Visibilidad de paneles principales
+    Object.keys(panels).forEach(k => {
+      const el = document.getElementById(panels[k]);
+      if (el) el.style.display = (k === v) ? '' : 'none';
+    });
+    // 2) Vistas auxiliares siempre ocultas al cambiar pestaña principal
+    document.getElementById('lessonView').style.display = 'none';
+    document.getElementById('tableView').style.display = 'none';
+    document.getElementById('examView').style.display = 'none';
+    // headerCatWrap removed - category selector moved to settings panel
+
+    // 3) Estado interno + render
+    view = v;
+    buildBottomNav();
+    if(v==='learn'){ cardsSubView='map'; renderCardsSubView(); }
+    else if(v==='review'){ renderReviewView(); }
+    else if(v==='mycards') renderMyCardsHome();
+    else if(v==='progress') renderProgress();
+    else if(v==='profile') renderProfile();
+
+    // 4) Auto-scroll SÍNCRONO al panel NUEVO (cada panel es su propio scroll container)
+    if (v !== 'learn') {
+      const activePanel = document.getElementById(nextPanel);
+      if (activePanel) activePanel.scrollTo(0, 0);
+    } else {
+      scrollToActiveMapNode();
+    }
+  };
+
+  doSwitch();
+}
+
+// Función para hacer scroll al nodo activo del mapa
+function scrollToActiveMapNode(){
+  const wrap = document.getElementById('pathWrap');
+  if(!wrap) return;
+  const target = wrap.querySelector('.pathNode.active') ||
+                 wrap.querySelector('.pathNode.seccion-cooldown') ||
+                 wrap.querySelector('.pathNode:not(.locked)');
+  if(target){
+    target.scrollIntoView({block:'center', behavior:'smooth'});
+  }
 }
 
 // Custom category labels (for Mis Tarjetas only; they never become map categories)
@@ -2906,6 +3511,9 @@ populateCardModalCats();
 
 // --- Configuración y temas ---
 const THEMES = {
+  axolotl:{name:'Ajolote Rosa', tag:'Dulce y motivador',
+    light:{bg:'#FFF0F5', paper:'#FFFFFF', primary:'#EC4899', secondary:'#F472B6', ink:'#1E1B4B'},
+    dark:{bg:'#2D0A1E', paper:'#3D1A2E', primary:'#F472B6', secondary:'#F9A8D4', ink:'#FDF2F8'}},
   vitality:{name:'Vitality', tag:'Energía y enfoque',
     light:{bg:'#F8F9FB', paper:'#FFFFFF', primary:'#FF6B35', secondary:'#00A8E8', ink:'#1E293B'},
     dark:{bg:'#0F172A', paper:'#1E293B', primary:'#FF8C61', secondary:'#38BDF8', ink:'#F1F5F9'}},
@@ -2919,9 +3527,9 @@ const THEMES = {
     light:{bg:'#F5F3FF', paper:'#FFFFFF', primary:'#6366F1', secondary:'#10B981', ink:'#1E1B4B'},
     dark:{bg:'#09090B', paper:'#18181B', primary:'#818CF8', secondary:'#34D399', ink:'#F4F4F5'}}
 };
-let themeKey = 'vitality', modeSel = 'auto';
-try{ themeKey = localStorage.getItem('ci_theme') || 'vitality'; modeSel = localStorage.getItem('ci_mode') || 'auto'; }catch(e){}
-if(!THEMES[themeKey]) themeKey = 'vitality';
+let themeKey = 'axolotl', modeSel = 'auto';
+try{ themeKey = localStorage.getItem('ci_theme') || 'axolotl'; modeSel = localStorage.getItem('ci_mode') || 'auto'; }catch(e){}
+if(!THEMES[themeKey]) themeKey = 'axolotl';
 if(['auto','light','dark'].indexOf(modeSel) < 0) modeSel = 'auto';
 const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 function resolvedMode(){ return modeSel === 'auto' ? ((mq && mq.matches) ? 'dark' : 'light') : modeSel; }
@@ -2946,6 +3554,20 @@ function applyTheme(){
   r.style.setProperty('--danger', m === 'dark' ? '#FF8A75' : '#C0392B');
   renderThemeList();
 }
+// Mapeo de tema → sticker de ajolote de color (carpeta: ajolotes_de_colores)
+const THEME_STICKERS = {
+  axolotl: 'ajolote_rosa_brazos_abiertos.png',
+  vitality: 'ajolote_rojo_caminando_saludando.png', // rojo/naranja para vitality
+  emerald: 'ajolote_verde_bailando.png',
+  sunset: 'ajolote_dorado_brillante.png', // dorado para sunset
+  indigo: 'ajolote_morado_pensativo.png'
+};
+
+function getThemeStickerPath(themeKey) {
+  const filename = THEME_STICKERS[themeKey] || 'ajolote_rosa_brazos_abiertos.png';
+  return './assets/stickers/ajolotes_de_colores/' + filename;
+}
+
 function renderThemeList(){
   const box = document.getElementById('themeList');
   box.innerHTML = '';
@@ -2954,7 +3576,8 @@ function renderThemeList(){
     const t = THEMES[k], c = t[m];
     const b = document.createElement('button');
     b.className = 'themeOpt' + (k === themeKey ? ' sel' : '');
-    b.innerHTML = '<span class="sw"><i style="background:'+c.bg+'"></i><i style="background:'+c.primary+'"></i><i style="background:'+c.secondary+'"></i></span>' +
+    const stickerPath = getThemeStickerPath(k);
+    b.innerHTML = '<span class="themeStickerWrap"><img class="themeSticker" src="'+stickerPath+'" alt="'+t.name+'" loading="lazy"></span>' +
                   '<span class="tn">'+t.name+'<small>'+t.tag+'</small></span>';
     b.onclick = ()=>{ themeKey = k; try{ localStorage.setItem('ci_theme', k); }catch(e){} applyTheme(); };
     box.appendChild(b);
@@ -2972,16 +3595,108 @@ if(mq){
 const sBtn = document.getElementById('settingsBtn');
 const sPanel = document.getElementById('settingsPanel');
 function closeSettings(){ sPanel.hidden = true; sBtn.setAttribute('aria-expanded', 'false'); }
+
+function updateCatSelector(){
+  const current = currentCat;
+  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
+    b.classList.toggle('sel', b.dataset.cat === current);
+  });
+}
+
+function initCatSelector(){
+  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
+    b.onclick = ()=> selectFocusCategory(b.dataset.cat);
+  });
+}
+
 sBtn.onclick = (e)=>{
   e.stopPropagation();
   const opening = sPanel.hidden;
   sPanel.hidden = !opening;
   sBtn.setAttribute('aria-expanded', String(opening));
+  if (opening) {
+    sPanel.scrollTo(0, 0); // auto-scroll top
+    updateCatSelector(); // refresh category selector
+  }
 };
+
+initCatSelector(); // attach category selector handlers
+
+// News/Changelog panel
+const APP_VERSION = '1.1.2';
+const APP_CHANGELOG = [
+  { version: '1.1.2', date: '2026-10-28', title: '5 Categorías maestras + Onboarding renovado', changes: [
+    'Nuevo sistema de 5 categorías: General, Viajes, Académico, Negocios, Pop/Gaming',
+    'Onboarding completo con selector de meta XP, nivel, enfoque y tema visual',
+    'Carga dinámica de frases desde JSON externo (phraseLoader.js)',
+    'Registro de categorías centralizado (categoriesRegistry.js)'
+  ]},
+  { version: '1.1.1', date: '2026-10-15', title: 'Correcciones y mejoras de estabilidad', changes: [
+    'Fix en phraseLoader: carga correcta de frases al iniciar',
+    'Sincronización del dropdown de categoría en header',
+    'Tema y onboarding persistentes entre sesiones',
+    'Metas diarias realistas y reinicio total funcional',
+    'Auto-scroll en mapa y ajolote por defecto'
+  ]},
+  { version: '1.1.0', date: '2026-10-02', title: 'Mapa de progreso + SRS + Exámenes', changes: [
+    'Mapa de etapas con nodos desbloqueables y exámenes',
+    'Sistema SRS (Repetición Espaciada) para repasar tarjetas',
+    'Exámenes por etapa con vidas y tipos de preguntas variados',
+    'Racha diaria, meta XP configurable, nivel de usuario'
+  ]},
+  { version: '1.0.0', date: '2026-09-18', title: 'Lanzamiento inicial', changes: [
+    'Tarjetas de vocabulario con volteo 3D',
+    'Práctica con calificación (Repasar/Bien/Fácil)',
+    'Estadísticas, racha, exportar/importar datos',
+    'PWA instalable con service worker'
+  ]}
+];
+
+const nBtn = document.getElementById('newsBtn');
+const nPanel = document.getElementById('newsPanel');
+function closeNews(){ nPanel.hidden = true; nBtn.setAttribute('aria-expanded', 'false'); }
+function populateNews(){
+  document.getElementById('newsCurrentVersion').innerHTML =
+    '<span class="newsVersionLabel">Versión actual</span><span class="newsVersionNumber">' + APP_VERSION + '</span>';
+  const changelogEl = document.getElementById('newsChangelog');
+  changelogEl.innerHTML = APP_CHANGELOG.map(entry => `
+    <div class="newsEntry">
+      <div class="newsEntryVersion">v${entry.version} <span class="newsEntryDate">${entry.date}</span></div>
+      <div class="newsEntryTitle">${entry.title}</div>
+      <ul class="newsEntryChanges">${entry.changes.map(c => '<li>' + c + '</li>').join('')}</ul>
+    </div>
+  `).join('');
+}
+nBtn.onclick = (e)=>{
+  e.stopPropagation();
+  const opening = nPanel.hidden;
+  nPanel.hidden = !opening;
+  nBtn.setAttribute('aria-expanded', String(opening));
+  if (opening) {
+    nPanel.scrollTo(0, 0);
+    populateNews();
+  }
+};
+document.getElementById('newsCloseBtn').onclick = closeNews;
+document.addEventListener('click', e=>{
+  if(nPanel.hidden) return;
+  const path = e.composedPath ? e.composedPath() : [];
+  const inside = path.length ? path.indexOf(nPanel) >= 0 : nPanel.contains(e.target);
+  if(!inside) closeNews();
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeNews(); });
 document.getElementById('themesBtn').onclick = ()=>{
   const box = document.getElementById('themesBox');
   box.hidden = !box.hidden;
 };
+
+document.getElementById('catSelectorBtn').onclick = ()=>{
+  const box = document.getElementById('catSelector');
+  const opening = box.hidden;
+  box.hidden = !opening;
+  if (opening) updateCatSelector();
+};
+
 document.addEventListener('click', e=>{
   if(sPanel.hidden) return;
   const path = e.composedPath ? e.composedPath() : [];
@@ -3016,7 +3731,119 @@ setInterval(()=>{
 
 document.getElementById('welcomeStartBtn').onclick = ()=>{
   document.getElementById('welcome-screen').style.display = 'none';
+  // Si ya hay idioma guardado, saltar a onboarding/aprendizaje
+  const savedLang = localStorage.getItem('vocabri_language');
+  if (savedLang) {
+    switchView('learn');
+  } else {
+    document.getElementById('languageView').style.display = 'flex';
+  }
 };
+
+// Language card handlers
+document.querySelectorAll('.langCard').forEach(card => {
+  card.addEventListener('click', () => {
+    const lang = card.dataset.lang;
+    if (lang === 'ja') {
+      // Japonés - mostrar toast "Próximamente"
+      showToast('🇯🇵 ¡Japonés estará disponible muy pronto!', '', 3000);
+      return;
+    }
+    // Inglés - mostrar onboarding
+    localStorage.setItem('vocabri_language', 'en');
+    document.getElementById('languageView').style.display = 'none';
+    showOnboardingView();
+  });
+});
+
+function showOnboardingView() {
+  const ov = document.getElementById('onboardingView');
+  ov.style.display = 'flex';
+  ov.scrollTo(0, 0); // auto-scroll top
+  // Marcar opciones por defecto visualmente Y en los hidden inputs
+  document.querySelector('.xpOption[data-xp="200"]').classList.add('selected');
+  document.querySelector('.levelOption[data-level="beginner"]').classList.add('selected');
+  document.querySelector('.focusOption[data-focus="general"]').classList.add('selected');
+  document.querySelector('.themeOption[data-theme="axolotl"]').classList.add('selected');
+  document.getElementById('selectedXp').value = '200';
+  document.getElementById('selectedLevel').value = 'beginner';
+  document.getElementById('selectedFocus').value = 'general';
+  document.getElementById('selectedTheme').value = 'axolotl';
+}
+
+// Onboarding option handlers
+function setActiveOption(containerSelector, optionSelector, hiddenInputId, selectedClass = 'selected', onSelect) {
+  document.querySelectorAll(containerSelector + ' ' + optionSelector).forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll(containerSelector + ' ' + optionSelector).forEach(b => b.classList.remove(selectedClass));
+      btn.classList.add(selectedClass);
+      const val = btn.dataset.xp || btn.dataset.level || btn.dataset.focus || btn.dataset.theme;
+      document.getElementById(hiddenInputId).value = val;
+      if (onSelect) onSelect(val);
+    });
+  });
+}
+
+// XP options
+setActiveOption('.xpOptions', '.xpOption', 'selectedXp');
+// Level options
+setActiveOption('.levelOptions', '.levelOption', 'selectedLevel');
+// Focus options (ahora son categorías maestras)
+setActiveOption('.focusOptions', '.focusOption', 'selectedFocus');
+// Theme options
+setActiveOption('.themeOptions', '.themeOption', 'selectedTheme', 'selected', (theme) => {
+  themeKey = theme;
+  applyTheme();
+});
+
+// Onboarding start button
+document.getElementById('onboardingStartBtn').addEventListener('click', () => {
+  const xp = parseInt(document.getElementById('selectedXp').value, 10);
+  const level = document.getElementById('selectedLevel').value;
+  const masterCat = document.getElementById('selectedFocus').value; // ahora es categoría maestra directa
+  const theme = document.getElementById('selectedTheme').value; // tema visual seleccionado
+
+  localStorage.setItem('ci_daily_goal_xp', xp);
+  localStorage.setItem('ci_user_level', level);
+  localStorage.setItem('ci_user_focus', masterCat); // guardar categoría maestra elegida
+  localStorage.setItem('ci_theme', theme); // guardar tema visual elegido
+  localStorage.setItem('onboardingDone', 'true');
+
+  // Aplicar el tema inmediatamente
+  themeKey = theme;
+  applyTheme();
+
+  // Guardar las 5 categorías maestras para el dropdown y el mapa
+  const masterCategories = ['general', 'travel', 'academic', 'business', 'pop'];
+  setMasterCategories(masterCategories);
+
+  // Establecer la categoría maestra elegida como actual
+  currentCat = masterCat;
+  localStorage.setItem('ci_current_master_category', masterCat);
+
+  // Actualizar el label del selector de categorías inmediatamente
+  let label = masterCat;
+  if (window.VocabriCategories) {
+    label = window.VocabriCategories.getCategoryShortLabel(masterCat);
+  }
+  const labelEl = document.getElementById('catSelectorLabel');
+  if (labelEl) labelEl.textContent = label;
+
+  // Establecer el nodo inicial según el nivel
+  const startNode = (window.VocabriCategories && window.VocabriCategories.getStartNode)
+    ? window.VocabriCategories.getStartNode(level)
+    : 0;
+  localStorage.setItem('ci_start_node', String(startNode));
+
+  // Aplicar inmediatamente el nodo inicial para la sesión actual
+  setUnlockedStage(currentCat, startNode);
+
+  // Actualizar el selector de categoría en el panel de ajustes
+  updateCatSelector();
+
+  document.getElementById('onboardingView').style.display = 'none';
+  switchView('learn');
+});
 
 // --- Translator (free public APIs via fetch: MyMemory first, Lingva as fallback) ---
 const TR_MAX_CHARS = 500;      // MyMemory's per-request limit
@@ -3167,6 +3994,529 @@ function exportBackup(){
     return false;
   }
 }
+
+function shareProgressCard(){
+  const statusEl = document.getElementById('shareStatus');
+  if(!statusEl) return;
+  statusEl.textContent = 'Generando tarjeta...';
+
+  // Obtener TODOS los datos de progreso
+  const xpTotal = parseInt(localStorage.getItem('ci_xp_total') || '0', 10);
+  const streak = parseInt(localStorage.getItem('vocabri_streak') || '0', 10);
+  const mastered = parseInt(localStorage.getItem('vocabri_mastered') || '0', 10);
+  const level = Math.floor(xpTotal / 100) + 1;
+  const xpInLevel = xpTotal % 100;
+  const activeDays = parseInt(localStorage.getItem('vocabri_active_days') || '0', 10);
+  const userName = localStorage.getItem('vocabri_user_name') || 'Usuario';
+  const userEmail = localStorage.getItem('vocabri_user_email') || '';
+  const userPhoto = localStorage.getItem('vocabri_user_photo') || ''; // URL de foto de Google
+
+  // Stats adicionales
+  const totalLearned = parseInt(localStorage.getItem('vocabri_total_learned') || '0', 10);
+  const currentCategory = localStorage.getItem('ci_category') || 'Casual';
+  const totalXpToday = parseInt(localStorage.getItem('vocabri_xp_today') || '0', 10);
+  const dailyGoal = parseInt(localStorage.getItem('ci_daily_goal') || '50', 10);
+
+  // Detectar tema actual (light/dark)
+  const isDark = document.documentElement.classList.contains('dark') ||
+                 window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Colores Material You
+  const colors = isDark ? {
+    surface: '#1C1C1E',
+    surfaceContainer: '#2C2C2E',
+    surfaceContainerHigh: '#3A3A3C',
+    onSurface: '#F5F5F4',
+    onSurfaceVariant: '#CAC4D0',
+    primary: '#D0BCFF',
+    onPrimary: '#381E72',
+    primaryContainer: '#4F378B',
+    onPrimaryContainer: '#EADDFF',
+    secondary: '#CCC2DC',
+    onSecondary: '#332D41',
+    secondaryContainer: '#4A4458',
+    onSecondaryContainer: '#E8DEF8',
+    tertiary: '#D8BCFF',
+    onTertiary: '#381E72',
+    outline: '#79747E',
+    outlineVariant: '#49454F',
+    shadow: 'rgba(0,0,0,0.4)',
+    xpGold: '#F9D56E',
+    success: '#A5D6A7',
+    error: '#EF9A9A'
+  } : {
+    surface: '#FFFFFF',
+    surfaceContainer: '#F5F5F4',
+    surfaceContainerHigh: '#E7E0EC',
+    onSurface: '#1C1B1F',
+    onSurfaceVariant: '#49454F',
+    primary: '#6750A4',
+    onPrimary: '#FFFFFF',
+    primaryContainer: '#EADDFF',
+    onPrimaryContainer: '#21005D',
+    secondary: '#625B71',
+    onSecondary: '#FFFFFF',
+    secondaryContainer: '#E8DEF8',
+    onSecondaryContainer: '#1D192B',
+    tertiary: '#7D5260',
+    onTertiary: '#FFFFFF',
+    outline: '#79747E',
+    outlineVariant: '#CAC4D0',
+    shadow: 'rgba(0,0,0,0.12)',
+    xpGold: '#B8860B',
+    success: '#2E7D32',
+    error: '#C62828'
+  };
+
+  // Crear canvas para la tarjeta
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const scale = window.devicePixelRatio || 1;
+  const width = 400 * scale;
+  const height = 760 * scale;
+  canvas.width = width;
+  canvas.height = height;
+  canvas.style.width = '400px';
+  canvas.style.height = '760px';
+  ctx.scale(scale, scale);
+
+  // ===== DIBUJAR TARJETA MATERIAL YOU =====
+  const cardX = 20, cardY = 20, cardW = 360, cardH = 720;
+  const radius = 28;
+
+  // Sombra de elevación (Elevation 3)
+  ctx.shadowColor = colors.shadow;
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 8;
+
+  // Tarjeta principal - fondo surface
+  drawRoundRect(ctx, cardX, cardY, cardW, cardH, radius);
+  ctx.fillStyle = colors.surface;
+  ctx.fill();
+
+  // Quitar sombra para elementos internos
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  // Barra superior decorativa con primaryContainer
+  drawRoundRect(ctx, cardX, cardY, cardW, 120, {tl: radius, tr: radius, bl: 0, br: 0});
+  const topGrad = ctx.createLinearGradient(0, cardY, 0, cardY + 120);
+  topGrad.addColorStop(0, colors.primaryContainer);
+  topGrad.addColorStop(1, colors.surfaceContainerHigh);
+  ctx.fillStyle = topGrad;
+  ctx.fill();
+
+  ctx.fillStyle = colors.onPrimaryContainer;
+  ctx.textAlign = 'center';
+
+  // Logo/app name
+  ctx.font = '600 22px Nunito, sans-serif';
+  ctx.fillText('Vocabri', cardX + cardW/2, cardY + 42);
+
+  ctx.font = '400 13px Nunito, sans-serif';
+  ctx.fillStyle = colors.onPrimaryContainer + 'CC';
+  ctx.fillText('Mi progreso en inglés', cardX + cardW/2, cardY + 64);
+
+  // Línea separadora sutil
+  ctx.strokeStyle = colors.outlineVariant + '40';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cardX + 24, cardY + 78);
+  ctx.lineTo(cardX + cardW - 24, cardY + 78);
+  ctx.stroke();
+
+  // Foto de perfil + Nombre
+  let photoY = cardY + 100;
+  const avatarSize = 64;
+
+  if(userPhoto){
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = userPhoto;
+    // Placeholder circle
+    ctx.fillStyle = colors.surfaceContainerHigh;
+    drawCircle(ctx, cardX + cardW/2, photoY + avatarSize/2, avatarSize/2);
+    ctx.fill();
+    img.onload = () => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cardX + cardW/2, photoY + avatarSize/2, avatarSize/2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(img, cardX + cardW/2 - avatarSize/2, photoY, avatarSize, avatarSize);
+      ctx.restore();
+      updateShareModalCanvas(canvas);
+    };
+    photoY += avatarSize + 16;
+  }
+
+  // Nombre de usuario
+  ctx.fillStyle = colors.onSurface;
+  ctx.font = '700 24px Nunito, sans-serif';
+  ctx.fillText(userName, cardX + cardW/2, photoY + 30);
+
+  // Email si existe
+  if(userEmail){
+    ctx.font = '400 13px Nunito, sans-serif';
+    ctx.fillStyle = colors.onSurfaceVariant;
+    ctx.fillText(userEmail, cardX + cardW/2, photoY + 52);
+    photoY += 22;
+  }
+
+  // Categoría actual - chip style
+  photoY += 12;
+  const chipText = `Categoría: ${currentCategory}`;
+  ctx.font = '500 12px Nunito, sans-serif';
+  const chipWidth = ctx.measureText(chipText).width + 24;
+  const chipX = cardX + cardW/2 - chipWidth/2;
+  const chipY = photoY;
+  const chipH = 28;
+  drawRoundRect(ctx, chipX, chipY, chipWidth, chipH, 14);
+  ctx.fillStyle = colors.primaryContainer;
+  ctx.fill();
+  ctx.fillStyle = colors.onPrimaryContainer;
+  ctx.fillText(chipText, cardX + cardW/2, photoY + 19);
+  photoY += chipH + 20;
+
+  // Separador
+  ctx.strokeStyle = colors.outlineVariant + '30';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cardX + 24, photoY);
+  ctx.lineTo(cardX + cardW - 24, photoY);
+  ctx.stroke();
+
+  // ===== NIVEL Y XP =====
+  let currentY = photoY + 24;
+  ctx.fillStyle = colors.onSurface;
+  ctx.font = '600 18px Nunito, sans-serif';
+  ctx.fillText(`Nivel ${level}`, cardX + cardW/2, currentY);
+
+  currentY += 24;
+  ctx.font = '400 14px Nunito, sans-serif';
+  ctx.fillStyle = colors.onSurfaceVariant;
+  ctx.fillText(`${xpInLevel} / 100 XP para siguiente nivel`, cardX + cardW/2, currentY);
+
+  // Barra XP - estilo Material
+  currentY += 16;
+  const barWidth = cardW - 48;
+  const barHeight = 8;
+  const barX = cardX + 24;
+  drawRoundRect(ctx, barX, currentY, barWidth, barHeight, 4);
+  ctx.fillStyle = colors.surfaceContainerHigh;
+  ctx.fill();
+
+  const progressWidth = (xpInLevel / 100) * barWidth;
+  drawRoundRect(ctx, barX, currentY, progressWidth, barHeight, 4);
+  const xpGrad = ctx.createLinearGradient(barX, currentY, barX + progressWidth, currentY);
+  xpGrad.addColorStop(0, colors.primary);
+  xpGrad.addColorStop(1, colors.secondary);
+  ctx.fillStyle = xpGrad;
+  ctx.fill();
+
+  // XP de hoy / Meta
+  currentY += 24;
+  ctx.font = '400 12px Nunito, sans-serif';
+  ctx.fillStyle = colors.outline;
+  ctx.fillText(`Hoy: ${totalXpToday} / ${dailyGoal} XP  •  ${Math.round((totalXpToday/dailyGoal)*100)}% de la meta`, cardX + cardW/2, currentY);
+
+  // ===== STATS GRID - Cards elevadas =====
+  currentY += 28;
+  const stats = [
+    {icon: '🔥', label: 'Racha actual', value: streak + ' días', color: colors.error},
+    {icon: '⭐', label: 'Frases dominadas', value: mastered, color: colors.xpGold},
+    {icon: '📅', label: 'Días activo', value: activeDays, color: colors.primary},
+    {icon: '📚', label: 'Total aprendido', value: totalLearned, color: colors.secondary},
+    {icon: '✨', label: 'XP total', value: xpTotal, color: colors.tertiary},
+    {icon: '🏆', label: 'Nivel actual', value: level, color: colors.success},
+  ];
+
+  stats.forEach((stat, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const x = cardX + 24 + col * (cardW/2 - 12);
+    const y = currentY + row * 90;
+    const w = cardW/2 - 30;
+    const h = 80;
+
+    // Sombra sutil para stat cards (Elevation 1)
+    ctx.shadowColor = colors.shadow;
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 2;
+
+    drawRoundRect(ctx, x, y, w, h, 16);
+    ctx.fillStyle = colors.surfaceContainer;
+    ctx.fill();
+
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Barra de color superior (acento)
+    drawRoundRect(ctx, x, y, w, 4, {tl: 16, tr: 16, bl: 0, br: 0});
+    ctx.fillStyle = stat.color + '30';
+    ctx.fill();
+
+    // Icon + Label
+    ctx.fillStyle = colors.onSurfaceVariant;
+    ctx.font = '500 12px Nunito, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${stat.icon} ${stat.label}`, x + w/2, y + 28);
+
+    // Value
+    ctx.fillStyle = colors.onSurface;
+    ctx.font = '700 24px Nunito, sans-serif';
+    ctx.fillText(stat.value, x + w/2, y + 58);
+  });
+
+  currentY += Math.ceil(stats.length / 2) * 90 + 20;
+
+  // Separador final
+  ctx.strokeStyle = colors.outlineVariant + '30';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cardX + 24, currentY);
+  ctx.lineTo(cardX + cardW - 24, currentY);
+  ctx.stroke();
+
+  // Footer
+  currentY += 20;
+  ctx.fillStyle = colors.outline;
+  ctx.font = '400 11px Nunito, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Compartido desde Vocabri', cardX + cardW/2, currentY);
+  ctx.fillText(new Date().toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'}), cardX + cardW/2, currentY + 18);
+
+  // ===== CREAR MODAL CON CANVAS Y BOTONES =====
+  showShareModal(canvas, statusEl, {
+    level, streak, mastered, activeDays, totalLearned, xpTotal,
+    userName, userEmail, userPhoto, currentCategory, totalXpToday, dailyGoal
+  });
+}
+
+// Helpers para dibujo
+function drawRoundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  if(typeof r === 'number'){
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+  }else{
+    // r = {tl, tr, br, bl}
+    const {tl=0, tr=0, br=0, bl=0} = r;
+    ctx.moveTo(x + tl, y);
+    ctx.lineTo(x + w - tr, y);
+    if(tr) ctx.arcTo(x + w, y, x + w, y + tr, tr);
+    else ctx.lineTo(x + w, y);
+    ctx.lineTo(x + w, y + h - br);
+    if(br) ctx.arcTo(x + w, y + h, x + w - br, y + h, br);
+    else ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x + bl, y + h);
+    if(bl) ctx.arcTo(x, y + h, x, y + h - bl, bl);
+    else ctx.lineTo(x, y + h);
+    ctx.lineTo(x, y + tl);
+    if(tl) ctx.arcTo(x, y, x + tl, y, tl);
+  }
+  ctx.closePath();
+}
+
+function drawCircle(ctx, x, y, r){
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.closePath();
+}
+
+function showShareModal(canvas, statusEl, data){
+  // Crear modal
+  const modal = document.createElement('div');
+  modal.className = 'gModalOverlay';
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '10000';
+  modal.innerHTML = `
+    <div class="gModal gModalWide" style="max-width:440px; max-height:90vh; overflow:auto;">
+      <div class="modalHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; position:sticky; top:0; background:var(--surface); padding-bottom:12px; border-bottom:1px solid var(--line); z-index:1;">
+        <h3 style="margin:0; font-family:var(--font-ui);">📤 Compartir mi progreso</h3>
+        <button class="modalCloseBtn" id="shareModalClose" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div style="text-align:center; margin-bottom:16px;">
+        <canvas id="shareCanvas" style="max-width:100%; height:auto; border-radius:16px; box-shadow:var(--elev2);"></canvas>
+      </div>
+      <div id="shareStatus" style="text-align:center; min-height:1.5em; font-size:.85rem; color:var(--muted);"></div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+        <button class="nav ripple hover-scale focus-glow" id="btnShareApp" style="width:100%;" type="button">
+          📱 Compartir via app
+        </button>
+        <button class="nav ripple hover-scale" id="btnDownload" style="width:100%;" type="button">
+          💾 Descargar imagen
+        </button>
+        <button class="nav ripple hover-scale" id="btnShareMessage" style="width:100%;" type="button">
+          💬 Enviar como mensaje
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  // Poner el canvas en el modal
+  const modalCanvas = modal.querySelector('#shareCanvas');
+  const modalCtx = modalCanvas.getContext('2d');
+  modalCanvas.width = canvas.width;
+  modalCanvas.height = canvas.height;
+  modalCtx.drawImage(canvas, 0, 0);
+
+  // Si hay foto de Google, dibujarla ahora que el canvas está en el DOM
+  if(data.userPhoto){
+    drawProfilePhoto(modalCanvas, data.userPhoto);
+  }
+
+  const statusElModal = modal.querySelector('#shareStatus');
+
+  // Cerrar modal
+  const closeModal = () => {
+    modal.remove();
+    statusEl.textContent = '';
+  };
+  modal.querySelector('#shareModalClose').onclick = closeModal;
+  modal.onclick = (e) => { if(e.target === modal) closeModal(); };
+
+  // --- BOTÓN 1: Compartir via app (Web Share API con imagen) ---
+  modal.querySelector('#btnShareApp').onclick = async () => {
+    statusElModal.textContent = 'Preparando para compartir...';
+    try{
+      const blob = await canvasToBlob(canvas);
+      const file = new File([blob], `vocabri-progreso-${new Date().toISOString().slice(0,10)}.png`, {type: 'image/png'});
+
+      if(navigator.share && navigator.canShare && navigator.canShare({files: [file]})){
+        await navigator.share({
+          title: 'Mi progreso en Vocabri',
+          text: `¡Mira mi progreso en inglés! Nivel ${data.level}, racha de ${data.streak} días 🔥`,
+          files: [file]
+        });
+        statusElModal.textContent = '✅ Compartido correctamente';
+      }else{
+        // Fallback: copiar al portapapeles + descargar
+        await copyImageToClipboard(blob);
+        statusElModal.textContent = '✅ Imagen copiada al portapapeles (comparte manualmente)';
+        downloadBlob(blob, file.name);
+      }
+    }catch(e){
+      if(e.name !== 'AbortError'){
+        statusElModal.textContent = '❌ Error al compartir';
+      }else{
+        statusElModal.textContent = 'Compartir cancelado';
+      }
+    }
+    setTimeout(()=> statusElModal.textContent = '', 4000);
+  };
+
+  // --- BOTÓN 2: Descargar imagen ---
+  modal.querySelector('#btnDownload').onclick = async () => {
+    statusElModal.textContent = 'Descargando...';
+    try{
+      const blob = await canvasToBlob(canvas);
+      downloadBlob(blob, `vocabri-progreso-${new Date().toISOString().slice(0,10)}.png`);
+      statusElModal.textContent = '✅ Imagen descargada';
+    }catch(e){
+      statusElModal.textContent = '❌ Error al descargar';
+    }
+    setTimeout(()=> statusElModal.textContent = '', 3000);
+  };
+
+  // --- BOTÓN 3: Enviar como mensaje (Web Share con solo texto + link) ---
+  modal.querySelector('#btnShareMessage').onclick = async () => {
+    statusElModal.textContent = 'Preparando mensaje...';
+    const text = `📚 Mi progreso en Vocabri:\n🏆 Nivel ${data.level} | 🔥 Racha: ${data.streak} días | ⭐ ${data.mastered} frases dominadas\n\nAprende inglés conmigo: `;
+
+    try{
+      if(navigator.share){
+        await navigator.share({
+          title: 'Mi progreso en Vocabri',
+          text: text,
+          url: window.location.origin
+        });
+        statusElModal.textContent = '✅ Mensaje enviado';
+      }else{
+        // Fallback: copiar texto al portapapeles
+        await navigator.clipboard.writeText(text + window.location.origin);
+        statusElModal.textContent = '✅ Texto copiado al portapapeles';
+      }
+    }catch(e){
+      if(e.name !== 'AbortError'){
+        statusElModal.textContent = '❌ Error al enviar';
+      }else{
+        statusElModal.textContent = 'Envío cancelado';
+      }
+    }
+    setTimeout(()=> statusElModal.textContent = '', 3000);
+  };
+}
+
+// Helpers
+function canvasToBlob(canvas){
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('No blob')), 'image/png', 0.95);
+  });
+}
+
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 2000);
+}
+
+async function copyImageToClipboard(blob){
+  try{
+    await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+  }catch(e){
+    // Fallback: descargar
+    downloadBlob(blob, 'vocabri-progreso.png');
+  }
+}
+
+function drawProfilePhoto(canvas, photoUrl){
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.src = photoUrl;
+  img.onload = () => {
+    const scale = canvas.width / 400;
+    const x = 170 * scale;
+    const y = 185 * scale;
+    const size = 60 * scale;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(200 * scale, y + size/2, size/2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(img, x, y, size, size);
+    ctx.restore();
+  };
+}
+
+function updateShareModalCanvas(canvas){
+  const modalCanvas = document.querySelector('#shareCanvas');
+  if(modalCanvas){
+    const ctx = modalCanvas.getContext('2d');
+    ctx.drawImage(canvas, 0, 0);
+  }
+}
+
 async function importBackupFile(file){
   const input = document.getElementById('importFile');
   try{
@@ -3192,6 +4542,7 @@ async function importBackupFile(file){
 }
 document.getElementById('exportBtn').onclick = exportBackup;
 document.getElementById('importBtn').onclick = ()=> document.getElementById('importFile').click();
+document.getElementById('shareProgressBtn').onclick = shareProgressCard;
 document.getElementById('importFile').onchange = (e)=>{
   const f = e.target.files && e.target.files[0];
   if(f) importBackupFile(f);
@@ -3202,7 +4553,9 @@ document.getElementById('importFile').onchange = (e)=>{
 // Google session are always kept. The user's own cards are only deleted if they opt in.
 const RESET_PROGRESS_KEYS = [
   'ci_xp_total', 'vocabri_xp_today', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date',
-  'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits'
+  'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits',
+  'vocabri_language', 'ci_daily_goal_xp', 'ci_user_level', 'ci_user_focus', 'ci_theme',
+  'onboardingDone', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
 ];
 const RESET_PROGRESS_PREFIXES = ['ci_master_', 'ci_time_', 'vocabri_exam_'];   // per-card progress, study minutes, exam results
 const RESET_CARD_KEYS = ['ci_custom_words', 'ci_custom_cats'];                  // only with the checkbox
@@ -3298,12 +4651,34 @@ document.addEventListener('keydown', (e)=>{
 
 
 applyTheme();
-buildCategoryDropdown();
-document.getElementById('catSelectLabel').textContent = currentCat;
-document.getElementById('headerCatWrap').style.display = (view==='learn') ? '' : 'none';
+
+// Inicializar categoría maestra guardada
+const savedMasterCat = localStorage.getItem('ci_current_master_category');
+if (savedMasterCat && window.VocabriCategories && window.VocabriCategories.isValidCategory(savedMasterCat)) {
+  currentCat = savedMasterCat;
+
+  // Mostrar label de la categoría maestra
+  let label = savedMasterCat;
+  if (window.VocabriCategories) {
+    label = window.VocabriCategories.getCategoryShortLabel(savedMasterCat);
+  }
+  // catSelectLabel removed - category selector moved to settings panel
+} else {
+  // catSelectLabel removed - category selector moved to settings panel
+}
+
+updateCatSelector();
+// headerCatWrap removed - category selector moved to settings panel
 updateTrLabels();
 render(true);
 updateGameBar();
+
+// Aplicar nodo inicial si está guardado (solo la primera vez)
+const startNode = parseInt(localStorage.getItem('ci_start_node') || '0', 10);
+if (startNode > 0) {
+  setUnlockedStage(currentCat, startNode);
+  localStorage.removeItem('ci_start_node');
+}
 
 // --- Material You ripple feedback (lightweight, event-delegated) ---
 document.addEventListener('pointerdown', (e)=>{
@@ -3557,8 +4932,11 @@ initPwaUpdates();
 // Mascota: Ajolote Kawaii
 // =====================================================================
 const MASCOT = {
-  happy: './assets/ajolote-happy.png', thinking: './assets/ajolote-thinking.png',
-  sad: './assets/ajolote-sad.png', scared: './assets/ajolote-scared.png', hero: './assets/ajolote-hero.png'
+  happy: './assets/stickers/ajolotes_emociones/feliz_brazos_arriba.png',
+  thinking: './assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png',
+  sad: './assets/stickers/ajolotes_emociones/triste_llorando.png',
+  scared: './assets/stickers/ajolotes_emociones/asustado_manos_en_mejillas.png',
+  hero: './assets/stickers/ajolotes_emociones/feliz_brazos_arriba.png'
 };
 (function preloadMascot(){
   Object.keys(MASCOT).forEach(k=>{ const i = new Image(); i.src = MASCOT[k]; });   // so the stickers appear instantly (and are cached offline)
@@ -4055,3 +5433,10 @@ function initCloud(){
 
 
 initCloud();
+
+// Apply button animations after DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', applyButtonAnimations);
+} else {
+  applyButtonAnimations();
+}

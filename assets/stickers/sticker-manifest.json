@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "description": "Manifest de stickers de Vocabri - organizado por categoría semántica para uso inteligente en la UI",
+  "categories": {
+    "emociones": {
+      "folder": "ajolotes_emociones",
+      "description": "Estados de ánimo y reacciones del ajolote",
+      "stickers": {
+        "feliz": ["feliz_brazos_arriba.png", "feliz_nadando_saludando.png", "feliz_con_corazones.png", "sonriente_relajado.png", "contento_de_pie.png", "sonriendo_sentado.png", "risa_pulgar_arriba.png", "sonriente_pulgar_arriba.png", "alegre_encogiendo_hombros.png", "risas_con_duda.png"],
+        "exitoso": ["aprobado_con_check.png", "determinado_pulgar_arriba.png", "esfuerzo_flexionando_con_estrellas.png", "mente_explotando_confeti.png", "enamorado_flexionando_musculos.png", "ajolote_azul_feliz_pulgar_arriba.png", "turquesa_feliz_pulgar_arriba.png"],
+        "pensativo": ["pensando_idea_o_duda.png", "detective_investigando.png", "detective_lupa_sonriente.png", "dudoso_mano_en_barbilla.png", "ajolote_morado_pensativo.png", "lector_con_gafas_y_estrellas.png", "ajolote_turquesa_leyendo_libro.png"],
+        "confundido": ["confundido_signos_de_pregunta.png", "mareado_ojos_en_espiral.png", "mareado_pensativo_con_pregunta.png", "mareado_con_signos_de_pregunta.png", "mareado_nervioso_con_pregunta.png", "esceptico_manos_en_mejillas.png"],
+        "sorprendido": ["sorprendido_boca_o.png", "asombrado_manos_en_mejillas.png", "rojo_sorprendido_manos_en_mejillas.png"],
+        "asustado_nervioso": ["asustado_manos_en_mejillas.png", "nervioso_manos_en_mejillas.png", "preocupado_manos_en_mejillas.png"],
+        "triste_decepcionado": ["triste_llorando.png", "suspiro_ojos_cerrados.png", "melancolico_manos_en_pecho.png", "cansado_acostado.png", "durmiendo_zzz.png", "ajolote_durazno_durmiendo_acurrucado.png"],
+        "enojado_frustrado": ["enojado_punos_apretados.png", "furioso_con_humo.png", "molesto_brazos_cruzados.png"],
+        "carinoso": ["enamorado_corazon_con_manos.png", "enamorado_ojos_de_corazon.png", "ternura_ojos_cerrados.png", "tierno_corazon_en_manos.png", "azul_ternura_corazon_en_manos.png", "rosa_enamorado_corazon_con_manos.png", "turquesa_enamorado_ojos_de_corazon.png", "naranja_feliz_con_corazones.png", "morado_enamorado_flexionando.png", "brazos_abiertos_para_abrazo.png", "ajolote_rosa_brazos_abiertos.png"],
+        "activo": ["ajolote_verde_bailando.png", "ajolote_amarillo_flotando_sonriente.png", "musico_ukelele_con_audifonos.png", "musico_escuchando_con_audifonos.png", "chef_cocinando.png", "chef_probando_la_receta.png", "ajolote_rojo_caminando_saludando.png"]
+      }
+    },
+    "colores_variantes": {
+      "folder": "ajolotes_de_colores",
+      "description": "Variantes de color del ajolote para personalización y logros",
+      "stickers": {
+        "turquesa": ["ajolote_turquesa_leyendo_libro.png"],
+        "plateado": ["ajolote_plateado_brillante.png"],
+        "azul_marino": ["ajolote_azul_marino_con_estrella.png"],
+        "durazno": ["ajolote_durazno_durmiendo_acurrucado.png"],
+        "rojo": ["ajolote_rojo_caminando_saludando.png"],
+        "azul": ["ajolote_azul_feliz_pulgar_arriba.png"],
+        "dorado": ["ajolote_dorado_brillante.png"],
+        "arcoiris": ["ajolote_arcoiris_holografico.png"],
+        "rosa": ["ajolote_rosa_brazos_abiertos.png"],
+        "morado": ["ajolote_morado_pensativo.png"],
+        "verde": ["ajolote_verde_bailando.png"],
+        "amarillo": ["ajolote_amarillo_flotando_sonriente.png"]
+      }
+    },
+    "familias_emojis": {
+      "folder": "familias_y_emojis_de_colores",
+      "description": "Familias y emojis de colores para logros sociales y hitos",
+      "stickers": {
+        "familias": ["familia_de_una_madre.png", "familia_nuclear.png", "familia_adoptiva.png", "familia_de_un_padre.png", "generaciones_reunidas.png", "familia_grande.png"],
+        "emojis_positivos": ["turquesa_feliz_pulgar_arriba.png", "naranja_feliz_con_corazones.png", "naranja_esfuerzo_flexionando_con_estrellas.png", "rosa_enamorado_corazon_con_manos.png", "turquesa_enamorado_ojos_de_corazon.png", "verde_feliz_con_pregunta.png", "azul_ternura_corazon_en_manos.png", "morado_enamorado_flexionando.png"],
+        "emojis_neutros_negativos": ["amarillo_desconfiado.png", "rojo_sorprendido_manos_en_mejillas.png"]
+      }
+    }
+  },
+  "semanticTags": {
+    "celebration": ["aprobado_con_check.png", "feliz_brazos_arriba.png", "feliz_con_corazones.png", "mente_explotando_confeti.png", "esfuerzo_flexionando_con_estrellas.png", "naranja_esfuerzo_flexionando_con_estrellas.png", "ajolote_dorado_brillante.png", "ajolote_arcoiris_holografico.png"],
+    "encouragement": ["determinado_pulgar_arriba.png", "feliz_nadando_saludando.png", "sonriente_pulgar_arriba.png", "ajolote_azul_feliz_pulgar_arriba.png", "turquesa_feliz_pulgar_arriba.png", "risa_pulgar_arriba.png", "enamorado_flexionando_musculos.png"],
+    "thinking": ["pensando_idea_o_duda.png", "detective_investigando.png", "detective_lupa_sonriente.png", "dudoso_mano_en_barbilla.png", "ajolote_morado_pensativo.png", "lector_con_gafas_y_estrellas.png", "ajolote_turquesa_leyendo_libro.png"],
+    "confused": ["confundido_signos_de_pregunta.png", "mareado_ojos_en_espiral.png", "mareado_pensativo_con_pregunta.png", "mareado_con_signos_de_pregunta.png", "mareado_nervioso_con_pregunta.png", "esceptico_manos_en_mejillas.png"],
+    "sad": ["triste_llorando.png", "suspiro_ojos_cerrados.png", "melancolico_manos_en_pecho.png", "cansado_acostado.png", "durmiendo_zzz.png", "ajolote_durazno_durmiendo_acurrucado.png"],
+    "angry": ["enojado_punos_apretados.png", "furioso_con_humo.png", "molesto_brazos_cruzados.png"],
+    "scared": ["asustado_manos_en_mejillas.png", "nervioso_manos_en_mejillas.png", "preocupado_manos_en_mejillas.png"],
+    "surprised": ["sorprendido_boca_o.png", "asombrado_manos_en_mejillas.png", "rojo_sorprendido_manos_en_mejillas.png"],
+    "love": ["enamorado_corazon_con_manos.png", "enamorado_ojos_de_corazon.png", "ternura_ojos_cerrados.png", "tierno_corazon_en_manos.png", "azul_ternura_corazon_en_manos.png", "rosa_enamorado_corazon_con_manos.png", "turquesa_enamorado_ojos_de_corazon.png", "naranja_feliz_con_corazones.png", "morado_enamorado_flexionando.png", "brazos_abiertos_para_abrazo.png", "ajolote_rosa_brazos_abiertos.png"],
+    "sleepy": ["durmiendo_zzz.png", "cansado_acostado.png", "ajolote_durazno_durmiendo_acurrucado.png", "suspiro_ojos_cerrados.png", "ternura_ojos_cerrados.png"],
+    "reading": ["ajolote_turquesa_leyendo_libro.png", "lector_con_gafas_y_estrellas.png"],
+    "music": ["musico_ukelele_con_audifonos.png", "musico_escuchando_con_audifonos.png"],
+    "cooking": ["chef_cocinando.png", "chef_probando_la_receta.png"],
+    "walking": ["ajolote_rojo_caminando_saludando.png", "feliz_nadando_saludando.png"],
+    "dancing": ["ajolote_verde_bailando.png"],
+    "floating": ["ajolote_amarillo_flotando_sonriente.png"],
+    "special_gold": ["ajolote_dorado_brillante.png"],
+    "special_rainbow": ["ajolote_arcoiris_holografico.png"],
+    "special_silver": ["ajolote_plateado_brillante.png"],
+    "family": ["familia_de_una_madre.png", "familia_nuclear.png", "familia_adoptiva.png", "familia_de_un_padre.png", "generaciones_reunidas.png", "familia_grande.png"]
+  },
+  "contextMapping": {
+    "correctAnswer": ["celebration", "encouragement"],
+    "wrongAnswer": ["sad", "confused", "encouragement"],
+    "almostCorrect": ["thinking", "encouragement"],
+    "levelUp": ["special_gold", "special_rainbow", "celebration"],
+    "streakMilestone": ["special_gold", "celebration", "family"],
+    "dailyGoalComplete": ["celebration", "encouragement", "special_rainbow"],
+    "stageComplete": ["celebration", "encouragement"],
+    "examPassed": ["special_gold", "celebration", "encouragement"],
+    "examFailed": ["sad", "encouragement"],
+    "welcomeScreen": ["love", "walking", "special_rainbow"],
+    "profileAvatar": ["colores_variantes"],
+    "mapNodeIdle": ["colores_variantes", "thinking", "reading"],
+    "mapNodeActive": ["encouragement", "walking", "dancing"],
+    "mapNodeComplete": ["celebration", "special_gold"],
+    "mapNodeLocked": ["sleepy", "confused"],
+    "mapNodeExam": ["thinking", "reading", "special_silver"],
+    "cooldown": ["sleepy", "thinking"],
+    "settings": ["reading", "thinking"],
+    "translator": ["thinking", "reading"],
+    "myCards": ["love", "cooking", "music"],
+    "progress": ["special_gold", "celebration", "thinking"],
+    "achievementUnlocked": ["special_gold", "special_rainbow", "celebration", "family"],
+    "streakProtector": ["special_silver", "family"],
+    "shareProgress": ["celebration", "special_rainbow", "love"]
+  }
+}

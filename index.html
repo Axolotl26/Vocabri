@@ -7,8 +7,11 @@
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
-<link rel="stylesheet" href="styles.css?v=1.1.0">
+<link rel="icon" href="assets/origin-logo.png">
+<link rel="stylesheet" href="styles.css?v=1.1.2">
 <link rel="manifest" href="manifest.json">
+<script src="./categoriesRegistry.js"></script>
+<script src="./phraseLoader.js"></script>
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,26 +20,176 @@
 <body>
 <div id="welcome-screen">
   <div class="welcomeInner">
-    <img class="mascot mascot-hero" src="./assets/ajolote-hero.png" alt="Ajolote, la mascota de Vocabri" width="150" height="150">
+    <img class="mascot mascot-hero" src="./assets/origin-logo.png" alt="Ajolote, la mascota de Vocabri" width="150" height="150">
     <h1 class="welcomeTitle">Vocabri</h1>
     <p class="welcomeTagline">Domina frases, no solo palabras.</p>
-    <button class="nav welcomeBtn" id="welcomeStartBtn" type="button">Comenzar</button>
+    <button class="nav welcomeBtn hover-scale focus-glow" id="welcomeStartBtn" type="button">Comenzar</button>
   </div>
 </div>
+
+<!-- Vista de selección de idioma -->
+<div id="languageView" style="display:none; position:fixed; inset:0; z-index:200; background:var(--bg); align-items:center; justify-content:center; padding:24px;">
+  <div class="welcomeInner">
+    <img class="mascot mascot-hero" src="./assets/stickers/ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png" alt="" width="120" height="120">
+    <h1 class="welcomeTitle">¿Qué idioma quieres aprender?</h1>
+    <p class="welcomeTagline">Elige tu aventura</p>
+
+    <div class="languageGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:24px; width:100%; max-width:360px;">
+      <button class="langCard langCard-active hover-scale focus-glow" data-lang="en" type="button">
+        <div class="langFlag" style="font-size:48px; margin-bottom:8px;">🇺🇸</div>
+        <div class="langName">Inglés</div>
+        <div class="langStatus">Disponible</div>
+      </button>
+      <button class="langCard langCard-disabled hover-scale focus-glow" data-lang="ja" type="button">
+        <div class="langFlag" style="font-size:48px; margin-bottom:8px;">🇯🇵</div>
+        <div class="langName">Japonés</div>
+        <div class="langStatus status-coming">Próximamente</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Vista de onboarding (cuestionario inicial) -->
+<div id="onboardingView" style="display:none; position:fixed; inset:0; z-index:200; background:var(--bg); align-items:center; justify-content:center; padding:24px; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+  <div class="welcomeInner" style="max-width:400px; width:100%;">
+    <img class="mascot mascot-hero" src="./assets/stickers/ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png" alt="" width="100" height="100">
+    <h1 class="welcomeTitle">¡Casi listo!</h1>
+    <p class="welcomeTagline">Configura tu experiencia para empezar con buen pie</p>
+
+    <div class="onboardingForm" style="margin-top:24px; display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Meta XP diaria -->
+      <fieldset class="onboardSection" style="border:none; padding:0;">
+        <legend class="onboardLabel" style="font-weight:700; color:var(--ink); margin-bottom:12px; font-size:var(--text-base);">🎯 Meta diaria de XP</legend>
+        <p class="hint" style="margin:0 0 8px; text-align:left;">1 palabra correcta = 10 XP</p>
+        <div class="xpOptions" style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px;">
+          <button type="button" class="xpOption nav hover-scale focus-glow" data-xp="100" style="padding:16px; text-align:center;">
+            <div style="font-weight:800; font-size:var(--text-lg); color:var(--ink);">100 XP</div>
+            <div class="hint" style="margin:0;">≈ 10 palabras/día</div>
+          </button>
+          <button type="button" class="xpOption nav hover-scale focus-glow" data-xp="200" style="padding:16px; text-align:center;">
+            <div style="font-weight:800; font-size:var(--text-lg); color:var(--ink);">200 XP</div>
+            <div class="hint" style="margin:0;">≈ 20 palabras/día</div>
+          </button>
+          <button type="button" class="xpOption nav hover-scale focus-glow" data-xp="300" style="padding:16px; text-align:center;">
+            <div style="font-weight:800; font-size:var(--text-lg); color:var(--ink);">300 XP</div>
+            <div class="hint" style="margin:0;">≈ 30 palabras/día</div>
+          </button>
+          <button type="button" class="xpOption nav hover-scale focus-glow" data-xp="400" style="padding:16px; text-align:center;">
+            <div style="font-weight:800; font-size:var(--text-lg); color:var(--ink);">400 XP</div>
+            <div class="hint" style="margin:0;">≈ 40 palabras/día</div>
+          </button>
+        </div>
+        <input type="hidden" id="selectedXp" value="200">
+      </fieldset>
+
+      <!-- Nivel actual -->
+      <fieldset class="onboardSection" style="border:none; padding:0;">
+        <legend class="onboardLabel" style="font-weight:700; color:var(--ink); margin-bottom:12px; font-size:var(--text-base);">📚 Tu nivel actual</legend>
+        <div class="levelOptions" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+          <button type="button" class="levelOption nav hover-scale focus-glow" data-level="beginner" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">Principiante</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Empiezo de cero</div>
+          </button>
+          <button type="button" class="levelOption nav hover-scale focus-glow" data-level="intermediate" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">Intermedio</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Sé lo básico</div>
+          </button>
+          <button type="button" class="levelOption nav hover-scale focus-glow" data-level="advanced" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">Avanzado</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Quiero perfeccionar</div>
+          </button>
+        </div>
+        <input type="hidden" id="selectedLevel" value="beginner">
+      </fieldset>
+
+      <!-- Enfoque -->
+      <fieldset class="onboardSection" style="border:none; padding:0;">
+        <legend class="onboardLabel" style="font-weight:700; color:var(--ink); margin-bottom:12px; font-size:var(--text-base);">🎨 Enfoque de aprendizaje</legend>
+        <div class="focusOptions" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+          <button type="button" class="focusOption nav hover-scale focus-glow" data-focus="general" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">🌍 General</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Vocabulario esencial</div>
+          </button>
+          <button type="button" class="focusOption nav hover-scale focus-glow" data-focus="travel" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">✈️ Viajes y supervivencia</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Turismo, transporte, emergencias</div>
+          </button>
+          <button type="button" class="focusOption nav hover-scale focus-glow" data-focus="academic" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">🎓 Académico</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Estudio, investigación, campus</div>
+          </button>
+          <button type="button" class="focusOption nav hover-scale focus-glow" data-focus="business" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">💼 Negocios y Profesional</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Reuniones, emails, negociación</div>
+          </button>
+          <button type="button" class="focusOption nav hover-scale focus-glow" data-focus="pop" style="padding:14px; text-align:center;">
+            <div style="font-weight:700; color:var(--ink);">🎮 Cultura pop y Gaming</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Series, memes, videojuegos</div>
+          </button>
+        </div>
+        <input type="hidden" id="selectedFocus" value="general">
+      </fieldset>
+
+      <!-- Tema visual -->
+      <fieldset class="onboardSection" style="border:none; padding:0;">
+        <legend class="onboardLabel" style="font-weight:700; color:var(--ink); margin-bottom:12px; font-size:var(--text-base);">🎨 Tema visual</legend>
+        <div class="themeOptions" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+          <button type="button" class="themeOption nav hover-scale focus-glow" data-theme="axolotl" style="padding:12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; border:2px solid var(--line); border-radius:var(--radius); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;">
+            <img class="themeSticker" src="./assets/stickers/ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png" alt="Ajolote Rosa" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">
+            <div style="font-weight:700; color:var(--ink); font-size:var(--text-sm);">Ajolote Rosa</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Dulce y motivador</div>
+          </button>
+          <button type="button" class="themeOption nav hover-scale focus-glow" data-theme="vitality" style="padding:12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; border:2px solid var(--line); border-radius:var(--radius); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;">
+            <img class="themeSticker" src="./assets/stickers/ajolotes_de_colores/ajolote_rojo_caminando_saludando.png" alt="Vitality" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">
+            <div style="font-weight:700; color:var(--ink); font-size:var(--text-sm);">Vitality</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Energía y enfoque</div>
+          </button>
+          <button type="button" class="themeOption nav hover-scale focus-glow" data-theme="emerald" style="padding:12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; border:2px solid var(--line); border-radius:var(--radius); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;">
+            <img class="themeSticker" src="./assets/stickers/ajolotes_de_colores/ajolote_verde_bailando.png" alt="Emerald Mint" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">
+            <div style="font-weight:700; color:var(--ink); font-size:var(--text-sm);">Emerald Mint</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Frescura y crecimiento</div>
+          </button>
+          <button type="button" class="themeOption nav hover-scale focus-glow" data-theme="sunset" style="padding:12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; border:2px solid var(--line); border-radius:var(--radius); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;">
+            <img class="themeSticker" src="./assets/stickers/ajolotes_de_colores/ajolote_dorado_brillante.png" alt="Sunset Dual" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">
+            <div style="font-weight:700; color:var(--ink); font-size:var(--text-sm);">Sunset Dual</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Calidez y fluidez</div>
+          </button>
+          <button type="button" class="themeOption nav hover-scale focus-glow" data-theme="indigo" style="padding:12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px; border:2px solid var(--line); border-radius:var(--radius); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;">
+            <img class="themeSticker" src="./assets/stickers/ajolotes_de_colores/ajolote_morado_pensativo.png" alt="Electric Indigo" width="48" height="48" style="border-radius:12px; box-shadow:var(--elev1);">
+            <div style="font-weight:700; color:var(--ink); font-size:var(--text-sm);">Electric Indigo</div>
+            <div class="hint" style="margin:0; font-size:var(--text-xs);">Tecnología y gamificación</div>
+          </button>
+        </div>
+        <input type="hidden" id="selectedTheme" value="axolotl">
+        <style>
+          .themeOption.sel {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px var(--primary-soft) !important;
+            transform: scale(1.02);
+          }
+          .themeOption.sel .themeSticker {
+            box-shadow: 0 0 0 3px var(--primary-soft), var(--elev1);
+          }
+        </style>
+      </fieldset>
+
+      <!-- Botón empezar -->
+      <button class="nav welcomeBtn hover-scale focus-glow" id="onboardingStartBtn" type="button" style="width:100%; margin-top:8px; padding:16px; font-size:var(--text-base);">Empezar 🚀</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
   <header id="appHeader">
     <div class="brand">
       <div class="brandRow">
-        <img class="mascot mascot-brand" src="./assets/ajolote-hero.png" alt="" width="34" height="34">
+        <img class="mascot mascot-brand" src="./assets/stickers/ajolotes_de_colores/ajolote_arcoiris_holografico.png" alt="" width="34" height="34">
         <h1>Vocabri</h1>
       </div>
       <p class="sub tagline">Domina frases, no solo palabras.</p>
     </div>
     <div class="headerRight">
-      <div class="catSelectWrap" id="headerCatWrap" style="display:none;">
-        <button class="catSelectBtn" id="catSelectBtn" type="button">📍 <span id="catSelectLabel">Casual</span> ▾</button>
-        <div class="catDropdown" id="catDropdown" hidden></div>
-      </div>
       <div class="levelRing" id="levelRing">
         <svg viewBox="0 0 40 40">
           <circle class="lrBg" cx="20" cy="20" r="16"></circle>
@@ -44,48 +197,72 @@
         </svg>
         <div class="lrText" id="lrText">1</div>
       </div>
-      <button class="gear" id="settingsBtn" aria-label="Configuración" aria-expanded="false">☰<span class="dot" id="syncDot"></span></button>
+      <button class="gear hover-scale focus-glow" id="newsBtn" aria-label="Novedades" aria-expanded="false">📰<span class="dot" id="newsDot" style="display:none;"></span></button>
+      <button class="gear hover-scale focus-glow" id="settingsBtn" aria-label="Configuración" aria-expanded="false">☰<span class="dot" id="syncDot"></span></button>
     </div>
-    <div class="settingsPanel" id="settingsPanel" data-testid="settings-dropdown" hidden>
-      <div class="setSec">
+    <div class="settingsPanel stagger-settings" id="settingsPanel" data-testid="settings-dropdown" hidden>
+      <div class="setSec" style="--i:1;">
         <div class="setTitle">Apariencia</div>
-        <button class="nav setBtn" id="themesBtn">🎨 Temas y modo</button>
+        <button class="nav setBtn hover-scale focus-glow" id="themesBtn">🎨 Temas y modo</button>
         <div id="themesBox" hidden>
           <div class="modeRow">
-            <button class="modeBtn" data-mode="auto">Auto</button>
-            <button class="modeBtn" data-mode="light">☀️ Claro</button>
-            <button class="modeBtn" data-mode="dark">🌙 Oscuro</button>
+            <button class="modeBtn hover-scale focus-glow" data-mode="auto">Auto</button>
+            <button class="modeBtn hover-scale focus-glow" data-mode="light">☀️ Claro</button>
+            <button class="modeBtn hover-scale focus-glow" data-mode="dark">🌙 Oscuro</button>
           </div>
           <div id="themeList"></div>
         </div>
       </div>
-      <div class="setSec">
+      <div class="setSec" style="--i:2;">
+        <div class="setTitle">Categoría</div>
+        <button class="nav setBtn hover-scale focus-glow" id="catSelectorBtn" type="button">📚 Categoría: <span id="catSelectorLabel">General</span></button>
+        <div class="catSelector" id="catSelector" hidden>
+          <button class="catSelectorBtn hover-scale focus-glow" data-cat="general" type="button">🌍 General</button>
+          <button class="catSelectorBtn hover-scale focus-glow" data-cat="travel" type="button">✈️ Viajes y supervivencia</button>
+          <button class="catSelectorBtn hover-scale focus-glow" data-cat="academic" type="button">🎓 Académico</button>
+          <button class="catSelectorBtn hover-scale focus-glow" data-cat="business" type="button">💼 Negocios y Profesional</button>
+          <button class="catSelectorBtn hover-scale focus-glow" data-cat="pop" type="button">🎮 Cultura pop y Gaming</button>
+        </div>
+      </div>
+      <div class="setSec" style="--i:3;">
         <div class="setTitle">Preferencias</div>
-        <button class="nav setBtn" id="sfxToggleBtn" type="button">🔊 Efectos y vibración: Activados</button>
-        <button class="nav setBtn" id="voiceConfigBtn" type="button" style="margin-top:8px;">🗣️ Configurar voces y traductor</button>
-        <button class="nav setBtn" id="notifToggleBtn" type="button" style="margin-top:8px;" aria-pressed="false">🔔 Recordatorios diarios: Desactivados</button>
+        <button class="nav setBtn hover-scale focus-glow" id="sfxToggleBtn" type="button">🔊 Efectos y vibración: Activados</button>
+        <button class="nav setBtn hover-scale focus-glow" id="voiceConfigBtn" type="button" style="margin-top:8px;">🗣️ Configurar voces y traductor</button>
+        <button class="nav setBtn hover-scale focus-glow" id="notifToggleBtn" type="button" style="margin-top:8px;" aria-pressed="false">🔔 Recordatorios diarios: Desactivados</button>
         <p class="setStatus notifStatus" id="notifStatus" role="status" aria-live="polite"></p>
       </div>
-      <div class="setSec">
+      <div class="setSec" style="--i:3;">
         <div class="setTitle">Meta diaria</div>
         <div class="goalRow">
-          <button class="goalOpt" data-goal="30" type="button">Relajado<br><small>30 XP</small></button>
-          <button class="goalOpt" data-goal="50" type="button">Normal<br><small>50 XP</small></button>
-          <button class="goalOpt" data-goal="100" type="button">Serio<br><small>100 XP</small></button>
-          <button class="goalOpt" data-goal="150" type="button">Intenso<br><small>150 XP</small></button>
+          <button class="goalOpt hover-scale focus-glow" data-goal="100" type="button">Relajado<br><small>100 XP (≈10 palabras)</small></button>
+          <button class="goalOpt hover-scale focus-glow" data-goal="200" type="button">Normal<br><small>200 XP (≈20 palabras)</small></button>
+          <button class="goalOpt hover-scale focus-glow" data-goal="300" type="button">Serio<br><small>300 XP (≈30 palabras)</small></button>
+          <button class="goalOpt hover-scale focus-glow" data-goal="400" type="button">Intenso<br><small>400 XP (≈40 palabras)</small></button>
         </div>
       </div>
-      <div class="setSec">
+      <div class="setSec" style="--i:4;">
         <div class="setTitle">Datos y cuenta</div>
         <div class="backupRow" style="display:flex; gap:8px; margin-bottom:8px;">
-          <button class="nav setBtn" id="setExportBtn" type="button" style="flex:1;">⬇️ Exportar (.json)</button>
-          <button class="nav setBtn" id="setImportBtn" type="button" style="flex:1;">⬆️ Importar (.json)</button>
+          <button class="nav setBtn hover-scale focus-glow" id="setExportBtn" type="button" style="flex:1;">⬇️ Exportar (.json)</button>
+          <button class="nav setBtn hover-scale focus-glow" id="setImportBtn" type="button" style="flex:1;">⬆️ Importar (.json)</button>
         </div>
         <p class="setStatus" id="syncStatus"></p>
-        <button class="nav setBtn dangerBtn setResetBtn" id="setResetBtn" type="button">🗑️ Borrar progreso</button>
+        <button class="nav setBtn dangerBtn setResetBtn hover-scale focus-glow" id="setResetBtn" type="button">🗑️ Borrar progreso</button>
       </div>
-      <div class="setSec" style="border-bottom:none; margin-bottom:0; padding-bottom:4px;">
-        <button class="nav setBtn" id="termsBtn" type="button" style="width:100%; text-align:center;">📄 Términos y Condiciones</button>
+      <div class="setSec" style="--i:5; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
+        <button class="nav setBtn hover-scale focus-glow" id="termsBtn" type="button" style="width:100%; text-align:center;">📄 Términos y Condiciones</button>
+      </div>
+    </div>
+
+    <!-- News/Changelog Panel -->
+    <div class="settingsPanel stagger-settings" id="newsPanel" data-testid="news-dropdown" hidden>
+      <div class="setSec" style="--i:1;">
+        <div class="setTitle">Novedades</div>
+        <div class="newsVersion" id="newsCurrentVersion"></div>
+        <div class="newsChangelog" id="newsChangelog"></div>
+      </div>
+      <div class="setSec" style="--i:2; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
+        <button class="nav setBtn hover-scale focus-glow" id="newsCloseBtn" type="button" style="width:100%; text-align:center;">Cerrar</button>
       </div>
     </div>
   </header>
@@ -97,7 +274,7 @@
       <div class="gModalEmoji" id="gModalEmoji">🎉</div>
       <h3 id="gModalTitle"></h3>
       <p id="gModalMsg"></p>
-      <button class="nav" id="gModalClose">¡Genial!</button>
+      <button class="nav hover-scale focus-glow" id="gModalClose">¡Genial!</button>
     </div>
   </div>
 
@@ -106,7 +283,7 @@
       <div class="gModalEmoji" id="stageCompleteEmoji">🏁</div>
       <h3 id="stageCompleteTitle">¡Etapa Completada!</h3>
       <p id="stageCompleteMsg"></p>
-      <button class="nav" id="stageCompleteBtn">Ver mapa</button>
+      <button class="nav hover-scale focus-glow" id="stageCompleteBtn">Ver mapa</button>
     </div>
   </div>
 
@@ -115,7 +292,7 @@
       <div class="gModalEmoji">⏳</div>
       <h3>¡Excelente progreso!</h3>
       <p id="cooldownModalMsg"></p>
-      <button class="nav" id="cooldownModalClose">Entendido</button>
+      <button class="nav hover-scale focus-glow" id="cooldownModalClose">Entendido</button>
     </div>
   </div>
 
@@ -127,7 +304,7 @@
     </div>
 
     <div id="lessonView" style="display:none;">
-      <button class="backToMapBtn" id="backToMapBtn" type="button">← Mapa</button>
+      <button class="backToMapBtn hover-scale focus-glow" id="backToMapBtn" type="button">← Mapa</button>
       <p class="hint" id="stageProgressText" style="text-align:left; margin:10px 0 10px;"></p>
       <div class="progress" id="progress"></div>
       <div class="progBarOuter"><div class="progBarFill" id="progBarFill"></div></div>
@@ -135,33 +312,33 @@
         <div class="card-inner">
           <div class="face front">
             <span class="tag">EN</span>
-            <button class="speakBtn" id="speakFront" aria-label="Escuchar en inglés">🔊</button>
-            <button class="speakBtn speakSlow" id="speakFrontSlow" aria-label="Escuchar en inglés, despacio">🐢</button>
+            <button class="speakBtn hover-scale focus-glow" id="speakFront" aria-label="Escuchar en inglés">🔊</button>
+            <button class="speakBtn speakSlow hover-scale focus-glow" id="speakFrontSlow" aria-label="Escuchar en inglés, despacio">🐢</button>
             <p id="frontText"></p>
             <div class="exWrap" id="exWrap" style="display:none;">
-              <button class="exToggle" id="exToggle" type="button">Ver ejemplo ▾</button>
+              <button class="exToggle hover-scale focus-glow" id="exToggle" type="button">Ver ejemplo ▾</button>
               <p class="exText" id="exampleText"></p>
             </div>
           </div>
-          <div class="face back"><span class="tag">ES</span><button class="speakBtn" id="speakBack" aria-label="Escuchar en español">🔊</button><p id="backText"></p><p class="exTextEs" id="exampleTextEs"></p></div>
+          <div class="face back"><span class="tag">ES</span><button class="speakBtn hover-scale focus-glow" id="speakBack" aria-label="Escuchar en español">🔊</button><p id="backText"></p><p class="exTextEs" id="exampleTextEs"></p></div>
         </div>
         <div class="flipHint">↻</div>
       </div>
       <div class="actionZone" id="actionZone">
-        <button class="showAnswerBtn" id="showAnswerBtn" type="button">Mostrar respuesta</button>
+        <button class="showAnswerBtn hover-scale focus-glow" id="showAnswerBtn" type="button">Mostrar respuesta</button>
         <p class="flipCoach" id="flipCoach" style="display:none;">👆 Toca la tarjeta o el botón para ver la respuesta</p>
         <div class="rateBlock" id="rateBlock" style="display:none;">
           <p class="ratePrompt" id="ratePrompt">¿Qué tan bien la sabías?</p>
           <div class="rateRow" id="rateRow">
-            <button class="rateBtn rateHard" id="rateHard" type="button"><span class="rateIcon" aria-hidden="true">😕</span><span class="rateLabel">Repasar</span><span class="rateCaption">Volverá a salir</span></button>
-            <button class="rateBtn rateGood" id="rateGood" type="button"><span class="rateIcon" aria-hidden="true">🙂</span><span class="rateLabel">Bien</span><span class="rateCaption">+10 XP</span></button>
-            <button class="rateBtn rateEasy" id="rateEasy" type="button"><span class="rateIcon" aria-hidden="true">⚡</span><span class="rateLabel">Fácil</span><span class="rateCaption">+10 XP · dominada</span></button>
+            <button class="rateBtn rateHard hover-scale focus-glow" id="rateHard" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png" alt="Repasar" width="28" height="28"></span><span class="rateLabel">Repasar</span><span class="rateCaption">Volverá a salir</span></button>
+            <button class="rateBtn rateGood hover-scale focus-glow" id="rateGood" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/aprobado_con_check.png" alt="Bien" width="28" height="28"></span><span class="rateLabel">Bien</span><span class="rateCaption">+10 XP</span></button>
+            <button class="rateBtn rateEasy hover-scale focus-glow" id="rateEasy" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="Fácil" width="28" height="28"></span><span class="rateLabel">Fácil</span><span class="rateCaption">+10 XP · dominada</span></button>
           </div>
         </div>
       </div>
       <div class="lessonMiniRow">
-        <button class="miniBtn" id="prevBtn" type="button" aria-label="Volver a la tarjeta anterior">↩ Anterior</button>
-        <button class="miniBtn" id="shuffleBtn" type="button" style="display:none;">🔀 Mezclar</button>
+        <button class="miniBtn hover-scale focus-glow" id="prevBtn" type="button" aria-label="Volver a la tarjeta anterior">↩ Anterior</button>
+        <button class="miniBtn hover-scale focus-glow" id="shuffleBtn" type="button" style="display:none;">🔀 Mezclar</button>
       </div>
       <p class="hint">Dominadas en esta sección: <span id="masteredCount">0</span>/<span id="totalCount">0</span></p>
     </div>
@@ -172,13 +349,13 @@
       <div class="gModalEmoji" id="examFailEmoji">💔</div>
       <h3>¡Te quedaste sin vidas!</h3>
       <p>El examen se detuvo. Repasa las secciones anteriores y vuelve a intentarlo cuando quieras.</p>
-      <button class="nav" id="examRetryBtn" type="button">Reintentar examen</button>
-      <button class="nav examFailBack" id="examFailBackBtn" type="button">Volver al mapa</button>
+      <button class="nav hover-scale focus-glow" id="examRetryBtn" type="button">Reintentar examen</button>
+      <button class="nav examFailBack hover-scale focus-glow" id="examFailBackBtn" type="button">Volver al mapa</button>
     </div>
   </div>
 
   <div id="examView" style="display:none;">
-    <button class="backToMapBtn" id="examBackBtn" type="button">← Mapa</button>
+    <button class="backToMapBtn hover-scale focus-glow" id="examBackBtn" type="button">← Mapa</button>
     <div class="examTopRow">
       <p class="hint" id="examProgressText" style="text-align:left; margin:0;"></p>
       <div class="examLives" id="examLives" aria-label="Vidas restantes"></div>
@@ -190,33 +367,33 @@
       <p class="examPrompt" id="examPrompt"></p>
       <div id="examMcOptions"></div>
       <div id="examWriteBox" style="display:none;">
-        <input type="text" id="examWriteInput" class="search" placeholder="Escribe la traducción...">
-        <button class="nav" id="examCheckBtn" type="button" style="width:100%;">Verificar</button>
+        <input type="text" id="examWriteInput" class="search focus-glow" placeholder="Escribe la traducción...">
+        <button class="nav hover-scale focus-glow" id="examCheckBtn" type="button" style="width:100%;">Verificar</button>
       </div>
       <div id="examSpeakBox" style="display:none;">
-        <button class="micBtn" id="examMicBtn" type="button" aria-label="Hablar">🎤</button>
+        <button class="micBtn hover-scale focus-glow" id="examMicBtn" type="button" aria-label="Hablar">🎤</button>
         <p class="hint" id="examSpeakStatus" style="text-align:center;"></p>
-        <button class="linkBtn" id="examSkipBtn" type="button">Omitir (cuenta como error)</button>
+        <button class="linkBtn hover-scale focus-glow" id="examSkipBtn" type="button">Omitir (cuenta como error)</button>
       </div>
       <div id="examDictationBox" style="display:none;">
         <div style="display:flex; gap:10px; margin:4px 0 14px;">
-          <button class="nav" id="examDictPlayBtn" type="button" style="flex:1;" aria-label="Escuchar la frase">🔊 Escuchar</button>
-          <button class="nav" id="examDictSlowBtn" type="button" style="flex:1;" aria-label="Escuchar la frase más lento">🐢 Más lento</button>
+          <button class="nav hover-scale focus-glow" id="examDictPlayBtn" type="button" style="flex:1;" aria-label="Escuchar la frase">🔊 Escuchar</button>
+          <button class="nav hover-scale focus-glow" id="examDictSlowBtn" type="button" style="flex:1;" aria-label="Escuchar la frase más lento">🐢 Más lento</button>
         </div>
-        <input type="text" id="examDictInput" class="search" placeholder="Escribe lo que escuchaste, en inglés..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="en">
-        <button class="nav" id="examDictCheckBtn" type="button" style="width:100%;">Verificar</button>
-        <button class="linkBtn" id="examDictSkipBtn" type="button">Omitir (cuenta como error)</button>
+        <input type="text" id="examDictInput" class="search focus-glow" placeholder="Escribe lo que escuchaste, en inglés..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="en">
+        <button class="nav hover-scale focus-glow" id="examDictCheckBtn" type="button" style="width:100%;">Verificar</button>
+        <button class="linkBtn hover-scale focus-glow" id="examDictSkipBtn" type="button">Omitir (cuenta como error)</button>
       </div>
       <p class="hint" id="examInputHint" role="status" aria-live="polite" style="text-align:center; display:none;"></p>
-      <img class="mascot mascot-exam" id="examMascot" src="./assets/ajolote-happy.png" alt="" width="96" height="96" hidden>
+      <img class="mascot mascot-exam" id="examMascot" src="./assets/stickers/ajolotes_emociones/aprobado_con_check.png" alt="" width="96" height="96" hidden>
       <p id="examFeedback" class="examFeedback" style="display:none;"></p>
     </div>
-    <button class="nav" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
+    <button class="nav hover-scale focus-glow" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
   </div>
 
   <div id="tableView" style="display:none;">
-    <button class="backToMapBtn" id="backFromTableBtn" type="button">← Progreso</button>
-    <input type="text" id="search" class="search" placeholder="Buscar en inglés o español...">
+    <button class="backToMapBtn hover-scale focus-glow" id="backFromTableBtn" type="button">← Progreso</button>
+    <input type="text" id="search" class="search focus-glow" placeholder="Buscar en inglés o español...">
     <p class="hint" id="tableCount" style="text-align:left;"></p>
     <div class="tableWrap">
       <table id="wordsTable">
@@ -227,6 +404,10 @@
   </div>
 
   <div id="progressView" style="display:none;">
+    <div class="viewHeader">
+      <h2 style="margin:0 0 4px; font-family:var(--font-ui); color:var(--ink);">Progreso</h2>
+      <p class="hint" style="margin:0 0 16px; text-align:left;">Tu avance, racha y dominio de frases.</p>
+    </div>
     <div class="gLevel" style="margin-bottom:14px;">
       <div class="gLevelTop"><span id="gLevelNum">Nivel 1</span><span id="gXpText">0/100 XP</span></div>
       <div class="gBarOuter"><div class="gBarFill" id="gLevelFill"></div></div>
@@ -245,8 +426,49 @@
     </div>
     <p class="progSummary" id="progSummary"></p>
     <div id="chartWrap"></div>
-    <p class="hint" id="progEmpty" style="display:none;">Aún no has calificado ninguna tarjeta. Ve a "Aprender", voltéala y califica con 🔴 🟡 🟢 para empezar a ver tu progreso aquí.</p>
-    <button class="nav" id="openTableBtn" type="button" style="width:100%; margin-top:16px;">📋 Ver tabla completa</button>
+    <p class="hint" id="progEmpty" style="display:none;">Aún no has calificado ninguna tarjeta. Ve a "Aprender", voltéala y califica con
+  <img class="rateSticker" src="./assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png" alt="Repasar" width="24" height="24" style="vertical-align:middle;margin:0 2px;">
+  <img class="rateSticker" src="./assets/stickers/ajolotes_emociones/aprobado_con_check.png" alt="Bien" width="24" height="24" style="vertical-align:middle;margin:0 2px;">
+  <img class="rateSticker" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="Fácil" width="24" height="24" style="vertical-align:middle;margin:0 2px;">
+  para empezar a ver tu progreso aquí.</p>
+    <button class="nav hover-scale focus-glow" id="openTableBtn" type="button" style="width:100%; margin-top:16px;">📋 Ver tabla completa</button>
+  </div>
+
+  <div id="reviewView" class="stagger-review" style="display:none;">
+    <div class="reviewHeader" style="--i:1;">
+      <button class="miniBtn hover-scale focus-glow" id="reviewBackBtn" type="button" aria-label="Volver">←</button>
+      <h2 style="margin:0; font-family:var(--font-ui); color:var(--ink);">Repasar hoy</h2>
+      <span id="reviewCount" class="hint" style="font-size:.75rem;">0 tarjetas para repasar</span>
+    </div>
+    <div id="reviewProgress" class="progBarOuter" style="--i:2; margin:12px 0; display:none;"><div class="progBarFill" id="reviewProgBarFill"></div></div>
+    <div class="card" id="reviewCard" style="--i:3;">
+      <div class="card-inner">
+        <div class="face front">
+          <span class="tag">EN</span>
+          <button class="speakBtn hover-scale focus-glow" id="reviewSpeakFront" aria-label="Escuchar en inglés">🔊</button>
+          <button class="speakBtn speakSlow hover-scale focus-glow" id="reviewSpeakFrontSlow" aria-label="Escuchar en inglés, despacio">🐢</button>
+          <p id="reviewFrontText"></p>
+        </div>
+        <div class="face back"><span class="tag">ES</span><button class="speakBtn hover-scale focus-glow" id="reviewSpeakBack" aria-label="Escuchar en español">🔊</button><p id="reviewBackText"></p></div>
+      </div>
+      <div class="flipHint">↻</div>
+    </div>
+    <div class="actionZone" id="reviewActionZone" style="--i:4;">
+      <button class="showAnswerBtn hover-scale focus-glow" id="reviewShowAnswerBtn" type="button">Mostrar respuesta</button>
+      <div class="rateBlock" id="reviewRateBlock" style="display:none;">
+        <p class="ratePrompt" id="reviewRatePrompt">¿Qué tan bien la sabías?</p>
+        <div class="rateRow" id="reviewRateRow">
+          <button class="rateBtn rateGood hover-scale focus-glow" id="reviewRateGood" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/aprobado_con_check.png" alt="Bien"></span><span class="rateLabel">Bien</span><span class="rateCaption">+10 XP</span></button>
+          <button class="rateBtn rateEasy hover-scale focus-glow" id="reviewRateEasy" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="Fácil"></span><span class="rateLabel">Fácil</span><span class="rateCaption">+10 XP · dominada</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="reviewEmpty" id="reviewEmpty" style="--i:5; display:none; text-align:center; padding:40px 16px;">
+      <img class="mascot" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="" width="80" height="80" style="margin-bottom:12px;">
+      <p style="font-family:var(--font-ui); font-weight:700; color:var(--ink); margin-bottom:4px;">¡No hay tarjetas para repasar!</p>
+      <p class="hint">Todo al día. Vuelve mañana o sigue aprendiendo en el mapa.</p>
+      <button class="nav hover-scale focus-glow" id="reviewEmptyLearnBtn" type="button" style="margin-top:16px;">🗺️ Ir al mapa</button>
+    </div>
   </div>
 
   <div id="myCardsView" style="display:none;">
@@ -257,50 +479,54 @@
       </div>
       <p class="hint" id="myCardsCount" style="text-align:left; margin:2px 0 14px;">Crea, edita y organiza tus propias frases.</p>
       <div class="myCardsActions" style="display:flex; gap:10px; margin-bottom:16px;">
-        <button class="nav" id="myCardsAddToggle" type="button" style="flex:1;">➕ Crear tarjeta</button>
-        <button class="nav" id="myCardsPracticeBtn" type="button" style="flex:1;">▶️ Practicar</button>
+        <button class="nav hover-scale focus-glow" id="myCardsAddToggle" type="button" style="flex:1;">➕ Crear tarjeta</button>
+        <button class="nav hover-scale focus-glow" id="myCardsPracticeBtn" type="button" style="flex:1;">▶️ Practicar</button>
       </div>
       <div class="myCardsIO" role="group" aria-label="Importar o exportar tus tarjetas">
-        <button class="nav myCardsIOBtn" id="myCardsExportBtn" type="button">⬇️ Exportar tarjetas (.json)</button>
-        <button class="nav myCardsIOBtn" id="myCardsImportBtn" type="button">⬆️ Importar tarjetas (.json)</button>
+        <button class="nav myCardsIOBtn hover-scale focus-glow" id="myCardsExportBtn" type="button">⬇️ Exportar tarjetas (.json)</button>
+        <button class="nav myCardsIOBtn hover-scale focus-glow" id="myCardsImportBtn" type="button">⬆️ Importar tarjetas (.json)</button>
       </div>
       <input type="file" id="myCardsImportFile" accept="application/json,.json" style="display:none;">
       <p class="hint myCardsIOStatus" id="myCardsIOStatus" role="status" aria-live="polite"></p>
     </div>
-    <div id="myCardsList" class="myCardsList"></div>
+    <div id="myCardsList" class="myCardsList stagger-mycards"></div>
   </div>
 
   <div id="translatorView" style="display:none;">
+    <div class="viewHeader">
+      <h2 style="margin:0 0 4px; font-family:var(--font-ui); color:var(--ink);">Traductor</h2>
+      <p class="hint" style="margin:0 0 16px; text-align:left;">Traduce frases entre inglés y español y guárdalas en tus tarjetas.</p>
+    </div>
     <div class="translatorDirRow">
       <span id="trFromLabel">Inglés</span>
-      <button class="nav" id="trSwapBtn" type="button" aria-label="Invertir idiomas">⇄</button>
+      <button class="nav hover-scale focus-glow" id="trSwapBtn" type="button" aria-label="Invertir idiomas">⇄</button>
       <span id="trToLabel">Español</span>
     </div>
     <textarea id="trInput" class="search trTextarea" placeholder="Escribe el texto a traducir..." rows="3" maxlength="500"></textarea>
-    <button class="nav" id="trGoBtn" type="button" style="width:100%;">Traducir</button>
+    <button class="nav hover-scale focus-glow" id="trGoBtn" type="button" style="width:100%;">Traducir</button>
     <p class="hint" id="trStatus" style="text-align:left;"></p>
     <div id="trResultBox" style="display:none;">
       <p class="fLabel" style="margin-top:16px;">Traducción</p>
       <p class="trResultText" id="trResultText"></p>
-      <button class="nav" id="trSaveBtn" type="button" style="width:100%;">💾 Guardar a Mis Tarjetas</button>
+      <button class="nav hover-scale focus-glow" id="trSaveBtn" type="button" style="width:100%;">💾 Guardar a Mis Tarjetas</button>
     </div>
     <p class="hint" id="trHint" style="text-align:left;">Traducción en línea (MyMemory, con respaldo en Lingva). Requiere conexión a internet · máx. 500 caracteres.</p>
   </div>
 
   <div id="profileView" style="display:none;">
     <div class="profileHead">
-      <div class="profileAvatar" id="profileAvatar"><img class="mascot mascot-avatar" src="./assets/ajolote-hero.png" alt="" width="56" height="56"></div>
+      <div class="profileAvatar" id="profileAvatar"><img class="mascot mascot-avatar" src="./assets/stickers/ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png" alt="" width="56" height="56"></div>
       <div class="profileWho">
         <div class="profileName" id="profileName">Tu cuenta</div>
         <div class="profileEmail" id="profileEmail">sin vincular</div>
         <div class="profileBadge" id="profileBadge">⚪ Cuenta no vinculada</div>
       </div>
     </div>
-    <button class="nav googleBtn" id="profileGoogleBtn" type="button">
+    <button class="nav googleBtn hover-scale focus-glow" id="profileGoogleBtn" type="button">
       <svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
       <span id="profileGoogleBtnLabel">Iniciar sesión con Google</span>
     </button>
-    <button class="nav cloudSyncBtn" id="cloudSyncNowBtn" type="button" hidden>☁️ Sincronizar ahora</button>
+    <button class="nav cloudSyncBtn hover-scale focus-glow" id="cloudSyncNowBtn" type="button" hidden>☁️ Sincronizar ahora</button>
     <p class="hint cloudStatus" id="cloudStatus" role="status" aria-live="polite"></p>
     <p class="hint cloudHint" id="cloudHint">La sincronización es opcional: sin iniciar sesión todo se guarda solo en este dispositivo.</p>
 
@@ -312,24 +538,31 @@
     <p class="hint" id="pfXpDetail" style="text-align:left; margin-top:4px;"></p>
 
     <div class="setTitle" style="margin:18px 0 8px;">Estadísticas</div>
-    <div class="statsRow">
-      <div class="statBox"><div class="statNum" id="pfStreak">0</div><div class="statLbl">🔥 Racha</div></div>
-      <div class="statBox"><div class="statNum" id="pfMastered">0</div><div class="statLbl">Frases dominadas</div></div>
-      <div class="statBox"><div class="statNum" id="pfActiveDays">0</div><div class="statLbl">Días activo</div></div>
+    <div class="statsRow stagger-stats">
+      <div class="statBox" style="--i:1;"><div class="statNum" id="pfStreak">0</div><div class="statLbl">🔥 Racha</div></div>
+      <div class="statBox" style="--i:2;"><div class="statNum" id="pfMastered">0</div><div class="statLbl">Frases dominadas</div></div>
+      <div class="statBox" style="--i:3;"><div class="statNum" id="pfActiveDays">0</div><div class="statLbl">Días activo</div></div>
     </div>
 
     <div class="setTitle" style="margin:18px 0 8px;">Recompensas</div>
-    <div class="rewardsGrid" id="rewardsGrid"></div>
+    <div class="rewardsGrid stagger-rewards" id="rewardsGrid"></div>
+
+    <div class="setTitle" style="margin:22px 0 8px;">Compartir progreso</div>
+    <button class="nav ripple hover-scale focus-glow" id="shareProgressBtn" type="button" style="width:100%;">📤 Generar tarjeta de progreso</button>
+    <p class="hint" id="shareStatus" style="text-align:left; margin-top:8px;"></p>
 
     <div class="setTitle" style="margin:22px 0 8px;">Respaldo</div>
     <div class="backupRow">
-      <button class="nav" id="exportBtn" type="button">⬇️ Exportar Respaldo (.json)</button>
-      <button class="nav" id="importBtn" type="button">⬆️ Importar Respaldo (.json)</button>
+      <button class="nav hover-scale focus-glow" id="exportBtn" type="button">⬇️ Exportar Respaldo (.json)</button>
+      <button class="nav hover-scale focus-glow" id="importBtn" type="button">⬆️ Importar Respaldo (.json)</button>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
     <p class="hint" id="backupStatus" style="text-align:left;"></p>
 
-    <button class="nav dangerBtn" id="profileLogoutBtn" type="button" style="width:100%; margin-top:20px;">Cerrar sesión</button>
+    <div class="setTitle" style="margin:22px 0 8px;">Tema de la app</div>
+    <div class="themeGrid" id="profileThemeGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:12px;"></div>
+
+    <button class="nav dangerBtn hover-scale focus-glow" id="profileLogoutBtn" type="button" style="width:100%; margin-top:20px;">Cerrar sesión</button>
 
     <footer class="appFooter">© 2026 Om<span class="iiAccent">ii</span> Lab. Todos los derechos reservados.</footer>
   </div>
@@ -339,28 +572,28 @@
     <div class="gModal gModalWide">
       <div class="modalHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <h3 id="cardModalTitle" style="margin:0; font-family:var(--font-ui);">Crear Tarjeta</h3>
-        <button class="modalCloseBtn" id="cardModalClose" type="button" aria-label="Cerrar">✕</button>
+        <button class="modalCloseBtn hover-scale focus-glow" id="cardModalClose" type="button" aria-label="Cerrar">✕</button>
       </div>
       <form id="cardModalForm" onsubmit="return false;">
         <input type="hidden" id="cardModalId" value="">
         <label class="fLabel">Frase en inglés *</label>
-        <input type="text" id="cardModalEn" class="search" placeholder="p. ej. Break a leg" required>
+        <input type="text" id="cardModalEn" class="search focus-glow" placeholder="p. ej. Break a leg" required>
         <label class="fLabel">Traducción en español *</label>
-        <input type="text" id="cardModalEs" class="search" placeholder="p. ej. Buena suerte" required>
+        <input type="text" id="cardModalEs" class="search focus-glow" placeholder="p. ej. Buena suerte" required>
         <label class="fLabel">Categoría</label>
         <div class="catRow" style="display:flex; gap:8px; margin-bottom:10px;">
-          <select id="cardModalCat" class="search" style="margin-bottom:0;"></select>
-          <button class="nav" id="cardModalNewCatBtn" type="button" style="white-space:nowrap;">+ Nueva</button>
+          <select id="cardModalCat" class="search focus-glow" style="margin-bottom:0;"></select>
+          <button class="nav hover-scale focus-glow" id="cardModalNewCatBtn" type="button" style="white-space:nowrap;">+ Nueva</button>
         </div>
         <div id="cardModalNewCatBox" style="display:none; margin-bottom:10px;">
-          <input type="text" id="cardModalNewCatInput" class="search" placeholder="Nombre de la nueva categoría" style="margin-bottom:6px;">
-          <button class="nav" id="cardModalNewCatSaveBtn" type="button" style="width:100%;">Guardar categoría</button>
+          <input type="text" id="cardModalNewCatInput" class="search focus-glow" placeholder="Nombre de la nueva categoría" style="margin-bottom:6px;">
+          <button class="nav hover-scale focus-glow" id="cardModalNewCatSaveBtn" type="button" style="width:100%;">Guardar categoría</button>
         </div>
         <label class="fLabel">Ejemplo en inglés (opcional)</label>
-        <input type="text" id="cardModalEx" class="search" placeholder="p. ej. Break a leg on your test!">
+        <input type="text" id="cardModalEx" class="search focus-glow" placeholder="p. ej. Break a leg on your test!">
         <label class="fLabel">Traducción del ejemplo (opcional)</label>
-        <input type="text" id="cardModalExEs" class="search" placeholder="p. ej. ¡Buena suerte en tu examen!">
-        <button class="nav" id="cardModalSaveBtn" type="button" style="width:100%; margin-top:8px;">Guardar tarjeta</button>
+        <input type="text" id="cardModalExEs" class="search focus-glow" placeholder="p. ej. ¡Buena suerte en tu examen!">
+        <button class="nav hover-scale focus-glow" id="cardModalSaveBtn" type="button" style="width:100%; margin-top:8px;">Guardar tarjeta</button>
         <p class="hint" id="cardModalStatus" style="text-align:left; margin-top:8px; min-height:1.2em;"></p>
       </form>
     </div>
@@ -371,16 +604,16 @@
     <div class="gModal gModalWide">
       <div class="modalHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <h3 style="margin:0; font-family:var(--font-ui);">🗣️ Configurar voces y traductor</h3>
-        <button class="modalCloseBtn" id="voiceModalClose" type="button" aria-label="Cerrar">✕</button>
+        <button class="modalCloseBtn hover-scale focus-glow" id="voiceModalClose" type="button" aria-label="Cerrar">✕</button>
       </div>
       <div class="voiceModalBody">
         <label class="fLabel">Voz en Inglés (EN)</label>
-        <select id="voiceEn" class="search"></select>
-        <button class="nav" id="voiceTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en inglés</button>
+        <select id="voiceEn" class="search focus-glow"></select>
+        <button class="nav hover-scale focus-glow" id="voiceTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en inglés</button>
         
         <label class="fLabel">Voz en Español (ES)</label>
-        <select id="voiceEs" class="search"></select>
-        <button class="nav" id="voiceEsTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en español</button>
+        <select id="voiceEs" class="search focus-glow"></select>
+        <button class="nav hover-scale focus-glow" id="voiceEsTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en español</button>
 
         <div class="infoBox" style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px; margin-top:10px;">
           <h4 style="margin:0 0 6px; font-size:.9rem; color:var(--ink);">🌐 Motor del Traductor</h4>
@@ -388,7 +621,7 @@
             Vocabri utiliza el motor MyMemory y respaldo en Lingva para traducir frases bidireccionalmente. Las traducciones guardadas van directo a tu sección de <strong>Mis Tarjetas</strong>.
           </p>
         </div>
-        <button class="nav" id="voiceModalDoneBtn" type="button" style="width:100%; margin-top:16px;">Listo</button>
+        <button class="nav hover-scale focus-glow" id="voiceModalDoneBtn" type="button" style="width:100%; margin-top:16px;">Listo</button>
       </div>
     </div>
   </div>
@@ -459,7 +692,7 @@
       <button class="nav resetBackupBtn" id="resetBackupBtn" type="button">⬇️ Exportar respaldo primero</button>
       <p class="resetStatus" id="resetStatus" role="status" aria-live="polite"></p>
       <label class="resetConfirmLabel" for="resetConfirmInput">Para confirmar, escribe <strong>BORRAR</strong></label>
-      <input type="text" id="resetConfirmInput" class="search" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="BORRAR" inputmode="text">
+      <input type="text" id="resetConfirmInput" class="search focus-glow" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="BORRAR" inputmode="text">
       <button class="nav dangerSolid" id="resetConfirmBtn" type="button" disabled>Borrar progreso</button>
       <button class="nav resetCancel" id="resetCancelBtn" type="button">Cancelar</button>
     </div>
@@ -469,13 +702,13 @@
 
 <nav class="bottomNav" id="bottomNav"></nav>
 
-<div class="mascotToast" id="mascotToast" aria-hidden="true"><img id="mascotToastImg" class="mascot" src="./assets/ajolote-happy.png" alt="" width="74" height="74"></div>
+<div class="mascotToast" id="mascotToast" aria-hidden="true"><img id="mascotToastImg" class="mascot" src="./assets/stickers/ajolotes_emociones/feliz_nadando_saludando.png" alt="" width="74" height="74"></div>
 
 <div class="updateBanner" id="updateBanner" role="status" aria-live="polite" hidden>
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.1.0"></script>
+<script src="app.js?v=1.1.2"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -485,20 +718,14 @@
     });
   }
 </script>
+<script src="config.js"></script>
 <script type="module">
 
 /* =====================================================================
 Firebase (Auth + Firestore) — sincronización en la nube OPCIONAL*/
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBwlMVUzgjDmIFB92N55ZI2RhdyI2k75nU",
-  authDomain: "vocabri-9571e.firebaseapp.com",
-  projectId: "vocabri-9571e",
-  storageBucket: "vocabri-9571e.firebasestorage.app",
-  messagingSenderId: "718289834673",
-  appId: "1:718289834673:web:caa9c068ce7b27fa85c890",
-  measurementId: "G-DY5KLZSQKM"
-};
+// Config loaded from config.js (window.VocabriConfig.firebaseConfig)
+const firebaseConfig = window.VocabriConfig?.firebaseConfig || {};
 
 
 const FIREBASE_VERSION = '10.14.1';
