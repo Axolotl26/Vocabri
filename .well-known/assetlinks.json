@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.axolotl26.twa",
+        "sha256_cert_fingerprints": ["21:87:31:C1:E9:DF:42:7B:FB:78:B8:2A:76:B9:C4:65:F9:5C:92:E9:0D:C8:1B:37:2D:F6:3E:7A:75:D1:67:0E"]
+      }
+    }]
