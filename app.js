@@ -4160,6 +4160,36 @@ const NAV_ICONS = {
   const h = document.querySelector('#'+v+' '+sel);
   if(h && !h.querySelector('.tabIcon')){ const i = document.createElement('span'); i.className = 'tabIcon'; i.setAttribute('aria-hidden','true'); i.innerHTML = NAV_ICONS[k]; h.insertBefore(i, h.firstChild); }
 });
+
+// ===== Pantalla completa (escritorio y móviles que lo permiten) =====
+{
+  const fsBtn = document.getElementById('fsBtn');
+  const root = document.documentElement;
+  const reqFs = root.requestFullscreen || root.webkitRequestFullscreen;
+  const canFs = !!reqFs && (document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  let standalone = false;
+  try{ standalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true; }catch(e){}
+  if(fsBtn && canFs && !standalone){
+    fsBtn.hidden = false;
+    const isFs = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const sync = () => {
+      const on = isFs();
+      fsBtn.classList.toggle('isFs', on);
+      fsBtn.setAttribute('aria-pressed', String(on));
+      const t = on ? 'Salir de pantalla completa' : 'Pantalla completa';
+      fsBtn.setAttribute('aria-label', t); fsBtn.title = t;
+    };
+    fsBtn.onclick = () => {
+      try{
+        if(isFs()){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+        else { const p = reqFs.call(root); if(p && p.catch) p.catch(()=>{}); }
+      }catch(e){}
+    };
+    document.addEventListener('fullscreenchange', sync);
+    document.addEventListener('webkitfullscreenchange', sync);
+    sync();
+  }
+}
 const MAIN_NAV_ITEMS = [
   {id:'learn', icon: NAV_ICONS.learn, label:'Aprender'},
   {id:'review', icon: NAV_ICONS.review, label:'Repasar'},
