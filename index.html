@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
 <link rel="icon" href="assets/origin-logo.png">
-<link rel="stylesheet" href="styles.css?v=1.1.2">
+<link rel="stylesheet" href="styles.css?v=1.1.3">
 <link rel="manifest" href="manifest.json">
 <script src="./categoriesRegistry.js"></script>
 <script src="./phraseLoader.js"></script>
@@ -197,6 +197,7 @@
         </svg>
         <div class="lrText" id="lrText">1</div>
       </div>
+      <button class="gear starBtn hover-scale focus-glow" id="starBtn" type="button" aria-label="Dar una estrella en GitHub" aria-expanded="false" aria-controls="starPanel"><span class="navIcon hdrIcon" aria-hidden="true"><svg viewBox="0 0 28 28" width="26" height="26" focusable="false" style="--c:#FBBF24;--e:#9A5A07"><g class="niEd" transform="translate(0 2)"><polygon points="14.0,2.0 17.2,9.2 25.0,10.0 19.1,15.3 20.8,23.0 14.0,19.0 7.2,23.0 8.9,15.3 3.0,10.0 10.8,9.2"/></g><g class="niMn"><polygon points="14.0,2.0 17.2,9.2 25.0,10.0 19.1,15.3 20.8,23.0 14.0,19.0 7.2,23.0 8.9,15.3 3.0,10.0 10.8,9.2"/></g><path d="M9.2 9.4 12.2 5.6" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/></svg></span></button>
       <button class="gear hover-scale focus-glow" id="newsBtn" aria-label="Novedades" aria-expanded="false">📰<span class="dot" id="newsDot" style="display:none;"></span></button>
       <button class="gear hover-scale focus-glow" id="settingsBtn" aria-label="Configuración" aria-expanded="false">☰<span class="dot" id="syncDot"></span></button>
     </div>
@@ -227,6 +228,7 @@
       <div class="setSec" style="--i:3;">
         <div class="setTitle">Preferencias</div>
         <button class="nav setBtn hover-scale focus-glow" id="sfxToggleBtn" type="button">🔊 Efectos y vibración: Activados</button>
+        <button class="nav setBtn hover-scale focus-glow" id="fxToggleBtn" type="button" style="margin-top:8px;">✨ Efectos del mapa: Completos</button>
         <button class="nav setBtn hover-scale focus-glow" id="voiceConfigBtn" type="button" style="margin-top:8px;">🗣️ Configurar voces y traductor</button>
         <button class="nav setBtn hover-scale focus-glow" id="notifToggleBtn" type="button" style="margin-top:8px;" aria-pressed="false">🔔 Recordatorios diarios: Desactivados</button>
         <p class="setStatus notifStatus" id="notifStatus" role="status" aria-live="polite"></p>
@@ -249,7 +251,7 @@
         <p class="setStatus" id="syncStatus"></p>
         <button class="nav setBtn dangerBtn setResetBtn hover-scale focus-glow" id="setResetBtn" type="button">🗑️ Borrar progreso</button>
       </div>
-      <div class="setSec" style="--i:5; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
+      <div class="setSec" style="--i:6; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
         <button class="nav setBtn hover-scale focus-glow" id="termsBtn" type="button" style="width:100%; text-align:center;">📄 Términos y Condiciones</button>
       </div>
     </div>
@@ -263,6 +265,27 @@
       </div>
       <div class="setSec" style="--i:2; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
         <button class="nav setBtn hover-scale focus-glow" id="newsCloseBtn" type="button" style="width:100%; text-align:center;">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- Panel: Apoya el proyecto (estrella en GitHub) -->
+    <div class="settingsPanel stagger-settings" id="starPanel" hidden>
+      <div class="setSec" style="--i:1;">
+        <div class="setTitle">Apoya el proyecto</div>
+        <p class="starLead">Vocabri es un proyecto de <b>código abierto</b> hecho por un estudiante. Si te sirve, una ⭐ en GitHub ayuda a que más gente lo encuentre.</p>
+        <div class="starRepo">
+          <span class="starRepoIco" aria-hidden="true">📂</span>
+          <div class="starRepoTxt"><b>Axolotl26/Vocabri</b><a id="starRepoLink" href="https://github.com/Axolotl26/Vocabri" target="_blank" rel="noopener noreferrer">github.com/Axolotl26/Vocabri</a></div>
+        </div>
+        <ul class="starFacts">
+          <li>Licencia MIT · versión <span id="starVersion"></span></li>
+          <li>¿Encontraste un error? <a id="starIssuesLink" href="https://github.com/Axolotl26/Vocabri/issues" target="_blank" rel="noopener noreferrer">Repórtalo aquí</a></li>
+        </ul>
+      </div>
+      <div class="setSec" style="--i:2; border-bottom:none; margin-bottom:0; padding-bottom:4px;">
+        <button class="nav setBtn hover-scale focus-glow" id="starOpenBtn" type="button" style="width:100%; text-align:center;">⭐ Dar una estrella en GitHub</button>
+        <p class="setStatus starNote">Se abre GitHub en otra pestaña: allí pulsa el botón <b>Star</b> (necesitas una cuenta gratuita).</p>
+        <button class="nav setBtn hover-scale focus-glow" id="starCloseBtn" type="button" style="width:100%; text-align:center; margin-top:8px;">Cerrar</button>
       </div>
     </div>
   </header>
@@ -708,7 +731,7 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.1.2"></script>
+<script src="app.js?v=1.1.3"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

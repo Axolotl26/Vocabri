@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.2';
+const CACHE_VERSION = '1.1.3';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -20,12 +20,9 @@ const STATE_URL = './vocabri-reminder-state.json';
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './styles.css?v=1.1.2',
-  './app.js?v=1.1.2',
+  './styles.css?v=1.1.3',
+  './app.js?v=1.1.3',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
   './assets/origin-logo.png',
   // mascot (exam stickers, welcome screen, header) — so they also show offline
   './assets/stickers/ajolotes_emociones/feliz_brazos_arriba.png',

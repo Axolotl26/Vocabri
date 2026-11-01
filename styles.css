@@ -212,7 +212,19 @@ body{
   font-family:var(--font-ui); font-size:var(--text-xs); cursor:pointer;
   position: relative;
 }
-.navItem .navIcon{font-size:var(--text-xl); line-height:1;}
+.navItem .navIcon{font-size:var(--text-xl); line-height:1; display:flex; align-items:center; justify-content:center; height:30px; transition:transform .18s ease;}
+.navItem .navIcon svg{display:block; width:30px; height:30px; overflow:visible; filter:saturate(.8) brightness(.92); opacity:.92; transition:filter .18s ease, opacity .18s ease;}
+.navIcon .niEd *{ fill:var(--e); stroke:var(--e); stroke-width:2.6; stroke-linejoin:round; }
+.navIcon .niMn > *{ fill:var(--c); stroke:var(--e); stroke-width:2.6; stroke-linejoin:round; }
+.navIcon .niEd .niLn, .navIcon .niMn .niLn{ fill:none; stroke-linecap:round; }
+.navIcon .niEd .niLn{ stroke:var(--e); stroke-width:7.4; }
+.navIcon .niMn .niLn{ stroke:var(--c); stroke-width:3.8; }
+.navIcon .niMn .niFl{ stroke:var(--e); stroke-width:2; }
+.navItem.active .navIcon{ transform:translateY(-2px) scale(1.12); }
+.navItem.active .navIcon svg{ filter:drop-shadow(0 3px 5px rgba(0,0,0,.3)); opacity:1; }
+.navItem.active .navIcon{ animation:navPop .32s ease-out; }
+@keyframes navPop{ 0%{transform:translateY(2px) scale(.88);} 60%{transform:translateY(-4px) scale(1.2);} 100%{transform:translateY(-2px) scale(1.12);} }
+@media (prefers-reduced-motion: reduce){ .navItem.active .navIcon{ animation:none; } }
 .navItem.active{color:var(--primary); background:var(--primary-soft); font-weight:700;}
 
 .navBadge{
@@ -1966,8 +1978,6 @@ button.nav.cloudSyncBtn:disabled{ opacity:.6; cursor:default; }
   .stage-badge > div:last-child {
     font-size: 0.65rem;
   }
-
-@media (max-width: 360px) {
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1984,3 +1994,281 @@ button.nav.cloudSyncBtn:disabled{ opacity:.6; cursor:default; }
     transform: translateY(0) scale(1);
   }
 }
+
+/* =====================================================================
+   Mapa isométrico 2.5D  (v2 — estilo "torres oscuras")
+   REEMPLAZA en styles.css todo el bloque desde el comentario
+   "Mapa isométrico 2.5D (buildPathMap en app.js)" hasta el final del
+   archivo (incluida la regla #stageMapView del final, que ya viene aquí).
+   Todo se deriva de --primary / --paper / --ink / --bg: funciona con los
+   5 temas en claro y oscuro.
+   ===================================================================== */
+.pathWrap.isoMap{
+  display:block; position:relative; width:100%; padding:0; gap:0;
+  --iso-shade: color-mix(in srgb, var(--primary) 18%, #000);
+  --iso-cloud: color-mix(in srgb, var(--primary) 18%, #fff);
+  --iso-cloud-sh: color-mix(in srgb, var(--primary) 28%, #9a8fb0);
+  --iso-mtn-l: color-mix(in srgb, var(--primary) 20%, var(--bg));
+  --iso-mtn-r: color-mix(in srgb, var(--primary) 8%, var(--bg));
+}
+.isoStage{
+  position:relative; width:100%; overflow:hidden;
+  background:radial-gradient(80% 22% at 50% 0%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 75%);
+}
+/* difuminado que sigue a la PANTALLA (sticky): lo lejano se funde con el fondo y se aclara al hacer scroll */
+.isoFade{
+  position:sticky; left:0; right:0; height:min(150px, 22vh); z-index:8; pointer-events:none;
+  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+}
+.isoFade.top{
+  top:0; margin-bottom:calc(-1 * min(150px, 22vh));
+  background:linear-gradient(180deg, var(--bg) 0, color-mix(in srgb, var(--bg) 70%, transparent) 40%, transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg, #000 0, #000 35%, transparent 100%); mask-image:linear-gradient(180deg, #000 0, #000 35%, transparent 100%);
+}
+.isoFade.bot{
+  bottom:0; margin-top:calc(-1 * min(150px, 22vh));
+  background:linear-gradient(0deg, var(--bg) 0, color-mix(in srgb, var(--bg) 70%, transparent) 40%, transparent 100%);
+  -webkit-mask-image:linear-gradient(0deg, #000 0, #000 35%, transparent 100%); mask-image:linear-gradient(0deg, #000 0, #000 35%, transparent 100%);
+}
+/* grano sutil + viñeta, nunca bloquean toques */
+.isoStage::before{
+  content:''; position:absolute; inset:0; z-index:6; pointer-events:none; opacity:.07; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.isoScene{
+  position:absolute; left:50%; top:0; width:420px; margin-left:-210px;
+  transform-origin:50% 0;
+}
+.isoLayer{ position:absolute; inset:0; pointer-events:none; }
+.isoNodes{ pointer-events:none; }
+.isoNodes > button{ pointer-events:auto; }
+.isoDefs{ position:absolute; width:0; height:0; overflow:hidden; }
+
+/* ---- Pilares ---- */
+.isoPillarBox{ position:absolute; }
+.isoPillar{ display:block; overflow:visible; }
+.isoPillar .isoT{
+  fill:var(--iso-top, color-mix(in srgb, var(--primary) 10%, #2a2036));
+  stroke:color-mix(in srgb, #fff 20%, transparent); stroke-width:1.3; stroke-linejoin:round;
+}
+.isoPillar .isoL{ fill:color-mix(in srgb, var(--iso-top, #2a2036) 55%, #0b0714); }
+.isoPillar .isoR{ fill:color-mix(in srgb, var(--iso-top, #2a2036) 32%, #0b0714); }
+.isoPillar .isoSh{ fill:url(#isoShadeG); }
+.isoPillar .isoSheen{ fill:url(#isoSheenG); }
+.st-locked{ --iso-top:#3a3048; }
+.st-active{ --iso-top:color-mix(in srgb, var(--primary) 30%, #2f2340); }
+.st-done  { --iso-top:color-mix(in srgb, #22C55E 26%, #2a2a38); }
+.st-exam  { --iso-top:color-mix(in srgb, #F59E0B 24%, #33283a); }
+.st-cd    { --iso-top:color-mix(in srgb, #9D4EDD 28%, var(--paper)); }
+
+/* ---- Camino ---- */
+.isoPath{ position:absolute; left:0; top:0; overflow:visible; }
+.isoPath path{ fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.isoPathBase{ stroke:color-mix(in srgb, var(--primary) 30%, #fff); stroke-width:4; opacity:.38; }
+.isoGlow.g1{ stroke:var(--primary); stroke-width:20; opacity:.16; }
+.isoGlow.g2{ stroke:var(--primary); stroke-width:11; opacity:.34; }
+.isoGlow.g3{ stroke:color-mix(in srgb, var(--primary) 40%, #fff); stroke-width:4; }
+
+/* ---- Nodos (botones) ---- */
+.isoMap .pathNode{
+  position:absolute; flex:none; width:64px; height:54px; border-radius:50%; border-width:3px; border-style:solid;
+  --puck-bg:var(--paper); --puck-rim:var(--line); --puck-edge:var(--line); --puck-ink:var(--ink);
+  border-color:var(--puck-rim); color:var(--puck-ink);
+  font-size:1.35rem; font-weight:800; line-height:1; padding:0; margin:0;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 0 var(--puck-edge), 0 14px 18px rgba(0,0,0,.38);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.pathWrap.isoMap .pathNode{
+  background:
+    radial-gradient(70% 55% at 34% 24%, rgba(255,255,255,.6), rgba(255,255,255,0) 70%),
+    linear-gradient(180deg, transparent 55%, rgba(0,0,0,.16)),
+    var(--puck-bg);
+}
+.isoMap .pathNode:not(:disabled):active{
+  transform:translateY(6px);
+  box-shadow:0 2px 0 var(--puck-edge), 0 4px 8px rgba(0,0,0,.3);
+}
+.isoMap .pathNode .isoMedal{ display:block; margin-top:-3px; filter:drop-shadow(0 2px 0 rgba(120,60,0,.45)); }
+.isoMap .pathNode .isoLock{ display:block; filter:drop-shadow(0 1px 0 rgba(255,255,255,.35)); }
+
+.isoMap .pathNode.active{
+  --puck-bg:var(--primary); --puck-rim:color-mix(in srgb, var(--primary) 70%, #fff);
+  --puck-edge:color-mix(in srgb, var(--primary) 52%, #000); --puck-ink:#fff;
+  box-shadow:0 8px 0 var(--puck-edge), 0 0 26px color-mix(in srgb, var(--primary) 75%, transparent), 0 14px 18px rgba(0,0,0,.38);
+}
+.isoMap .pathNode.active::after{ inset:-8px -10px; }
+.isoMap .pathNode.done{
+  --puck-bg:#22C55E; --puck-rim:#4ADE80; --puck-edge:#15803D; --puck-ink:#fff;
+}
+.isoMap .pathNode.examNode{
+  --puck-bg:#F59E0B; --puck-rim:#FBBF24; --puck-edge:#B45309; --puck-ink:#3B2800;
+  box-shadow:0 8px 0 var(--puck-edge), 0 0 22px rgba(245,158,11,.5), 0 14px 18px rgba(0,0,0,.38);
+}
+.isoMap .pathNode.examNode.done{ --puck-bg:#22C55E; --puck-rim:#4ADE80; --puck-edge:#15803D; --puck-ink:#fff; box-shadow:0 8px 0 var(--puck-edge), 0 14px 18px rgba(0,0,0,.38); }
+/* bloqueado: gris opaco y brillante, candado oscuro (el examen bloqueado sigue naranja) */
+.isoMap .pathNode.locked{
+  opacity:1; cursor:not-allowed;
+  --puck-bg:#9C98A6; --puck-rim:#C4C1CC; --puck-edge:#5E5A68; --puck-ink:#2B2635;
+  box-shadow:0 8px 0 var(--puck-edge), 0 14px 18px rgba(0,0,0,.38);
+}
+.isoMap .pathNode.examNode.locked{
+  --puck-bg:#F59E0B; --puck-rim:#FBBF24; --puck-edge:#B45309; --puck-ink:#3B2800;
+  box-shadow:0 8px 0 var(--puck-edge), 0 0 22px rgba(245,158,11,.45), 0 14px 18px rgba(0,0,0,.38);
+}
+.isoMap .pathNode.seccion-cooldown{
+  --puck-bg:#9CA3AF; --puck-rim:#C4B5FD; --puck-edge:#6D28D9; --puck-ink:#fff;
+  box-shadow:0 8px 0 var(--puck-edge), 0 14px 18px rgba(0,0,0,.38);
+}
+
+/* ---- Etiquetas y detalles "blueprint" ---- */
+.isoMap .nodeLabel{
+  position:absolute; width:124px; text-align:center; pointer-events:none;
+  font:700 .66rem/1.15 var(--font-ui); color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.7);
+}
+.isoMap .nodeTimer{
+  position:absolute; width:124px; margin:0; transform:none; text-align:center; pointer-events:none;
+  font:800 .72rem var(--font-ui); color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.7);
+}
+.isoMap .nodeReviewBtn{ position:absolute; margin:0; width:36px; height:36px; }
+.isoRing{
+  position:absolute; width:96px; height:80px; border-radius:50%; pointer-events:none;
+  border:1.5px solid rgba(255,255,255,.16);
+}
+.isoRing.on{ border-color:color-mix(in srgb, var(--primary) 60%, #fff); opacity:.55; }
+.isoMarks{ position:absolute; width:152px; height:0; pointer-events:none; }
+.isoMarks .mk{ position:absolute; top:-2px; width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.4); }
+.isoMarks .mkL{ left:0; }
+.isoMarks .mkR{ right:0; }
+.isoMarks .mkTick{
+  position:absolute; left:26px; top:-32px; width:7px; height:34px;
+  border:1px solid rgba(255,255,255,.28); border-right:none;
+}
+/* ---- Puentes de madera entre zonas (estilo cartoon) ---- */
+.isoBridge{ position:absolute; left:0; top:0; overflow:visible; }
+.isoBridge .brSh{ stroke:rgba(0,0,0,.32); stroke-width:46; stroke-linecap:round; fill:none; }
+.isoBridge .brPl{ fill:#e2a85f; stroke:#4a2a10; stroke-width:2.4; stroke-linejoin:round; }
+.isoBridge .brPl.b{ fill:#cf8f47; }
+.isoBridge .brHi{ fill:rgba(255,255,255,.3); }
+.isoBridge .brRailO{ stroke:#4a2a10; stroke-width:8; stroke-linecap:round; fill:none; }
+.isoBridge .brRail{ stroke:#f3cf8a; stroke-width:4.4; stroke-linecap:round; fill:none; }
+.isoBridge .brPostO{ stroke:#4a2a10; stroke-width:8.4; stroke-linecap:round; }
+.isoBridge .brPost{ stroke:#c98a42; stroke-width:4.8; stroke-linecap:round; }
+.isoBridge .brCap{ fill:#f3cf8a; stroke:#4a2a10; stroke-width:2.2; }
+.isoBridge.lk{ filter:saturate(.8) brightness(.94); }
+
+/* ---- Carteles de zona: plantados sobre el pilar, estilo cartoon ---- */
+/* isla flotante que sostiene el cartel (cara superior del islote ≈ centro en 56px, 28px) */
+.isoSignIsle{ position:absolute; width:112px; z-index:3; pointer-events:none; animation:isoBob 5s ease-in-out infinite alternate; animation-delay:calc(var(--d, 0) * -1s); }
+.isoSignIsle .isoPillar{ width:112px; height:auto; --iso-top:color-mix(in srgb, var(--primary) 20%, #3a3048); }
+.isoSignIsle.lk{ filter:saturate(.85) brightness(.95); }
+@keyframes isoBob{ from{ transform:translateY(-4px); } to{ transform:translateY(4px); } }
+.isoSign{
+  position:absolute; left:56px; top:30px; width:112px; margin-left:-56px; transform:translateY(-100%);
+  display:flex; flex-direction:column; align-items:center; pointer-events:none;
+}
+.isoBoard{
+  width:100%; box-sizing:border-box; padding:7px 10px 8px; text-align:center; position:relative;
+  font:800 .76rem/1.12 var(--font-ui); color:#fff7e3;
+  text-shadow:0 2px 0 #6b3b12, 0 0 3px rgba(74,42,16,.9);
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,0) 0 7px, rgba(120,66,20,.14) 7px 8px),
+    linear-gradient(180deg, #f0b96a 0, #dc9a4a 55%, #c78236 100%);
+  border:3px solid #4a2a10; border-radius:14px;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.4), inset 0 -4px 0 rgba(110,58,14,.35), 0 4px 0 #4a2a10;
+}
+.isoBoard::before, .isoBoard::after{ /* clavos */
+  content:''; position:absolute; top:6px; width:5px; height:5px; border-radius:50%;
+  background:#fbe3ae; box-shadow:0 0 0 1.5px #4a2a10;
+}
+.isoBoard::before{ left:6px; } .isoBoard::after{ right:6px; }
+.isoPost{
+  width:12px; height:18px; margin-top:1px; position:relative;
+  background:linear-gradient(90deg, #b87a38, #e0a45c 45%, #b87a38);
+  border:3px solid #4a2a10; border-top:none; border-radius:0 0 4px 4px;
+}
+.isoPost::after{ /* sombra en el suelo */
+  content:''; position:absolute; left:50%; bottom:-8px; width:34px; height:10px; margin-left:-17px; z-index:-1;
+  background:radial-gradient(closest-side, rgba(0,0,0,.4), transparent); border-radius:50%;
+}
+
+/* ---- Decoración ---- */
+.isoDeco{ position:absolute; }
+.isoCloud{ display:block; animation:isoDrift 16s ease-in-out infinite alternate; animation-delay:calc(var(--d, 0) * -1s); }
+.isoCloud .cShade{ fill:var(--iso-cloud-sh); }
+.isoCloud .cMain{ fill:var(--iso-cloud); }
+.isoCloud .cHi{ fill:#fff; opacity:.55; }
+.isoMountain{ display:block; }
+.isoMountain .mL{ fill:var(--iso-mtn-l); stroke:color-mix(in srgb, #fff 10%, transparent); stroke-width:.6; stroke-linejoin:round; }
+.isoMountain .mR{ fill:var(--iso-mtn-r); }
+.isoIsland{ isolation:isolate; animation:isoBob 5s ease-in-out infinite alternate; animation-delay:calc(var(--d, 0) * -1s); }
+.isoIsland .isoPillar{ width:100px; height:auto; --iso-top:color-mix(in srgb, var(--primary) 22%, var(--paper)); }
+.isoIsland .isoAxo{ position:absolute; left:21px; top:-40px; width:58px; height:58px; object-fit:contain; }
+.isoHanger{ position:absolute; z-index:-1; }
+.isoSitter .isoAxo, .isoHanger .isoAxo{ display:block; width:100%; height:100%; object-fit:contain; }
+.isoAxo.flip{ transform:scaleX(-1); }
+@keyframes isoDrift{ from{ transform:translateX(-10px); } to{ transform:translateX(10px); } }
+
+@media (prefers-reduced-motion: reduce){
+  .isoCloud, .isoSignIsle, .isoIsland{ animation:none; }
+  .isoMap .pathNode{ transition:none; }
+}
+
+/* #cardsView es un flex centrado: sin esto el mapa se encoge al ancho de su contenido */
+#stageMapView{ width:100%; align-self:stretch; }
+
+/* Mapa a todo el ancho de la pantalla (el resto de pestañas conserva la columna de 640px) */
+.wrap:has(#cardsView:not([style*="none"]) #stageMapView:not([style*="none"])){
+  max-width:none; padding-left:0; padding-right:0;
+}
+
+/* ---- Zonas táctiles de al menos 44px ---- */
+/* fichas del mapa: área de toque ampliada sin cambiar el dibujo */
+.isoMap .pathNode::before{ content:''; position:absolute; inset:-8px -6px; border-radius:50%; }
+#reviewBackBtn, .reviewBackBtn, #trSwapBtn, .trSwapBtn{ min-width:44px; min-height:44px; }
+#trGoBtn, .trGoBtn, #reviewEmptyLearnBtn, .reviewEmptyLearnBtn, #myCardsAddToggle, .myCardsAddToggle, #myCardsPracticeBtn, .myCardsPracticeBtn, #myCardsExportBtn, .myCardsExportBtn, #myCardsImportBtn, .myCardsImportBtn, #openTableBtn, .openTableBtn, #shareProgressBtn, .shareProgressBtn, #exportBtn, .exportBtn, #importBtn, .importBtn, #profileLogoutBtn, .profileLogoutBtn{ min-height:44px; }
+
+/* ---- Modo ligero (sin desenfoque de fondo ni animaciones decorativas; el degradado se mantiene) ---- */
+.fxLite .isoFade{ -webkit-backdrop-filter:none; backdrop-filter:none; }
+.fxLite .isoCloud, .fxLite .isoSignIsle, .fxLite .isoIsland{ animation:none; }
+
+/* ---- Avisos flotantes (modo ligero, estrella en GitHub) ---- */
+.vbPrompt{
+  position:fixed; left:50%; bottom:calc(88px + env(safe-area-inset-bottom, 0px)); z-index:95;
+  width:min(440px, calc(100vw - 24px)); box-sizing:border-box;
+  display:flex; gap:12px; align-items:flex-start; padding:14px;
+  background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:var(--radius, 16px);
+  box-shadow:var(--elev3, 0 12px 30px rgba(0,0,0,.35)); font-family:var(--font-ui);
+  opacity:0; transform:translate(-50%, 16px); transition:transform .25s ease, opacity .25s ease;
+}
+.vbPrompt.on{ opacity:1; transform:translate(-50%, 0); }
+.vbpIcon{ flex:none; font-size:1.7rem; line-height:1; }
+.vbpTitle{ font-weight:800; margin-bottom:2px; }
+.vbpText{ font-size:.84rem; line-height:1.4; color:var(--muted); }
+.vbpBtns{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.vbpBtn{
+  min-height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background:transparent;
+  color:var(--ink); font:700 .85rem var(--font-ui); cursor:pointer;
+}
+.vbpBtn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+.vbpBtn.quiet{ border-color:transparent; color:var(--muted); font-weight:600; }
+@media (prefers-reduced-motion: reduce){ .vbPrompt{ transition:none; } }
+
+/* ---- Botón ⭐ del encabezado + panel de apoyo ---- */
+.gear .navIcon.hdrIcon{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
+.gear .navIcon.hdrIcon svg{ display:block; width:26px; height:26px; overflow:visible; filter:drop-shadow(0 2px 3px rgba(0,0,0,.18)); transition:transform .18s ease; }
+.starBtn:hover .navIcon.hdrIcon svg, .starBtn[aria-expanded="true"] .navIcon.hdrIcon svg{ transform:rotate(-12deg) scale(1.12); }
+.starBtn[aria-expanded="true"]{ border-color:var(--primary); }
+#starPanel{ right:104px; }
+@media (max-width: 560px){ #starPanel{ right:0; } }
+.starLead{ margin:0 0 12px; font-size:.86rem; line-height:1.5; color:var(--ink); }
+.starRepo{ display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:var(--bg); }
+.starRepoIco{ font-size:1.4rem; line-height:1; }
+.starRepoTxt{ min-width:0; display:flex; flex-direction:column; gap:2px; font-size:.86rem; }
+.starRepoTxt a{ color:var(--primary); font-weight:700; text-decoration:none; word-break:break-all; font-size:.8rem; }
+.starRepoTxt a:hover{ text-decoration:underline; }
+.starFacts{ list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; font-size:.8rem; color:var(--muted); }
+.starFacts a{ color:var(--primary); font-weight:700; text-decoration:none; }
+.starFacts a:hover{ text-decoration:underline; }
+.starNote{ margin-top:8px; font-size:.78rem; color:var(--muted); }
+@media (prefers-reduced-motion: reduce){ .gear .navIcon.hdrIcon svg{ transition:none; } }
