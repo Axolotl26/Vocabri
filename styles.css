@@ -2272,3 +2272,574 @@ button.nav.cloudSyncBtn:disabled{ opacity:.6; cursor:default; }
 .starFacts a:hover{ text-decoration:underline; }
 .starNote{ margin-top:8px; font-size:.78rem; color:var(--muted); }
 @media (prefers-reduced-motion: reduce){ .gear .navIcon.hdrIcon svg{ transition:none; } }
+
+/* ===== Repaso (rediseño 1.1.3) ===== */
+.reviewHeader{ display:flex; align-items:center; gap:10px; }
+.reviewHeader h2{ margin:0; flex:1; min-width:0; font-family:var(--font-ui); color:var(--ink); font-size:1.25rem; }
+.reviewCountPill{ font-family:var(--font-ui); font-size:.85rem; font-weight:800; color:var(--primary); background:color-mix(in srgb, var(--primary) 12%, var(--paper)); border-radius:999px; padding:6px 12px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.reviewProg{ height:8px; max-width:none; margin:0 0 14px; }
+.reviewProg .progBarFill{ transition:width .35s ease; }
+.rateRow4{ gap:6px; }
+.rateRow4 .rateBtn{ min-width:0; padding-left:2px; padding-right:2px; }
+.rateRow4 .rateLabel{ font-size:.8rem; }
+.rateAgain{ border-color:#8B5CF6; color:#8B5CF6; background:color-mix(in srgb, #8B5CF6 9%, var(--paper)); }
+.rvKeys{ margin:8px 0 0; text-align:center; font-size:.68rem; color:var(--muted); }
+@media (hover:none){ .rvKeys{ display:none; } }
+.reviewEmpty{ text-align:center; padding:32px 16px; }
+.reviewEmpty .mascot{ margin-bottom:12px; }
+.rvBig{ font-family:var(--font-ui); font-weight:800; font-size:1.15rem; color:var(--ink); margin:0 0 4px; }
+.rvStats{ display:flex; justify-content:center; gap:10px; margin:16px 0 12px; }
+.rvStats div{ flex:1; max-width:110px; background:var(--paper); border:1.5px solid var(--line); border-radius:var(--radius); padding:10px 4px; display:flex; flex-direction:column; gap:2px; }
+.rvStats b{ font-family:var(--font-ui); font-size:1.4rem; color:var(--ink); }
+.rvStats span{ font-size:.7rem; font-weight:700; color:var(--muted); }
+.rvBreak{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
+.rvChip{ font-size:.75rem; font-weight:700; padding:4px 10px; border-radius:999px; background:color-mix(in srgb, var(--muted) 12%, var(--paper)); color:var(--ink); }
+.rvBtns{ display:flex; flex-direction:column; gap:10px; align-items:center; margin-top:16px; }
+.rvBtns .rvMore{ min-height:52px; max-width:320px; }
+
+/* ===== ESTUDIO CARTOON (vista de tarjetas y repaso) ===== */
+#lessonView, #reviewView{
+  --edge: color-mix(in srgb, var(--primary) 42%, #000);
+  --edge2: color-mix(in srgb, var(--secondary) 42%, #000);
+  --glow: color-mix(in srgb, var(--primary) 16%, transparent);
+  position:relative; width:100%; max-width:460px; margin:0 auto;
+}
+#lessonView::before, #reviewView::before{
+  content:""; position:absolute; left:50%; top:90px; width:120%; height:420px; transform:translateX(-50%);
+  background:radial-gradient(closest-side, var(--glow), transparent); pointer-events:none; z-index:-1;
+}
+/* --- cabecera --- */
+#lessonView .backToMapBtn{
+  display:inline-flex; align-items:center; gap:6px; min-height:42px; padding:0 16px; border-radius:999px;
+  font-weight:800; font-size:.92rem; color:var(--ink); background:var(--paper);
+  border:2.5px solid var(--edge2); box-shadow:0 4px 0 var(--edge2); transition:transform .1s, box-shadow .1s;
+}
+#lessonView .backToMapBtn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--edge2); }
+#lessonView #stageProgressText{
+  display:block; margin:10px 0 6px !important; font-size:.82rem; font-weight:800; color:var(--ink);
+  letter-spacing:.01em; line-height:1.3;
+}
+#lessonView .progress{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 10px; padding:4px 12px; border-radius:999px;
+  background:color-mix(in srgb, var(--primary) 16%, var(--paper)); color:var(--ink);
+  font-weight:800; font-size:.76rem; border:2px solid var(--edge);
+}
+#lessonView .progBarOuter, #reviewView .progBarOuter{
+  height:16px; max-width:none; border-radius:999px; margin:0 0 18px; position:relative;
+  background:color-mix(in srgb, var(--ink) 14%, var(--paper)); border:2.5px solid var(--edge);
+  box-shadow:inset 0 3px 0 rgba(0,0,0,.18);
+}
+#lessonView .progBarFill, #reviewView .progBarFill{
+  position:relative; border-radius:999px; min-width:0;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 70%, #fff) 0 45%, var(--primary) 45%);
+}
+#lessonView .progBarFill::after, #reviewView .progBarFill::after{
+  content:""; position:absolute; left:8px; right:8px; top:3px; height:3px; border-radius:3px; background:rgba(255,255,255,.55);
+}
+/* --- tarjeta --- */
+#lessonView .card, #reviewView .card{
+  max-width:none; height:clamp(230px, 36vh, 300px); isolation:isolate; margin-top:30px;
+}
+#lessonView .card::after, #reviewView .card::after{
+  content:""; position:absolute; z-index:-1; right:18px; top:-58px; width:84px; height:84px;
+  background:var(--lv-mascot, url("./assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png")) center/contain no-repeat;
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.25)); transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  animation:lvPeek 3.2s ease-in-out infinite;
+}
+#lessonView .card.flipped::after, #reviewView .card.flipped::after{
+  --lv-mascot:url("./assets/stickers/ajolotes_emociones/aprobado_con_check.png");
+}
+@keyframes lvPeek{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-4px) rotate(3deg); } }
+#lessonView .face, #reviewView .face{
+  border-radius:28px; border:3px solid var(--edge); padding:34px 22px 22px; gap:12px;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--primary) 14%, transparent) 1.4px, transparent 1.6px) 0 0/18px 18px,
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) 9%, var(--paper)), var(--paper) 60%);
+  box-shadow:0 8px 0 var(--edge), 0 18px 28px rgba(0,0,0,.22);
+}
+#lessonView .face.back, #reviewView .face.back{
+  border-color:var(--edge2);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--secondary) 16%, transparent) 1.4px, transparent 1.6px) 0 0/18px 18px,
+    linear-gradient(180deg, color-mix(in srgb, var(--secondary) 11%, var(--paper)), var(--paper) 60%);
+  box-shadow:0 8px 0 var(--edge2), 0 18px 28px rgba(0,0,0,.22);
+}
+#lessonView .face p, #reviewView .face p{
+  font-family:var(--font-ui); font-weight:800; font-size:clamp(1.35rem, 5.6vw, 1.8rem); line-height:1.25; color:var(--ink);
+  text-wrap:balance; overflow-wrap:anywhere;
+}
+#lessonView .tag, #reviewView .tag{
+  top:-2px; left:18px; transform:translateY(-50%); padding:4px 14px; border-radius:999px; font-weight:900; font-size:.78rem;
+  letter-spacing:.08em; color:var(--on-primary); background:var(--primary); border:2.5px solid var(--edge); box-shadow:0 3px 0 var(--edge);
+}
+#lessonView .face.back .tag, #reviewView .face.back .tag{ background:var(--secondary); border-color:var(--edge2); box-shadow:0 3px 0 var(--edge2); color:var(--on-primary); }
+#lessonView .speakBtn, #reviewView .speakBtn{
+  top:14px; right:14px; width:42px; height:42px; font-size:1.05rem; border-radius:50%;
+  background:color-mix(in srgb, var(--primary) 18%, var(--paper)); border:2.5px solid var(--edge); box-shadow:0 3px 0 var(--edge);
+  transition:transform .1s, box-shadow .1s;
+}
+#lessonView .face.back .speakBtn, #reviewView .face.back .speakBtn{ background:color-mix(in srgb, var(--secondary) 18%, var(--paper)); border-color:var(--edge2); box-shadow:0 3px 0 var(--edge2); }
+#lessonView .speakBtn.speakSlow, #reviewView .speakBtn.speakSlow{ right:64px; }
+#lessonView .speakBtn:active, #reviewView .speakBtn:active{ transform:translateY(3px); box-shadow:0 0 0; background:var(--primary); }
+#lessonView .flipHint, #reviewView .flipHint{
+  bottom:-26px; right:10px; width:38px; height:38px; border:2.5px solid var(--edge); background:var(--paper); color:var(--ink); box-shadow:0 3px 0 var(--edge);
+  font-size:1.1rem; align-items:center;
+}
+#lessonView .exToggle{
+  font-weight:800; color:var(--ink); padding:6px 14px; border-radius:999px;
+  background:color-mix(in srgb, var(--secondary) 18%, var(--paper)); border:2px solid var(--edge2); font-size:.8rem;
+}
+#lessonView .exTextEs:empty{ display:none; }
+#lessonView .exText, #lessonView .exTextEs{ font-style:normal; font-weight:600; font-size:.88rem; color:var(--muted); background:color-mix(in srgb, var(--ink) 6%, transparent); border-radius:14px; padding:8px 12px; }
+/* --- botones de acción 3D --- */
+#lessonView .actionZone, #reviewView .actionZone{ max-width:none; margin-top:38px; }
+#lessonView .showAnswerBtn, #reviewView .showAnswerBtn{
+  min-height:64px; border:3px solid var(--edge); border-radius:20px; font-size:1.1rem; font-weight:900; letter-spacing:.01em;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 78%, #fff), var(--primary));
+  color:var(--on-primary); box-shadow:0 7px 0 var(--edge), 0 14px 20px rgba(0,0,0,.2); transition:transform .1s, box-shadow .1s;
+}
+#lessonView .showAnswerBtn:active, #reviewView .showAnswerBtn:active{ transform:translateY(6px); box-shadow:0 1px 0 var(--edge); }
+#lessonView .flipCoach{ margin-top:16px; font-weight:800; }
+#lessonView .ratePrompt, #reviewView .ratePrompt{ font-size:.78rem; margin-bottom:12px; color:var(--ink); opacity:.8; }
+#lessonView .rateRow, #reviewView .rateRow{ gap:10px; max-width:none; }
+#lessonView .rateBtn, #reviewView .rateBtn{
+  --rc:#F59E0B; min-height:88px; padding:12px 4px 10px; border-radius:20px; border:3px solid color-mix(in srgb, var(--rc) 60%, #000);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--rc) 26%, var(--paper)), color-mix(in srgb, var(--rc) 10%, var(--paper)));
+  box-shadow:0 6px 0 color-mix(in srgb, var(--rc) 60%, #000); color:var(--ink); transition:transform .1s, box-shadow .1s;
+}
+#lessonView .rateBtn:active, #reviewView .rateBtn:active{ transform:translateY(5px); box-shadow:0 1px 0 color-mix(in srgb, var(--rc) 60%, #000); filter:none; }
+#lessonView .rateHard, #reviewView .rateHard{ --rc:#EF4444; }
+#lessonView .rateGood, #reviewView .rateGood{ --rc:#F59E0B; }
+#lessonView .rateEasy, #reviewView .rateEasy{ --rc:#22C55E; }
+#reviewView .rateAgain{ --rc:#8B5CF6; }
+#lessonView .rateLabel, #reviewView .rateLabel{ font-weight:900; font-size:.95rem; }
+#lessonView .rateCaption, #reviewView .rateCaption{ font-weight:800; color:var(--ink); opacity:.7; }
+#lessonView .rateSticker{ width:46px; height:46px; }
+#reviewView .rateRow4 .rateLabel{ font-size:.8rem; }
+/* --- pie --- */
+#lessonView .lessonMiniRow{ max-width:none; margin-top:22px; }
+#lessonView .miniBtn, #reviewView .miniBtn{
+  min-height:42px; padding:0 16px; border-radius:999px; background:var(--paper); color:var(--ink); font-weight:800;
+  border:2.5px solid var(--edge2); box-shadow:0 4px 0 var(--edge2); transition:transform .1s, box-shadow .1s;
+}
+#lessonView .miniBtn:active, #reviewView .miniBtn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--edge2); background:var(--paper); }
+#lessonView > .hint:last-child{
+  display:table; margin:18px auto 0; padding:6px 16px; border-radius:999px; font-weight:800; color:var(--ink);
+  background:color-mix(in srgb, #22C55E 16%, var(--paper)); border:2px solid color-mix(in srgb, #22C55E 55%, #000);
+}
+/* --- repaso: cabecera y píldora con el mismo lenguaje --- */
+#reviewView .reviewHeader{ border-bottom:none; padding-bottom:0; margin-bottom:14px; }
+#reviewView .reviewCountPill{
+  background:color-mix(in srgb, var(--primary) 18%, var(--paper)); color:var(--ink); border:2.5px solid var(--edge); box-shadow:0 3px 0 var(--edge); font-weight:900;
+}
+#reviewView .reviewProg{ height:16px; }
+@media (prefers-reduced-motion:reduce){ #lessonView .card::after, #reviewView .card::after{ animation:none; } }
+@media (max-width:360px){
+  #lessonView .rateBtn{ min-height:80px; }
+}
+
+/* ===== EXAMEN CARTOON ===== */
+#examView{
+  --ex: #F59E0B; --exE: color-mix(in srgb, #F59E0B 55%, #000);
+  --edge2: color-mix(in srgb, var(--secondary) 42%, #000);
+  position:relative; max-width:460px; margin:0 auto; width:100%;
+}
+#examView::before{
+  content:""; position:absolute; left:50%; top:90px; width:120%; height:480px; transform:translateX(-50%);
+  background:radial-gradient(closest-side, color-mix(in srgb, #F59E0B 15%, transparent), transparent); pointer-events:none; z-index:-1;
+}
+#examView .backToMapBtn{
+  display:inline-flex; align-items:center; gap:6px; min-height:42px; padding:0 16px; border-radius:999px;
+  font-weight:800; font-size:.92rem; color:var(--ink); background:var(--paper);
+  border:2.5px solid var(--edge2); box-shadow:0 4px 0 var(--edge2); transition:transform .1s, box-shadow .1s;
+}
+#examView .backToMapBtn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--edge2); }
+#examView .examTopRow{ margin:14px 0 10px; }
+#examView #examProgressText{
+  display:inline-flex; padding:5px 14px; border-radius:999px; font-weight:900; font-size:.8rem; color:var(--ink) !important;
+  background:color-mix(in srgb, #F59E0B 20%, var(--paper)); border:2.5px solid var(--exE); box-shadow:0 3px 0 var(--exE);
+}
+#examView .examLives{
+  gap:4px; font-size:1.3rem; padding:4px 10px; border-radius:999px; background:color-mix(in srgb, #EF4444 12%, var(--paper));
+  border:2.5px solid color-mix(in srgb, #EF4444 55%, #000); box-shadow:0 3px 0 color-mix(in srgb, #EF4444 55%, #000);
+}
+#examView .examLives .heart{ filter:drop-shadow(0 2px 0 rgba(0,0,0,.25)); }
+#examView .examLives .heart.lost{ filter:grayscale(1); }
+#examView .progBarOuter{
+  height:16px; max-width:none; border-radius:999px; margin:0 0 26px;
+  background:color-mix(in srgb, var(--ink) 14%, var(--paper)); border:2.5px solid var(--exE); box-shadow:inset 0 3px 0 rgba(0,0,0,.18);
+}
+#examView .progBarFill{
+  position:relative; border-radius:999px;
+  background:linear-gradient(180deg, #FCD34D 0 45%, #F59E0B 45%);
+}
+#examView .progBarFill::after{ content:""; position:absolute; left:8px; right:8px; top:3px; height:3px; border-radius:3px; background:rgba(255,255,255,.6); }
+/* tarjeta */
+#examView .examCard{
+  position:relative; margin-top:18px; padding:34px 20px 22px; border-radius:28px; border:3px solid var(--exE);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, #F59E0B 16%, transparent) 1.4px, transparent 1.6px) 0 0/18px 18px,
+    linear-gradient(180deg, color-mix(in srgb, #F59E0B 10%, var(--paper)), var(--paper) 55%);
+  box-shadow:0 8px 0 var(--exE), 0 18px 28px rgba(0,0,0,.22);
+}
+#examView .examCard > .tag{
+  top:-2px; left:50%; transform:translate(-50%,-50%); padding:5px 16px; border-radius:999px; font-weight:900; font-size:.8rem; letter-spacing:.08em;
+  color:#3B2800; background:linear-gradient(180deg,#FCD34D,#F59E0B); border:2.5px solid var(--exE); box-shadow:0 3px 0 var(--exE); white-space:nowrap;
+}
+#examView .examInstruction{
+  display:inline-block; margin:6px 0 0; padding:4px 12px; border-radius:999px; font-size:.7rem; font-weight:900; color:var(--ink);
+  background:color-mix(in srgb, var(--ink) 8%, transparent); letter-spacing:.05em;
+}
+#examView .examPrompt{
+  font-family:var(--font-ui); font-weight:900; font-size:clamp(1.4rem, 6vw, 1.9rem); line-height:1.25; margin:14px 0 20px; color:var(--ink);
+  text-wrap:balance; overflow-wrap:anywhere;
+}
+/* opciones 3D con letra */
+#examView #examMcOptions{ counter-reset:opt; }
+#examView .examMcBtn{
+  counter-increment:opt; position:relative; display:flex; align-items:center; gap:12px; min-height:56px;
+  padding:10px 14px; margin:0 0 12px; border-radius:18px; font-weight:800; font-size:1rem; line-height:1.25;
+  background:var(--paper); border:3px solid var(--edge2); box-shadow:0 5px 0 var(--edge2);
+  transition:transform .1s, box-shadow .1s, background .15s;
+}
+#examView .examMcBtn::before{
+  content:counter(opt, upper-alpha); flex:0 0 auto; width:32px; height:32px; border-radius:50%; display:grid; place-items:center;
+  font-weight:900; font-size:.85rem; color:var(--ink); background:color-mix(in srgb, var(--secondary) 25%, var(--paper)); border:2px solid var(--edge2);
+}
+#examView .examMcBtn:not(:disabled):active{ transform:translateY(4px); box-shadow:0 1px 0 var(--edge2); }
+#examView .examMcBtn.correct{
+  background:color-mix(in srgb, #22C55E 24%, var(--paper)); border-color:color-mix(in srgb, #22C55E 60%, #000); box-shadow:0 5px 0 color-mix(in srgb, #22C55E 60%, #000);
+  animation:exPop .35s cubic-bezier(.34,1.56,.64,1);
+}
+#examView .examMcBtn.correct::before{ content:"✓"; background:#22C55E; color:#fff; border-color:color-mix(in srgb, #22C55E 60%, #000); }
+#examView .examMcBtn.wrong{
+  background:color-mix(in srgb, #EF4444 22%, var(--paper)); border-color:color-mix(in srgb, #EF4444 60%, #000); box-shadow:0 5px 0 color-mix(in srgb, #EF4444 60%, #000);
+  animation:heartShake .45s ease;
+}
+#examView .examMcBtn.wrong::before{ content:"✕"; background:#EF4444; color:#fff; border-color:color-mix(in srgb, #EF4444 60%, #000); }
+#examView .examMcBtn:disabled:not(.correct):not(.wrong){ opacity:.55; }
+@keyframes exPop{ 0%{ transform:scale(.96); } 60%{ transform:scale(1.03); } 100%{ transform:scale(1); } }
+/* entradas y botones */
+#examView input.search{
+  border:3px solid var(--edge2); border-radius:18px; min-height:54px; font-weight:700; font-size:1rem; text-align:center;
+  box-shadow:inset 0 3px 0 rgba(0,0,0,.14); margin-bottom:12px;
+}
+#examView button.nav{
+  min-height:56px; border-radius:18px; border:3px solid var(--edge); font-weight:900; font-size:1.02rem;
+  --edge: color-mix(in srgb, var(--primary) 42%, #000);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 78%, #fff), var(--primary)); color:var(--on-primary);
+  box-shadow:0 6px 0 var(--edge), 0 12px 18px rgba(0,0,0,.18); transition:transform .1s, box-shadow .1s;
+}
+#examView button.nav:active{ transform:translateY(5px); box-shadow:0 1px 0 var(--edge); }
+#examView #examNextBtn{
+  --edge: color-mix(in srgb, #22C55E 60%, #000); margin-top:26px; min-height:60px; font-size:1.1rem;
+  background:linear-gradient(180deg, #4ADE80, #22C55E); color:#052e16;
+}
+#examView .micBtn{
+  width:96px; height:96px; font-size:2.2rem; border:3px solid color-mix(in srgb, var(--primary) 42%, #000);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 78%, #fff), var(--primary));
+  box-shadow:0 7px 0 color-mix(in srgb, var(--primary) 42%, #000), 0 14px 20px rgba(0,0,0,.2);
+}
+#examView .micBtn:active{ transform:translateY(6px); box-shadow:0 1px 0 color-mix(in srgb, var(--primary) 42%, #000); }
+#examView .micBtn.listening{ background:#EF4444; border-color:#7f1d1d; }
+#examView .linkBtn{ font-weight:800; color:var(--ink); opacity:.7; }
+/* feedback */
+#examView .examFeedback{
+  margin-top:18px; padding:12px 14px; border-radius:18px; font-weight:800; font-size:.98rem; line-height:1.3; border:3px solid;
+}
+#examView .examFeedback.ok{ color:color-mix(in srgb, #22C55E 40%, var(--ink)); background:color-mix(in srgb, #22C55E 16%, var(--paper)); border-color:color-mix(in srgb, #22C55E 60%, #000); }
+#examView .examFeedback.bad{ color:color-mix(in srgb, #EF4444 35%, var(--ink)); background:color-mix(in srgb, #EF4444 14%, var(--paper)); border-color:color-mix(in srgb, #EF4444 60%, #000); }
+#examView .mascot-exam{ width:84px; height:84px; margin-top:10px; animation:exPop .45s cubic-bezier(.34,1.56,.64,1); }
+@media (prefers-reduced-motion:reduce){ #examView .examMcBtn.correct, #examView .mascot-exam{ animation:none; } }
+
+/* ===== ESTUDIO + EXAMEN: responsive y ajuste de la etiqueta al voltear ===== */
+#lessonView .tag, #reviewView .tag, #lessonView .face, #reviewView .face{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+#lessonView .card.flipped .face.front .tag, #reviewView .card.flipped .face.front .tag,
+#lessonView .card:not(.flipped) .face.back .tag, #reviewView .card:not(.flipped) .face.back .tag{ visibility:hidden; }
+#lessonView .card.flipped .face.front .speakBtn, #reviewView .card.flipped .face.front .speakBtn{ visibility:hidden; }
+
+/* escritorio / tablet: columna más ancha y tipografía mayor */
+@media (min-width:700px){
+  #lessonView, #reviewView, #examView{ max-width:600px; }
+  #lessonView .card, #reviewView .card{ height:clamp(230px, 33vh, 360px); }
+  #lessonView .face p, #reviewView .face p{ font-size:clamp(1.8rem, 2.6vw, 2.2rem); }
+  #lessonView .face, #reviewView .face{ padding:40px 36px 28px; }
+  #lessonView .card::after, #reviewView .card::after{ width:100px; height:100px; top:-70px; right:28px; }
+  #lessonView .backToMapBtn, #examView .backToMapBtn{ min-height:46px; font-size:1rem; }
+  #lessonView .rateBtn, #reviewView .rateBtn{ min-height:104px; }
+  #lessonView .rateSticker{ width:54px; height:54px; }
+  #lessonView .rateLabel, #reviewView .rateLabel{ font-size:1.05rem; }
+  #examView .examCard{ padding:40px 32px 28px; }
+  #examView .examPrompt{ font-size:clamp(1.8rem, 2.6vw, 2.2rem); }
+  #examView .examMcBtn{ min-height:62px; font-size:1.08rem; padding:12px 18px; }
+  #examView .examMcBtn:not(:disabled):hover{ transform:translateY(-2px); box-shadow:0 7px 0 var(--edge2); }
+  #lessonView .showAnswerBtn:hover, #reviewView .showAnswerBtn:hover{ transform:translateY(-2px); }
+}
+@media (min-width:1200px){
+  #lessonView, #reviewView, #examView{ max-width:680px; }
+}
+/* móviles pequeños */
+@media (max-width:360px){
+  #lessonView .face, #reviewView .face{ padding:30px 14px 16px; }
+  #lessonView .face p, #reviewView .face p{ font-size:1.3rem; }
+  #lessonView .rateRow, #reviewView .rateRow{ gap:6px; }
+  #lessonView .rateCaption{ font-size:.58rem; }
+  #lessonView .rateSticker{ width:38px; height:38px; }
+  #lessonView .speakBtn, #reviewView .speakBtn{ width:38px; height:38px; }
+  #lessonView .speakBtn.speakSlow, #reviewView .speakBtn.speakSlow{ right:58px; }
+  #examView .examCard{ padding:32px 12px 16px; }
+  #examView .examMcBtn{ padding:8px 10px; gap:8px; font-size:.94rem; }
+  #examView .examMcBtn::before{ width:28px; height:28px; }
+  #examView .examLives{ font-size:1.1rem; padding:3px 8px; }
+}
+/* teléfono en horizontal / pantallas muy bajas */
+@media (max-height:520px) and (orientation:landscape){
+  #lessonView::before, #reviewView::before, #examView::before{ display:none; }
+  #lessonView, #reviewView, #examView{ max-width:720px; }
+  #lessonView .card, #reviewView .card{ height:clamp(150px, 40vh, 190px); margin-top:14px; }
+  #lessonView .card::after, #reviewView .card::after{ display:none; }
+  #lessonView .face, #reviewView .face{ padding:24px 20px 12px; }
+  #lessonView .face p, #reviewView .face p{ font-size:1.35rem; }
+  #lessonView #stageProgressText{ display:inline-block; margin:6px 10px 6px 8px !important; }
+  #lessonView .progress{ margin:0; }
+  #lessonView .progBarOuter, #reviewView .progBarOuter, #examView .progBarOuter{ height:12px; margin:6px 0 10px; }
+  #lessonView .actionZone, #reviewView .actionZone{ margin-top:26px; min-height:0; }
+  #lessonView .showAnswerBtn, #reviewView .showAnswerBtn{ min-height:50px; font-size:1rem; }
+  #lessonView .rateBtn, #reviewView .rateBtn{ min-height:60px; flex-direction:row; flex-wrap:wrap; justify-content:center; align-content:center; gap:2px 6px; padding:6px; }
+  #lessonView .rateSticker{ width:30px; height:30px; }
+  #lessonView .rateCaption, #reviewView .rateCaption{ flex-basis:100%; }
+  #lessonView .ratePrompt, #reviewView .ratePrompt{ margin-bottom:6px; }
+  #lessonView .lessonMiniRow{ margin-top:14px; }
+  #examView .examCard{ padding:28px 18px 14px; margin-top:14px; }
+  #examView .examPrompt{ font-size:1.3rem; margin:8px 0 12px; }
+  #examView .examMcBtn{ min-height:46px; margin-bottom:8px; padding:6px 12px; }
+  #examView #examMcOptions{ display:grid; grid-template-columns:1fr 1fr; gap:0 10px; }
+  #examView .mascot-exam{ width:56px; height:56px; }
+  #examView .examTopRow{ margin:8px 0; }
+}
+/* chrome compacto en horizontal bajo (más espacio para estudiar) */
+@media (max-height:520px) and (orientation:landscape){
+  body{ padding-top:calc(52px + env(safe-area-inset-top,0px)); padding-bottom:calc(58px + env(safe-area-inset-bottom,0px)); }
+  header{ padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px; }
+  header .tagline{ display:none; }
+  .brandRow h1{ font-size:1.25rem; }
+  header .brandRow img, header .brandRow .logo, header .brandRow > :first-child:not(h1){ max-height:30px; }
+  .headerRight{ gap:8px; }
+  .gear, .levelRing{ transform:scale(.85); transform-origin:center; }
+  .bottomNav{ padding:3px 8px calc(3px + env(safe-area-inset-bottom,0px)); }
+  .navItem{ flex-direction:row; justify-content:center; gap:6px; padding:4px; font-size:.74rem; }
+  .navItem .navIcon{ height:24px; }
+  .navItem .navIcon svg, .navItem .navSticker{ width:24px; height:24px; }
+}
+@media (max-height:520px) and (orientation:landscape){
+  #lessonView .backToMapBtn, #examView .backToMapBtn{ min-height:34px; font-size:.84rem; padding:0 12px; box-shadow:0 3px 0 var(--edge2); }
+  #lessonView #stageProgressText{ display:none; }
+  #lessonView .progress{ margin:0 0 0 8px; vertical-align:middle; }
+  #lessonView .progBarOuter, #reviewView .progBarOuter, #examView .progBarOuter{ margin:8px 0 12px; }
+  #examView .examTopRow{ margin:6px 0 4px; }
+  #examView .examTopRow #examProgressText{ padding:3px 10px; font-size:.72rem; }
+  #examView .examLives{ font-size:1rem; padding:2px 8px; }
+  #lessonView .card, #reviewView .card{ height:clamp(130px, 36vh, 170px); margin-top:20px; }
+  #lessonView > .hint:last-child{ margin-top:10px; }
+}
+/* escritorio de poca altura (laptops): que la tarjeta y los botones quepan sin bajar */
+@media (min-width:700px) and (max-height:820px) and (min-height:521px){
+  #lessonView #stageProgressText{ display:inline-block; margin:0 10px 0 12px !important; vertical-align:middle; }
+  #lessonView .progress{ margin:8px 0 0; }
+  #lessonView .progBarOuter, #reviewView .progBarOuter, #examView .progBarOuter{ margin:8px 0 22px; }
+  #lessonView .card, #reviewView .card{ height:clamp(190px, 29vh, 260px); margin-top:22px; }
+  #lessonView .actionZone, #reviewView .actionZone{ margin-top:34px; min-height:0; }
+  #lessonView .rateBtn, #reviewView .rateBtn{ min-height:84px; }
+  #lessonView .rateSticker{ width:42px; height:42px; }
+  #lessonView .lessonMiniRow{ margin-top:16px; }
+  #examView .examCard{ padding:34px 24px 16px; }
+  #examView .examPrompt{ margin:8px 0 12px; }
+  #examView .examMcBtn{ min-height:50px; margin-bottom:9px; }
+}
+
+/* ===== PESTAÑAS CARTOON (Progreso · Mis Tarjetas · Traductor · Perfil) ===== */
+#progressView, #myCardsView, #translatorView, #profileView{
+  --tab:#A78BFA; --tabE:color-mix(in srgb, var(--tab) 45%, #000);
+  position:relative; max-width:640px; margin:0 auto; width:100%; padding-top:10px;
+}
+#progressView{ --tab:#A78BFA; }
+#myCardsView{ --tab:#F472B6; }
+#translatorView{ --tab:#FBBF24; }
+#profileView{ --tab:#FB7185; }
+:is(#progressView,#myCardsView,#translatorView,#profileView)::before{
+  content:""; position:absolute; left:50%; top:-10px; width:130%; height:340px; transform:translateX(-50%);
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--tab) 20%, transparent), transparent); pointer-events:none; z-index:-1;
+}
+/* cabecera con icono */
+:is(#progressView,#translatorView) .viewHeader, #myCardsView .myCardsHeader > div:first-child{ position:relative; }
+:is(#progressView,#translatorView) .viewHeader{ border-bottom:none; padding-bottom:0; margin-bottom:6px; }
+:is(#progressView,#translatorView,#myCardsView) h2{
+  display:flex; align-items:center; gap:12px; font-size:1.6rem !important; font-weight:900; letter-spacing:-.01em;
+}
+.tabIcon{
+  flex:0 0 auto; width:52px; height:52px; display:grid; place-items:center; border-radius:18px;
+  background:color-mix(in srgb, var(--tab) 22%, var(--paper)); border:3px solid var(--tabE); box-shadow:0 5px 0 var(--tabE);
+  transform:rotate(-4deg);
+}
+.tabIcon svg{ width:34px; height:34px; overflow:visible; display:block; }
+.tabIcon .niEd *{ fill:var(--e); stroke:var(--e); stroke-width:2.6; stroke-linejoin:round; }
+.tabIcon .niMn > *{ fill:var(--c); stroke:var(--e); stroke-width:2.6; stroke-linejoin:round; }
+.tabIcon .niEd .niLn, .tabIcon .niMn .niLn{ fill:none; stroke-linecap:round; }
+.tabIcon .niEd .niLn{ stroke:var(--e); stroke-width:7.4; }
+.tabIcon .niMn .niLn{ stroke:var(--c); stroke-width:3.8; }
+.tabIcon .niMn .niFl{ stroke:var(--e); stroke-width:2; }
+:is(#progressView,#translatorView,#myCardsView) .viewHeader .hint, #myCardsView #myCardsCount{ font-weight:700; }
+/* títulos de sección */
+:is(#progressView,#profileView) .setTitle{
+  display:inline-block; margin:22px 0 12px !important; padding:5px 14px; border-radius:999px; border:2.5px solid var(--tabE);
+  background:color-mix(in srgb, var(--tab) 20%, var(--paper)); color:var(--ink); font-weight:900; font-size:.72rem; letter-spacing:.08em;
+  box-shadow:0 3px 0 var(--tabE);
+}
+/* nivel */
+:is(#progressView,#profileView) .gLevel{
+  padding:14px 16px; border-radius:22px; border:3px solid var(--tabE); box-shadow:0 6px 0 var(--tabE);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--tab) 14%, var(--paper)), var(--paper));
+}
+:is(#progressView,#profileView) .gLevelTop{ margin-bottom:10px; }
+:is(#progressView,#profileView) .gLevelTop span:first-child{ font-size:1.15rem !important; font-weight:900; color:var(--ink); }
+:is(#progressView,#profileView) .gLevelTop span:last-child{ font-weight:800; font-size:.82rem; color:var(--ink); opacity:.75; }
+:is(#progressView,#profileView) .gBarOuter{
+  height:18px; border-radius:999px; border:2.5px solid var(--tabE); box-shadow:inset 0 3px 0 rgba(0,0,0,.18);
+  background:color-mix(in srgb, var(--ink) 14%, var(--paper));
+}
+:is(#progressView,#profileView) .gBarFill{
+  position:relative; border-radius:999px; background:linear-gradient(180deg, color-mix(in srgb, var(--tab) 60%, #fff) 0 45%, var(--tab) 45%);
+}
+:is(#progressView,#profileView) .gBarFill::after{ content:""; position:absolute; left:8px; right:8px; top:3px; height:3px; border-radius:3px; background:rgba(255,255,255,.55); }
+/* meta diaria */
+#progressView .gGoal{
+  gap:14px; padding:12px 16px; border-radius:22px; border:3px solid color-mix(in srgb, var(--secondary) 45%, #000);
+  box-shadow:0 5px 0 color-mix(in srgb, var(--secondary) 45%, #000); background:color-mix(in srgb, var(--secondary) 10%, var(--paper));
+}
+#progressView .gGoalRing{ width:52px; height:52px; }
+#progressView .gGoalBg{ stroke-width:5; stroke:color-mix(in srgb, var(--ink) 16%, var(--paper)); }
+#progressView .gGoalFg{ stroke-width:5; }
+#progressView .gGoalText{ font-weight:900; font-size:.95rem; color:var(--ink); }
+#progressView .gGoalText small{ font-weight:800; }
+/* estadísticas */
+:is(#progressView,#profileView) .statsRow{ gap:10px; }
+:is(#progressView,#profileView) .statBox{
+  --sc:#F59E0B; padding:14px 4px 10px; border-radius:20px; border:3px solid color-mix(in srgb, var(--sc) 55%, #000);
+  box-shadow:0 5px 0 color-mix(in srgb, var(--sc) 55%, #000);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--sc) 20%, var(--paper)), color-mix(in srgb, var(--sc) 6%, var(--paper)));
+}
+:is(#progressView,#profileView) .statBox:nth-child(2){ --sc:#22C55E; }
+:is(#progressView,#profileView) .statBox:nth-child(3){ --sc:#38BDF8; }
+:is(#progressView,#profileView) .statNum{ font-size:1.7rem !important; font-weight:900; color:var(--ink) !important; line-height:1.1; }
+:is(#progressView,#profileView) .statLbl{ font-weight:800; font-size:.7rem; color:var(--ink); opacity:.75; margin-top:2px; }
+#progressView .progSummary{
+  margin:18px 0 12px; padding:10px 14px; border-radius:16px; font-weight:800; text-align:center;
+  background:color-mix(in srgb, var(--tab) 14%, var(--paper)); border:2.5px dashed var(--tabE);
+}
+#progressView #chartWrap{
+  padding:12px; border-radius:22px; border:3px solid var(--tabE); box-shadow:0 6px 0 var(--tabE); background:var(--paper);
+}
+#progressView #progEmpty{ padding:14px; border-radius:18px; border:2.5px dashed var(--tabE); background:color-mix(in srgb, var(--tab) 10%, var(--paper)); font-weight:700; }
+/* botones 3D en pestañas */
+:is(#progressView,#myCardsView,#translatorView,#profileView) button.nav{
+  --edge:color-mix(in srgb, var(--primary) 42%, #000); min-height:52px; border-radius:18px; border:3px solid var(--edge); font-weight:900;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 78%, #fff), var(--primary)); color:var(--on-primary);
+  box-shadow:0 5px 0 var(--edge), 0 10px 16px rgba(0,0,0,.16); transition:transform .1s, box-shadow .1s;
+}
+:is(#progressView,#myCardsView,#translatorView,#profileView) button.nav:active:not(:disabled){ transform:translateY(4px); box-shadow:0 1px 0 var(--edge); }
+:is(#myCardsView,#profileView) button.nav:disabled{ opacity:.55; }
+#myCardsView .myCardsIOBtn, #profileView .backupRow .nav, #profileView #shareProgressBtn, #profileView #cloudSyncNowBtn{
+  --edge:color-mix(in srgb, var(--secondary) 42%, #000); background:linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--secondary) 14%, var(--paper))); color:var(--ink);
+}
+#profileView button.nav.googleBtn{ --edge:#9aa3b2; background:#fff; color:#1f2937; }
+#profileView button.nav.dangerBtn{ --edge:color-mix(in srgb, var(--danger) 60%, #000); background:color-mix(in srgb, var(--danger) 12%, var(--paper)); color:var(--danger); border-color:var(--edge); }
+#myCardsView #myCardsPracticeBtn{ --edge:color-mix(in srgb, #22C55E 60%, #000); background:linear-gradient(180deg,#4ADE80,#22C55E); color:#052e16; }
+#translatorView #trGoBtn{ --edge:color-mix(in srgb, #F59E0B 60%, #000); background:linear-gradient(180deg,#FCD34D,#F59E0B); color:#3B2800; }
+#translatorView #trSaveBtn{ --edge:color-mix(in srgb, #22C55E 60%, #000); background:linear-gradient(180deg,#4ADE80,#22C55E); color:#052e16; }
+/* campos */
+:is(#myCardsView,#translatorView,#profileView) input.search, #translatorView textarea.search{
+  border:3px solid var(--tabE); border-radius:18px; font-weight:700; box-shadow:inset 0 3px 0 rgba(0,0,0,.14);
+}
+#translatorView .trTextarea{ min-height:120px; font-size:1.05rem; padding:14px; margin-bottom:14px; }
+#translatorView .translatorDirRow{
+  display:flex; align-items:center; justify-content:center; gap:14px; margin:14px 0;
+}
+#translatorView .translatorDirRow > span{
+  padding:8px 18px; border-radius:999px; font-weight:900; background:color-mix(in srgb, var(--tab) 20%, var(--paper)); border:2.5px solid var(--tabE); box-shadow:0 3px 0 var(--tabE);
+}
+#translatorView #trSwapBtn{ width:52px; height:52px; min-height:52px; padding:0; border-radius:50%; font-size:1.3rem; }
+#translatorView .trResultText{
+  padding:16px; border-radius:22px; border:3px solid var(--tabE); box-shadow:0 6px 0 var(--tabE); font-weight:800; font-size:1.2rem; margin:8px 0 18px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--tab) 16%, var(--paper)), var(--paper));
+}
+#translatorView .fLabel{ font-weight:900; }
+/* mis tarjetas */
+#myCardsView .catBadge{ border:2.5px solid var(--tabE) !important; box-shadow:0 3px 0 var(--tabE); color:var(--ink) !important; background:color-mix(in srgb, var(--tab) 22%, var(--paper)) !important; font-weight:900 !important; }
+#myCardsView .myCardItem{
+  border-radius:20px; border:3px solid var(--tabE); box-shadow:0 5px 0 var(--tabE);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--tab) 10%, var(--paper)), var(--paper));
+}
+#myCardsView .myCardEn{ font-weight:900; }
+#myCardsView .myCardCat{ font-weight:800; border:2px solid var(--tabE); }
+#myCardsView .myCardBtn{ border:2.5px solid var(--tabE); border-radius:12px; box-shadow:0 3px 0 var(--tabE); }
+#myCardsView .myCardsEmpty{
+  border-radius:24px; border:3px dashed var(--tabE); background:color-mix(in srgb, var(--tab) 10%, var(--paper)); padding:30px 18px;
+}
+#myCardsView .myCardsEmpty::before{ content:""; display:block; width:84px; height:84px; margin:0 auto 10px; background:url("./assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png") center/contain no-repeat; animation:lvPeek 3.2s ease-in-out infinite; }
+#myCardsView .myCardsEmpty > :first-child{ display:none; }
+/* perfil */
+#profileView .profileHead{
+  flex-direction:column; text-align:center; gap:10px; padding:20px 16px 18px; margin-bottom:14px; border-radius:26px;
+  border:3px solid var(--tabE); box-shadow:0 7px 0 var(--tabE);
+  background:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--tab) 16%, transparent) 1.4px, transparent 1.6px) 0 0/18px 18px,
+    linear-gradient(180deg, color-mix(in srgb, var(--tab) 16%, var(--paper)), var(--paper));
+}
+#profileView .profileAvatar{ width:92px !important; height:92px !important; border:4px solid var(--tabE) !important; box-shadow:0 5px 0 var(--tabE); }
+#profileView .profileName{ font-size:1.3rem; font-weight:900; }
+#profileView .profileBadge{ font-weight:800; border:2.5px solid var(--tabE); }
+#profileView .rewardsGrid{ gap:10px; }
+#profileView .rewardItem{
+  --rc:#F59E0B; padding:12px 6px 10px; border-radius:20px; border:3px solid color-mix(in srgb, var(--rc) 55%, #000); box-shadow:0 5px 0 color-mix(in srgb, var(--rc) 55%, #000);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--rc) 24%, var(--paper)), color-mix(in srgb, var(--rc) 8%, var(--paper)));
+}
+#profileView .rewardItem.locked{ --rc:#64748B; opacity:.7; filter:grayscale(.4); }
+#profileView .rewardIcon{ font-size:2rem; filter:drop-shadow(0 3px 0 rgba(0,0,0,.25)); }
+#profileView .rewardName{ font-weight:900; font-size:.74rem; }
+#profileView .rewardLvl{ font-weight:800; opacity:.8; }
+#profileView .themeOpt{ border:3px solid var(--tabE); border-radius:18px; box-shadow:0 4px 0 var(--tabE); font-weight:800; transition:transform .1s, box-shadow .1s; }
+#profileView .themeOpt.sel{ outline:3px solid var(--primary); outline-offset:2px; transform:translateY(-2px); }
+#profileView .themeOpt:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--tabE); }
+/* escritorio */
+@media (min-width:700px){
+  :is(#progressView,#myCardsView,#translatorView,#profileView) h2{ font-size:1.9rem !important; }
+  :is(#progressView,#profileView) .statNum{ font-size:2rem !important; }
+  #profileView .rewardsGrid{ grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width:360px){
+  :is(#progressView,#profileView) .statNum{ font-size:1.35rem !important; }
+  .tabIcon{ width:44px; height:44px; }
+}
+
+/* ===== Brillo de fondo a pantalla completa (reemplaza los brillos recortados por columna) ===== */
+#lessonView::before, #reviewView::before, #examView::before,
+:is(#progressView,#myCardsView,#translatorView,#profileView)::before{ display:none !important; }
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transition:opacity .35s ease;
+  background:radial-gradient(ellipse 85% 60% at 50% 32%, color-mix(in srgb, var(--gc, transparent) 22%, transparent), transparent 72%);
+}
+body:has(#progressView:not([style*="none"])){ --gc:#A78BFA; }
+body:has(#myCardsView:not([style*="none"])){ --gc:#F472B6; }
+body:has(#translatorView:not([style*="none"])){ --gc:#FBBF24; }
+body:has(#profileView:not([style*="none"])){ --gc:#FB7185; }
+body:has(#reviewView:not([style*="none"])){ --gc:var(--primary); }
+body:has(#examView:not([style*="none"])){ --gc:#F59E0B; }
+body:has(#cardsView:not([style*="none"]) #lessonView:not([style*="none"])){ --gc:var(--primary); }
+body:has(#progressView:not([style*="none"])),
+body:has(#myCardsView:not([style*="none"])),
+body:has(#translatorView:not([style*="none"])),
+body:has(#profileView:not([style*="none"])),
+body:has(#reviewView:not([style*="none"])),
+body:has(#examView:not([style*="none"])),
+body:has(#cardsView:not([style*="none"]) #lessonView:not([style*="none"])){ }
+body:is(:has(#progressView:not([style*="none"])),:has(#myCardsView:not([style*="none"])),:has(#translatorView:not([style*="none"])),:has(#profileView:not([style*="none"])),:has(#reviewView:not([style*="none"])),:has(#examView:not([style*="none"])),:has(#cardsView:not([style*="none"]) #lessonView:not([style*="none"])))::before{ opacity:1; }
+.reviewEmpty .mascot{ display:block; margin:0 auto 12px; }

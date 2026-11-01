@@ -1742,7 +1742,7 @@ function itemsFor(cat, includeCustom){
 function mapItemsFor(cat){ return itemsFor(cat, false); }
 
 function readStored(key){
-  const dflt = {m:false, t:null, mt:null, lvl:0, next:null};
+  const dflt = {m:false, t:null, mt:null, lvl:0, next:null, iv:0};
   let raw;
   try{ raw = localStorage.getItem("ci_master_"+key); }catch(e){ return dflt; }
   if(!raw) return dflt;
@@ -1750,7 +1750,7 @@ function readStored(key){
   if(raw === "0") return dflt;
   try{
     const o = JSON.parse(raw);
-    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null};
+    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null, iv:o.iv||0};
   }catch(e){ return dflt; }
 }
 function isMastered(key){ return readStored(key).m; }
@@ -1802,70 +1802,71 @@ function todayKeyStr(){ return dayKey(new Date()); }
 const GOAL_PRESETS = {relajado:30, normal:50, serio:100, intenso:150};
 
 // ==================== REPASAR HOY (SRS) ====================
-const REVIEW_GAPS = {1:10*60*1000, 2:2*24*3600*1000, 3:10*24*3600*1000};
+const DAY_MS = 24*3600*1000;
+const REVIEW_AGAIN_MS = 10*60*1000;
+const REVIEW_SESSION_CAP = 25;
+const REVIEW_XP = {1:0, 2:5, 3:10, 4:12};
 
-// Obtener todas las cartas vencidas para repasar (SRS)
-function getDueCards(){
+// Intervalo actual (en días) de una tarjeta; las guardadas con el sistema anterior se derivan de su nivel.
+function srsInterval(s){
+  if(s.iv) return s.iv;
+  return {1:0, 2:2, 3:10}[s.lvl] || 0;
+}
+// Calcula el siguiente intervalo (días) según la nota: 1 Otra vez · 2 Difícil · 3 Bien · 4 Fácil
+function srsNextInterval(prev, grade){
+  if(grade === 1) return 0;
+  if(grade === 2) return Math.min(365, Math.max(1, Math.round(prev * 1.2)));
+  if(grade === 3) return Math.min(365, Math.max(2, Math.round(prev * 2.2)));
+  return Math.min(365, Math.max(5, Math.round(prev * 3.5)));
+}
+function srsGapText(days){
+  if(days <= 0) return '10 min';
+  if(days === 1) return '1 día';
+  if(days < 30) return days + ' días';
+  const m = Math.round(days/30);
+  return m + (m === 1 ? ' mes' : ' meses');
+}
+function srsGrade(key, grade){
+  if(!key) return;
+  const cur = readStored(key);
   const now = Date.now();
-  const todayStart = new Date();
-  todayStart.setHours(0,0,0,0);
-  const todayStartMs = todayStart.getTime();
-
-  const due = [];
-  const recentlyLearned = [];
-
-  itemsFor("Todas").forEach(it=>{
-    const s = readStored(it[3]);
-    // Cartas vencidas (SRS normal)
-    if(!s.m && s.next && s.next <= now){
-      due.push({
-        ...it,
-        lvl: s.lvl,
-        next: s.next,
-        source: 'due'
-      });
-    }
-    // Cartas aprendidas hoy (lvl >= 2, rated today) - para repasar inmediatamente
-    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs){
-      recentlyLearned.push({
-        ...it,
-        lvl: s.lvl,
-        next: s.next,
-        source: 'recent'
-      });
-    }
-  });
-
-  // Ordenar: vencidas primero (más urgentes), luego recientes
-  due.sort((a,b)=> a.next - b.next);
-  recentlyLearned.sort((a,b)=> (b.t || 0) - (a.t || 0)); // más recientes primero
-
-  return [...due, ...recentlyLearned];
+  const iv = srsNextInterval(srsInterval(cur), grade);
+  const m = iv >= 10;
+  const next = grade === 1 ? now + REVIEW_AGAIN_MS : now + iv*DAY_MS;
+  const lvl = grade === 1 ? 1 : (iv >= 10 ? 3 : 2);
+  try{
+    localStorage.setItem("ci_master_"+key, JSON.stringify({m:m, t:now, mt: m ? (cur.mt || now) : cur.mt, lvl:lvl, next:next, iv:iv}));
+  }catch(e){}
 }
 
-// Obtener tarjetas que vencen hoy (para badge contador)
-function getDueTodayCount(){
+// Tarjetas vencidas ahora (única fuente de verdad: lista, contador del menú y sesión usan esto).
+function getDueCards(){
   const now = Date.now();
-  const todayStart = new Date();
-  todayStart.setHours(0,0,0,0);
-  const todayStartMs = todayStart.getTime();
-  const endOfDay = new Date();
-  endOfDay.setHours(23,59,59,999);
-  const endOfDayMs = endOfDay.getTime();
-
-  let count = 0;
+  const due = [];
   itemsFor("Todas").forEach(it=>{
     const s = readStored(it[3]);
-    // Vencidas hoy
-    if(!s.m && s.next && s.next <= endOfDayMs){
-      count++;
-    }
-    // Aprendidas hoy (lvl >= 2, rated today)
-    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs && s.t <= endOfDayMs){
-      count++;
-    }
+    if(s.next && s.next <= now) due.push({it, next:s.next});
   });
-  return count;
+  due.sort((a,b)=> a.next - b.next);
+  return due.map(d=>d.it);
+}
+function getDueTodayCount(){ return getDueCards().length; }
+// Próxima tarjeta que vencerá (ms) o null
+function getNextDueTime(){
+  const now = Date.now();
+  let best = null;
+  itemsFor("Todas").forEach(it=>{
+    const s = readStored(it[3]);
+    if(s.next && s.next > now && (best === null || s.next < best)) best = s.next;
+  });
+  return best;
+}
+function fmtWhen(ts){
+  const diff = ts - Date.now();
+  if(diff < 3600*1000) return 'en ' + Math.max(1, Math.round(diff/60000)) + ' min';
+  if(diff < DAY_MS) return 'en ' + Math.round(diff/3600000) + ' h';
+  const d = Math.round(diff/DAY_MS);
+  return d === 1 ? 'mañana' : 'en ' + d + ' días';
 }
 function getXpTotal(){ try{ return parseInt(localStorage.getItem('ci_xp_total')||'0',10); }catch(e){ return 0; } }
 function setXpTotal(v){ try{ localStorage.setItem('ci_xp_total', String(v)); }catch(e){} }
@@ -2357,156 +2358,132 @@ function dayKey(d){
 }
 
 // ==================== VISTA REPASAR HOY ====================
-let reviewCards = [];
-let reviewIdx = 0;
-let reviewOrder = [];
+let reviewQueue = [];
+let reviewSession = null;   // {total, done, stats, xp, stage}
+let reviewCurrent = null;
+
+function reviewEl(id){ return document.getElementById(id); }
+
+function reviewShow(part){   // 'card' | 'empty' | 'summary'
+  reviewEl('reviewCard').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewActionZone').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewProgress').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewEmpty').style.display = part === 'empty' ? '' : 'none';
+  reviewEl('reviewSummary').style.display = part === 'summary' ? '' : 'none';
+}
 
 function renderReviewView(){
-  // Verificar si hay una sección específica para repasar (desde el mapa)
-  const stageReview = window.currentReviewStage;
-
-  if(stageReview && stageReview.items && stageReview.items.length > 0){
-    // Usar las tarjetas de esa sección específica
-    reviewCards = stageReview.items.map(it => [...it]);
-    reviewOrder = reviewCards.map((_,i)=>i);
-    reviewIdx = 0;
-
-    // Limpiar para que no se repita
+  const stage = window.currentReviewStage;
+  let cards;
+  if(stage && stage.items && stage.items.length){
+    cards = stage.items.slice();
     window.currentReviewStage = null;
   } else {
-    // Repaso general (SRS + aprendidas hoy)
-    reviewCards = getDueCards();
-    reviewOrder = reviewCards.map((_,i)=>i);
-    reviewIdx = 0;
+    cards = getDueCards();
   }
+  reviewEl('reviewBackBtn').onclick = () => switchView('learn');
+  reviewEl('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+  reviewEl('reviewTitle').textContent = stage ? 'Repasar sección' : 'Repasar hoy';
+  updateReviewBadge();
 
-  const emptyEl = document.getElementById('reviewEmpty');
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progressEl = document.getElementById('reviewProgress');
-  const progFill = document.getElementById('reviewProgBarFill');
-
-  if(reviewCards.length === 0){
-    emptyEl.style.display = '';
-    cardEl.style.display = 'none';
-    actionZone.style.display = 'none';
-    progressEl.style.display = 'none';
-    document.getElementById('reviewCount').textContent = '0 tarjetas para repasar';
-    // Back button handler for empty state
-    document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
-    document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+  if(!cards.length){
+    reviewShow('empty');
+    reviewEl('reviewCount').textContent = 'Al día';
+    const nxt = getNextDueTime();
+    reviewEl('reviewEmptyHint').textContent = nxt
+      ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '. Mientras, sigue aprendiendo en el mapa.'
+      : 'Aún no tienes tarjetas en repaso. Aprende algunas en el mapa y aparecerán aquí.';
     return;
   }
-
-  emptyEl.style.display = 'none';
-  cardEl.style.display = '';
-  actionZone.style.display = '';
-  progressEl.style.display = '';
-
-  // Mostrar indicador si es repaso de sección específica
-  const countEl = document.getElementById('reviewCount');
-  if(stageReview){
-    countEl.textContent = `Repasando: ${stageReview.items.length} tarjetas de la sección`;
-  } else {
-    countEl.textContent = reviewCards.length + ' tarjetas para repasar';
-  }
-
-  // Back button handler
-  document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
-  document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
-
+  const batch = stage ? cards : cards.slice(0, REVIEW_SESSION_CAP);
+  reviewQueue = batch.slice();
+  reviewSession = {total: batch.length, done:0, stats:{1:0,2:0,3:0,4:0}, xp:0, stage:!!stage, remaining: cards.length - batch.length};
   showReviewCard();
-  updateReviewBadge();
+}
+
+function updateReviewProgress(){
+  const s = reviewSession;
+  reviewEl('reviewCount').textContent = Math.min(s.done + 1, s.total) + ' / ' + s.total;
+  reviewEl('reviewProgBarFill').style.width = Math.round(s.done / s.total * 100) + '%';
 }
 
 function showReviewCard(){
-  if(reviewIdx >= reviewOrder.length){
-    // Sesión terminada
-    finishReviewSession();
-    return;
-  }
-
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progFill = document.getElementById('reviewProgBarFill');
-
+  if(!reviewQueue.length){ finishReviewSession(); return; }
+  reviewShow('card');
+  reviewCurrent = reviewQueue[0];
+  const cardEl = reviewEl('reviewCard');
   cardEl.classList.remove('flipped');
-  document.getElementById('reviewRateBlock').style.display = 'none';
-  document.getElementById('reviewShowAnswerBtn').style.display = '';
+  reviewEl('reviewRateBlock').style.display = 'none';
+  reviewEl('reviewShowAnswerBtn').style.display = '';
+  updateReviewProgress();
 
-  progFill.style.width = Math.round((reviewIdx / reviewOrder.length) * 100) + '%';
+  const item = reviewCurrent;
+  reviewEl('reviewFrontText').textContent = item[0];
+  reviewEl('reviewBackText').textContent = item[1];
+  window.currentReviewKey = item[3];
 
-  const orderIdx = reviewOrder[reviewIdx];
-  const item = reviewCards[orderIdx];
-  const key = item[3];
-
-  // Actualizar textos
-  document.getElementById('reviewFrontText').textContent = item[0]; // EN
-  document.getElementById('reviewBackText').textContent = item[1]; // ES
-
-  // Guardar key actual
-  window.currentReviewKey = key;
-
-  // Botón mostrar respuesta
-  document.getElementById('reviewShowAnswerBtn').onclick = () => {
-    cardEl.classList.add('flipped');
-    document.getElementById('reviewShowAnswerBtn').style.display = 'none';
-    document.getElementById('reviewRateBlock').style.display = '';
-  };
-
-  // Botones de rating
-  setupReviewRateButtons();
-}
-
-function setupReviewRateButtons(){
-  const buttons = [
-    {id: 'reviewRateGood', level: 2},
-    {id: 'reviewRateEasy', level: 3}
-  ];
-
-  buttons.forEach(btn => {
-    const el = document.getElementById(btn.id);
-    if(el) el.onclick = () => rateReviewCard(btn.level);
+  // Intervalos que se aplicarían con cada botón
+  const prev = srsInterval(readStored(item[3]));
+  [1,2,3,4].forEach(g => {
+    const c = reviewEl('reviewRate'+g+'Cap');
+    if(c) c.textContent = srsGapText(srsNextInterval(prev, g));
   });
+
+  reviewEl('reviewShowAnswerBtn').onclick = revealReviewAnswer;
+  [1,2,3,4].forEach(g => { reviewEl('reviewRate'+g).onclick = () => rateReviewCard(g); });
 }
 
-function rateReviewCard(level){
-  const key = window.currentReviewKey;
-  if(!key) return;
+function revealReviewAnswer(){
+  if(!reviewCurrent || reviewEl('reviewRateBlock').style.display !== 'none') return;
+  reviewEl('reviewCard').classList.add('flipped');
+  reviewEl('reviewShowAnswerBtn').style.display = 'none';
+  reviewEl('reviewRateBlock').style.display = '';
+}
 
-  // Actualizar SRS
-  rateCard(key, level);
-
-  // XP
-  const xpGain = level === 1 ? 0 : (level === 2 ? 10 : 10);
-  if(xpGain > 0) awardXp(xpGain);
-
-  // Siguiente carta
-  reviewIdx++;
+function rateReviewCard(grade){
+  if(!reviewCurrent || !reviewSession) return;
+  const item = reviewQueue.shift();
+  srsGrade(item[3], grade);
+  const s = reviewSession;
+  s.stats[grade]++;
+  const xp = REVIEW_XP[grade];
+  if(xp){ awardXp(xp); s.xp += xp; }
+  if(grade === 1){
+    // vuelve a aparecer tras unas cartas más (o enseguida si es la última)
+    reviewQueue.splice(Math.min(reviewQueue.length, 3), 0, item);
+  } else {
+    s.done++;
+  }
+  reviewCurrent = null;
+  updateReviewBadge();
   showReviewCard();
 }
 
 function finishReviewSession(){
-  const emptyEl = document.getElementById('reviewEmpty');
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progressEl = document.getElementById('reviewProgress');
-
-  emptyEl.style.display = '';
-  cardEl.style.display = 'none';
-  actionZone.style.display = 'none';
-  progressEl.style.display = 'none';
-  document.getElementById('reviewCount').textContent = 'Sesión completada';
-
-  emptyEl.querySelector('p').textContent = '¡Repaso completado!';
-  emptyEl.querySelector('.hint').textContent = 'Has repasado todas las tarjetas pendientes.';
-
-  // Botón volver al mapa
-  document.getElementById('reviewEmptyLearnBtn').onclick = () => {
-    switchView('learn');
-  };
-
-  // Actualizar badge del navbar
+  const s = reviewSession;
+  reviewShow('summary');
+  reviewEl('reviewCount').textContent = '¡Listo!';
+  reviewEl('reviewProgBarFill').style.width = '100%';
+  const answers = s.stats[1] + s.stats[2] + s.stats[3] + s.stats[4];
+  const firstTry = s.total - Math.min(s.total, s.stats[1]);
+  const acc = s.total ? Math.round(firstTry / s.total * 100) : 0;
+  reviewEl('reviewSumDone').textContent = s.total;
+  reviewEl('reviewSumAcc').textContent = acc + '%';
+  reviewEl('reviewSumXp').textContent = '+' + s.xp;
+  reviewEl('reviewSumBreak').innerHTML =
+    '<span class="rvChip rvAgain">🔁 ' + s.stats[1] + ' otra vez</span>' +
+    '<span class="rvChip rvHard">😓 ' + s.stats[2] + ' difícil</span>' +
+    '<span class="rvChip rvGood">🙂 ' + s.stats[3] + ' bien</span>' +
+    '<span class="rvChip rvEasy">🚀 ' + s.stats[4] + ' fácil</span>';
+  const due = s.stage ? 0 : getDueCards().length;
+  const nxt = getNextDueTime();
+  reviewEl('reviewSumNext').textContent = due > 0
+    ? 'Aún tienes ' + due + (due === 1 ? ' tarjeta' : ' tarjetas') + ' pendiente' + (due === 1 ? '' : 's') + '.'
+    : (nxt ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '.' : 'Todo al día.');
+  const more = reviewEl('reviewMoreBtn');
+  more.style.display = due > 0 ? '' : 'none';
+  more.onclick = () => renderReviewView();
+  reviewEl('reviewSumMapBtn').onclick = () => switchView('learn');
   updateReviewBadge();
 }
 
@@ -2514,23 +2491,23 @@ function updateReviewBadge(){
   const count = getDueTodayCount();
   const badge = document.getElementById('reviewNavBadge');
   if(badge){
-    if(count > 0){
-      badge.textContent = count > 99 ? '99+' : count;
-      badge.style.display = '';
-    }else{
-      badge.style.display = 'none';
-    }
+    if(count > 0){ badge.textContent = count > 99 ? '99+' : count; badge.style.display = ''; }
+    else badge.style.display = 'none';
   }
 }
+setInterval(updateReviewBadge, 60000);
 
-// Actualizar badge al cambiar vista
-const originalSwitchView = switchView;
-function switchView(v){
-  originalSwitchView(v);
-  if(v === 'review'){
-    updateReviewBadge();
-  }
-}
+// Atajos: Espacio/Enter muestra la respuesta, 1-4 califica
+document.addEventListener('keydown', e => {
+  const v = document.getElementById('reviewView');
+  if(!v || v.style.display === 'none' || !reviewCurrent) return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target && e.target.tagName;
+  if(t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+  const rating = document.getElementById('reviewRateBlock').style.display !== 'none';
+  if((e.key === ' ' || e.key === 'Enter') && !rating && t !== 'BUTTON'){ e.preventDefault(); revealReviewAnswer(); }
+  else if(rating && '1234'.includes(e.key) && e.key.length === 1){ e.preventDefault(); rateReviewCard(+e.key); }
+});
 
 function renderProgress(){
   const allItems = itemsFor("Todas");
@@ -3259,6 +3236,12 @@ document.getElementById('speakFrontSlow').onclick = (e)=>{
   speak(document.getElementById('frontText').textContent, 'en-US', 0.6);
 };
 
+// Repaso: botones de audio (antes no hacían nada)
+[['reviewSpeakFront','reviewFrontText','en-US'],['reviewSpeakFrontSlow','reviewFrontText','en-US',0.6],['reviewSpeakBack','reviewBackText','es-ES']].forEach(([b,t,l,r])=>{
+  const el = document.getElementById(b);
+  if(el) el.onclick = (e)=>{ e.stopPropagation(); speak(document.getElementById(t).textContent, l, r); };
+});
+
 // --- Sound effects (Web Audio API, no audio files) and haptic feedback ---
 let sfxEnabled = true;
 try{ sfxEnabled = localStorage.getItem('vocabri_sfx') !== '0'; }catch(e){}
@@ -3871,6 +3854,7 @@ function showExamFeedback(ok, failText, okNote){
   const next = document.getElementById('examNextBtn');
   next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
   next.style.display = '';
+  try{ setTimeout(()=> next.scrollIntoView({behavior:'smooth', block:'nearest'}), 120); }catch(e){}
 }
 // Single place where an answer is scored: sound, score, lives and feedback.
 function resolveExamAnswer(ok, failText, okNote){
@@ -4171,6 +4155,11 @@ const NAV_ICONS = {
     '<path d="M11 6.4a3.6 3.6 0 0 1 2.4-1.6M7 20.6a6.2 6.2 0 0 1 2.4-2.4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>')
 };
 
+// Icono cartoon (el mismo de la barra inferior) en el título de cada pestaña
+[['progressView','progress','.viewHeader h2'],['translatorView','translator','.viewHeader h2'],['myCardsView','mycards','.myCardsHeader h2']].forEach(([v,k,sel])=>{
+  const h = document.querySelector('#'+v+' '+sel);
+  if(h && !h.querySelector('.tabIcon')){ const i = document.createElement('span'); i.className = 'tabIcon'; i.setAttribute('aria-hidden','true'); i.innerHTML = NAV_ICONS[k]; h.insertBefore(i, h.firstChild); }
+});
 const MAIN_NAV_ITEMS = [
   {id:'learn', icon: NAV_ICONS.learn, label:'Aprender'},
   {id:'review', icon: NAV_ICONS.review, label:'Repasar'},

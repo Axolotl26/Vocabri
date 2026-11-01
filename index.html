@@ -460,10 +460,10 @@
   <div id="reviewView" class="stagger-review" style="display:none;">
     <div class="reviewHeader" style="--i:1;">
       <button class="miniBtn hover-scale focus-glow" id="reviewBackBtn" type="button" aria-label="Volver">←</button>
-      <h2 style="margin:0; font-family:var(--font-ui); color:var(--ink);">Repasar hoy</h2>
-      <span id="reviewCount" class="hint" style="font-size:.75rem;">0 tarjetas para repasar</span>
+      <h2 id="reviewTitle">Repasar hoy</h2>
+      <span id="reviewCount" class="reviewCountPill" aria-live="polite">0 / 0</span>
     </div>
-    <div id="reviewProgress" class="progBarOuter" style="--i:2; margin:12px 0; display:none;"><div class="progBarFill" id="reviewProgBarFill"></div></div>
+    <div id="reviewProgress" class="progBarOuter reviewProg" style="--i:2; display:none;"><div class="progBarFill" id="reviewProgBarFill"></div></div>
     <div class="card" id="reviewCard" style="--i:3;">
       <div class="card-inner">
         <div class="face front">
@@ -480,17 +480,35 @@
       <button class="showAnswerBtn hover-scale focus-glow" id="reviewShowAnswerBtn" type="button">Mostrar respuesta</button>
       <div class="rateBlock" id="reviewRateBlock" style="display:none;">
         <p class="ratePrompt" id="reviewRatePrompt">¿Qué tan bien la sabías?</p>
-        <div class="rateRow" id="reviewRateRow">
-          <button class="rateBtn rateGood hover-scale focus-glow" id="reviewRateGood" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/aprobado_con_check.png" alt="Bien"></span><span class="rateLabel">Bien</span><span class="rateCaption">+10 XP</span></button>
-          <button class="rateBtn rateEasy hover-scale focus-glow" id="reviewRateEasy" type="button"><span class="rateIcon" aria-hidden="true"><img class="rateSticker" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="Fácil"></span><span class="rateLabel">Fácil</span><span class="rateCaption">+10 XP · dominada</span></button>
+        <div class="rateRow rateRow4" id="reviewRateRow">
+          <button class="rateBtn rateAgain hover-scale focus-glow" id="reviewRate1" type="button"><span class="rateIcon" aria-hidden="true">🔁</span><span class="rateLabel">Otra vez</span><span class="rateCaption" id="reviewRate1Cap">10 min</span></button>
+          <button class="rateBtn rateHard hover-scale focus-glow" id="reviewRate2" type="button"><span class="rateIcon" aria-hidden="true">😓</span><span class="rateLabel">Difícil</span><span class="rateCaption" id="reviewRate2Cap">1 día</span></button>
+          <button class="rateBtn rateGood hover-scale focus-glow" id="reviewRate3" type="button"><span class="rateIcon" aria-hidden="true">🙂</span><span class="rateLabel">Bien</span><span class="rateCaption" id="reviewRate3Cap">2 días</span></button>
+          <button class="rateBtn rateEasy hover-scale focus-glow" id="reviewRate4" type="button"><span class="rateIcon" aria-hidden="true">🚀</span><span class="rateLabel">Fácil</span><span class="rateCaption" id="reviewRate4Cap">5 días</span></button>
         </div>
+        <p class="rvKeys">Atajos: 1 · 2 · 3 · 4</p>
       </div>
     </div>
-    <div class="reviewEmpty" id="reviewEmpty" style="--i:5; display:none; text-align:center; padding:40px 16px;">
-      <img class="mascot" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="" width="80" height="80" style="margin-bottom:12px;">
-      <p style="font-family:var(--font-ui); font-weight:700; color:var(--ink); margin-bottom:4px;">¡No hay tarjetas para repasar!</p>
-      <p class="hint">Todo al día. Vuelve mañana o sigue aprendiendo en el mapa.</p>
+    <div class="reviewEmpty" id="reviewEmpty" style="--i:5; display:none;">
+      <img class="mascot" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="" width="80" height="80">
+      <p class="rvBig">¡No hay tarjetas para repasar!</p>
+      <p class="hint" id="reviewEmptyHint">Todo al día. Vuelve mañana o sigue aprendiendo en el mapa.</p>
       <button class="nav hover-scale focus-glow" id="reviewEmptyLearnBtn" type="button" style="margin-top:16px;">🗺️ Ir al mapa</button>
+    </div>
+    <div class="reviewEmpty reviewSummary" id="reviewSummary" style="display:none;">
+      <img class="mascot" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="" width="88" height="88">
+      <p class="rvBig">¡Repaso completado!</p>
+      <div class="rvStats">
+        <div><b id="reviewSumDone">0</b><span>tarjetas</span></div>
+        <div><b id="reviewSumAcc">0%</b><span>a la primera</span></div>
+        <div><b id="reviewSumXp">+0</b><span>XP</span></div>
+      </div>
+      <div class="rvBreak" id="reviewSumBreak"></div>
+      <p class="hint" id="reviewSumNext"></p>
+      <div class="rvBtns">
+        <button class="showAnswerBtn rvMore hover-scale focus-glow" id="reviewMoreBtn" type="button" style="display:none;">Seguir repasando</button>
+        <button class="nav hover-scale focus-glow" id="reviewSumMapBtn" type="button">🗺️ Ir al mapa</button>
+      </div>
     </div>
   </div>
 
