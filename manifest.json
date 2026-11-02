@@ -1,25 +1,27 @@
 {
   "name": "Vocabri",
   "short_name": "Vocabri",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
+  "id": "vocabri",
   "display": "standalone",
   "icons": [
     {
       "src": "assets/origin-logo.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
       "src": "assets/origin-logo.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
   "theme_color": "#0b0f19",
   "background_color": "#0f172a",
-  "id": "/",
   "description": "Domina frases, no solo palabras. Aplicación de aprendizaje de idiomas con tarjetas interactivas, práctica diaria y seguimiento de progreso.",
-  "scope": "/",
   "lang": "es",
   "orientation": "portrait",
   "dir": "ltr"
