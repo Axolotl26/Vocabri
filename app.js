@@ -2262,6 +2262,7 @@ function currentLessonItems(){
   return stageItems(currentCat, getCurrentStage(currentCat));
 }
 function renderCards(){
+  scrollTopNow('lessonView');
   const cat = currentCat;
   const items = currentLessonItems();
   const backBtn = document.getElementById('backToMapBtn');
@@ -2410,6 +2411,7 @@ function updateReviewProgress(){
 function showReviewCard(){
   if(!reviewQueue.length){ finishReviewSession(); return; }
   reviewShow('card');
+  scrollTopNow('reviewView');
   reviewCurrent = reviewQueue[0];
   const cardEl = reviewEl('reviewCard');
   cardEl.classList.remove('flipped');
@@ -2976,10 +2978,45 @@ document.addEventListener('keydown', (e)=>{
   const ov = document.getElementById('cardModalOverlay');
   if(ov && ov.style.display === 'flex') closeCardModal();
 });
+// ===== Scroll: botón "subir" y reinicio al abrir/cambiar contenido =====
+function addScrollTopBtn(scroller, host){
+  if(!scroller || scroller.querySelector(':scope > .scrollTopBtn')) return;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'scrollTopBtn'; b.setAttribute('aria-label', 'Volver arriba'); b.title = 'Volver arriba'; b.textContent = '↑';
+  (host || scroller).appendChild(b);
+  const upd = () => b.classList.toggle('show', scroller.scrollTop > 220);
+  scroller.addEventListener('scroll', upd, {passive:true});
+  b.onclick = () => { try{ scroller.scrollTo({top:0, behavior:'smooth'}); }catch(e){ scroller.scrollTop = 0; } };
+  upd();
+}
+/* Escritorio: la rueda del ratón desplaza el panel activo aunque el puntero esté fuera de la columna central */
+(function(){
+  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView'];
+  document.addEventListener('wheel', function(e){
+    try{
+      if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
+      const t=e.target;
+      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, textarea, select')) return;
+      for(const id of IDS){
+        const el=document.getElementById(id);
+        if(!el || !el.offsetParent) continue;
+        if(el.contains(t)) return;                    // ya está dentro: scroll nativo
+        const k = e.deltaMode===1 ? 16 : (e.deltaMode===2 ? el.clientHeight : 1);
+        el.scrollBy({top:e.deltaY*k, behavior:'auto'});
+        e.preventDefault();
+        return;
+      }
+    }catch(_){}
+  }, {passive:false});
+})();
+
+function scrollTopNow(id){ try{ const el = typeof id === 'string' ? document.getElementById(id) : id; if(el) el.scrollTo(0,0); }catch(e){} }
 document.getElementById('openTableBtn').onclick = ()=>{
   document.getElementById('progressView').style.display = 'none';
   document.getElementById('tableView').style.display = '';
   renderTable();
+  scrollTopNow('tableView');
+  addScrollTopBtn(document.getElementById('tableView'));
 };
 document.getElementById('backFromTableBtn').onclick = ()=>{
   document.getElementById('tableView').style.display = 'none';
@@ -3177,8 +3214,8 @@ function openTermsModal(){
   if(!ov) return;
   _termsOpener = document.getElementById('settingsBtn');
   ov.style.display = 'flex';
-  const box = ov.querySelector('.legalModal');
-  if(box) box.scrollTop = 0;
+  const box = ov.querySelector('.legalContent');
+  if(box){ box.scrollTop = 0; const lm = ov.querySelector('.legalModal'); if(lm) lm.scrollTop = 0; addScrollTopBtn(box); }
   const closeBtn = document.getElementById('termsModalClose');
   if(closeBtn) closeBtn.focus();
 }
@@ -3791,6 +3828,7 @@ function startExam(cat, stageIdx){
   renderExamQuestion();
 }
 function renderExamQuestion(){
+  scrollTopNow('examView');
   stopExamRecognition();
   hideExamMascot();
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
@@ -4440,8 +4478,9 @@ nBtn.onclick = (e)=>{
   nPanel.hidden = !opening;
   nBtn.setAttribute('aria-expanded', String(opening));
   if (opening) {
-    nPanel.scrollTo(0, 0);
     populateNews();
+    nPanel.scrollTo(0, 0);
+    addScrollTopBtn(nPanel);
   }
 };
 document.getElementById('newsCloseBtn').onclick = closeNews;
@@ -5474,7 +5513,7 @@ const REMINDER_TAG = 'vocabri-daily-reminder';          // periodicSync tag + no
 const REMINDER_STATE_CACHE = 'vocabri-state';            // same as sw.js
 const REMINDER_STATE_URL = './vocabri-reminder-state.json';
 const REMINDER_START_HOUR = 10, REMINDER_END_HOUR = 22;  // keep in sync with sw.js
-const REMINDER_ICON = './icons/icon-192.png';
+const REMINDER_ICON = './assets/origin-logo.png';
 const REMINDER_MESSAGES = [
   '🔥 ¡No pierdas tu racha en Vocabri! Completa tu lección de hoy.',
   '🎯 Tu meta diaria te está esperando en Vocabri. ¡Tú puedes!',
