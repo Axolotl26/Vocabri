@@ -43,7 +43,7 @@
 ## 🚀 Instalación y Uso
 
 ### Usar en el Navegador / Instalar PWA
-1. Visita la versión desplegada en [GitHub Pages](https://axolotl26.github.io/Vocabri/)[cite: 18].
+1. Visita la versión desplegada en [GitHub Pages](https://axolotl26.github.io/Vocabri/).
 2. En tu móvil o navegador, toca en **"Añadir a la pantalla de inicio"** o **"Instalar aplicación"**.
 
 ### Desarrollo Local
@@ -51,9 +51,10 @@ Si deseas clonar el proyecto y ejecutarlo de manera local:
 
 ```bash
 # Clonar el repositorio
-git clone [https://github.com/Axolotl26/Vocabri.git](https://github.com/Axolotl26/Vocabri.git)
+git clone https://github.com/Axolotl26/Vocabri.git
 
 # Entrar al directorio
 cd Vocabri
 
 # Abrir index.html en tu navegador o usar un servidor local (ej. Live Server)
+```

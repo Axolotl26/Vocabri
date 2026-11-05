@@ -3,7 +3,7 @@
  * Carga base_de_datos_de_frases_vocabri.json y convierte al formato interno DATA
  */
 
-// Formato interno: DATA[category] = [[en, es], [en, es], ...]
+// Formato interno: DATA[category] = [[en, es, ex?, exEs?, id?], ...]
 
 async function loadPhrasesFromJSON() {
   try {
@@ -24,15 +24,14 @@ async function loadPhrasesFromJSON() {
     const categoriesData = jsonData.categories || jsonData;
     for (const [jsonKey, catId] of Object.entries(categoryMap)) {
       if (categoriesData[jsonKey] && Array.isArray(categoriesData[jsonKey])) {
-        DATA[catId] = categoriesData[jsonKey].map(item => [item.en, item.es]);
-        console.log(`[phraseLoader] Cargada categoría ${catId}: ${DATA[catId].length} frases`);
+        // [en, es, ejemplo, ejemplo_es, id]: el id estable es la clave del progreso (no cambia si se reordena el JSON)
+        DATA[catId] = categoriesData[jsonKey].map(item => [item.en, item.es, item.ex || null, item.exEs || null, item.id || null]);
       }
     }
 
     // La categoría "general" usa el contenido existente de DATA.Casual
     if (DATA.Casual && DATA.Casual.length > 0) {
-      DATA.general = [...DATA.Casual];
-      console.log(`[phraseLoader] Categoría general: ${DATA.general.length} frases (desde Casual)`);
+      DATA.general = DATA.Casual; // misma lista (por referencia): una sola fuente de verdad
     }
 
     // Exponer categorías válidas para el registro
@@ -75,16 +74,3 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = { loadPhrasesFromJSON };
 }
 
-
-//Resumen para mañana:
-
-//┌─────────────────────┬──────────────┬─────────────────────────────────────────────────────────────────────────────┐
-//│        Fase         │    Estado    │                                  Qué falta                                  │
-//├─────────────────────┼──────────────┼─────────────────────────────────────────────────────────────────────────────┤
-//│ A Datos/Registro    │ ✅ Done      │ —                                                                           │
-//├─────────────────────┼──────────────┼─────────────────────────────────────────────────────────────────────────────┤
-//│ B Onboarding 5 cats │ ✅ Done      │ —                                                                           │
-//├─────────────────────┼──────────────┼─────────────────────────────────────────────────────────────────────────────┤
-//│ C Mapa/Navegación   │ 🟡 Parcial   │ Verificar distribución nodos (100 frases → ~19-20 nodos) + Test E2E         │
-//├─────────────────────┼──────────────┼─────────────────────────────────────────────────────────────────────────────┤
-//│ D Limpieza          │ ⏳ Pendiente │ Borrar CAT_MODULE_SIZES, CAT_MODULE_NAMES, hasNamedModules, realCats legacy │

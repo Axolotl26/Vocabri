@@ -84,7 +84,7 @@ const DATA = {
     ["Can I pay by card?","¿Puedo pagar con tarjeta?"],["Do you take cash?","¿Aceptan efectivo?"],
     ["Is service included?","¿La propina está incluida?"],["Separate checks, please.","Cuentas separadas, por favor."],
     ["To go, please.","Para llevar, por favor."],["I'd like a coffee.","Quisiera un café."],
-    ["With sugar/milk.","Con azúcar/leche."],["Cheers!","¡Salud!"],
+    ["With sugar/milk.","Con azúcar/leche."],["Can I have a refill, please?","¿Me puede rellenar, por favor?"],
     ["I'm full.","Estoy lleno/satisfecho."],["Where are the restrooms?","¿Dónde están los baños?"],
     // De Compras
     ["I'm just looking.","Solo estoy mirando."],["How much does this cost?","¿Cuánto cuesta esto?"],
@@ -334,9 +334,9 @@ const DATA = {
     ["Thank you for your patience.","Gracias por su paciencia."],
     // Phrasal Verbs y Expresiones Comunes
     ["Hold on a second.","Espera un segundo."],["Go on, I'm listening.","Continúa, te escucho."],
-    ["I need to find out.","Necesito averiguar."],["Don't give up.","No te rindas."],
+    ["I need to find out.","Necesito averiguar."],["Let's figure it out.","Vamos a resolverlo."],
     ["I'll look into it.","Lo investigaré."],["Slow down, please.","Ve más despacio, por favor."],
-    ["Hurry up!","¡Date prisa!"],["Come in.","Adelante."],
+    ["Don't rush me.","No me apresures."],["Come in.","Adelante."],
     ["Sit down.","Siéntate."],["Stand up.","Levántate."],
     ["Turn it up.","Súbelo."],["Turn it down.","Bájalo."],
     ["Put it on.","Póntelo."],["Take it off.","Quítatelo."],
@@ -356,7 +356,7 @@ const DATA = {
     ["Let's forget about it.","Olvidémoslo."],["I apologize.","Pido disculpas."],
     ["I forgive you.","Te perdono."],["Stop arguing.","Dejen de discutir."],
     ["We need to find a solution.","Necesitamos encontrar una solución."],["It's not a big deal.","No es para tanto."],
-    ["Are you kidding me?","¿Me estás tomando el pelo?"],["I'm serious.","Hablo en serio."],
+    ["Are you kidding me?","¿Me estás tomando el pelo?"],["I mean it.","Lo digo en serio."],
     ["Believe it or not.","Créalo o no."],["To be honest...","Para ser honesto..."],
     ["Anyway...","De todos modos..."],["As I was saying...","Como iba diciendo..."],
     ["In other words...","En otras palabras..."],
@@ -379,7 +379,7 @@ const DATA = {
     ["I would like...","Me gustaría..."],["I wish...","Desearía..."],
     ["I hope everything goes well.","Espero que todo salga bien."],["I'm dying for a coffee.","Me muero por un café."],
     ["I could use some help.","Me vendría bien algo de ayuda."],["If only I could...","Si tan solo pudiera..."],
-    ["What do you want to do?","¿Qué quieres hacer?"],["I'm looking for...","Estoy buscando..."],
+    ["What do you want to do?","¿Qué quieres hacer?"],["I'm in the mood for something sweet.","Se me antoja algo dulce."],
     ["I'm craving pizza.","Tengo antojo de pizza."],["Do you need anything?","¿Necesitas algo?"],
     ["It's necessary.","Es necesario."],["It's optional.","Es opcional."],
     ["I have to go.","Tengo que irme."],["I must do it.","Debo hacerlo."],
@@ -394,7 +394,7 @@ const DATA = {
     ["It's different from this.","Es diferente a esto."],["It's not as good as...","No es tan bueno como..."],
     ["It's much bigger.","Es mucho más grande."],["It's smaller than that.","Es más pequeño que eso."],
     ["This one is cheaper.","Este es más barato."],["That's the most expensive.","Ese es el más caro."],
-    ["I need more of this.","Necesito más de esto."],["That's enough.","Eso es suficiente."],
+    ["I need more of this.","Necesito más de esto."],["That's more than enough.","Eso es más que suficiente."],
     ["It's too much for me.","Es demasiado para mí."],["There are too many people.","Hay demasiada gente."],
     ["A little bit more.","Un poquito más."],["Not even a little.","Ni siquiera un poco."],
     ["Most of the time.","La mayoría de las veces."],["Hardly ever.","Casi nunca."],
@@ -429,7 +429,7 @@ const DATA = {
     ["It's a dream come true.","Es un sueño hecho realidad."],["I'm used to it.","Estoy acostumbrado/a a ello."],
     ["I'll never forget it.","Nunca lo olvidaré."],["What a relief!","¡Qué alivio!"],
     ["It's a small world.","El mundo es un pañuelo."],["In the end...","Al final..."],
-    ["Believe it or not.","Créalo o no."],
+    ["It was unforgettable.","Fue inolvidable."],
     // Frases para la Calle y el Entorno
     ["Is it safe around here?","¿Es seguro por aquí?"],["It's very crowded.","Está muy lleno de gente."],
     ["I'm looking for a park.","Estoy buscando un parque."],["Where can I find a map?","¿Dónde puedo encontrar un mapa?"],
@@ -476,14 +476,14 @@ const DATA = {
     ["I'm self-taught.","Soy autodidacta."],
     // Motivación y Ánimo
     ["You can do it!","¡Tú puedes hacerlo!"],["Keep going!","¡Sigue adelante!"],
-    ["Don't give up!","¡No te rindas!"],["Believe in yourself.","Cree en ti mismo."],
+    ["Never give up on your dreams.","Nunca renuncies a tus sueños."],["Believe in yourself.","Cree en ti mismo."],
     ["Anything is possible.","Todo es posible."],["Stay positive.","Mantente positivo."],
     ["Dream big.","Sueña en grande."],["It's never too late.","Nunca es demasiado tarde."],
     ["Go for it!","¡Ve por ello!"],["Take a chance.","Arriésgate."],
     ["Everything will be okay.","Todo estará bien."],["One step at a time.","Un paso a la vez."],
     ["Don't be afraid of mistakes.","No tengas miedo a los errores."],["Success takes time.","El éxito toma tiempo."],
     ["Focus on your goals.","Enfócate en tus metas."],["You're doing great.","Lo estás haciendo genial."],
-    ["I'm proud of you.","Estoy orgulloso de ti."],["That's the spirit!","¡Esa es la actitud!"],
+    ["You should be proud of yourself.","Deberías estar orgulloso de ti mismo."],["That's the spirit!","¡Esa es la actitud!"],
     ["Make it happen.","Haz que suceda."],["Just do it.","Solo hazlo."],
     ["You have potential.","Tienes potencial."],["Stay focused.","Mantente enfocado."],
     ["Hard work pays off.","El trabajo duro rinde frutos."],["Be yourself.","Sé tú mismo."],
@@ -507,7 +507,7 @@ const DATA = {
     ["Good things come to those who wait.","Lo bueno le llega a quien sabe esperar."],["The early bird catches the worm.","Al que madruga, Dios lo ayuda."],
     ["Easy come, easy go.","Lo que fácil viene, fácil se va."],["Honesty is the best policy.","La honestidad es la mejor política."],
     ["Practice what you preach.","Predica con el ejemplo."],["Rome wasn't built in a day.","Roma no se construyó en un día."],
-    ["Better late than never.","Más vale tarde que nunca."],["Beauty is in the eye of the beholder.","La belleza está en los ojos del que mira."],
+    ["A watched pot never boils.","Olla vigilada nunca hierve."],["Beauty is in the eye of the beholder.","La belleza está en los ojos del que mira."],
     ["A friend in need is a friend indeed.","En las malas se conocen a los amigos."],["Keep your friends close and your enemies closer.","Ten cerca a tus amigos, pero más cerca a tus enemigos."],
     ["Don't put all your eggs in one basket.","No te lo juegues todo a una sola carta."],["Fortune favors the bold.","La fortuna favorece a los valientes."],
     ["Out of sight, out of mind.","Ojos que no ven, corazón que no siente."],["The grass is always greener on the other side.","El césped siempre es más verde al otro lado."],
@@ -553,7 +553,7 @@ const DATA = {
     ["Peace out.","Adiós (informal)."],["I'm off.","Me voy."],
     ["Keep me posted.","Manténme informado."],["It's time to say goodbye.","Es hora de decir adiós."],
     ["Hope to see you soon.","Espero verte pronto."],["God bless you.","Dios te bendiga."],
-    ["Take it easy.","Tómalo con calma."],["You made my day.","Me alegraste el día."],
+    ["It was great seeing you.","Fue un gusto verte."],["You made my day.","Me alegraste el día."],
     ["We finally did it!","¡Finalmente lo logramos!"]
   ],
   "Universidad": [
@@ -643,10 +643,39 @@ const DATA = {
 const realCats = Object.keys(DATA);
 const CAT_MODULE_SIZES = {'Casual': [15,20,15,20,30,25,30,25,20,15,30,25,30,25,30,20,25,25,30,25,20,25,25,25,25,25,25,25,25,25,25,25,25,30,25,25,20,25,25,25,25]};
 const CAT_MODULE_NAMES = {'Casual': ["Saludos y Despedidas","Cortesía y Social","Para cuando no entiendes","Información Personal","Situaciones Diarias","Viajes y Transporte","En el Restaurante","De Compras","Direcciones","El Tiempo y la Hora","En el Trabajo","Teléfono y Tecnología","Salud y Emergencias","Sentimientos y Estados de Ánimo","Expresando Opiniones y Gustos","Describiendo Personas","Relaciones y Vida Social","En Casa","En la Cocina y Comida","Hobbies y Tiempo Libre","Preguntas Frecuentes y Misceláneas","Dinero y Finanzas","Planes y Futuro","Hablando del Pasado","Trámites y Documentos","Phrasal Verbs y Expresiones Comunes","Discusiones y Malentendidos","Expresando Certeza y Duda","Deseos y Necesidades","Comparaciones y Cantidades","Eventos y Celebraciones","Describiendo Experiencias","Frases para la Calle y el Entorno","Modismos y Expresiones Idiomáticas","Educación y Aprendizaje","Motivación y Ánimo","Preguntas para Profundizar","Proverbios y Sabiduría Popular","Frases Avanzadas para Debatir","Expresiones para Situaciones Específicas","Despedidas y Cierre Final"]};
-function hasNamedModules(cat){ return !!CAT_MODULE_SIZES[cat]; }
+// 'general' usa el contenido de DATA.Casual (ver phraseLoader.js): comparte sus zonas con nombre
+CAT_MODULE_SIZES.general = CAT_MODULE_SIZES.Casual;
+CAT_MODULE_NAMES.general = CAT_MODULE_NAMES.Casual;
+// Categorías del JSON: 4 zonas temáticas. Los tamaños son múltiplos de 8 (una sección = 8 frases), así las secciones y los
+// exámenes quedan exactamente donde estaban antes de nombrar las zonas (el progreso guardado no se desplaza).
+const JSON_ZONES = {
+  travel:   {sizes:[24,24,24,28], names:["Aeropuerto y Transporte","Hotel y Alojamiento","Restaurantes y Comida","Emergencias y Direcciones"]},
+  academic: {sizes:[24,24,24,28], names:["En Clase y Tareas","Investigación y Ciencia","Biblioteca y Tecnología","Vida Universitaria"]},
+  business: {sizes:[24,24,24,28], names:["Correos Profesionales","Reuniones","Finanzas y Ventas","Gestión y Estrategia"]},
+  pop:      {sizes:[24,24,24,28], names:["Gaming: Acción y Equipo","Gaming Online y Ranked","Series, Anime y Cine","Streaming y Redes"]}
+};
+const ZONES_CARRY_EXAM = new Set(Object.keys(JSON_ZONES));   // el examen cuenta cada 2 secciones aunque crucen de zona
+Object.keys(JSON_ZONES).forEach(c=>{ CAT_MODULE_SIZES[c] = JSON_ZONES[c].sizes; CAT_MODULE_NAMES[c] = JSON_ZONES[c].names; });
+function hasNamedModules(cat){
+  if(!CAT_MODULE_SIZES[cat]) return false;
+  // Zonas del JSON: solo si encajan con las frases cargadas (si no, mapa sin zonas, como antes)
+  if(ZONES_CARRY_EXAM.has(cat)) return CAT_MODULE_SIZES[cat].reduce((a,b)=>a+b,0) === (DATA[cat] ? DATA[cat].length : -1);
+  return true;
+}
 let customCats = [];
 try{ customCats = JSON.parse(localStorage.getItem('ci_custom_cats')||'[]'); }catch(e){}
-function allCats(){ return realCats.concat(customCats.filter(c=> realCats.indexOf(c)<0)); }
+// Categorías maestras (las únicas con contenido de la app) + etiquetas propias del usuario.
+// 'Casual', 'Universidad', 'Espacio' e 'Inmobiliaria' son datos heredados: ya no se listan (general = Casual).
+const MASTER_IDS = ['general','travel','academic','business','pop'];
+function allCats(){
+  const m = MASTER_IDS.filter(c=> DATA[c] && DATA[c].length);
+  return m.concat(customCats.filter(c=> MASTER_IDS.indexOf(c)<0 && c !== 'Casual'));
+}
+// Nombre legible de una categoría (maestra → etiqueta corta; el resto, tal cual)
+function catLabel(c){
+  try{ if(window.VocabriCategories && window.VocabriCategories.isValidCategory(c)) return window.VocabriCategories.getCategoryShortLabel(c); }catch(e){}
+  return c === 'Casual' ? 'General' : c;
+}
 
 // --- Stage / lesson system (Duolingo-style) ---
 let unlockedStage = {};
@@ -659,7 +688,8 @@ function setUnlockedStage(cat, idx){
 }
 // --- Cool-down mechanic (memory-consolidation pacing) ---
 const COOLDOWN_NORMAL_MS = 14400000; // 4 hours after 2 consecutive normal Secciones
-const COOLDOWN_EXAM_MS = 28800000;   // 8 hours after 1 Sección de Examen
+const COOLDOWN_EXAM_MS = 28800000;   // 8 hours after 1 Sección de Examen (1 estrella)
+const COOLDOWN_EXAM_BY_STARS = {1:28800000, 2:21600000, 3:14400000};   // mejor nota → descanso más corto (8 h · 6 h · 4 h)
 function defaultVocabriProgress(){
   return {categoriaActualId:'', etapaActualId:'', seccionActualId:'',
           seccionesCompletadasSeguidas:0, ultimoTimestamp:0, enCooldown:false, tiempoCooldownMs:0};
@@ -695,7 +725,7 @@ function fmtHhMmSs(ms){
   return hh+':'+mm+':'+ss;
 }
 // Call right after a Sección (normal or exam) is marked complete.
-function registerSectionCompletion(cat, nodeIdx, wasExam){
+function registerSectionCompletion(cat, nodeIdx, wasExam, stars){
   vocabriProgress.categoriaActualId = cat;
   vocabriProgress.etapaActualId = String(etapaNameForSession(cat, nodeIdx));
   vocabriProgress.seccionActualId = cat + '|' + (nodeIdx+1);
@@ -703,7 +733,7 @@ function registerSectionCompletion(cat, nodeIdx, wasExam){
     vocabriProgress.seccionesCompletadasSeguidas = 0;
     vocabriProgress.enCooldown = true;
     vocabriProgress.ultimoTimestamp = Date.now();
-    vocabriProgress.tiempoCooldownMs = COOLDOWN_EXAM_MS;
+    vocabriProgress.tiempoCooldownMs = COOLDOWN_EXAM_BY_STARS[stars] || COOLDOWN_EXAM_MS;
   } else {
     vocabriProgress.seccionesCompletadasSeguidas = (vocabriProgress.seccionesCompletadasSeguidas||0) + 1;
     if(vocabriProgress.seccionesCompletadasSeguidas >= MAX_CONSECUTIVE_NORMAL){
@@ -783,8 +813,7 @@ function nodeLayout(cat){
   for(let i=0;i<L.sessSizes.length;i++){
     const etapaIdx = L.sessEtapaIdx[i];
     if(etapaIdx !== lastEtapa){
-      if(pending.length) nodes.push({type:'exam', etapaIdx:lastEtapa, sources:pending});
-      pending = [];
+      if(pending.length && !ZONES_CARRY_EXAM.has(cat)){ nodes.push({type:'exam', etapaIdx:lastEtapa, sources:pending}); pending = []; }
       lastEtapa = etapaIdx;
     }
     nodes.push({type:'normal', sessIdx:i, etapaIdx});
@@ -842,6 +871,452 @@ function isStageComplete(cat, stageIdx){
   return items.length > 0 && items.every(it=> (readStored(it[3]).lvl || 0) >= 1);
 }
 
+/* =====================================================================
+   Mapa isométrico 2.5D  (v2 — estilo "torres oscuras")
+   REEMPLAZA en app.js todo el bloque desde el comentario
+   "Mapa isométrico 2.5D" hasta el final de la función buildPathMap().
+   Conserva las clases que usa el resto de app.js: .pathNode
+   (+ active/locked/done/examNode/seccion-cooldown), .nodeTimer,
+   .nodeLabel y .nodeReviewBtn.
+   Capas (atrás → adelante):
+     defs → decoración trasera → pilares → camino → decoración frontal → nodos
+   ===================================================================== */
+const ISO = {
+  SCENE_W: 420,        // ancho lógico de la escena; se escala con CSS al ancho disponible
+  TW: 210, TH: 105,    // rombo de la cara superior (proporción 2:1)
+  STEP: 84,            // separación vertical entre nodos consecutivos
+  ETAPA_GAP: 70,       // espacio extra al empezar una nueva etapa
+  AMP: 84,             // desplazamiento lateral del zigzag
+  OFFSETS: [-1, 0, 1, 0],
+  PUCK_W: 64, PUCK_H: 54, PUCK_LIFT: 9,
+  PAD_TOP: 170, PAD_BOTTOM: 200
+};
+const ISO_AXOLOTLS = [
+  'ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png',
+  'ajolotes_de_colores/ajolote_verde_bailando.png',
+  'ajolotes_de_colores/ajolote_dorado_brillante.png',
+  'ajolotes_de_colores/ajolote_morado_pensativo.png',
+  'ajolotes_de_colores/ajolote_amarillo_flotando_sonriente.png',
+  'ajolotes_emociones/feliz_nadando_saludando.png'
+];
+let _isoStage = null, _isoScene = null, _isoSceneH = 0, _isoResizeBound = false, _isoFreeBuilt = 0;
+
+// Pseudo-aleatorio determinista: la misma posición siempre da la misma decoración.
+function isoRand(n){
+  let x = Math.imul(n + 1, 2654435761) >>> 0;
+  x = (x ^ (x >>> 15)) >>> 0;
+  x = Math.imul(x, 2246822519) >>> 0;
+  return (x % 1000) / 1000;
+}
+const ISO_LOCK_SVG =
+  '<svg class="isoLock" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false">' +
+  '<path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' +
+  '<rect x="5" y="10" width="14" height="11" rx="2.6" fill="currentColor"/>' +
+  '<circle cx="12" cy="15" r="1.7" fill="rgba(255,255,255,.55)"/></svg>';
+
+// Gradientes compartidos (sombras de las caras, brillo de la cara superior).
+function isoDefsSvg(){
+  return '<svg class="isoDefs" width="0" height="0" aria-hidden="true" focusable="false"><defs>' +
+    '<linearGradient id="isoShadeG" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".58"/></linearGradient>' +
+    '<linearGradient id="isoSheenG" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+  '</defs></svg>';
+}
+// Pilar: dos caras laterales + sombra degradada + cara superior con brillo.
+const ISO_MEDAL_SVG = '<svg class="isoMedal" viewBox="0 0 40 46" width="36" height="41" aria-hidden="true">' +
+  '<polygon points="9,2 21,2 25,22 14,24" fill="#3B82F6" stroke="#1E3A8A" stroke-width="2" stroke-linejoin="round"/>' +
+  '<polygon points="31,2 19,2 15,22 26,24" fill="#EF4444" stroke="#7F1D1D" stroke-width="2" stroke-linejoin="round"/>' +
+  '<circle cx="20" cy="30" r="13.5" fill="#FCD34D" stroke="#7A4A06" stroke-width="2.4"/>' +
+  '<circle cx="20" cy="30" r="9.6" fill="#FBBF24" stroke="#B45309" stroke-width="1.6"/>' +
+  '<polygon points="20.0,22.7 21.7,27.2 26.5,27.4 22.8,30.4 24.0,35.0 20.0,32.4 16.0,35.0 17.2,30.4 13.5,27.4 18.3,27.2" fill="#7A4A06" stroke="#7A4A06" stroke-width="1" stroke-linejoin="round"/>' +
+  '<path d="M12.5 26 A9 9 0 0 1 20 21" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.8" stroke-linecap="round"/></svg>';
+// Reloj de arena (nodo en enfriamiento): mismo estilo "cartoon" que la medalla y el candado.
+const ISO_HOURGLASS_SVG = '<svg class="isoHourglass" viewBox="0 0 40 46" width="34" height="40" aria-hidden="true" focusable="false">' +
+  '<path d="M10 7 H30 C30 16.5 23.2 19.4 23.2 23 C23.2 26.6 30 29.5 30 39 H10 C10 29.5 16.8 26.6 16.8 23 C16.8 19.4 10 16.5 10 7 Z" fill="#DBEAFE" fill-opacity=".92" stroke="#1E3A8A" stroke-width="2.2" stroke-linejoin="round"/>' +
+  '<path d="M13.2 9.4 H26.8 C26.2 14 22.6 16.4 20 19.2 C17.4 16.4 13.8 14 13.2 9.4 Z" fill="#FBBF24"/>' +
+  '<rect x="19.2" y="19.5" width="1.6" height="10" rx=".8" fill="#F59E0B"/>' +
+  '<path d="M13 37 C13.6 32.4 16.6 30.8 20 28.6 C23.4 30.8 26.4 32.4 27 37 Z" fill="#F59E0B" stroke="#B45309" stroke-width="1" stroke-linejoin="round"/>' +
+  '<rect x="6" y="3" width="28" height="5.6" rx="2.8" fill="#A78BFA" stroke="#4C1D95" stroke-width="2.2"/>' +
+  '<rect x="6" y="37.4" width="28" height="5.6" rx="2.8" fill="#A78BFA" stroke="#4C1D95" stroke-width="2.2"/>' +
+  '<path d="M12.6 11 C12.8 14.6 14.6 16.4 16.2 17.8" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="1.6" stroke-linecap="round"/></svg>';
+function isoPillarSvg(h, w){
+  const W = w || ISO.TW, T = W / 2, hw = W / 2, hh = T / 2;
+  return '<svg class="isoPillar" viewBox="0 0 ' + W + ' ' + (T + h) + '" width="' + W + '" height="' + (T + h) +
+    '" aria-hidden="true" focusable="false">' +
+    '<polygon class="isoL" points="0,' + hh + ' ' + hw + ',' + T + ' ' + hw + ',' + (T + h) + ' 0,' + (hh + h) + '"/>' +
+    '<polygon class="isoR" points="' + W + ',' + hh + ' ' + hw + ',' + T + ' ' + hw + ',' + (T + h) + ' ' + W + ',' + (hh + h) + '"/>' +
+    '<polygon class="isoSh" points="0,' + hh + ' ' + hw + ',' + T + ' ' + W + ',' + hh + ' ' + W + ',' + (hh + h) + ' ' + hw + ',' + (T + h) + ' 0,' + (hh + h) + '"/>' +
+    '<polygon class="isoT" points="' + hw + ',0 ' + W + ',' + hh + ' ' + hw + ',' + T + ' 0,' + hh + '"/>' +
+    '<polygon class="isoSheen" points="' + hw + ',0 ' + W + ',' + hh + ' ' + hw + ',' + T + ' 0,' + hh + '"/>' +
+  '</svg>';
+}
+// Nube con volumen: sombra inferior + cuerpo + brillo.
+const ISO_CLOUD_SHAPES =
+  '<circle cx="30" cy="36" r="16"/><circle cx="52" cy="26" r="21"/><circle cx="76" cy="36" r="15"/>' +
+  '<rect x="22" y="34" width="62" height="17" rx="8.5"/>';
+function isoCloudSvg(w){
+  return '<svg class="isoCloud" viewBox="0 0 100 62" width="' + w + '" height="' + Math.round(w * 0.62) + '" aria-hidden="true">' +
+    '<g class="cShade" transform="translate(0 6)">' + ISO_CLOUD_SHAPES + '</g>' +
+    '<g class="cMain">' + ISO_CLOUD_SHAPES + '</g>' +
+    '<ellipse class="cHi" cx="48" cy="17" rx="17" ry="6"/></svg>';
+}
+// Grupo de picos con cara clara y cara oscura.
+function isoMountainSvg(w){
+  const peak = (ax, ay, bl, br) => {
+    const m = ax + 7;
+    return '<polygon class="mL" points="' + ax + ',' + ay + ' ' + bl + ',100 ' + m + ',100"/>' +
+           '<polygon class="mR" points="' + ax + ',' + ay + ' ' + m + ',100 ' + br + ',100"/>';
+  };
+  return '<svg class="isoMountain" viewBox="0 0 160 100" width="' + w + '" height="' + Math.round(w * 100 / 160) +
+    '" aria-hidden="true">' + peak(26, 46, 0, 52) + peak(60, 8, 8, 108) + peak(112, 38, 70, 160) + '</svg>';
+}
+// Camino recto entre los centros de los nodos.
+function isoPathD(pts, from, to){
+  let d = '';
+  for(let k = from; k <= to; k++){
+    d += (k === from ? 'M' : ' L') + pts[k].cx + ' ' + (pts[k].cy - ISO.PUCK_LIFT);
+  }
+  return d;
+}
+
+// Puente de madera entre dos zonas: tablones y barandas a lo largo del tramo recto A→B.
+function isoBridgeSvg(A, B, locked, W, H){
+  const ax = A.cx, ay = A.cy, bx = B.cx, by = B.cy;
+  const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
+  const nx = -uy, ny = ux, ang = Math.atan2(dy, dx) * 180 / Math.PI;
+  const tA = 24, tB = 52, L = len - tA - tB, n = Math.max(4, Math.floor(L / 11));   // tB mayor: no pisa la etiqueta del nodo de llegada
+  const half = 21;                       // medio ancho del puente
+  let s = '<svg class="isoBridge' + (locked ? ' lk' : '') + '" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true">';
+  const px = k => ax + ux * (tA + L * k), py = k => ay + uy * (tA + L * k);
+  // sombra
+  s += '<path class="brSh" d="M' + (px(0) + 5) + ' ' + (py(0) + 12) + ' L' + (px(1) + 5) + ' ' + (py(1) + 12) + '"/>';
+  // tablones (con contorno grueso y brillo, estilo cartoon)
+  for(let k = 0; k < n; k++){
+    const t = (k + .5) / n, tr = 'translate(' + px(t).toFixed(1) + ' ' + py(t).toFixed(1) + ') rotate(' + ang.toFixed(1) + ')';
+    s += '<g transform="' + tr + '"><rect class="brPl' + (k % 2 ? ' b' : '') + '" x="-6.5" y="-' + half + '" width="13" height="' + half * 2 + '" rx="4"/>' +
+         '<rect class="brHi" x="-4" y="-' + (half - 3) + '" width="3" height="' + (half * 2 - 6) + '" rx="1.5"/></g>';
+  }
+  // barandas de cuerda + postes con remate
+  [-1, 1].forEach(side => {
+    const o = (half + 1) * side;
+    const d = 'M' + (px(0) + nx * o) + ' ' + (py(0) + ny * o - 14) + ' L' + (px(1) + nx * o) + ' ' + (py(1) + ny * o - 14);
+    s += '<path class="brRailO" d="' + d + '"/><path class="brRail" d="' + d + '"/>';
+    for(let k = 0; k <= 4; k++){
+      const t = k / 4, x = (px(t) + nx * o).toFixed(1), y = (py(t) + ny * o).toFixed(1), y2 = (py(t) + ny * o - 14).toFixed(1);
+      s += '<line class="brPostO" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + y2 + '"/><line class="brPost" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + y2 + '"/>' +
+           '<circle class="brCap" cx="' + x + '" cy="' + y2 + '" r="4.6"/>';
+    }
+  });
+  return s + '</svg>';
+}
+// Ajusta el tamaño de la escena al ancho disponible (sin reconstruir el mapa).
+// Espacio libre mínimo (unidades de escena) a cada lado para colocar los carteles/islas FUERA de la escena sin que se corten
+// con el borde de la pantalla (la isla mide 112 de ancho y se centra a free/2 del borde de la escena).
+const ISO_FREE_MIN = 114;
+// Escala de la escena: según el ancho disponible, pero sin pasarse del alto visible (móvil horizontal: fichas gigantes).
+function isoScaleK(availW){
+  const sc = document.getElementById('stageMapView');
+  const hh = sc ? sc.clientHeight : 0;
+  const kh = hh > 0 ? hh / 290 : 9;
+  return Math.max(0.62, Math.min(1.5, availW / ISO.SCENE_W, kh));
+}
+function isoApplyScale(){
+  if(!_isoStage || !_isoScene) return;
+  const avail = _isoStage.clientWidth || 340;
+  const k = isoScaleK(avail);
+  _isoScene.style.transform = 'scale(' + k + ')';
+  _isoStage.style.height = Math.round(_isoSceneH * k) + 'px';
+}
+
+// ---- Modo ligero del mapa ----
+// 'lite' = sin desenfoque de fondo ni animaciones decorativas · 'full' = efectos completos (elegido a mano) · '' = automático.
+// Si el dispositivo va justo mientras se hace scroll en el mapa, se avisa UNA vez con la opción de activarlo.
+const FX_KEY = 'vocabri_fx', FX_ASKED_KEY = 'vocabri_fx_asked';
+function fxMode(){ try{ return localStorage.getItem(FX_KEY) || ''; }catch(e){ return ''; } }
+function fxUpdateToggleUi(){
+  const b = document.getElementById('fxToggleBtn');
+  if(b) b.textContent = fxMode() === 'lite' ? '⚡ Efectos del mapa: Modo ligero' : '✨ Efectos del mapa: Completos';
+}
+function fxApply(){
+  document.documentElement.classList.toggle('fxLite', fxMode() === 'lite');
+  fxUpdateToggleUi();
+}
+function fxSet(m){
+  try{ if(m) localStorage.setItem(FX_KEY, m); else localStorage.removeItem(FX_KEY); }catch(e){}
+  fxApply();
+}
+const _fx = { samples: [], active: false, raf: 0, last: 0, timer: 0, prompted: false };
+function fxOnScroll(){
+  if(fxMode() || _fx.prompted || document.hidden) return;                 // ya decidió (o ya se le preguntó en esta sesión)
+  clearTimeout(_fx.timer);
+  _fx.timer = setTimeout(() => { _fx.active = false; cancelAnimationFrame(_fx.raf); }, 180);
+  if(_fx.active) return;
+  _fx.active = true; _fx.last = 0;
+  const tick = t => {
+    if(!_fx.active) return;
+    if(_fx.last){ const d = t - _fx.last; if(d < 200) _fx.samples.push(d); }   // se ignoran pausas largas (pestaña en segundo plano)
+    _fx.last = t;
+    if(_fx.samples.length >= 100){ fxJudge(); return; }
+    _fx.raf = requestAnimationFrame(tick);
+  };
+  _fx.raf = requestAnimationFrame(tick);
+}
+function fxJudge(){
+  _fx.active = false;
+  const s = _fx.samples.slice(10).sort((a, b) => a - b);                    // se descartan los primeros fotogramas (arranque del scroll)
+  _fx.samples = [];
+  if(s.length < 60) return;
+  const med = s[s.length >> 1], slow = s.filter(d => d > 33.4).length / s.length;
+  let weakHw = false;
+  try{ weakHw = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+                (navigator.connection && navigator.connection.saveData); }catch(e){}
+  if(med >= 28 || slow >= 0.4 || (weakHw && (med >= 22 || slow >= 0.25))) fxPrompt();
+}
+function fxPrompt(){
+  let asked = 0;
+  try{ asked = parseInt(localStorage.getItem(FX_ASKED_KEY) || '0', 10) || 0; }catch(e){}
+  if(asked >= 3) return;
+  _fx.prompted = true;
+  const shown = vbPrompt({
+    icon: '⚡', title: '¿El mapa va lento?',
+    text: 'Parece que tu dispositivo va un poco justo. El modo ligero quita el desenfoque y las animaciones del fondo del mapa (el degradado se queda). Puedes cambiarlo cuando quieras en Ajustes.',
+    buttons: [
+      { label: 'Activar modo ligero', primary: true, onClick: () => { fxSet('lite'); showToast('Modo ligero activado', '⚡', 2500); } },
+      { label: 'Mantener efectos', onClick: () => fxSet('full') }
+    ],
+    autoMs: 25000
+  });
+  if(shown){ try{ localStorage.setItem(FX_ASKED_KEY, String(asked + 1)); }catch(e){} }
+  else _fx.prompted = false;
+}
+fxApply();
+{ const fxBtn = document.getElementById('fxToggleBtn'); if(fxBtn) fxBtn.onclick = () => { fxSet(fxMode() === 'lite' ? 'full' : 'lite'); }; }
+// ---- Stickers: variedad por contexto + colocación sin choques ----
+// Carpeta base. Los lotes deben estar en assets/stickers/lote_1, lote_2 y lote_3.
+const ISO_STK_BASE = './assets/stickers/';
+const ISO_STK_FALLBACK = 'ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png';
+// [archivo, ancho, alto, tipo, mira, temas]
+//   tipo: s = un personaje · w = pareja/trío/escena ancha · u = boca abajo / colgando (cuelga bajo una isla)
+//   mira: L / R = hacia dónde mira el dibujo ('' = de frente); se voltea para que mire al camino
+const ISO_STK = [
+  // --- un personaje ---
+  ['lote_1/04_axolotl_amarillo_chef.png', 173, 192, 's', '', 'cocina trabajo'],
+  ['lote_1/05_axolotl_rosa_chef_pintor.png', 181, 186, 's', '', 'cocina hobby'],
+  ['lote_1/26_axolotl_morado_chef.png', 162, 181, 's', '', 'cocina'],
+  ['lote_1/06_axolotl_azul_tubo_ensayo.png', 168, 176, 's', '', 'ciencia'],
+  ['lote_1/20_axolotl_azul_cientifico_bata_gafas.png', 175, 176, 's', '', 'ciencia trabajo'],
+  ['lote_1/12_axolotl_morado_matraz_quimica.png', 183, 186, 's', '', 'ciencia sabio'],
+  ['lote_1/11_axolotl_rosa_estrella_dorada.png', 182, 188, 's', '', 'motiva trabajo futuro fiesta'],
+  ['lote_1/18_axolotl_rosa_nervioso_sudando.png', 180, 185, 's', '', 'salud emocion debate'],
+  ['lote_1/19_axolotl_rosa_bailando_feliz.png', 177, 193, 's', '', 'emocion fiesta motiva'],
+  ['lote_1/29_axolotl_rosa_saludando.png', 166, 175, 's', '', 'saludo social'],
+  ['lote_1/30_axolotl_rosa_caminando_alegre.png', 166, 174, 's', '', 'viaje saludo'],
+  ['lote_1/10_axolotl_rosa_manta_durmiendo.png', 213, 178, 's', '', 'casa salud'],
+  ['lote_1/08_axolotl_rosa_flotando_cola.png', 142, 192, 's', '', 'viaje tiempo futuro'],
+  ['lote_2/03_axolotl_lila_durmiendo_enrollado.png', 295, 291, 's', '', 'casa salud'],
+  ['lote_2/06_axolotl_amarillo_jugando_roca.png', 288, 293, 's', 'L', 'hobby'],
+  ['lote_2/11_axolotl_azul_sosteniendo_concha.png', 283, 257, 's', '', 'viaje tiempo hobby'],
+  ['lote_2/14_axolotl_morado_meditando.png', 301, 301, 's', '', 'sabio duda pasado'],
+  ['lote_2/16_axolotl_verde_menta_confundido_esfera.png', 312, 292, 's', '', 'duda ciencia'],
+  ['lote_2/08_axolotl_turquesa_cargando_tabla_madera.png', 206, 395, 's', '', 'trabajo casa'],
+  ['lote_2/04_axolotl_rosa_flotando_costado.png', 237, 286, 's', '', 'tiempo viaje'],
+  ['lote_3/05_axolotl_amarillo_enojado.png', 172, 172, 's', '', 'debate emocion'],
+  ['lote_3/08_axolotl_rosa_pequeno_manos_juntas.png', 105, 106, 's', '', 'social duda saludo'],
+  ['lote_3/27_axolotl_rosa_pequeno_pensativo.png', 106, 88, 's', '', 'duda pasado'],
+  ['lote_3/30_axolotl_morado_manos_cadera.png', 163, 157, 's', '', 'debate motiva'],
+  ['lote_3/35_axolotl_rosa_musculos_fuerte.png', 161, 162, 's', '', 'motiva salud debate'],
+  ['lote_3/22_axolotl_morado_mago_sombrero_cristal.png', 148, 179, 's', '', 'sabio futuro'],
+  ['lote_3/21_axolotl_rosa_pintando_caballete.png', 140, 160, 's', '', 'hobby'],
+  ['lote_3/34_axolotl_azul_bailando_feliz.png', 165, 173, 's', '', 'emocion fiesta'],
+  // --- parejas / tríos / escenas anchas ---
+  ['lote_1/01_axolotl_rosa_pareja_abrazo.png', 272, 210, 'w', '', 'social'],
+  ['lote_1/09_axolotl_rosa_azul_amigos_sentados.png', 270, 160, 'w', '', 'social saludo'],
+  ['lote_1/15_axolotl_rosa_morado_amigos_abrazo.png', 240, 173, 'w', '', 'social'],
+  ['lote_1/25_axolotl_morado_azul_abrazo.png', 207, 155, 'w', '', 'social'],
+  ['lote_3/17_axolotl_azul_morado_amigos_abrazo.png', 242, 172, 'w', '', 'social'],
+  ['lote_1/14_axolotl_rosa_morado_estrella_compartida.png', 238, 166, 'w', '', 'fiesta motiva'],
+  ['lote_3/16_axolotl_verde_morado_estrella_compartida.png', 237, 166, 'w', '', 'fiesta futuro'],
+  ['lote_2/05_axolotl_verde_morado_chocando_manos.png', 214, 204, 'w', '', 'fiesta trabajo debate'],
+  ['lote_1/24_axolotl_rosa_azul_pergamino.png', 227, 165, 'w', '', 'pasado trabajo sabio'],
+  ['lote_1/28_axolotl_rosa_pareja_pintando_caballete.png', 227, 167, 'w', '', 'hobby'],
+  ['lote_3/32_axolotl_verde_rosa_pintando_caballete.png', 227, 167, 'w', '', 'hobby'],
+  ['lote_1/02_axolotl_trio_rosa_azul_morado_abrazo.png', 251, 237, 'w', '', 'social fiesta'],
+  ['lote_1/03_axolotl_trio_circulo_rosa_morado_verde.png', 267, 263, 'w', '', 'social fiesta'],
+  ['lote_1/17_axolotl_trio_arcoiris_holografico.png', 248, 214, 'w', '', 'fiesta social'],
+  ['lote_1/31_axolotl_rosa_sobre_nube.png', 173, 152, 'w', '', 'tiempo viaje futuro'],
+  ['lote_1/13_axolotl_arcoiris_nadando.png', 291, 126, 'w', 'L', 'viaje hobby tiempo'],
+  ['lote_2/12_axolotl_arcoiris_piedras_serio.png', 417, 215, 'w', 'R', 'hobby pasado debate'],
+  // --- boca abajo / colgando (cuelgan bajo una isla flotante) ---
+  ['lote_2/01_axolotl_rosa_boca_abajo_sorprendido.png', 248, 346, 'u', '', 'emocion tiempo'],
+  ['lote_2/02_axolotl_rosa_boca_abajo_moviendo_cola.png', 238, 347, 'u', '', 'emocion tiempo'],
+  ['lote_2/17_axolotl_magenta_boca_abajo_palillos.png', 240, 330, 'u', '', 'cocina emocion'],
+  ['lote_2/07_axolotl_rosa_estirado_colgando.png', 171, 288, 'u', '', 'trabajo motiva'],
+  ['lote_1/07_axolotl_rosa_estirado_brazos_arriba.png', 102, 190, 'u', '', 'motiva futuro']
+].concat(ISO_AXOLOTLS.map(f => [f, 1, 1, 's', '', '']));   // los ajolotes de siempre (cuadrados) como comodín
+// Nombre de zona (sin acentos) → temas
+const ISO_THEMES = [
+  [/cocina|restaurante|comida/, 'cocina'], [/educacion|aprendizaje|telefono|tecnologia/, 'ciencia'],
+  [/hobbies|tiempo libre|experiencias/, 'hobby'], [/saludos|despedidas|cierre/, 'saludo'],
+  [/salud|emergencias/, 'salud'], [/sentimientos|animo|opiniones|gustos/, 'emocion'],
+  [/discusion|malentendido|debatir/, 'debate'], [/entiendes|frecuentes|profundizar|certeza|duda/, 'duda'],
+  [/motivacion|deseos|necesidades/, 'motiva'], [/proverbio|sabiduria|modismo|expresiones/, 'sabio'],
+  [/relacion|social|cortesia|informacion personal|personas/, 'social'], [/evento|celebracion/, 'fiesta'],
+  [/viaje|transporte|calle|entorno|direcciones/, 'viaje'], [/casa/, 'casa'],
+  [/trabajo|tramite|documento|dinero|finanza|compras/, 'trabajo'], [/plan|futuro/, 'futuro'],
+  [/pasado/, 'pasado'], [/tiempo y la hora|comparaciones|cantidades|phrasal/, 'tiempo']
+];
+function isoZoneThemes(name){
+  const n = String(name || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const t = [];
+  ISO_THEMES.forEach(r => { if(r[0].test(n)) t.push(r[1]); });
+  return t;
+}
+// Elige un sticker: primero los que combinan con la zona, luego el resto; evita repetir los últimos usados.
+function isoStickerChoices(kinds, themes, recent, seed){
+  return ISO_STK.map((e, k) => ({ e: e, k: k }))
+    .filter(o => kinds.indexOf(o.e[3]) >= 0 && recent.indexOf(o.k) < 0)
+    .map(o => ({ o: o, sc: (themes.some(t => o.e[5].split(' ').indexOf(t) >= 0) ? 0 : 1) + isoRand(seed * 17 + o.k * 5) * 0.9 }))
+    .sort((p, q) => p.sc - q.sc).map(x => x.o);
+}
+function isoStickerImg(src, flip, w, h, style){
+  return '<img class="isoAxo' + (flip ? ' flip' : '') + '" src="' + ISO_STK_BASE + src + '" alt="" width="' + w + '" height="' + h +
+         '" loading="lazy" decoding="async" style="' + (style || '') + '" onerror="this.onerror=null;this.src=\'' + ISO_STK_BASE + ISO_STK_FALLBACK + '\'">';
+}
+// tamaño en pantalla (máx. lado = m) respetando la proporción real
+function isoStkSize(e, m){
+  const k = m / Math.max(e[1], e[2]);
+  return { w: Math.round(e[1] * k), h: Math.round(e[2] * k) };
+}
+function isoHit(a, b, m){
+  m = m || 0;
+  return a.x + m < b.x + b.w && a.x + a.w - m > b.x && a.y + m < b.y + b.h && a.y + a.h - m > b.y;
+}
+// Zonas que ningún sticker debe pisar: fichas, etiquetas, temporizadores, botón Repasar, carteles y puentes.
+function isoObstacles(pts, signs){
+  const o = [];
+  pts.forEach((p, i) => {
+    o.push({ x: p.cx - 34, y: p.pcy - 30, w: 68, h: 66 });                       // ficha
+    o.push({ x: p.cx - 64, y: p.pcy + 34, w: 128, h: 40 });                      // etiqueta / temporizador
+    if(p.node.type !== 'exam') o.push({ x: p.cx + 38, y: p.pcy - 46, w: 50, h: 50 });   // botón Repasar
+    if(p.newEtapa && i > 0){                                                      // puente
+      const q = pts[i - 1];
+      o.push({ x: Math.min(p.cx, q.cx) - 28, y: Math.min(p.cy, q.cy) - 40, w: Math.abs(p.cx - q.cx) + 56, h: Math.abs(p.cy - q.cy) + 60 });
+    }
+  });
+  signs.forEach(s => o.push({ x: s.x - 66, y: s.y - 110, w: 132, h: 180, sg: s }));   // cartel + isla completa (hasta su borde inferior)
+  return o;
+}
+// Decoración TRASERA (detrás de los pilares): solo nubes lejanas y montañas (sin stickers).
+function isoDecorBackHtml(pts, total, obst){
+  let html = '';
+  const clear = b => !obst.some(o => o.sg && isoHit(b, o, 0));   // no dejar nubes/montañas a medio tapar por una isla
+  for(let i = 0; i < total; i++){
+    const p = pts[i], r = isoRand(i * 13 + 5), right = ((i / 3) | 0) % 2 === 0;
+    if(i % 4 === 1){                                    // nubes
+      const w = 70 + Math.round(r * 50);
+      const x = right ? 318 + r * 70 : -70 + r * 60;
+      if(clear({ x: x, y: p.cy - 100 + r * 40, w: w, h: w / 2 }))
+        html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy - 100 + r * 40) +
+                'px;--d:' + Math.round(r * 14) + '">' + isoCloudSvg(w) + '</div>';
+    }
+    if(i % 8 === 3){                                    // montañas
+      const x = right ? 300 + r * 40 : -90 - r * 20;
+      if(clear({ x: x, y: p.cy + 24, w: 150, h: 95 }))
+        html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy + 24) + 'px">' +
+                isoMountainSvg(150) + '</div>';
+    }
+  }
+  return html;
+}
+// Decoración FRONTAL (delante de los pilares, detrás de los nodos): todos los stickers van aquí,
+// así nunca quedan ocultos tras pilares o montañas. Cada uno se coloca solo si no choca con nada.
+function isoDecorFrontHtml(pts, total, free, obst, signs, zones){
+  const placed = [], recent = [];
+  const isFree = (r, own) => !obst.some(o => !(own && o.sg === own) && isoHit(r, o, 6)) && !placed.some(o => isoHit(r, o, 4));
+  const used = k => { recent.push(k); if(recent.length > 12) recent.shift(); };
+  let html = '', last = -9;
+  for(let i = 0; i < total; i++){
+    const p = pts[i], themes = zones[i];
+    // 1) ajolote(s) sentados en la esquina del pilar, del lado contrario al nodo siguiente
+    if(i - last >= 2 && (free >= ISO_FREE_MIN ? i % 2 === 0 : i % 3 !== 1)){   // en móvil se intenta más seguido (hay poco espacio)
+      const up = i < total - 1 ? Math.sign(pts[i + 1].cx - p.cx) : 0;
+      const sides = up > 0 ? [-1, 1] : up < 0 ? [1, -1] : (i % 4 === 0 ? [-1, 1] : [1, -1]);
+      const kinds = isoRand(i * 3 + 9) < 0.3 ? ['s', 'w'] : ['s'];
+      let done = false;
+      for(const c of isoStickerChoices(kinds, themes, recent, i)){
+        const e = c.e, wide = e[3] === 'w', sz = isoStkSize(e, wide ? 70 : (e[1] < 130 ? 54 : (e[2] > e[1] * 1.6 ? 86 : 70)));
+        for(const s of sides){
+          const r = { x: p.cx + s * (40 + sz.w / 2) - sz.w / 2, y: p.cy + 4 - sz.h, w: sz.w, h: sz.h };
+          if(!isFree(r)) continue;
+          const want = s < 0 ? 'R' : 'L';                      // que mire hacia el camino
+          const flip = e[4] ? e[4] !== want : isoRand(i * 5 + 2) < 0.5;
+          placed.push(r); used(c.k); last = i; done = true;
+          html += '<div class="isoDeco isoSitter" style="left:' + Math.round(r.x) + 'px;top:' + Math.round(r.y) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px">' +
+                  isoStickerImg(e[0], flip, sz.w, sz.h) + '</div>';
+          break;
+        }
+        if(done) break;
+      }
+    }
+    // 2) islote flotante con personaje(s): solo cuando hay espacio libre a los lados (pantallas anchas)
+    if(free >= ISO_FREE_MIN && i % 4 === 2){
+      const left = ((i / 4) | 0) % 2 === 0, cx = left ? -free * 0.5 : ISO.SCENE_W + free * 0.5;
+      const hang = isoRand(i * 11 + 1) < 0.35;
+      for(const c of isoStickerChoices(hang ? ['u'] : ['s', 'w'], themes, recent, i + 100)){
+        const e = c.e, sz = isoStkSize(e, hang ? 84 : (e[3] === 'w' ? 100 : 66));
+        const top = p.cy - 30;
+        const r = hang ? { x: cx - 54, y: top - 4, w: 108, h: 84 + sz.h - 20 + 4 }
+                       : { x: cx - 54, y: top + 26 - sz.h - 4, w: 108, h: sz.h + 60 };
+        if(!isFree(r)) continue;
+        placed.push(r); used(c.k);
+        const flip = e[4] ? e[4] !== (left ? 'R' : 'L') : isoRand(i * 5 + 3) < 0.5;
+        const img = hang ? isoStickerImg(e[0], flip, sz.w, sz.h, 'left:' + Math.round((left ? 75 : 25) - sz.w / 2) + 'px;top:58px;width:' + sz.w + 'px;height:' + sz.h + 'px;z-index:-1')   // cuelga de la esquina inferior
+                         : isoStickerImg(e[0], flip, sz.w, sz.h, 'left:' + Math.round(50 - sz.w / 2) + 'px;top:' + (26 - sz.h) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px');
+        html += '<div class="isoDeco isoIsland" style="left:' + Math.round(cx - 50) + 'px;top:' + Math.round(top) + 'px">' +
+                isoPillarSvg(34, 100) + img + '</div>';
+        break;
+      }
+    }
+  }
+  // 3) personajes colgando de una esquina inferior de la isla del cartel. Van DENTRO de la isla (coordenadas locales),
+  //    así se mueven con ella al flotar; la parte superior queda escondida tras la cara frontal para que parezca que se agarran.
+  signs.forEach((sg, k) => {
+    if(isoRand(k * 7 + 4) > 0.7) return;
+    const side = isoRand(k * 3 + 8) < 0.5 ? -1 : 1;                 // esquina izquierda o derecha
+    const ex = 56 + side * 30, ey = 58 + (56 - Math.abs(ex - 56)) / 2 + 2;   // punto del borde inferior de la cara (local a la isla)
+    for(const c of isoStickerChoices(['u'], isoZoneThemes(sg.name), recent, k + 300)){
+      const e = c.e, sz = isoStkSize(e, 66);
+      const lx = ex - sz.w / 2, ly = ey - 14;                        // 14 px quedan tapados por la isla
+      const r = { x: sg.x - 56 + lx, y: sg.y - 28 + ly, w: sz.w, h: sz.h };
+      if(!isFree(r, sg)) continue;
+      placed.push(r); used(c.k);
+      sg.hang = '<div class="isoHanger" style="left:' + Math.round(lx) + 'px;top:' + Math.round(ly) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px">' +
+                isoStickerImg(e[0], isoRand(k * 3 + 1) < 0.5, sz.w, sz.h) + '</div>';
+      break;
+    }
+  });
+  // 4) nubes que rozan el borde del pilar (solo si no tapan un sticker)
+  for(let i = 0; i < total; i++){
+    if(i % 5 !== 2) continue;
+    const p = pts[i], r = isoRand(i * 7 + 11), right = i % 2 === 1;
+    const w = 70 + Math.round(r * 30);
+    const x = right ? p.cx + ISO.TW / 2 - 24 : p.cx - ISO.TW / 2 - w + 24;
+    const box = { x: x, y: p.cy + 34, w: w, h: w / 2 };
+    if(placed.some(o => isoHit(box, o, 0)) || obst.some(o => o.sg && isoHit(box, o, 0))) continue;
+    html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy + 34) +
+            'px;--d:' + Math.round(r * 14) + '">' + isoCloudSvg(w) + '</div>';
+  }
+  return html;
+}
+
+function isoUpdateMapSub(cat, total, doneBits){
+  const doneCount = (doneBits.match(/1/g) || []).length;
+  const totalItems = mapItemsFor(cat).length;
+  const masteredN = mapItemsFor(cat).filter(it => isMastered(it[3])).length;
+  document.getElementById('mapSub').textContent =
+    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + totalItems + ' tarjetas dominadas';
+}
 function buildPathMap(){
   const wrap = document.getElementById('pathWrap');
   if(!wrap) return;
@@ -849,13 +1324,11 @@ function buildPathMap(){
   // Esperar a que los datos de frases estén cargados
   if (!window.VocabriPhraseData || !window.VocabriPhraseData.loaded) {
     console.log('[buildPathMap] Esperando datos de frases...');
-    // Escuchar evento de carga completada
     const waitForData = () => {
       window.removeEventListener('vocabri:phrasesLoaded', waitForData);
-      buildPathMap(); // Reintentar
+      buildPathMap();
     };
     window.addEventListener('vocabri:phrasesLoaded', waitForData);
-    // También intentar de nuevo en 100ms por si el evento ya pasó
     setTimeout(() => {
       if (window.VocabriPhraseData && window.VocabriPhraseData.loaded) {
         window.removeEventListener('vocabri:phrasesLoaded', waitForData);
@@ -870,70 +1343,269 @@ function buildPathMap(){
   const total = stageCountFor(cat);
   const unlocked = getUnlockedStage(cat);
   const cooldownMs = cooldownRemainingMs();
-  let doneCount = 0, lastEtapa = null;
-  // Usar label bonito de la categoría maestra
   const catLabel = (window.VocabriCategories && window.VocabriCategories.getCategoryLabel)
     ? window.VocabriCategories.getCategoryLabel(cat)
     : cat;
   document.getElementById('mapCatName').textContent = catLabel;
-  wrap.innerHTML = '';
-  const posCycle = ['pos-l','pos-c','pos-r','pos-c'];
-  // Iterate from the highest node down to node 1 so the DOM (and the page's
-  // natural top-to-bottom flow) shows the path ascending: node 1 ends up at
-  // the bottom, later nodes stack upward above it.
-  for(let i=total-1; i>=0; i--){
+
+  // Si el mapa ya está dibujado y nada de lo que lo define cambió (categoría, avance, enfriamiento, espacio lateral),
+  // no se reconstruye: al volver a la pestaña Aprender solo se actualiza el texto y se recentra el nodo activo.
+  const sigW = wrap.clientWidth || 340;
+  const sigFree = (sigW / isoScaleK(sigW) - ISO.SCENE_W) / 2;
+  let doneBits = '';
+  for(let i = 0; i <= unlocked && i < total; i++) doneBits += isStageComplete(cat, i) ? (isExamNode(cat, i) ? String(examStarsOf(cat, i)) : '1') : '0';
+  const sig = [cat, total, unlocked, cooldownMs > 0 ? 1 : 0, doneBits, sigFree >= ISO_FREE_MIN ? Math.round(sigFree / 30) : 'n'].join('|');
+  if(wrap._isoSig === sig && wrap.classList.contains('isoMap') && _isoStage && wrap.contains(_isoStage)){
+    isoApplyScale();
+    isoUpdateMapSub(cat, total, doneBits);
+    requestAnimationFrame(() => {
+      const t = wrap.querySelector('.pathNode.active') || wrap.querySelector('.pathNode.seccion-cooldown') || wrap.querySelector('.pathNode:not(.locked)');
+      if(t) t.scrollIntoView({block: 'center', behavior: 'auto'});
+    });
+    return;
+  }
+
+  // ---- 1) Geometría: posición de cada nodo sobre la malla isométrica ----
+  const pts = [];
+  let up = 0, prevEtapa = null;
+  for(let i = 0; i < total; i++){
     const node = NL.nodes[i];
-    if(node.etapaIdx !== lastEtapa){
-      lastEtapa = node.etapaIdx;
-      const banner = document.createElement('div');
-      banner.className = 'etapaBanner';
-      banner.textContent = 'ETAPA ' + (node.etapaIdx+1) + ' · ' + NL.etapaNames[node.etapaIdx];
-      wrap.appendChild(banner);
-    }
+    const newEtapa = node.etapaIdx !== prevEtapa;
+    if(i > 0) up += ISO.STEP + (newEtapa ? ISO.ETAPA_GAP : 0);
+    prevEtapa = node.etapaIdx;
+    pts.push({
+      i: i, node: node, up: up, newEtapa: newEtapa,
+      h: i === 0 ? 190 : 120 + Math.floor(isoRand(i * 7 + 3) * 3) * 40,   // pilares: 120 / 160 / 200 (el primero llega al suelo)
+      cx: ISO.SCENE_W / 2 + ISO.OFFSETS[i % 4] * ISO.AMP
+    });
+  }
+  const H = ISO.PAD_TOP + up + ISO.PAD_BOTTOM;
+  pts.forEach(p => { p.cy = H - ISO.PAD_BOTTOM - p.up; p.pcy = p.cy - ISO.PUCK_LIFT; });   // cy = centro del rombo, pcy = centro del nodo
+
+  // ---- 2) Capas ----
+  const stage = document.createElement('div');
+  stage.className = 'isoStage';
+  const scene = document.createElement('div');
+  scene.className = 'isoScene';
+  scene.style.height = H + 'px';
+  scene.style.width = ISO.SCENE_W + 'px';
+  scene.style.marginLeft = (-ISO.SCENE_W / 2) + 'px';
+
+  const defs = document.createElement('div');
+  defs.className = 'isoLayer';
+  defs.innerHTML = isoDefsSvg();
+
+  const decor = document.createElement('div');
+  decor.className = 'isoLayer isoDecor';
+  // Carteles de zona: islas flotantes en los costados, donde hay espacio libre
+  const availW = wrap.clientWidth || 340;
+  const free = (availW / isoScaleK(availW) - ISO.SCENE_W) / 2;   // espacio libre a cada lado (unidades de escena)
+  _isoFreeBuilt = free;
+  const signs = [];
+  pts.forEach(p => {
+    if(!p.newEtapa) return;
+    const i = p.i, rawName = NL.etapaNames[p.node.etapaIdx];
+    let left;
+    if(i < total - 1 && Math.abs(pts[i + 1].cx - p.cx) > 1) left = pts[i + 1].cx > p.cx;   // lejos del siguiente nodo
+    else left = p.cx >= ISO.SCENE_W / 2;
+    // pantalla ancha: la isla va en el espacio vacío fuera de la escena; pantalla estrecha: en el borde, más arriba para no tocar el nodo
+    const sx = free >= ISO_FREE_MIN ? (left ? -free * 0.5 : ISO.SCENE_W + free * 0.5) : (left ? 62 : ISO.SCENE_W - 62);
+    signs.push({ i: i, left: left, x: sx, y: free >= ISO_FREE_MIN ? p.cy - 34 : p.cy - 100,
+                 name: (rawName === cat || !rawName) ? catLabel : rawName, lk: i > unlocked });
+  });
+  const obst = isoObstacles(pts, signs);
+  decor.innerHTML = isoDecorBackHtml(pts, total, obst);
+
+  // Pilares: del más alto al más bajo, así los de abajo tapan a los de atrás.
+  const pillars = document.createElement('div');
+  pillars.className = 'isoLayer';
+  let pillarsHtml = '';
+  for(let i = total - 1; i >= 0; i--){
+    const p = pts[i];
+    const locked = i > unlocked;
+    const done = !locked && isStageComplete(cat, i);
+    const isExam = p.node.type === 'exam';
+    const isCd = !locked && !done && i === unlocked && cooldownMs > 0;
+    const st = locked ? 'locked' : done ? 'done' : isCd ? 'cd' : isExam ? 'exam' : 'active';
+    pillarsHtml += '<div class="isoPillarBox st-' + st + '" style="left:' + (p.cx - ISO.TW / 2) + 'px;top:' +
+                   (p.cy - ISO.TH / 2) + 'px">' + isoPillarSvg(p.h) + '</div>';
+  }
+  pillars.innerHTML = pillarsHtml;
+
+  // Camino: tramo completo tenue + tramo recorrido con brillo.
+  let pathHtml = '<svg class="isoPath" viewBox="0 0 ' + ISO.SCENE_W + ' ' + H + '" width="' + ISO.SCENE_W +
+                 '" height="' + H + '" aria-hidden="true">';
+  if(total > 1) pathHtml += '<path class="isoPathBase" d="' + isoPathD(pts, 0, total - 1) + '"/>';
+  const reach = Math.min(unlocked, total - 1);
+  if(reach >= 1){
+    const d = isoPathD(pts, 0, reach);
+    pathHtml += '<path class="isoGlow g1" d="' + d + '"/><path class="isoGlow g2" d="' + d + '"/><path class="isoGlow g3" d="' + d + '"/>';
+  }
+  pathHtml += '</svg>';
+  const bridgeLayer = document.createElement('div');
+  bridgeLayer.className = 'isoLayer';
+  let bridgeHtml = '';
+  for(let i = 1; i < total; i++){
+    if(pts[i].newEtapa) bridgeHtml += isoBridgeSvg(pts[i - 1], pts[i], i > unlocked, ISO.SCENE_W, H);
+  }
+  bridgeLayer.innerHTML = bridgeHtml;
+
+  const pathLayer = document.createElement('div');
+  pathLayer.className = 'isoLayer';
+  pathLayer.innerHTML = pathHtml;
+
+  const front = document.createElement('div');
+  front.className = 'isoLayer isoDecor';
+  front.innerHTML = isoDecorFrontHtml(pts, total, free, obst, signs, pts.map(p => isoZoneThemes(NL.etapaNames[p.node.etapaIdx] === cat ? '' : NL.etapaNames[p.node.etapaIdx])));
+
+  // Nodos (botones reales, encima de todo)
+  const nodesLayer = document.createElement('div');
+  nodesLayer.className = 'isoLayer isoNodes';
+  let doneCount = 0;
+  for(let i = 0; i < total; i++){
+    const p = pts[i], node = p.node;
+    const isExam = node.type === 'exam';
     const locked = i > unlocked;
     const done = !locked && isStageComplete(cat, i);
     if(done) doneCount++;
     const isCooldownNode = !locked && !done && i === unlocked && cooldownMs > 0;
     const active = !locked && !done && !isCooldownNode;
-    const row = document.createElement('div');
-    row.className = 'pathRow ' + posCycle[i % posCycle.length];
+
+    if(p.newEtapa){
+      const sg = signs.find(s => s.i === i);
+      const isle = document.createElement('div');
+      isle.className = 'isoSignIsle' + (sg.lk ? ' lk' : '');
+      isle.style.left = Math.round(sg.x - 56) + 'px';
+      isle.style.top = Math.round(sg.y - 28) + 'px';
+      isle.style.setProperty('--d', String(i % 5));
+      isle.innerHTML = isoPillarSvg(30, 112);
+      const sign = document.createElement('div'); sign.className = 'isoSign';
+      const board = document.createElement('div'); board.className = 'isoBoard'; board.textContent = sg.name;
+      const post = document.createElement('div'); post.className = 'isoPost';
+      sign.appendChild(board); sign.appendChild(post);
+      isle.appendChild(sign);
+      if(sg.hang) isle.insertAdjacentHTML('beforeend', sg.hang);
+      nodesLayer.appendChild(isle);
+    }
+
+    // Detalles "blueprint": anillo tenue, puntos laterales y marca de esquina
+    const ring = document.createElement('div');
+    ring.className = 'isoRing' + (active ? ' on' : '');
+    ring.style.left = Math.round(p.cx - 48) + 'px';
+    ring.style.top = Math.round(p.pcy - 40) + 'px';
+    nodesLayer.appendChild(ring);
+    const marks = document.createElement('div');
+    marks.className = 'isoMarks';
+    marks.style.left = Math.round(p.cx - 76) + 'px';
+    marks.style.top = Math.round(p.pcy) + 'px';
+    marks.innerHTML = '<i class="mk mkL"></i><i class="mk mkR"></i><i class="mkTick"></i>';
+    nodesLayer.appendChild(marks);
 
     const b = document.createElement('button');
     b.type = 'button';
-    const isExam = node.type === 'exam';
-    b.className = 'pathNode' + (active?' active':'') + (locked?' locked':'') + (done?' done':'') +
-                  (isExam?' examNode':'') + (isCooldownNode?' seccion-cooldown':'');
-    let icon = locked ? '🔒' : (done ? '✓' : (isCooldownNode ? '⏳' : (isExam ? '🏅' : String(i+1))));
-    let label = '<span class="nodeLabel">' + stageName(cat, i) + '</span>';
-    if(isCooldownNode) label += '<span class="nodeTimer" id="cooldownTimer-'+i+'" data-node="'+i+'">' + fmtHhMmSs(cooldownMs) + '</span>';
-    b.innerHTML = icon + label;
+    b.className = 'pathNode' + (active ? ' active' : '') + (locked ? ' locked' : '') + (done ? ' done' : '') +
+                  (isExam ? ' examNode' : '') + (isCooldownNode ? ' seccion-cooldown' : '');
+    b.style.left = Math.round(p.cx - ISO.PUCK_W / 2) + 'px';
+    b.style.top = Math.round(p.pcy - ISO.PUCK_H / 2) + 'px';
+    if(locked) b.innerHTML = ISO_LOCK_SVG;
+    else if(isExam && !done && !isCooldownNode) b.innerHTML = ISO_MEDAL_SVG;
+    else if(isCooldownNode) b.innerHTML = ISO_HOURGLASS_SVG;
+    else b.textContent = done ? '✓' : String(i + 1);
+    b.setAttribute('aria-label', stageName(cat, i) + (locked ? ' (bloqueada)' : ''));
     b.disabled = locked;
-    b.onclick = ()=> showLesson(cat, i);
-    row.appendChild(b);
+    b.onclick = () => showLesson(cat, i);
+    nodesLayer.appendChild(b);
 
-    // Botón "Repasar" para secciones completadas (flotante al lado del nodo)
+    const lab = document.createElement('span');
+    lab.className = 'nodeLabel';
+    lab.style.left = Math.round(p.cx - 62) + 'px';
+    lab.style.top = Math.round(p.pcy + ISO.PUCK_H / 2 + 12) + 'px';
+    lab.textContent = stageName(cat, i);
+    nodesLayer.appendChild(lab);
+
+    if(done && isExam){
+      const st = examStarsOf(cat, i);
+      const sp = document.createElement('span');
+      sp.className = 'nodeStars';
+      sp.setAttribute('aria-label', st + ' de 3 estrellas');
+      sp.textContent = '★'.repeat(st) + '☆'.repeat(3 - st);
+      sp.style.left = Math.round(p.cx - 62) + 'px';
+      sp.style.top = Math.round(p.pcy + ISO.PUCK_H / 2 + 28) + 'px';
+      nodesLayer.appendChild(sp);
+    }
+
+    if(isCooldownNode){
+      const t = document.createElement('span');
+      t.className = 'nodeTimer';
+      t.id = 'cooldownTimer-' + i;
+      t.dataset.node = String(i);
+      t.style.left = Math.round(p.cx - 62) + 'px';
+      t.style.top = Math.round(p.pcy + ISO.PUCK_H / 2 + 28) + 'px';
+      t.textContent = fmtHhMmSs(cooldownMs);
+      nodesLayer.appendChild(t);
+    }
+
     if(done && !isExam){
       const reviewBtn = document.createElement('button');
       reviewBtn.type = 'button';
       reviewBtn.className = 'nodeReviewBtn';
       reviewBtn.innerHTML = '<img class="nodeReviewIcon" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="Repasar" width="24" height="24">';
       reviewBtn.title = 'Repasar esta sección';
-      reviewBtn.onclick = (e) => {
-        e.stopPropagation();
-        startStageReview(cat, i);
-      };
-      row.appendChild(reviewBtn);
+      reviewBtn.style.left = Math.round(p.cx + 46) + 'px';
+      reviewBtn.style.top = Math.round(p.pcy - 6) + 'px';   // a la altura del disco, fuera del camino hacia el nodo siguiente
+      reviewBtn.onclick = (e) => { e.stopPropagation(); startStageReview(cat, i); };
+      nodesLayer.appendChild(reviewBtn);
     }
-
-    wrap.appendChild(row);
   }
-  const total_items = mapItemsFor(cat).length;
-  const masteredN = mapItemsFor(cat).filter(it=> isMastered(it[3])).length;
+
+  // ---- 3) Montaje ----
+  scene.appendChild(defs);
+  scene.appendChild(decor);
+  scene.appendChild(pillars);
+  scene.appendChild(bridgeLayer);
+  scene.appendChild(pathLayer);
+  scene.appendChild(front);
+  scene.appendChild(nodesLayer);
+  stage.appendChild(scene);
+  wrap.innerHTML = '';
+  wrap.classList.add('isoMap');
+  wrap._isoSig = sig;
+  const fadeTop = document.createElement('div'); fadeTop.className = 'isoFade top';
+  const fadeBot = document.createElement('div'); fadeBot.className = 'isoFade bot';
+  wrap.appendChild(fadeTop);
+  wrap.appendChild(stage);
+  wrap.appendChild(fadeBot);
+  _isoStage = stage; _isoScene = scene; _isoSceneH = H;
+  isoApplyScale();
+  if(!_isoResizeBound){
+    _isoResizeBound = true;
+    const sm = document.getElementById('stageMapView');
+    if(sm) sm.addEventListener('scroll', fxOnScroll, { passive: true });
+    let raf = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        isoApplyScale();
+        // los carteles/islas dependen del espacio libre a los lados: si cambia mucho (p. ej. de escritorio a móvil), se reconstruye
+        const w = document.getElementById('pathWrap'), m = document.getElementById('stageMapView');
+        if(!w || !m || m.style.display === 'none' || !w.classList.contains('isoMap') || !w.clientWidth) return;
+        const f = (w.clientWidth / isoScaleK(w.clientWidth) - ISO.SCENE_W) / 2;
+        if((f >= ISO_FREE_MIN) !== (_isoFreeBuilt >= ISO_FREE_MIN) || (f >= ISO_FREE_MIN && Math.abs(f - _isoFreeBuilt) > 30)){
+          const ratio = m.scrollTop / Math.max(1, m.scrollHeight);
+          buildPathMap();
+          requestAnimationFrame(() => requestAnimationFrame(() => { m.scrollTop = ratio * m.scrollHeight; }));
+        }
+      });
+    });
+  }
+
+  const totalItems = mapItemsFor(cat).length;
+  const masteredN = mapItemsFor(cat).filter(it => isMastered(it[3])).length;
   document.getElementById('mapSub').textContent =
-    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + total_items + ' tarjetas dominadas';
-  requestAnimationFrame(()=>{
+    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + totalItems + ' tarjetas dominadas';
+  requestAnimationFrame(() => {
     const target = wrap.querySelector('.pathNode.active') || wrap.querySelector('.pathNode.seccion-cooldown') || wrap.querySelector('.pathNode:not(.locked)');
-    if(target) target.scrollIntoView({block:'center', behavior:'auto'});
+    if(target) target.scrollIntoView({block: 'center', behavior: 'auto'});
   });
 }
 
@@ -1052,9 +1724,65 @@ function showStageCompleteScreen(stageIdx, hasNext, bonus, etapaJustFinished, wa
       '+' + bonus + ' XP de bono. La siguiente sección ya está desbloqueada en el mapa.';
   }
   pendingNextStage = hasNext ? stageIdx+1 : null;
-  document.getElementById('stageCompleteOverlay').style.display = 'flex';
+  showModalFromTop('stageCompleteOverlay');
 }
 let pendingNextStage = null;
+function examWrongListHtml(wrong, max){
+  if(!wrong || !wrong.length) return '';
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return '<p class="exWrongTitle">Para reforzar</p>' + wrong.slice(0, max || 6).map(w =>
+    '<div class="exWrongRow"><b>' + esc(w.it[0]) + '</b><span>' + esc(w.it[1]) + '</span></div>').join('') +
+    (wrong.length > (max || 6) ? '<p class="exWrongMore">y ' + (wrong.length - (max || 6)) + ' más…</p>' : '');
+}
+let _examResultInfo = null;
+function showExamResults(info){
+  _examResultInfo = info;
+  const pct = info.total ? Math.round(info.score / info.total * 100) : 0;
+  setMascotIn(document.getElementById('examResultEmoji'), info.stars >= 2 ? 'happy' : 'thinking');
+  document.getElementById('examResultTitle').textContent =
+    info.stars === 3 ? '¡Examen perfecto!' : info.stars === 2 ? '¡Muy bien!' : '¡Examen superado!';
+  document.getElementById('examResultStars').innerHTML = [1,2,3].map(i => '<span class="exStar' + (i <= info.stars ? ' on' : '') + '" style="--i:' + i + '">★</span>').join('');
+  document.getElementById('examResultScore').textContent = info.score + '/' + info.total;
+  document.getElementById('examResultPct').textContent = pct + '%';
+  document.getElementById('examResultXp').textContent = '+' + info.xp;
+  const lines = [];
+  if(info.first){
+    lines.push(info.hasNext ? '🔓 La siguiente sección ya está desbloqueada.' : '🏆 ¡Completaste todas las secciones!');
+    if(info.cooldownMs) lines.push('⏳ Descanso de ' + Math.round(info.cooldownMs / 3600000) + ' h para fijar lo aprendido' + (info.stars < 3 ? ' (con ★★★ sería de 4 h)' : '') + '.');
+  } else {
+    lines.push(info.bestStars > info.prevStars ? '⭐ ¡Mejoraste tu mejor nota!' : 'Repetición: tu mejor nota se mantiene en ' + '★'.repeat(info.bestStars) + '.');
+    if(!info.xp) lines.push('Sin XP extra: solo se paga cuando mejoras.');
+  }
+  document.getElementById('examResultNote').innerHTML = lines.map(l => '<span>' + l + '</span>').join('');
+  document.getElementById('examResultWrong').innerHTML = examWrongListHtml(info.wrong, 5);
+  const rb = document.getElementById('examResultReviewBtn');
+  rb.style.display = info.wrong.length ? '' : 'none';
+  showModalFromTop('examResultOverlay');
+  playSfx(info.stars >= 2 ? 'levelup' : 'correct');
+}
+// Abre una ventana emergente siempre desde arriba (si se había desplazado antes, el ajolote quedaba tapado)
+function showModalFromTop(id){
+  const ov = document.getElementById(id);
+  if(!ov) return;
+  ov.style.display = 'flex';
+  const reset = ()=>{ ov.scrollTop = 0; ov.querySelectorAll('.gModal').forEach(m=>{ m.scrollTop = 0; }); };
+  reset(); requestAnimationFrame(reset);
+}
+function closeExamResults(thenReview){
+  document.getElementById('examResultOverlay').style.display = 'none';
+  const info = _examResultInfo; _examResultInfo = null;
+  if(thenReview && info && info.wrong.length){
+    window.currentReviewStage = {items: info.wrong.map(w => w.it), label:'Reforzar falladas'};
+    pendingNextStage = null;
+    dismissTopModal();
+    switchView('review');
+    return;
+  }
+  pendingNextStage = null;
+  showMap();
+  dismissTopModal();
+  setTimeout(maybeAskStar, 700);
+}
 function checkStageCompletion(){
   const cat = currentCat;
   const stageIdx = getCurrentStage(cat);
@@ -1072,19 +1800,28 @@ function checkStageCompletion(){
   buildPathMap();
   return true;
 }
+// XP del examen según la mejor nota. En una repetición solo se paga la mejora (nunca se farmea).
+const EXAM_XP_BY_STARS = {1:30, 2:40, 3:55};
 // Called by the exam view when its last question is answered.
-function finishExam(score, total){
+function finishExam(score, total, wrong){
   const cat = currentCat;
   const stageIdx = getCurrentStage(cat);
-  setExamResult(cat, stageIdx, score, total);
-  const bonus = 40;
-  awardXp(bonus);
+  const r = setExamResult(cat, stageIdx, score, total);
+  const attemptStars = examStarsFor(score, total);
+  const xp = r.first ? EXAM_XP_BY_STARS[r.stars]
+                     : Math.max(0, EXAM_XP_BY_STARS[r.stars] - (EXAM_XP_BY_STARS[r.prevStars] || 0));
+  if(xp) awardXp(xp);
   const stageTotal = stageCountFor(cat);
   const hasNext = stageIdx+1 < stageTotal;
-  if(hasNext) setUnlockedStage(cat, stageIdx+1);
-  registerSectionCompletion(cat, stageIdx, true);
+  // Nunca retrocede el avance: solo desbloquea si el siguiente nodo aún está cerrado.
+  const unlockedNow = hasNext && getUnlockedStage(cat) <= stageIdx;
+  if(unlockedNow) setUnlockedStage(cat, stageIdx+1);
+  // El descanso solo se activa la primera vez que se supera el examen.
+  if(r.first) registerSectionCompletion(cat, stageIdx, true, attemptStars);
   buildPathMap();
-  enqueueModal(()=> showStageCompleteScreen(stageIdx, hasNext, bonus, false, true));
+  const info = {score, total, xp, first:r.first, stars:attemptStars, bestStars:r.stars, prevStars:r.prevStars, hasNext, unlockedNow,
+                cooldownMs: r.first ? (COOLDOWN_EXAM_BY_STARS[attemptStars] || COOLDOWN_EXAM_MS) : 0, wrong: wrong || []};
+  enqueueModal(()=> showExamResults(info));
 }
 
 let currentCat = "general";
@@ -1098,7 +1835,8 @@ let customWords = []; // {id, en, es, cat}
 
 // Built-in content only (what the stage map is made of). The map has no editing features.
 function baseItems(c, includeCustom){
-  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+i, it[2]||null, it[3]||null]) : [];
+  // Clave estable: si la frase trae id (JSON) se usa el id; si no, su posición (datos internos)
+  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+(it[4]||i), it[2]||null, it[3]||null]) : [];
   if(includeCustom !== false){
     customWords.filter(w=> w.cat===c).forEach(w=> out.push([w.en, w.es, c, 'custom|'+w.id, w.ex||null, w.exEs||null]));
   }
@@ -1108,7 +1846,9 @@ function baseItems(c, includeCustom){
 function itemsFor(cat, includeCustom){
   if(cat === "Todas"){
     let all = [];
-    allCats().forEach(c=> { all = all.concat(baseItems(c, includeCustom)); });
+    allCats().forEach(c=> { if(MASTER_IDS.indexOf(c) >= 0) all = all.concat(baseItems(c, false)); });
+    // Tarjetas propias: todas, una sola vez, sea cual sea su etiqueta
+    if(includeCustom !== false) customWords.forEach(w=> all.push([w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]));
     return all;
   }
   return baseItems(cat, includeCustom);
@@ -1117,7 +1857,7 @@ function itemsFor(cat, includeCustom){
 function mapItemsFor(cat){ return itemsFor(cat, false); }
 
 function readStored(key){
-  const dflt = {m:false, t:null, mt:null, lvl:0, next:null};
+  const dflt = {m:false, t:null, mt:null, lvl:0, next:null, iv:0, lapses:0, rl:false, reps:0};
   let raw;
   try{ raw = localStorage.getItem("ci_master_"+key); }catch(e){ return dflt; }
   if(!raw) return dflt;
@@ -1125,8 +1865,12 @@ function readStored(key){
   if(raw === "0") return dflt;
   try{
     const o = JSON.parse(raw);
-    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null};
+    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null, iv:o.iv||0, lapses:o.lapses||0, rl:!!o.rl, reps:o.reps||0};
   }catch(e){ return dflt; }
+}
+function writeCard(key, rec){
+  try{ localStorage.setItem("ci_master_"+key, JSON.stringify(rec)); }catch(e){}
+  srsInvalidate();
 }
 function isMastered(key){ return readStored(key).m; }
 function setMastered(key,val){
@@ -1134,23 +1878,43 @@ function setMastered(key,val){
     const cur = readStored(key);
     localStorage.setItem("ci_master_"+key, JSON.stringify(Object.assign({}, cur, {m:!!val})));
   }catch(e){}
+  srsInvalidate();
 }
+// Lecciones del mapa (3 botones) → mismo motor SRS que el Repaso. Devuelve {applied}.
+// 1 Difícil → "Otra vez" · 2 Bien → "Bien" · 3 Fácil → "Fácil" (mínimo 10 días, como antes).
 function rateCard(key, level){
-  if(!key) return;
-  const cur = readStored(key);
-  const now = Date.now();
-  const gaps = {1:10*60*1000, 2:2*24*3600*1000, 3:10*24*3600*1000};
-  const m = (level === 3);
-  const mt = m ? now : cur.mt;
-  try{
-    localStorage.setItem("ci_master_"+key, JSON.stringify({m:m, t:now, mt:mt, lvl:level, next: now+(gaps[level]||0)}));
-  }catch(e){}
+  if(!key) return {applied:false};
+  const grade = level === 1 ? 1 : (level === 2 ? 3 : 4);
+  return srsGrade(key, grade, {minIv: level === 3 ? 10 : 0});
 }
 function getExamResult(cat, nodeIdx){
   try{ return JSON.parse(localStorage.getItem('vocabri_exam_'+cat+'_'+nodeIdx)||'null'); }catch(e){ return null; }
 }
+// Estrellas según el porcentaje de aciertos: ≥90 % ★★★ · ≥75 % ★★ · resto ★
+function examStarsFor(score, total){
+  const p = total ? score / total : 0;
+  return p >= 0.9 ? 3 : (p >= 0.75 ? 2 : 1);
+}
+function examStarsOf(cat, nodeIdx){
+  const r = getExamResult(cat, nodeIdx);
+  return r ? examStarsFor(Number(r.score) || 0, Number(r.total) || 0) : 0;
+}
+// Guarda siempre la MEJOR nota (score/total) y cuenta los intentos. Devuelve si era la primera vez y las estrellas.
 function setExamResult(cat, nodeIdx, score, total){
-  try{ localStorage.setItem('vocabri_exam_'+cat+'_'+nodeIdx, JSON.stringify({done:true, score, total, t:Date.now()})); }catch(e){}
+  const prev = getExamResult(cat, nodeIdx);
+  const prevFrac = (prev && prev.total) ? prev.score / prev.total : -1;
+  const frac = total ? score / total : 0;
+  const best = frac > prevFrac ? {score, total} : {score:prev.score, total:prev.total};
+  try{
+    localStorage.setItem('vocabri_exam_'+cat+'_'+nodeIdx, JSON.stringify({
+      done:true, score:best.score, total:best.total, t:Date.now(), attempts:((prev && prev.attempts) || 0) + 1, last:{score, total}
+    }));
+  }catch(e){}
+  return {
+    first: !prev,
+    prevStars: prev ? examStarsFor(Number(prev.score) || 0, Number(prev.total) || 0) : 0,
+    stars: examStarsFor(best.score, best.total)
+  };
 }
 function allMasteredTimestamps(){
   let out = [];
@@ -1177,70 +1941,144 @@ function todayKeyStr(){ return dayKey(new Date()); }
 const GOAL_PRESETS = {relajado:30, normal:50, serio:100, intenso:150};
 
 // ==================== REPASAR HOY (SRS) ====================
-const REVIEW_GAPS = {1:10*60*1000, 2:2*24*3600*1000, 3:10*24*3600*1000};
+const DAY_MS = 24*3600*1000;
+const REVIEW_AGAIN_MS = 10*60*1000;
+const REVIEW_SESSION_CAP = 25;
+const REVIEW_XP = {1:0, 2:4, 3:8, 4:8};   // Bien y Fácil pagan igual: no hay incentivo a marcar siempre "Fácil"
+const LEECH_LAPSES = 4;                    // tarjeta "sanguijuela": fallada 4 veces o más
 
-// Obtener todas las cartas vencidas para repasar (SRS)
-function getDueCards(){
+// Intervalo actual (en días) de una tarjeta; las guardadas con el sistema anterior se derivan de su nivel.
+function srsInterval(s){
+  if(s.iv) return s.iv;
+  return {1:0, 2:2, 3:10}[s.lvl] || 0;
+}
+// Días de retraso con que se repasa una tarjeta vencida
+function srsLateDays(s, now){ return (s && s.next && now > s.next) ? (now - s.next) / DAY_MS : 0; }
+// Siguiente intervalo (días) según la nota: 1 Otra vez · 2 Difícil · 3 Bien · 4 Fácil.
+// `s` (opcional) es el registro de la tarjeta: permite bonus por repasar tarde y el tramo de "reaprendizaje".
+function srsNextInterval(prev, grade, s){
+  if(grade === 1) return 0;
+  if(s && s.rl && prev > 0){        // tras un fallo: la tarjeta vuelve a su intervalo reducido, sin multiplicar
+    if(grade === 2) return Math.max(1, Math.round(prev * 0.8));
+    if(grade === 3) return Math.max(1, prev);
+    return Math.max(2, Math.round(prev * 1.3));
+  }
+  const eff = (grade >= 3 && s) ? prev + Math.min(prev, srsLateDays(s, Date.now()) * 0.5) : prev;   // bonus por acertar tarde
+  if(grade === 2) return Math.min(365, Math.max(1, Math.round(eff * 1.2)));
+  if(grade === 3) return Math.min(365, Math.max(2, Math.round(eff * 2.2)));
+  return Math.min(365, Math.max(5, Math.round(eff * 3.5)));
+}
+function srsGapText(days){
+  if(days <= 0) return '10 min';
+  if(days === 1) return '1 día';
+  if(days < 30) return days + ' días';
+  const m = Math.round(days/30);
+  return m + (m === 1 ? ' mes' : ' meses');
+}
+// Vence "al empezar el día" (medianoche local) para que "Repasar hoy" signifique hoy, no "dentro de 24 h".
+function srsDueAt(days, now){ const d = new Date(now); return new Date(d.getFullYear(), d.getMonth(), d.getDate() + days).getTime(); }
+function srsStartOfDay(ts){ const d = new Date(ts); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+
+// ¿Esta nota debe mover el calendario? Solo si la tarjeta es nueva, está vencida, está en reaprendizaje o es un fallo.
+// Un repaso anticipado (p. ej. "Repasar sección") con acierto no cambia nada: evita inflar intervalos.
+function srsWouldApply(cur, grade, now){
+  now = now || Date.now();
+  return !cur.next || cur.next <= now || cur.rl || grade === 1;
+}
+function srsGrade(key, grade, opts){
+  opts = opts || {};
+  if(!key) return {applied:false};
+  const cur = readStored(key);
   const now = Date.now();
-  const todayStart = new Date();
-  todayStart.setHours(0,0,0,0);
-  const todayStartMs = todayStart.getTime();
-
-  const due = [];
-  const recentlyLearned = [];
-
-  itemsFor("Todas").forEach(it=>{
-    const s = readStored(it[3]);
-    // Cartas vencidas (SRS normal)
-    if(!s.m && s.next && s.next <= now){
-      due.push({
-        ...it,
-        lvl: s.lvl,
-        next: s.next,
-        source: 'due'
-      });
-    }
-    // Cartas aprendidas hoy (lvl >= 2, rated today) - para repasar inmediatamente
-    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs){
-      recentlyLearned.push({
-        ...it,
-        lvl: s.lvl,
-        next: s.next,
-        source: 'recent'
-      });
-    }
-  });
-
-  // Ordenar: vencidas primero (más urgentes), luego recientes
-  due.sort((a,b)=> a.next - b.next);
-  recentlyLearned.sort((a,b)=> (b.t || 0) - (a.t || 0)); // más recientes primero
-
-  return [...due, ...recentlyLearned];
+  if(!srsWouldApply(cur, grade, now)){
+    writeCard(key, Object.assign({}, cur, {t:now, reps:cur.reps + 1}));   // cuenta como actividad (racha), calendario intacto
+    return {applied:false, leech:cur.lapses >= LEECH_LAPSES};
+  }
+  const prev = srsInterval(cur);
+  let iv, next, lapses = cur.lapses, rl;
+  if(grade === 1){
+    if(!cur.rl){ lapses++; iv = prev > 0 ? Math.max(1, Math.floor(prev * 0.4)) : 0; }   // un fallo reduce el intervalo, no lo borra
+    else iv = prev;
+    rl = true; next = now + REVIEW_AGAIN_MS;
+  } else {
+    iv = srsNextInterval(prev, grade, cur);
+    if(opts.minIv) iv = Math.max(iv, opts.minIv);
+    if(iv >= 7) iv = Math.min(365, Math.round(iv * (0.94 + Math.random() * 0.12)));   // ±6 %: evita que todo venza el mismo día
+    rl = false; next = srsDueAt(iv, now);
+  }
+  const m = !rl && iv >= 10;
+  const lvl = rl ? 1 : (iv >= 10 ? 3 : 2);
+  writeCard(key, {m:m, t:now, mt: m ? (cur.mt || now) : cur.mt, lvl:lvl, next:next, iv:iv, lapses:lapses, rl:rl, reps:cur.reps + 1});
+  return {applied:true, leech: lapses >= LEECH_LAPSES, lapses:lapses};
 }
 
-// Obtener tarjetas que vencen hoy (para badge contador)
-function getDueTodayCount(){
-  const now = Date.now();
-  const todayStart = new Date();
-  todayStart.setHours(0,0,0,0);
-  const todayStartMs = todayStart.getTime();
-  const endOfDay = new Date();
-  endOfDay.setHours(23,59,59,999);
-  const endOfDayMs = endOfDay.getTime();
+// Registro diario de repasos {día:[total, acertados]} para la retención (últimos 30 días)
+function srsLog(ok, delta){
+  delta = delta || 1;
+  try{
+    const log = JSON.parse(localStorage.getItem('ci_review_log') || '{}');
+    const k = dayKey(new Date());
+    const e = log[k] || [0,0];
+    e[0] = Math.max(0, e[0] + delta); if(ok) e[1] = Math.max(0, e[1] + delta);
+    log[k] = e;
+    const keys = Object.keys(log);
+    if(keys.length > 30){ keys.slice(0, keys.length - 30).forEach(x => delete log[x]); }
+    localStorage.setItem('ci_review_log', JSON.stringify(log));
+  }catch(e){}
+}
+function srsRetention7(){
+  try{
+    const log = JSON.parse(localStorage.getItem('ci_review_log') || '{}');
+    let n = 0, ok = 0;
+    for(let i = 0; i < 7; i++){ const d = new Date(); d.setDate(d.getDate() - i); const e = log[dayKey(d)]; if(e){ n += e[0]; ok += e[1]; } }
+    return n >= 5 ? Math.round(ok / n * 100) : null;
+  }catch(e){ return null; }
+}
 
-  let count = 0;
+// Escaneo de tarjetas programadas, con caché breve (se invalida al calificar) para no recorrer 1000+ tarjetas en cada llamada.
+var _srsScan = null, _srsScanAt = 0;
+function srsInvalidate(){ _srsScan = null; }
+function srsScanAll(){
+  const t = Date.now();
+  if(_srsScan && t - _srsScanAt < 3000) return _srsScan;
+  const out = [];
   itemsFor("Todas").forEach(it=>{
     const s = readStored(it[3]);
-    // Vencidas hoy
-    if(!s.m && s.next && s.next <= endOfDayMs){
-      count++;
-    }
-    // Aprendidas hoy (lvl >= 2, rated today)
-    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs && s.t <= endOfDayMs){
-      count++;
-    }
+    if(s.next) out.push({it, next:s.next, s});
   });
-  return count;
+  _srsScan = out; _srsScanAt = t;
+  return out;
+}
+
+// Tarjetas vencidas ahora (única fuente de verdad: lista, contador del menú y sesión usan esto).
+function getDueCards(){
+  const now = Date.now();
+  return srsScanAll().filter(d => d.next <= now).sort((a,b)=> a.next - b.next).map(d => d.it);
+}
+function getDueTodayCount(){ return getDueCards().length; }
+// Próxima tarjeta que vencerá (ms) o null
+function getNextDueTime(){
+  const now = Date.now();
+  let best = null;
+  srsScanAll().forEach(d=>{ if(d.next > now && (best === null || d.next < best)) best = d.next; });
+  return best;
+}
+// Tarjetas que vencen cada uno de los próximos 7 días (el día 0 incluye las atrasadas)
+function srsForecast(){
+  const out = [0,0,0,0,0,0,0];
+  const today = srsStartOfDay(Date.now());
+  srsScanAll().forEach(d=>{
+    const k = Math.round((srsStartOfDay(d.next) - today) / DAY_MS);
+    if(k <= 0) out[0]++; else if(k < 7) out[k]++;
+  });
+  return out;
+}
+function fmtWhen(ts){
+  const diff = ts - Date.now();
+  if(diff < 3600*1000) return 'en ' + Math.max(1, Math.round(diff/60000)) + ' min';
+  const d = Math.round((srsStartOfDay(ts) - srsStartOfDay(Date.now())) / DAY_MS);
+  if(d <= 0) return 'en ' + Math.max(1, Math.round(diff/3600000)) + ' h';
+  return d === 1 ? 'mañana' : 'en ' + d + ' días';
 }
 function getXpTotal(){ try{ return parseInt(localStorage.getItem('ci_xp_total')||'0',10); }catch(e){ return 0; } }
 function setXpTotal(v){ try{ localStorage.setItem('ci_xp_total', String(v)); }catch(e){} }
@@ -1510,6 +2348,50 @@ function loadCustomWords(){
   }catch(e){ customWords = []; }
 }
 loadCustomWords();
+
+// --- Migración de progreso (idempotente, no destructiva) ---
+// 1) 'Casual|i' → 'general|i'   2) 'travel|<posición>' → 'travel|<id>' (ids estables del JSON)
+// 3) exámenes y etapa desbloqueada de Casual → general   4) tarjetas propias con etiqueta 'Casual' → 'general'
+function migrateProgressKeys(){
+  try{
+    const ls = localStorage, moves = [];
+    for(let i = 0; i < ls.length; i++){
+      const k = ls.key(i); if(!k) continue;
+      let m = /^ci_master_(Casual|travel|academic|business|pop)\|(\d+)$/.exec(k);
+      if(m){
+        let cat = m[1], idx = +m[2];
+        if(cat === 'Casual'){ moves.push([k, 'ci_master_general|' + idx, 'card']); continue; }
+        const row = DATA[cat] && DATA[cat][idx];
+        if(row && row[4]) moves.push([k, 'ci_master_' + cat + '|' + row[4], 'card']);
+        continue;
+      }
+      m = /^vocabri_exam_Casual_(\d+)$/.exec(k);
+      if(m) moves.push([k, 'vocabri_exam_general_' + m[1], 'exam']);
+    }
+    moves.forEach(([from, to, type])=>{
+      const a = ls.getItem(from), b = ls.getItem(to);
+      if(b === null) ls.setItem(to, a);
+      else ls.setItem(to, type === 'card' ? mergeCardRecord(b, a) : mergeExamResult(b, a));
+      ls.removeItem(from);
+    });
+    // Etapa desbloqueada (la más avanzada de las dos)
+    if(unlockedStage && unlockedStage.Casual != null){
+      unlockedStage.general = Math.max(Number(unlockedStage.general) || 0, Number(unlockedStage.Casual) || 0);
+      delete unlockedStage.Casual;
+      ls.setItem('vocabri_unlocked_stage', JSON.stringify(unlockedStage));
+    }
+    // Tarjetas propias
+    let ch = false;
+    customWords.forEach(w=>{ if(w && w.cat === 'Casual'){ w.cat = 'general'; ch = true; } });
+    if(ch) ls.setItem('ci_custom_words', JSON.stringify(customWords));
+    if(moves.length || ch) srsInvalidate();
+  }catch(e){ console.warn('[migrate]', e); }
+}
+(function(){
+  const run = ()=> migrateProgressKeys();
+  if(window.VocabriPhraseData && window.VocabriPhraseData.loaded) run();
+  window.addEventListener('vocabri:phrasesLoaded', run);
+})();
 function addWord(en, es, cat, ex, exEs){
   en = en.trim(); es = es.trim(); ex = (ex||'').trim(); exEs = (exEs||'').trim();
   if(!en || !es || !cat) return Promise.resolve(false);
@@ -1537,9 +2419,7 @@ function selectCategory(cat){
   // Legacy function for DATA categories (used by custom categories, etc.)
   currentCat = cat;
   idx = 0; order = [];
-  buildCategoryDropdown();
-  document.getElementById('catSelectLabel').textContent = cat;
-  document.getElementById('catDropdown').hidden = true;
+  selectFocusCategory(cat);
   cardsSubView = 'map';
   renderCardsSubView();
 }
@@ -1556,7 +2436,7 @@ function buildBottomNav(){
     // Render sticker image instead of emoji
     const iconHtml = it.icon.startsWith('./')
       ? '<img class="navIcon navSticker" src="' + it.icon + '" alt="" width="28" height="28">'
-      : '<span class="navIcon">' + it.icon + '</span>';
+      : '<span class="navIcon">' + it.icon + '</span>';   // SVG propio
 
     b.innerHTML = iconHtml + '<span>' + it.label + '</span>';
     if (it.id === 'review') {
@@ -1600,19 +2480,21 @@ function selectFocusCategory(masterCatId) {
 
   currentCat = masterCatId;
   idx = 0; order = [];
-  buildCategoryDropdown();
 
-  // Mostrar el label de la categoría maestra en el botón
+  // Mostrar el label de la categoría maestra en el botón del panel de ajustes
   let label = masterCatId;
-  let emoji = '📚';
   if (window.VocabriCategories) {
-    label = window.VocabriCategories.getCategoryLabel(masterCatId);
-    emoji = window.VocabriCategories.getCategoryEmoji(masterCatId);
-    // Usar shortLabel para el dropdown
     label = window.VocabriCategories.getCategoryShortLabel(masterCatId);
   }
-  document.getElementById('catSelectLabel').textContent = label;
-  document.getElementById('catDropdown').hidden = true;
+  const selectorLabel = document.getElementById('catSelectorLabel');
+  if (selectorLabel) selectorLabel.textContent = label;
+
+  // Actualizar selección visual en el panel de ajustes
+  updateCatSelector();
+
+  // Cerrar el selector de categorías
+  const catSelector = document.getElementById('catSelector');
+  if (catSelector) catSelector.hidden = true;
 
   // Persistir la categoría elegida
   localStorage.setItem('ci_current_master_category', masterCatId);
@@ -1628,43 +2510,6 @@ function selectFocusCategory(masterCatId) {
   renderCardsSubView();
 }
 
-function buildCategoryDropdown(){
-  const el = document.getElementById('catDropdown');
-  if(!el) return;
-  el.innerHTML = '';
-
-  const masterCats = getMasterCategories();
-
-  masterCats.forEach(catId => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    const isSelected = catId === currentCat;
-    b.className = 'catOpt' + (isSelected ? ' sel' : '');
-
-    // Obtener label y emoji del registry
-    let label = catId;
-    let emoji = '📚';
-    if (window.VocabriCategories) {
-      label = window.VocabriCategories.getCategoryShortLabel(catId);
-      emoji = window.VocabriCategories.getCategoryEmoji(catId);
-    }
-
-    b.innerHTML = '<span>' + emoji + '</span><span>' + label + '</span>';
-    b.onclick = ()=> selectFocusCategory(catId);
-    el.appendChild(b);
-  });
-}
-document.getElementById('catSelectBtn').onclick = (e)=>{
-  e.stopPropagation();
-  const dd = document.getElementById('catDropdown');
-  dd.hidden = !dd.hidden;
-};
-document.addEventListener('click', (e)=>{
-  const dd = document.getElementById('catDropdown');
-  if(!dd || dd.hidden) return;
-  if(!dd.contains(e.target) && e.target.id !== 'catSelectBtn') dd.hidden = true;
-});
-
 function freeplayItems(){
   return customWords.map(w=> [w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]);
 }
@@ -1673,6 +2518,7 @@ function currentLessonItems(){
   return stageItems(currentCat, getCurrentStage(currentCat));
 }
 function renderCards(){
+  scrollTopNow('lessonView');
   const cat = currentCat;
   const items = currentLessonItems();
   const backBtn = document.getElementById('backToMapBtn');
@@ -1769,156 +2615,220 @@ function dayKey(d){
 }
 
 // ==================== VISTA REPASAR HOY ====================
-let reviewCards = [];
-let reviewIdx = 0;
-let reviewOrder = [];
+let reviewQueue = [];
+let reviewSession = null;   // {total, done, stats, xp, stage, failed:Map, noXp:Set, remaining}
+let reviewCurrent = null;
+let reviewUndo = null;      // última nota, para poder deshacerla
+
+function reviewEl(id){ return document.getElementById(id); }
+function rvEsc(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function reviewShow(part){   // 'card' | 'empty' | 'summary'
+  reviewEl('reviewCard').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewActionZone').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewProgress').style.display = part === 'card' ? '' : 'none';
+  reviewEl('reviewEmpty').style.display = part === 'empty' ? '' : 'none';
+  reviewEl('reviewSummary').style.display = part === 'summary' ? '' : 'none';
+  if(part !== 'card'){
+    reviewEl('reviewExample').style.display = 'none';
+    reviewEl('reviewLeech').style.display = 'none';
+    reviewEl('reviewUndoBtn').style.display = 'none';
+  }
+}
+
+// Mini gráfico "próximos 7 días" + retención, para la pantalla vacía y el resumen
+function renderReviewForecast(hostId){
+  const host = reviewEl(hostId); if(!host) return;
+  const f = srsForecast();
+  const max = Math.max(1, ...f);
+  const names = ['Hoy','Mañ','','','','',''];
+  const today = new Date();
+  const bars = f.map((n,i)=>{
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const lab = i === 0 ? 'Hoy' : d.toLocaleDateString('es', {weekday:'short'}).replace('.','').slice(0,3);
+    return '<div class="rvFcCol"><span class="rvFcNum">' + (n || '') + '</span><i style="height:' + Math.max(n ? 8 : 3, Math.round(n / max * 54)) + 'px"' + (n ? '' : ' class="zero"') + '></i><span class="rvFcDay">' + rvEsc(lab) + '</span></div>';
+  }).join('');
+  const total = f.reduce((a,b)=>a+b, 0);
+  const ret = srsRetention7();
+  host.innerHTML = total || ret !== null
+    ? '<p class="rvFcTitle">Próximos 7 días</p><div class="rvFcBars">' + bars + '</div>' +
+      (ret !== null ? '<p class="rvFcRet">Retención de la semana: <b>' + ret + '%</b></p>' : '')
+    : '';
+}
 
 function renderReviewView(){
-  // Verificar si hay una sección específica para repasar (desde el mapa)
-  const stageReview = window.currentReviewStage;
-
-  if(stageReview && stageReview.items && stageReview.items.length > 0){
-    // Usar las tarjetas de esa sección específica
-    reviewCards = stageReview.items.map(it => [...it]);
-    reviewOrder = reviewCards.map((_,i)=>i);
-    reviewIdx = 0;
-
-    // Limpiar para que no se repita
+  const stage = window.currentReviewStage;
+  let cards;
+  if(stage && stage.items && stage.items.length){
+    cards = stage.items.slice();
     window.currentReviewStage = null;
   } else {
-    // Repaso general (SRS + aprendidas hoy)
-    reviewCards = getDueCards();
-    reviewOrder = reviewCards.map((_,i)=>i);
-    reviewIdx = 0;
+    cards = getDueCards();
   }
+  reviewUndo = null;
+  reviewEl('reviewBackBtn').onclick = () => switchView('learn');
+  reviewEl('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+  reviewEl('reviewTitle').textContent = stage ? (stage.label || 'Repasar sección') : 'Repasar hoy';
+  updateReviewBadge();
 
-  const emptyEl = document.getElementById('reviewEmpty');
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progressEl = document.getElementById('reviewProgress');
-  const progFill = document.getElementById('reviewProgBarFill');
-
-  if(reviewCards.length === 0){
-    emptyEl.style.display = '';
-    cardEl.style.display = 'none';
-    actionZone.style.display = 'none';
-    progressEl.style.display = 'none';
-    document.getElementById('reviewCount').textContent = '0 tarjetas para repasar';
-    // Back button handler for empty state
-    document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
-    document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+  if(!cards.length){
+    reviewShow('empty');
+    reviewEl('reviewCount').textContent = 'Al día';
+    const nxt = getNextDueTime();
+    reviewEl('reviewEmptyHint').textContent = nxt
+      ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '. Mientras, sigue aprendiendo en el mapa.'
+      : 'Aún no tienes tarjetas en repaso. Aprende algunas en el mapa y aparecerán aquí.';
+    renderReviewForecast('reviewEmptyForecast');
     return;
   }
-
-  emptyEl.style.display = 'none';
-  cardEl.style.display = '';
-  actionZone.style.display = '';
-  progressEl.style.display = '';
-
-  // Mostrar indicador si es repaso de sección específica
-  const countEl = document.getElementById('reviewCount');
-  if(stageReview){
-    countEl.textContent = `Repasando: ${stageReview.items.length} tarjetas de la sección`;
-  } else {
-    countEl.textContent = reviewCards.length + ' tarjetas para repasar';
-  }
-
-  // Back button handler
-  document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
-  document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
-
+  const batch = stage ? cards : cards.slice(0, REVIEW_SESSION_CAP);
+  reviewQueue = batch.slice();
+  reviewSession = {total: batch.length, done:0, stats:{1:0,2:0,3:0,4:0}, xp:0, stage:!!stage, remaining: cards.length - batch.length, failed:new Map(), noXp:new Set()};
   showReviewCard();
-  updateReviewBadge();
+}
+
+function updateReviewProgress(){
+  const s = reviewSession;
+  reviewEl('reviewCount').textContent = Math.min(s.done + 1, s.total) + ' / ' + s.total;
+  reviewEl('reviewProgBarFill').style.width = Math.round(s.done / s.total * 100) + '%';
 }
 
 function showReviewCard(){
-  if(reviewIdx >= reviewOrder.length){
-    // Sesión terminada
-    finishReviewSession();
-    return;
-  }
-
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progFill = document.getElementById('reviewProgBarFill');
-
+  if(!reviewQueue.length){ finishReviewSession(); return; }
+  reviewShow('card');
+  scrollTopNow('reviewView');
+  reviewCurrent = reviewQueue[0];
+  const cardEl = reviewEl('reviewCard');
   cardEl.classList.remove('flipped');
-  document.getElementById('reviewRateBlock').style.display = 'none';
-  document.getElementById('reviewShowAnswerBtn').style.display = '';
+  reviewEl('reviewRateBlock').style.display = 'none';
+  reviewEl('reviewShowAnswerBtn').style.display = '';
+  reviewEl('reviewExample').style.display = 'none';
+  reviewEl('reviewUndoBtn').style.display = reviewUndo ? '' : 'none';
+  updateReviewProgress();
 
-  progFill.style.width = Math.round((reviewIdx / reviewOrder.length) * 100) + '%';
+  const item = reviewCurrent;
+  reviewEl('reviewFrontText').textContent = item[0];
+  reviewEl('reviewBackText').textContent = item[1];
+  window.currentReviewKey = item[3];
 
-  const orderIdx = reviewOrder[reviewIdx];
-  const item = reviewCards[orderIdx];
-  const key = item[3];
-
-  // Actualizar textos
-  document.getElementById('reviewFrontText').textContent = item[0]; // EN
-  document.getElementById('reviewBackText').textContent = item[1]; // ES
-
-  // Guardar key actual
-  window.currentReviewKey = key;
-
-  // Botón mostrar respuesta
-  document.getElementById('reviewShowAnswerBtn').onclick = () => {
-    cardEl.classList.add('flipped');
-    document.getElementById('reviewShowAnswerBtn').style.display = 'none';
-    document.getElementById('reviewRateBlock').style.display = '';
-  };
-
-  // Botones de rating
-  setupReviewRateButtons();
-}
-
-function setupReviewRateButtons(){
-  const buttons = [
-    {id: 'reviewRateGood', level: 2},
-    {id: 'reviewRateEasy', level: 3}
-  ];
-
-  buttons.forEach(btn => {
-    const el = document.getElementById(btn.id);
-    if(el) el.onclick = () => rateReviewCard(btn.level);
+  // Intervalos que se aplicarían con cada botón (y "sin cambio" si es un repaso anticipado que no mueve el calendario)
+  const cur = readStored(item[3]);
+  const prev = srsInterval(cur);
+  [1,2,3,4].forEach(g => {
+    const c = reviewEl('reviewRate'+g+'Cap');
+    if(c) c.textContent = srsWouldApply(cur, g) ? srsGapText(srsNextInterval(prev, g, cur)) : 'sin cambio';
   });
+  const leech = reviewEl('reviewLeech');
+  if(cur.lapses >= LEECH_LAPSES){ leech.textContent = '🩹 Te cuesta: fallada ' + cur.lapses + ' veces'; leech.style.display = ''; }
+  else leech.style.display = 'none';
+
+  reviewEl('reviewShowAnswerBtn').onclick = revealReviewAnswer;
+  [1,2,3,4].forEach(g => { reviewEl('reviewRate'+g).onclick = () => rateReviewCard(g); });
 }
 
-function rateReviewCard(level){
-  const key = window.currentReviewKey;
-  if(!key) return;
+function revealReviewAnswer(){
+  if(!reviewCurrent || reviewEl('reviewRateBlock').style.display !== 'none') return;
+  reviewEl('reviewCard').classList.add('flipped');
+  reviewEl('reviewShowAnswerBtn').style.display = 'none';
+  reviewEl('reviewRateBlock').style.display = '';
+  const it = reviewCurrent, ex = reviewEl('reviewExample');
+  if(it[4]){
+    ex.innerHTML = '<p class="rvExEn">“' + rvEsc(it[4]) + '”</p>' + (it[5] ? '<p class="rvExEs">' + rvEsc(it[5]) + '</p>' : '');
+    ex.style.display = '';
+  }
+}
 
-  // Actualizar SRS
-  rateCard(key, level);
+function rateReviewCard(grade){
+  if(!reviewCurrent || !reviewSession) return;
+  const item = reviewQueue.shift();
+  const key = item[3];
+  const s = reviewSession;
+  let raw = null; try{ raw = localStorage.getItem('ci_master_' + key); }catch(e){}
+  const res = srsGrade(key, grade);
+  s.stats[grade]++;
+  let xp = 0;
+  if(res.applied){
+    xp = s.noXp.has(key) ? 0 : REVIEW_XP[grade];
+    srsLog(grade >= 2);
+    if(xp){ awardXp(xp); s.xp += xp; }
+  }
+  let at = -1;
+  if(grade === 1){
+    s.failed.set(key, {item, n:((s.failed.get(key) || {n:0}).n) + 1});
+    at = Math.min(reviewQueue.length, 3);     // vuelve a aparecer tras unas cartas más (o enseguida si es la última)
+    reviewQueue.splice(at, 0, item);
+  } else {
+    s.done++;
+  }
+  reviewUndo = {key, raw, item, grade, xp, at, applied:res.applied};
+  reviewCurrent = null;
+  updateReviewBadge();
+  showReviewCard();
+}
 
-  // XP
-  const xpGain = level === 1 ? 0 : (level === 2 ? 10 : 10);
-  if(xpGain > 0) awardXp(xpGain);
-
-  // Siguiente carta
-  reviewIdx++;
+// Deshacer la última nota: restaura la tarjeta, la cola y los contadores (el XP ya dado no se vuelve a dar)
+function undoReviewRating(){
+  const u = reviewUndo, s = reviewSession;
+  if(!u || !s) return;
+  reviewUndo = null;
+  try{ if(u.raw === null) localStorage.removeItem('ci_master_' + u.key); else localStorage.setItem('ci_master_' + u.key, u.raw); }catch(e){}
+  srsInvalidate();
+  s.stats[u.grade]--;
+  if(u.applied) srsLog(u.grade >= 2, -1);
+  if(u.xp) s.noXp.add(u.key);
+  if(u.grade === 1){
+    const idx = reviewQueue.indexOf(u.item);
+    if(idx >= 0) reviewQueue.splice(idx, 1);
+    const f = s.failed.get(u.key);
+    if(f){ f.n--; if(f.n <= 0) s.failed.delete(u.key); }
+  } else {
+    s.done--;
+  }
+  reviewQueue.unshift(u.item);
+  reviewCurrent = null;
+  updateReviewBadge();
   showReviewCard();
 }
 
 function finishReviewSession(){
-  const emptyEl = document.getElementById('reviewEmpty');
-  const cardEl = document.getElementById('reviewCard');
-  const actionZone = document.getElementById('reviewActionZone');
-  const progressEl = document.getElementById('reviewProgress');
+  const s = reviewSession;
+  reviewUndo = null;
+  reviewShow('summary');
+  reviewEl('reviewCount').textContent = '¡Listo!';
+  reviewEl('reviewProgBarFill').style.width = '100%';
+  const firstTry = s.total - Math.min(s.total, s.failed.size);   // tarjetas distintas falladas, no pulsaciones
+  const acc = s.total ? Math.round(firstTry / s.total * 100) : 0;
+  reviewEl('reviewSumDone').textContent = s.total;
+  reviewEl('reviewSumAcc').textContent = acc + '%';
+  reviewEl('reviewSumXp').textContent = '+' + s.xp;
+  reviewEl('reviewSumBreak').innerHTML =
+    '<span class="rvChip rvAgain">🔁 ' + s.stats[1] + ' otra vez</span>' +
+    '<span class="rvChip rvHard">😓 ' + s.stats[2] + ' difícil</span>' +
+    '<span class="rvChip rvGood">🙂 ' + s.stats[3] + ' bien</span>' +
+    '<span class="rvChip rvEasy">🚀 ' + s.stats[4] + ' fácil</span>';
 
-  emptyEl.style.display = '';
-  cardEl.style.display = 'none';
-  actionZone.style.display = 'none';
-  progressEl.style.display = 'none';
-  document.getElementById('reviewCount').textContent = 'Sesión completada';
+  // Tarjetas falladas: lista y botón para repasarlas ya
+  const failed = Array.from(s.failed.values());
+  const fBox = reviewEl('reviewSumFailed'), redo = reviewEl('reviewRedoBtn');
+  if(failed.length){
+    fBox.innerHTML = '<p class="rvFailTitle">Para reforzar</p>' + failed.slice(0, 8).map(f =>
+      '<div class="rvFailRow"><b>' + rvEsc(f.item[0]) + '</b><span>' + rvEsc(f.item[1]) + '</span></div>').join('') +
+      (failed.length > 8 ? '<p class="rvFailMore">y ' + (failed.length - 8) + ' más…</p>' : '');
+    fBox.style.display = '';
+    redo.style.display = '';
+    redo.onclick = () => { window.currentReviewStage = {items: failed.map(f => f.item), label:'Reforzar falladas'}; renderReviewView(); };
+  } else { fBox.style.display = 'none'; redo.style.display = 'none'; }
 
-  emptyEl.querySelector('p').textContent = '¡Repaso completado!';
-  emptyEl.querySelector('.hint').textContent = 'Has repasado todas las tarjetas pendientes.';
-
-  // Botón volver al mapa
-  document.getElementById('reviewEmptyLearnBtn').onclick = () => {
-    switchView('learn');
-  };
-
-  // Actualizar badge del navbar
+  const due = s.stage ? 0 : getDueCards().length;
+  const nxt = getNextDueTime();
+  reviewEl('reviewSumNext').textContent = due > 0
+    ? 'Aún tienes ' + due + (due === 1 ? ' tarjeta' : ' tarjetas') + ' pendiente' + (due === 1 ? '' : 's') + '.'
+    : (nxt ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '.' : 'Todo al día.');
+  const more = reviewEl('reviewMoreBtn');
+  more.style.display = due > 0 ? '' : 'none';
+  more.onclick = () => renderReviewView();
+  reviewEl('reviewSumMapBtn').onclick = () => switchView('learn');
+  renderReviewForecast('reviewSumForecast');
   updateReviewBadge();
 }
 
@@ -1926,24 +2836,62 @@ function updateReviewBadge(){
   const count = getDueTodayCount();
   const badge = document.getElementById('reviewNavBadge');
   if(badge){
-    if(count > 0){
-      badge.textContent = count > 99 ? '99+' : count;
-      badge.style.display = '';
-    }else{
-      badge.style.display = 'none';
-    }
+    if(count > 0){ badge.textContent = count > 99 ? '99+' : count; badge.style.display = ''; }
+    else badge.style.display = 'none';
   }
 }
+setInterval(updateReviewBadge, 60000);
+document.addEventListener('DOMContentLoaded', ()=>{ const u = document.getElementById('reviewUndoBtn'); if(u) u.onclick = undoReviewRating; });
+(function(){ const u = document.getElementById('reviewUndoBtn'); if(u) u.onclick = undoReviewRating; })();
 
-// Actualizar badge al cambiar vista
-const originalSwitchView = switchView;
-function switchView(v){
-  originalSwitchView(v);
-  if(v === 'review'){
-    updateReviewBadge();
+// Atajos: Espacio/Enter muestra la respuesta, 1-4 califica, U deshace
+document.addEventListener('keydown', e => {
+  const v = document.getElementById('reviewView');
+  if(!v || v.style.display === 'none') return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target && e.target.tagName;
+  if(t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+  if((e.key === 'u' || e.key === 'U') && reviewUndo){ e.preventDefault(); undoReviewRating(); return; }
+  if(!reviewCurrent) return;
+  const rating = document.getElementById('reviewRateBlock').style.display !== 'none';
+  if((e.key === ' ' || e.key === 'Enter') && !rating && t !== 'BUTTON'){ e.preventDefault(); revealReviewAnswer(); }
+  else if(rating && '1234'.includes(e.key) && e.key.length === 1){ e.preventDefault(); rateReviewCard(+e.key); }
+});
+
+// Barras de dominio por categoría (solo las que tienen contenido cargado) + "Mis tarjetas" si hay
+function renderCategoryProgress(allItems){
+  const box = document.getElementById('catProgress');
+  if(!box) return;
+  const COLORS = {general:'#F59E0B', travel:'#38BDF8', academic:'#A78BFA', business:'#22C55E', pop:'#F472B6', custom:'#FB923C'};
+  const EMOJI = {general:'🌍', travel:'✈️', academic:'🎓', business:'💼', pop:'🎮', custom:'🃏'};
+  const rows = [];
+  MASTER_IDS.forEach(c=>{
+    if(!DATA[c] || !DATA[c].length) return;
+    const items = mapItemsFor(c);
+    const done = items.filter(it=> isMastered(it[3])).length;
+    const seen = items.filter(it=> readStored(it[3]).reps > 0 || readStored(it[3]).lvl > 0).length;
+    let secDone = 0, secTotal = 0;
+    try{
+      const nodes = nodeLayout(c).nodes;
+      nodes.forEach((n, i)=>{ if(n.type === 'normal'){ secTotal++; if(isStageComplete(c, i)) secDone++; } });
+    }catch(e){}
+    rows.push({id:c, label:catLabel(c), done, seen, total:items.length, secDone, secTotal});
+  });
+  if(customWords.length){
+    const done = customWords.filter(w=> isMastered('custom|' + w.id)).length;
+    rows.push({id:'custom', label:'Mis tarjetas', done, seen:done, total:customWords.length, secDone:0, secTotal:0});
   }
+  box.innerHTML = rows.map(r=>{
+    const pct = r.total ? Math.round(r.done / r.total * 100) : 0;
+    const seenPct = r.total ? Math.round(Math.max(r.seen, r.done) / r.total * 100) : 0;
+    const sec = r.secTotal ? ' · ' + r.secDone + '/' + r.secTotal + ' secciones' : '';
+    return '<div class="catProgRow' + (r.id === currentCat ? ' cur' : '') + '" style="--cc:' + COLORS[r.id] + '">' +
+      '<div class="catProgTop"><span class="catProgName">' + EMOJI[r.id] + ' ' + escapeHtml(r.label) + '</span><span class="catProgPct">' + pct + '%</span></div>' +
+      '<div class="catProgBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + escapeHtml(r.label) + '">' +
+        '<div class="catProgSeen" style="width:' + seenPct + '%"></div><div class="catProgFill" style="width:' + pct + '%"></div></div>' +
+      '<div class="catProgSub">' + r.done + '/' + r.total + ' dominadas' + sec + '</div></div>';
+  }).join('');
 }
-
 function renderProgress(){
   const allItems = itemsFor("Todas");
   const total = allItems.length;
@@ -1954,6 +2902,8 @@ function renderProgress(){
   document.getElementById('statStreak').textContent = computeStreak();
   document.getElementById('statPct').textContent = (total ? Math.round(masteredTotal/total*100) : 0) + '%';
   document.getElementById('statTime').textContent = studyMinutesToday() + ' min';
+
+  renderCategoryProgress(allItems);
 
   const wrap = document.getElementById('chartWrap');
   const empty = document.getElementById('progEmpty');
@@ -2041,10 +2991,15 @@ function populateCardModalCats(selectVal){
   allCats().forEach(c=>{
     const o = document.createElement('option');
     o.value = c;
-    o.textContent = c;
+    o.textContent = catLabel(c);
     sel.appendChild(o);
   });
-  if(selectVal) sel.value = selectVal;
+  if(selectVal){
+    if(!Array.from(sel.options).some(o=> o.value === selectVal)){   // etiqueta heredada: se conserva como opción
+      const o = document.createElement('option'); o.value = selectVal; o.textContent = catLabel(selectVal); sel.appendChild(o);
+    }
+    sel.value = selectVal;
+  }
 }
 
 function openCardModal(cardId){
@@ -2069,7 +3024,10 @@ function openCardModal(cardId){
       title.textContent = 'Editar Tarjeta';
       enInput.value = card.en || '';
       esInput.value = card.es || '';
-      if(catSel && card.cat) catSel.value = card.cat;
+      if(catSel && card.cat){
+        if(!Array.from(catSel.options).some(o=> o.value === card.cat)){ const o = document.createElement('option'); o.value = card.cat; o.textContent = catLabel(card.cat); catSel.appendChild(o); }
+        catSel.value = card.cat;
+      }
       exInput.value = card.ex || '';
       exEsInput.value = card.exEs || '';
     }
@@ -2077,7 +3035,7 @@ function openCardModal(cardId){
     title.textContent = 'Crear Tarjeta';
     enInput.value = '';
     esInput.value = '';
-    if(catSel) catSel.value = allCats()[0] || 'Casual';
+    if(catSel) catSel.value = allCats()[0] || 'general';
     exInput.value = '';
     exEsInput.value = '';
   }
@@ -2197,7 +3155,7 @@ function renderMyCardsHome(){
       '<div class="myCardEn">' + escapeHtml(w.en) + '</div>' +
       '<div class="myCardEs">' + escapeHtml(w.es) + '</div>' +
       '<div class="myCardMeta">' +
-        '<span class="myCardCat">' + escapeHtml(w.cat || 'Personalizada') + '</span>' +
+        '<span class="myCardCat">' + escapeHtml(w.cat ? catLabel(w.cat) : 'Personalizada') + '</span>' +
         exHtml +
       '</div>';
 
@@ -2290,7 +3248,7 @@ function validateImportedCard(raw){
 }
 // Existing category (case-insensitive) or a new custom label; empty → the first category.
 function resolveImportCategory(name){
-  if(!name) return allCats()[0] || 'Casual';
+  if(!name) return allCats()[0] || 'general';
   const found = allCats().find(c=> c.toLowerCase() === name.toLowerCase());
   if(found) return found;
   customCats.push(name);
@@ -2411,10 +3369,65 @@ document.addEventListener('keydown', (e)=>{
   const ov = document.getElementById('cardModalOverlay');
   if(ov && ov.style.display === 'flex') closeCardModal();
 });
+// ===== Scroll: botón "subir" y reinicio al abrir/cambiar contenido =====
+function addScrollTopBtn(scroller, host){
+  if(!scroller || scroller.querySelector(':scope > .scrollTopBtn')) return;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'scrollTopBtn'; b.setAttribute('aria-label', 'Volver arriba'); b.title = 'Volver arriba'; b.textContent = '↑';
+  (host || scroller).appendChild(b);
+  const upd = () => b.classList.toggle('show', scroller.scrollTop > 220);
+  scroller.addEventListener('scroll', upd, {passive:true});
+  b.onclick = () => { try{ scroller.scrollTo({top:0, behavior:'smooth'}); }catch(e){ scroller.scrollTop = 0; } };
+  upd();
+}
+/* Escritorio: la rueda del ratón desplaza el panel activo aunque el puntero esté fuera de la columna central */
+// Desplazamiento suave (inercia): acumula el destino y se acerca a él en cada fotograma
+const _smoothScroll = new WeakMap();
+function smoothWheelScroll(el, dy){
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const max = Math.max(0, el.scrollHeight - el.clientHeight);
+  let st = _smoothScroll.get(el);
+  if(!st){ st = {target: el.scrollTop, raf: 0}; _smoothScroll.set(el, st); }
+  if(!st.raf) st.target = el.scrollTop;                 // sin animación en curso: parte de la posición real
+  st.target = Math.max(0, Math.min(max, st.target + Math.max(-240, Math.min(240, dy))));
+  if(reduce){ el.scrollTop = st.target; return; }
+  if(st.raf) return;
+  const step = ()=>{
+    const diff = st.target - el.scrollTop;
+    if(Math.abs(diff) < 1){ el.scrollTop = st.target; st.raf = 0; return; }
+    let d = diff * 0.16; if(Math.abs(d) < 1) d = diff > 0 ? 1 : -1;   // scrollTop se redondea a px enteros
+    el.scrollTop += d;
+    st.raf = requestAnimationFrame(step);
+  };
+  st.raf = requestAnimationFrame(step);
+}
+(function(){
+  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView'];
+  document.addEventListener('wheel', function(e){
+    try{
+      if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
+      const t=e.target;
+      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, textarea, select')) return;
+      for(const id of IDS){
+        const el=document.getElementById(id);
+        if(!el || !el.offsetParent) continue;
+        if(el.contains(t)) return;                    // ya está dentro: scroll nativo
+        const k = e.deltaMode===1 ? 16 : (e.deltaMode===2 ? el.clientHeight : 1);
+        smoothWheelScroll(el, e.deltaY*k);
+        e.preventDefault();
+        return;
+      }
+    }catch(_){}
+  }, {passive:false});
+})();
+
+function scrollTopNow(id){ try{ const el = typeof id === 'string' ? document.getElementById(id) : id; if(el) el.scrollTo(0,0); }catch(e){} }
 document.getElementById('openTableBtn').onclick = ()=>{
   document.getElementById('progressView').style.display = 'none';
   document.getElementById('tableView').style.display = '';
   renderTable();
+  scrollTopNow('tableView');
+  addScrollTopBtn(document.getElementById('tableView'));
 };
 document.getElementById('backFromTableBtn').onclick = ()=>{
   document.getElementById('tableView').style.display = 'none';
@@ -2532,7 +3545,7 @@ function renderProfileThemeGrid(){
 }
 
 function render(rebuildNav){
-  if(rebuildNav){ buildBottomNav(); buildCategoryDropdown(); }
+  if(rebuildNav){ buildBottomNav(); updateCatSelector(); }
   order = [];
   idx = 0;
   if(view === "learn"){ renderCardsSubView(); }
@@ -2612,8 +3625,8 @@ function openTermsModal(){
   if(!ov) return;
   _termsOpener = document.getElementById('settingsBtn');
   ov.style.display = 'flex';
-  const box = ov.querySelector('.legalModal');
-  if(box) box.scrollTop = 0;
+  const box = ov.querySelector('.legalContent');
+  if(box){ box.scrollTop = 0; const lm = ov.querySelector('.legalModal'); if(lm) lm.scrollTop = 0; addScrollTopBtn(box); }
   const closeBtn = document.getElementById('termsModalClose');
   if(closeBtn) closeBtn.focus();
 }
@@ -2671,6 +3684,12 @@ document.getElementById('speakFrontSlow').onclick = (e)=>{
   speak(document.getElementById('frontText').textContent, 'en-US', 0.6);
 };
 
+// Repaso: botones de audio (antes no hacían nada)
+[['reviewSpeakFront','reviewFrontText','en-US'],['reviewSpeakFrontSlow','reviewFrontText','en-US',0.6],['reviewSpeakBack','reviewBackText','es-ES']].forEach(([b,t,l,r])=>{
+  const el = document.getElementById(b);
+  if(el) el.onclick = (e)=>{ e.stopPropagation(); speak(document.getElementById(t).textContent, l, r); };
+});
+
 // --- Sound effects (Web Audio API, no audio files) and haptic feedback ---
 let sfxEnabled = true;
 try{ sfxEnabled = localStorage.getItem('vocabri_sfx') !== '0'; }catch(e){}
@@ -2723,6 +3742,91 @@ document.getElementById('sfxToggleBtn').onclick = ()=>{
   if(sfxEnabled){ playSfx('correct'); haptic(); }
 };
 updateSfxToggleUi();
+// ---- Avisos flotantes reutilizables (modo ligero, estrella en GitHub) ----
+let _vbPromptEl = null;
+function vbPrompt(o){
+  if(_vbPromptEl) return false;                                  // solo uno a la vez
+  const el = document.createElement('div');
+  el.className = 'vbPrompt'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-live', 'polite');
+  el.innerHTML = '<div class="vbpIcon" aria-hidden="true"></div><div class="vbpBody"><div class="vbpTitle"></div><div class="vbpText"></div><div class="vbpBtns"></div></div>';
+  el.querySelector('.vbpIcon').textContent = o.icon || '';
+  el.querySelector('.vbpTitle').textContent = o.title || '';
+  el.querySelector('.vbpText').textContent = o.text || '';
+  let timer = 0;
+  const close = () => {
+    clearTimeout(timer);
+    el.classList.remove('on');
+    setTimeout(() => { el.remove(); if(_vbPromptEl === el) _vbPromptEl = null; }, 260);
+  };
+  (o.buttons || []).forEach(bd => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'vbpBtn' + (bd.primary ? ' primary' : '') + (bd.quiet ? ' quiet' : '');
+    b.textContent = bd.label;
+    b.onclick = () => { close(); if(bd.onClick) bd.onClick(); };
+    el.querySelector('.vbpBtns').appendChild(b);
+  });
+  document.body.appendChild(el);
+  _vbPromptEl = el;
+  requestAnimationFrame(() => el.classList.add('on'));
+  if(o.autoMs) timer = setTimeout(close, o.autoMs);
+  return true;
+}
+
+// ---- Estrella en GitHub ----
+const REPO_URL = 'https://github.com/Axolotl26/Vocabri';
+const STAR_KEY = 'vocabri_star';                                 // { s: 'done' | 'later' | 'never', t: ms, n: veces que se mostró }
+function starState(){ try{ return JSON.parse(localStorage.getItem(STAR_KEY) || 'null') || {}; }catch(e){ return {}; } }
+function starSave(o){ try{ localStorage.setItem(STAR_KEY, JSON.stringify(o)); }catch(e){} }
+function openRepo(){
+  window.open(REPO_URL, '_blank', 'noopener,noreferrer');
+  starSave({ s: 'done', t: Date.now(), n: starState().n || 0 }); // ya fue al repositorio: no se vuelve a pedir
+}
+// Botón ⭐ del encabezado (junto a Novedades): despliega un panel con la info y el enlace al repositorio.
+{
+  const sBtnStar = document.getElementById('starBtn'), sPanelStar = document.getElementById('starPanel');
+  const closeStar = () => { sPanelStar.hidden = true; sBtnStar.setAttribute('aria-expanded', 'false'); };
+  sBtnStar.onclick = () => {
+    const opening = sPanelStar.hidden;
+    sPanelStar.hidden = !opening;
+    sBtnStar.setAttribute('aria-expanded', String(opening));
+    if(opening){
+      sPanelStar.scrollTo(0, 0);
+      document.getElementById('starVersion').textContent = APP_VERSION;
+      const sp = document.getElementById('settingsPanel'), np = document.getElementById('newsPanel');
+      if(sp) sp.hidden = true; if(np) np.hidden = true;           // un solo desplegable abierto a la vez
+    }
+  };
+  document.getElementById('starOpenBtn').onclick = () => { openRepo(); closeStar(); };
+  document.getElementById('starCloseBtn').onclick = closeStar;
+  ['starRepoLink', 'starIssuesLink'].forEach(id => document.getElementById(id).addEventListener('click', () => starSave({ s: 'done', t: Date.now(), n: starState().n || 0 })));
+  // fase de captura: así también se cierra al tocar Novedades o Ajustes (sus botones detienen la propagación)
+  document.addEventListener('click', e => {
+    if(sPanelStar.hidden) return;
+    if(sPanelStar.contains(e.target) || sBtnStar.contains(e.target)) return;
+    closeStar();
+  }, true);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && !sPanelStar.hidden){ closeStar(); sBtnStar.focus(); } });
+}
+// Aviso amable: una sola vez por sesión, tras haber avanzado (3 secciones o más), máx. 2 veces y con 14 días de margen.
+function maybeAskStar(){
+  const st = starState();
+  if(st.s === 'done' || st.s === 'never' || (st.n || 0) >= 2) return;
+  if(st.s === 'later' && Date.now() - (st.t || 0) < 14 * 864e5) return;
+  let passed = 0;
+  try{ passed = Object.values(unlockedStage).reduce((a, b) => a + (+b || 0), 0); }catch(e){}
+  if(passed < 3) return;
+  try{ if(sessionStorage.getItem('vb_star_asked')) return; }catch(e){}
+  const shown = vbPrompt({
+    icon: '⭐', title: '¿Te está gustando Vocabri?',
+    text: 'Es un proyecto de código abierto hecho por un estudiante. Si te sirve, una estrella en GitHub ayuda muchísimo a que más gente lo encuentre.',
+    buttons: [
+      { label: '⭐ Dar una estrella', primary: true, onClick: openRepo },
+      { label: 'Ahora no', onClick: () => starSave({ s: 'later', t: Date.now(), n: (st.n || 0) + 1 }) },
+      { label: 'No mostrar más', quiet: true, onClick: () => starSave({ s: 'never', t: Date.now(), n: (st.n || 0) + 1 }) }
+    ]
+  });
+  if(shown){ try{ sessionStorage.setItem('vb_star_asked', '1'); }catch(e){} }
+}
 
 // Step 1: only "Mostrar respuesta". Step 2 (card flipped): "¿Qué tan bien la sabías?" + 3 buttons.
 const FLIP_COACH_KEY = 'vocabri_flip_coach_done';
@@ -2814,9 +3918,9 @@ function refreshStageProgressText(){
 function rateAndAdvance(level){
   if(!curKey) return;
   haptic();
-  rateCard(curKey, level);
+  const rated = rateCard(curKey, level);
   showMascotToast(level >= 2 ? 'happy' : 'thinking');
-  if(level >= 2) awardXp(10);
+  if(level >= 2 && rated && rated.applied) awardXp(10);   // XP solo si la nota cuenta (tarjeta nueva o vencida): no se puede farmear repitiendo
   refreshStageProgressText();
   const stageJustCompleted = (level >= 2 && studyMode === 'lesson') ? checkStageCompletion() : false;
   if(!stageJustCompleted) afterRate();
@@ -2829,6 +3933,7 @@ document.getElementById('stageCompleteBtn').onclick = ()=>{
   pendingNextStage = null;
   showMap();
   dismissTopModal();
+  setTimeout(maybeAskStar, 700);
 };
 document.getElementById('backToMapBtn').onclick = ()=> backFromLesson();
 function showCooldownModal(){
@@ -3023,6 +4128,38 @@ function pickDistractors(correctEs, count){
   }
   return out;
 }
+// Distractores del examen: misma categoría, longitud y nº de palabras parecidos; sin sinónimos/variantes de la respuesta
+// y sin traducciones de otras preguntas del mismo examen (no regalan pistas).
+function examDistractors(it, col, count, avoid){
+  const lang = col === 1 ? 'es' : 'en';
+  const correct = String(it[col]);
+  const cn = normalizeForCompare(correct, lang);
+  const variants = new Set(writtenVariants(correct, lang).map(v => v.norm));
+  const len = correct.length, words = correct.split(/\s+/).length;
+  const pre = [];
+  const oth = 1 - col, othLang = oth === 1 ? 'es' : 'en', promptN = normalizeForCompare(String(it[oth] || ''), othLang);
+  itemsFor('Todas').forEach(o=>{
+    if(o[3] === it[3] || !o[col]) return;
+    // Misma frase de partida (p. ej. dos formas de decir «Cuidado») = otra respuesta válida, no un distractor
+    if(promptN && o[oth] && normalizeForCompare(String(o[oth]), othLang) === promptN) return;
+    const t = String(o[col]);
+    const sc = (o[2] === it[2] ? 2 : 0) + (1 - Math.min(1, Math.abs(t.length - len) / Math.max(len, t.length, 1))) * 2 +
+               (t.split(/\s+/).length === words ? 0.7 : 0) + Math.random() * 0.8;
+    pre.push({t, sc});
+  });
+  pre.sort((a,b)=> b.sc - a.sc);
+  const out = [], seen = new Set([cn]);
+  for(const c of pre.slice(0, 80)){
+    if(out.length >= Math.max(count, 3) + 3) break;
+    const n = normalizeForCompare(c.t, lang);
+    if(!n || seen.has(n) || variants.has(n) || (avoid && avoid.has(n))) continue;
+    if(n.indexOf(cn) >= 0 || cn.indexOf(n) >= 0) continue;   // "Gracias" / "Muchas gracias"
+    seen.add(n); out.push(c.t);
+  }
+  const picked = shuffledCopy(out).slice(0, count);
+  if(picked.length < count) pickDistractors(correct, count - picked.length).forEach(x => { if(picked.indexOf(x) < 0 && x !== correct) picked.push(x); });
+  return picked;
+}
 function shuffledCopy(arr){
   const a = arr.slice();
   for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; }
@@ -3088,7 +4225,9 @@ function renderExamLives(animate){
   if(animate){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
 }
 
-function startExam(cat, stageIdx){
+function startExam(cat, stageIdx, opts){
+  opts = opts || {};
+  const prio = new Set(opts.prioritize || []);
   const pool = examItemsFor(cat, stageIdx);
   if(!pool.length) return;
   stopExamRecognition();
@@ -3111,6 +4250,9 @@ function startExam(cat, stageIdx){
   }
   const used = speakItems.concat(dictationItems);
   const rest = shuffledPool.filter(it=> used.indexOf(it) < 0);
+  // Las tarjetas que más te cuestan (falladas en el repaso o en el intento anterior) entran primero.
+  const weak = it => (prio.has(it[3]) ? 2 : 0) + ((readStored(it[3]).lapses || 0) > 0 ? 1 : 0);
+  rest.sort((a,b)=> weak(b) - weak(a));
   const source = rest.length ? rest : shuffledPool;
   const needed = EXAM_QUESTIONS - used.length;
   // Slots that can't be filled (no microphone / no speech synthesis / tiny pool) become multiple-choice and writing.
@@ -3119,13 +4261,29 @@ function startExam(cat, stageIdx){
   const questions = [];
   speakItems.forEach(it=> questions.push({it, mode:'speak'}));
   dictationItems.forEach(it=> questions.push({it, mode:'dictation'}));
-  for(let i=0;i<needed;i++) questions.push({it: source[i % source.length], mode: i < mcCount ? 'mc' : 'write'});
+  // Dirección: ~60 % de las de opción múltiple EN→ES; en las escritas, la mayoría ES→EN (producir en inglés es lo más difícil)
+  const mcEn2Es = Math.ceil(mcCount * 0.6);
+  for(let i=0;i<needed;i++){
+    const it = source[i % source.length];
+    if(i < mcCount) questions.push({it, mode:'mc', dir: i < mcEn2Es ? 'en2es' : 'es2en'});
+    else questions.push({it, mode:'write', dir: (i - mcCount) === 0 ? 'en2es' : 'es2en'});
+  }
+  const shuffled = shuffledCopy(questions);
+  // Si una tarjeta aparece dos veces, la pregunta de producción va antes que la de opción múltiple (que regala la respuesta).
+  for(let i=0;i<shuffled.length;i++) for(let j=i+1;j<shuffled.length;j++){
+    if(shuffled[i].it[3] === shuffled[j].it[3] && shuffled[i].mode === 'mc' && shuffled[j].mode !== 'mc'){
+      const t = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = t;
+    }
+  }
+  const avoid = {es:new Set(), en:new Set()};
+  shuffled.forEach(q=>{ avoid.es.add(normalizeForCompare(String(q.it[1]), 'es')); avoid.en.add(normalizeForCompare(String(q.it[0]), 'en')); });
   examState = {
-    cat, stageIdx, questions: shuffledCopy(questions),
+    cat, stageIdx, questions: shuffled, avoid, wrong:[],
     idx:0, score:0, lives:EXAM_LIVES, answered:false, failed:false
   };
   currentCat = cat; setCurrentStage(cat, stageIdx);
   lessonHost = 'learn';
+  disarmExamBack();
   document.getElementById('examFailOverlay').style.display = 'none';
   document.getElementById('cardsView').style.display = 'none';
   document.getElementById('myCardsView').style.display = 'none';
@@ -3134,6 +4292,7 @@ function startExam(cat, stageIdx){
   renderExamQuestion();
 }
 function renderExamQuestion(){
+  scrollTopNow('examView');
   stopExamRecognition();
   hideExamMascot();
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
@@ -3142,10 +4301,11 @@ function renderExamQuestion(){
   document.getElementById('examProgressText').textContent = 'Pregunta ' + (examState.idx+1) + ' de ' + examState.questions.length;
   document.getElementById('examProgBarFill').style.width = Math.round((examState.idx/examState.questions.length)*100) + '%';
   // Dictation never shows the English text: the player has to listen.
-  document.getElementById('examPrompt').textContent = (q.mode === 'dictation') ? '🎧 ¿Qué dice?' : q.it[0];
+  const es2en = (q.dir === 'es2en');
+  document.getElementById('examPrompt').textContent = (q.mode === 'dictation') ? '🎧 ¿Qué dice?' : ((q.mode === 'mc' || q.mode === 'write') && es2en ? q.it[1] : q.it[0]);
   document.getElementById('examInstruction').textContent =
-    q.mode === 'mc' ? 'Elige la traducción correcta' :
-    q.mode === 'write' ? 'Escribe la traducción en español' :
+    q.mode === 'mc' ? (es2en ? 'Elige la traducción en inglés' : 'Elige la traducción correcta') :
+    q.mode === 'write' ? (es2en ? 'Escribe la traducción en inglés' : 'Escribe la traducción en español') :
     q.mode === 'dictation' ? 'Escucha y escribe lo que oigas, en inglés' :
     'Di esta frase en voz alta, en inglés';
   showExamInputHint('');
@@ -3164,16 +4324,24 @@ function renderExamQuestion(){
   dictBox.style.display = 'none';
   if(q.mode === 'mc'){
     mcBox.style.display = '';
-    const options = shuffledCopy(pickDistractors(q.it[1], 3).concat([q.it[1]]));
+    const col = es2en ? 0 : 1;
+    const right = q.it[col];
+    const options = shuffledCopy(examDistractors(q.it, col, 3, examState.avoid[es2en ? 'en' : 'es']).concat([right]));
     options.forEach(opt=>{
       const b = document.createElement('button');
       b.className = 'examMcBtn'; b.type = 'button'; b.textContent = opt;
-      b.onclick = ()=> answerMc(b, opt, q.it[1]);
+      b.onclick = ()=> answerMc(b, opt, right);
       mcBox.appendChild(b);
     });
   } else if(q.mode === 'write'){
     writeBox.style.display = '';
-    document.getElementById('examWriteInput').value = '';
+    const wi = document.getElementById('examWriteInput');
+    wi.value = '';
+    wi.placeholder = es2en ? 'Escribe la traducción en inglés...' : 'Escribe la traducción...';
+    wi.lang = es2en ? 'en' : 'es';
+    wi.setAttribute('autocapitalize', es2en ? 'off' : 'sentences');
+    wi.setAttribute('autocorrect', es2en ? 'off' : 'on');
+    wi.spellcheck = !es2en;
   } else if(q.mode === 'dictation'){
     dictBox.style.display = '';
     document.getElementById('examDictInput').value = '';
@@ -3197,15 +4365,25 @@ function showExamFeedback(ok, failText, okNote){
   const next = document.getElementById('examNextBtn');
   next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
   next.style.display = '';
+  try{ setTimeout(()=> next.scrollIntoView({behavior:'smooth', block:'nearest'}), 120); }catch(e){}
 }
 // Single place where an answer is scored: sound, score, lives and feedback.
 function resolveExamAnswer(ok, failText, okNote){
   if(!examState || examState.answered) return;
   examState.answered = true;
+  const cq = examState.questions[examState.idx];
+  // El examen alimenta el Repaso: un fallo adelanta la tarjeta; un acierto producido (escribir/dictar/hablar) cuenta como repaso.
+  try{
+    if(cq && cq.it && cq.it[3]){
+      if(!ok) srsGrade(cq.it[3], 1);
+      else if(cq.mode !== 'mc') srsGrade(cq.it[3], 3);
+    }
+  }catch(e){}
   if(ok){
     examState.score++;
     playSfx('correct');
   } else {
+    if(cq && cq.it && !examState.wrong.some(w => w.it[3] === cq.it[3])) examState.wrong.push({it:cq.it, mode:cq.mode});
     playSfx('wrong');
     examState.lives = Math.max(0, examState.lives - 1);
     if(examState.lives <= 0) examState.failed = true;
@@ -3230,10 +4408,19 @@ document.getElementById('examCheckBtn').onclick = ()=>{
   if(!input.value.trim()){ showExamInputHint('Escribe tu respuesta antes de verificar.'); input.focus(); return; }
   haptic();
   const q = examState.questions[examState.idx];
-  const r = evaluateWrittenAnswer(input.value, q.it[1], 'es');
+  const toEn = (q.dir === 'es2en');
+  const target = toEn ? q.it[0] : q.it[1];
+  let r = evaluateWrittenAnswer(input.value, target, toEn ? 'en' : 'es');
+  if(!r.ok){
+    // Varias frases pueden compartir la misma traducción: se acepta cualquiera de ellas
+    const lang = toEn ? 'en' : 'es', fromCol = toEn ? 1 : 0, toCol = toEn ? 0 : 1;
+    const pn = normalizeForCompare(String(q.it[fromCol]), toEn ? 'es' : 'en');
+    const alt = itemsFor('Todas').filter(o=> o[3] !== q.it[3] && o[fromCol] && o[toCol] && normalizeForCompare(String(o[fromCol]), toEn ? 'es' : 'en') === pn);
+    for(const o of alt){ const r2 = evaluateWrittenAnswer(input.value, String(o[toCol]), lang); if(r2.ok){ r = r2; break; } }
+  }
   document.getElementById('examWriteBox').style.display = 'none';
   showExamInputHint('');
-  resolveExamAnswer(r.ok, 'La traducción correcta era: ' + q.it[1] + closeCallSuffix(r), nearMissNote(r));
+  resolveExamAnswer(r.ok, 'La traducción correcta era: ' + target + closeCallSuffix(r), nearMissNote(r));
 };
 document.getElementById('examWriteInput').addEventListener('keydown', (e)=>{
   if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('examCheckBtn').click(); }
@@ -3362,26 +4549,31 @@ function startExamListening(){
   }
 }
 document.getElementById('examMicBtn').onclick = startExamListening;
+// "No puedo hablar ahora": la pregunta de pronunciación se cambia por una escrita, sin perder vida.
 document.getElementById('examSkipBtn').onclick = ()=>{
   if(!examState || examState.answered) return;
   const q = examState.questions[examState.idx];
+  if(!q || q.mode !== 'speak') return;
   haptic();
   stopExamRecognition();
-  document.getElementById('examSpeakBox').style.display = 'none';
-  resolveExamAnswer(false, 'Pregunta omitida. La frase era: «' + q.it[0] + '»');
+  q.mode = 'write'; q.dir = 'es2en';
+  renderExamQuestion();
+  showExamInputHint('Cambiamos la pregunta: sin penalización.');
 };
 
 // --- Flow: next question / finish / out of lives ---
 function showExamFail(){
   stopExamRecognition();
   setMascotIn(document.getElementById('examFailEmoji'), 'sad');
-  document.getElementById('examFailOverlay').style.display = 'flex';
+  document.getElementById('examFailWrong').innerHTML = examState ? examWrongListHtml(examState.wrong, 5) : '';
+  showModalFromTop('examFailOverlay');
 }
 document.getElementById('examRetryBtn').onclick = ()=>{
   document.getElementById('examFailOverlay').style.display = 'none';
   const cat = examState ? examState.cat : currentCat;
   const stageIdx = examState ? examState.stageIdx : getCurrentStage(cat);
-  startExam(cat, stageIdx);
+  const prioritize = examState ? examState.wrong.map(w => w.it[3]) : [];
+  startExam(cat, stageIdx, {prioritize});
 };
 document.getElementById('examFailBackBtn').onclick = ()=>{
   document.getElementById('examFailOverlay').style.display = 'none';
@@ -3395,23 +4587,54 @@ document.getElementById('examNextBtn').onclick = ()=>{
   if(examState.failed){ showExamFail(); return; }
   examState.idx++;
   if(examState.idx >= examState.questions.length){
-    const score = examState.score, total = examState.questions.length;
+    const score = examState.score, total = examState.questions.length, wrong = examState.wrong.slice();
     stopExamRecognition();
     examState = null;
     document.getElementById('examView').style.display = 'none';
     document.getElementById('cardsView').style.display = '';
     cardsSubView = 'map';
-    finishExam(score, total);
+    finishExam(score, total, wrong);
   } else {
     renderExamQuestion();
   }
 };
+// Salir a mitad de examen pide confirmación (segundo toque) para no perder el progreso por accidente.
+let examBackTimer = null;
+function disarmExamBack(){
+  clearTimeout(examBackTimer); examBackTimer = null;
+  const b = document.getElementById('examBackBtn'); if(b) b.textContent = '← Mapa';
+}
 document.getElementById('examBackBtn').onclick = ()=>{
+  const started = examState && (examState.idx > 0 || examState.answered);
+  if(started && !examBackTimer){
+    document.getElementById('examBackBtn').textContent = 'Toca otra vez para salir (se pierde el examen)';
+    examBackTimer = setTimeout(disarmExamBack, 3500);
+    return;
+  }
+  disarmExamBack();
   stopExamRecognition();
   examState = null;
   document.getElementById('examView').style.display = 'none';
   showMap();
 };
+
+document.getElementById('examResultBtn').onclick = ()=> closeExamResults(false);
+document.getElementById('examResultReviewBtn').onclick = ()=> closeExamResults(true);
+// Atajos del examen: 1–4 elige opción, Enter/Espacio pasa a la siguiente pregunta
+document.addEventListener('keydown', e => {
+  const v = document.getElementById('examView');
+  if(!v || v.style.display === 'none' || !examState) return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target && e.target.tagName;
+  if(t === 'INPUT' || t === 'TEXTAREA') return;
+  const next = document.getElementById('examNextBtn');
+  if(next.style.display !== 'none' && (e.key === 'Enter' || e.key === ' ') && t !== 'BUTTON'){ e.preventDefault(); next.click(); return; }
+  if(!examState.answered && '1234'.includes(e.key) && e.key.length === 1){
+    const btns = document.querySelectorAll('#examMcOptions .examMcBtn');
+    const b = btns[+e.key - 1];
+    if(b && !b.disabled){ e.preventDefault(); b.click(); }
+  }
+});
 
 (function setupSwipe(){
   const cardEl = document.getElementById('card');
@@ -3463,23 +4686,82 @@ document.getElementById('shuffleBtn').onclick = ()=>{
 };
 document.getElementById('search').oninput = renderTable;
 
-// Sticker paths for navbar icons (fresh stickers, correct folders)
-const NAV_STICKERS = {
-  learn: './assets/stickers/ajolotes_emociones/detective_investigando.png',           // 🔍 Investigando/Aprendiendo
-  review: './assets/stickers/ajolotes_emociones/sonriendo_sentado.png',                // 😊 Repaso tranquilo
-  mycards: './assets/stickers/ajolotes_emociones/chef_probando_la_receta.png',         // 👨‍🍳 Colección de recetas
-  translator: './assets/stickers/ajolotes_de_colores/ajolote_amarillo_flotando_sonriente.png', // 🌊 Fluyendo entre idiomas
-  progress: './assets/stickers/ajolotes_emociones/tranquilo_meditando.png',            // 🧘 Progreso/calma
-  profile: './assets/stickers/ajolotes_emociones/enamorado_ojos_de_corazon.png'        // 😍 Perfil/identidad
+// Iconos de la barra inferior (estilo cartoon, como las fichas del mapa): relleno de color, contorno grueso,
+// "borde" inferior más oscuro con volumen y brillo. Colores por pestaña (--c relleno, --e contorno/borde).
+const _ni = (c, e, shapes, extra) =>
+  '<svg viewBox="0 0 28 28" width="30" height="30" aria-hidden="true" focusable="false" style="--c:' + c + ';--e:' + e + '">' +
+  '<g class="niEd" transform="translate(0 2)">' + shapes + '</g><g class="niMn">' + shapes + '</g>' + (extra || '') + '</svg>';
+const _niW = 'fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"';
+const NAV_ICONS = {
+  // brújula: aprender / explorar
+  learn: _ni('#38BDF8', '#0B6190', '<circle cx="14" cy="13.5" r="10.5"/>',
+    '<polygon points="18.8,8.7 15.6,15.1 9.2,18.3 12.4,11.9" fill="#fff" stroke="#0B6190" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<circle cx="14" cy="13.5" r="1.5" fill="#0B6190"/><path d="M6.8 9.2A8.6 8.6 0 0 1 11.6 5" ' + _niW + ' stroke-opacity=".6" stroke-width="2"/>'),
+  // flechas circulares: repasar
+  review: _ni('#4ADE80', '#15733B',
+    '<path class="niLn" d="M5.2 13.6A8.8 8.8 0 0 1 20.6 7.6"/><path class="niLn" d="M22.8 14.4A8.8 8.8 0 0 1 7.4 20.4"/>' +
+    '<polygon class="niFl" points="17,3.8 24.2,5.6 20.8,12.2"/><polygon class="niFl" points="11,24.2 3.8,22.4 7.2,15.8"/>',
+    '<path d="M7.8 10.2A7 7 0 0 1 12.6 6.8" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>'),
+  // cartas apiladas: mis tarjetas
+  mycards: _ni('#F472B6', '#9B2166',
+    '<rect x="3" y="7.5" width="14" height="17" rx="3.4" transform="rotate(-11 10 16)"/><rect x="9" y="3.5" width="15.5" height="20" rx="3.4"/>',
+    '<path d="M12.6 10h8.2M12.6 14.2h8.2M12.6 18.4h4.6" ' + _niW + ' stroke-width="2.2"/>'),
+  // globo de diálogo con A: traductor
+  translator: _ni('#FBBF24', '#9A5A07',
+    '<path d="M6 4h16a3.5 3.5 0 0 1 3.5 3.5v8.5A3.5 3.5 0 0 1 22 19.5h-7.2L8.6 25v-5.5H6A3.5 3.5 0 0 1 2.5 16V7.5A3.5 3.5 0 0 1 6 4z"/>',
+    '<path d="M9.4 15.4 14 6.8l4.6 8.6M10.9 12.6h6.2" ' + _niW + ' stroke-width="2.4"/>'),
+  // barras ascendentes: progreso
+  progress: _ni('#A78BFA', '#53359F',
+    '<rect x="3" y="14.5" width="6" height="9.5" rx="2.2"/><rect x="11" y="9" width="6" height="15" rx="2.2"/><rect x="19" y="3.5" width="6" height="20.5" rx="2.2"/>',
+    '<path d="M5.2 17.8v3.4M13.2 12.2v6.4M21.2 6.8v9" ' + _niW + ' stroke-opacity=".55" stroke-width="1.7"/>'),
+  // persona: perfil
+  profile: _ni('#FB7185', '#9B2140',
+    '<circle cx="14" cy="8.8" r="5.6"/><path d="M3.6 24.2c0-5.8 4.6-9 10.4-9s10.4 3.2 10.4 9z"/>',
+    '<path d="M11 6.4a3.6 3.6 0 0 1 2.4-1.6M7 20.6a6.2 6.2 0 0 1 2.4-2.4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>')
 };
 
+// Icono cartoon (el mismo de la barra inferior) en el título de cada pestaña
+[['progressView','progress','.viewHeader h2'],['translatorView','translator','.viewHeader h2'],['myCardsView','mycards','.myCardsHeader h2']].forEach(([v,k,sel])=>{
+  const h = document.querySelector('#'+v+' '+sel);
+  if(h && !h.querySelector('.tabIcon')){ const i = document.createElement('span'); i.className = 'tabIcon'; i.setAttribute('aria-hidden','true'); i.innerHTML = NAV_ICONS[k]; h.insertBefore(i, h.firstChild); }
+});
+
+// ===== Pantalla completa (escritorio y móviles que lo permiten) =====
+{
+  const fsBtn = document.getElementById('fsBtn');
+  const root = document.documentElement;
+  const reqFs = root.requestFullscreen || root.webkitRequestFullscreen;
+  const canFs = !!reqFs && (document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  let standalone = false;
+  try{ standalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true; }catch(e){}
+  if(fsBtn && canFs && !standalone){
+    fsBtn.hidden = false;
+    const isFs = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const sync = () => {
+      const on = isFs();
+      fsBtn.classList.toggle('isFs', on);
+      fsBtn.setAttribute('aria-pressed', String(on));
+      const t = on ? 'Salir de pantalla completa' : 'Pantalla completa';
+      fsBtn.setAttribute('aria-label', t); fsBtn.title = t;
+    };
+    fsBtn.onclick = () => {
+      try{
+        if(isFs()){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+        else { const p = reqFs.call(root); if(p && p.catch) p.catch(()=>{}); }
+      }catch(e){}
+    };
+    document.addEventListener('fullscreenchange', sync);
+    document.addEventListener('webkitfullscreenchange', sync);
+    sync();
+  }
+}
 const MAIN_NAV_ITEMS = [
-  {id:'learn', icon: NAV_STICKERS.learn, label:'Aprender'},
-  {id:'review', icon: NAV_STICKERS.review, label:'Repasar'},
-  {id:'mycards', icon: NAV_STICKERS.mycards, label:'Mis Tarjetas'},
-  {id:'translator', icon: NAV_STICKERS.translator, label:'Traductor'},
-  {id:'progress', icon: NAV_STICKERS.progress, label:'Progreso'},
-  {id:'profile', icon: NAV_STICKERS.profile, label:'Perfil'}
+  {id:'learn', icon: NAV_ICONS.learn, label:'Aprender'},
+  {id:'review', icon: NAV_ICONS.review, label:'Repasar'},
+  {id:'mycards', icon: NAV_ICONS.mycards, label:'Mis Tarjetas'},
+  {id:'translator', icon: NAV_ICONS.translator, label:'Traductor'},
+  {id:'progress', icon: NAV_ICONS.progress, label:'Progreso'},
+  {id:'profile', icon: NAV_ICONS.profile, label:'Perfil'}
 ];
 
 function switchView(v){
@@ -3498,7 +4780,7 @@ function switchView(v){
     document.getElementById('lessonView').style.display = 'none';
     document.getElementById('tableView').style.display = 'none';
     document.getElementById('examView').style.display = 'none';
-    document.getElementById('headerCatWrap').style.display = (v==='learn') ? '' : 'none';
+    // headerCatWrap removed - category selector moved to settings panel
 
     // 3) Estado interno + render
     view = v;
@@ -3632,17 +4914,143 @@ if(mq){
 const sBtn = document.getElementById('settingsBtn');
 const sPanel = document.getElementById('settingsPanel');
 function closeSettings(){ sPanel.hidden = true; sBtn.setAttribute('aria-expanded', 'false'); }
+
+function updateCatSelector(){
+  const current = currentCat;
+  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
+    b.classList.toggle('sel', b.dataset.cat === current);
+  });
+}
+
+function initCatSelector(){
+  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
+    b.onclick = ()=> selectFocusCategory(b.dataset.cat);
+  });
+}
+
 sBtn.onclick = (e)=>{
   e.stopPropagation();
   const opening = sPanel.hidden;
   sPanel.hidden = !opening;
   sBtn.setAttribute('aria-expanded', String(opening));
-  if (opening) sPanel.scrollTo(0, 0); // auto-scroll top
+  if (opening) {
+    sPanel.scrollTo(0, 0); // auto-scroll top
+    updateCatSelector(); // refresh category selector
+  }
 };
+
+initCatSelector(); // attach category selector handlers
+
+// News/Changelog panel
+const APP_VERSION = '1.1.4';
+const APP_CHANGELOG = [
+  { version: '1.1.4', date: '2026-11-03', title: 'Progreso por categoría, ejemplos y datos más sólidos', changes: [
+    'Nueva sección «Por categoría» en Progreso: barra de dominio, tarjetas dominadas y secciones completadas de cada categoría',
+    'Zonas con nombre y carteles en Viajes, Académico, Negocios y Pop & Gaming (Aeropuerto y Transporte, Reuniones, Series, Anime y Cine…)',
+    'Las 400 frases de esas categorías ahora traen un ejemplo de uso en inglés y español («Ver ejemplo»)',
+    'Corregido: Repaso, racha, estadísticas y tabla ahora cuentan también tu progreso en Viajes, Académico, Negocios y Pop',
+    'Tu progreso se guarda con identificadores estables por frase y se migra solo desde versiones anteriores, sin perder nada',
+    'Reemplazamos 18 frases repetidas por frases nuevas y corregimos varias traducciones poco naturales',
+    'Examen: si dos frases se traducen igual (por ejemplo «Watch out!» y «Look out!»), se acepta cualquiera y no aparecen como opciones falsas',
+    'Scroll con la rueda más suave y con inercia al mover el mouse fuera de la columna central (Perfil, Progreso y demás pestañas)',
+    'Resultado del examen: el ajolote ya no queda tapado al reabrir la ventana, y es más compacta en pantallas bajas',
+    'Las categorías de Mis Tarjetas se muestran con su nombre (General, Viajes…) y se quitó un título vacío en Perfil',
+    'Limpieza interna: carga de frases más ligera y documentación actualizada'
+  ]},
+  { version: '1.1.3', date: '2026-10-28', title: 'Mapa isométrico 2.5D', changes: [
+    'Nuevo logo animado del ajolote en el encabezado, con un encabezado más limpio (sin eslogan)',
+    'Repaso renovado: repetición espaciada más justa, con intervalos que se ajustan a cómo lo recuerdas, deshacer y resumen de sesión',
+    'Repasar una lección ya no borra tus intervalos, y adelantar un repaso ya no infla el progreso',
+    'Exámenes de 12 preguntas (opción múltiple, escritura, dictado y pronunciación) con 5 vidas, estrellas por nota y pantalla de resultados',
+    'Los errores del examen se envían al Repaso y hay un descanso con reloj de arena antes de repetirlo',
+    'Arreglada la tabla completa (las filas ya no se ven por encima del encabezado)',
+    'En escritorio, la rueda del mouse desplaza la pantalla desde cualquier punto',
+    'Arreglada la instalación como app en GitHub Pages (error 404)',
+    'Nuevo mapa con pilares isométricos, camino brillante y fichas 3D',
+    'Decoración con nubes, montañas e islotes con ajolotes',
+    'El mapa se adapta al ancho de la pantalla',
+    'Zonas con nombre en carteles de madera, separadas por puentes',
+    'Difuminado en los bordes que se funde con el tema',
+    'Más variedad de stickers en el mapa, según el tema de cada zona, sin tapar textos ni quedar ocultos',
+    'Nuevos íconos en la barra inferior, hechos a medida',
+    'Modo ligero: si el mapa va lento te lo proponemos, y puedes activarlo o quitarlo en Ajustes',
+    'El mapa ya no se reconstruye al volver a Aprender si nada cambió',
+    'Botones táctiles más grandes y mejor adaptación a móviles en horizontal',
+    '¿Te gusta Vocabri? Nuevo botón ⭐ en el encabezado para dar una estrella al repositorio de GitHub'
+  ]},
+  { version: '1.1.2', date: '2026-10-28', title: '5 Categorías maestras + Onboarding renovado', changes: [
+    'Nuevo sistema de 5 categorías: General, Viajes, Académico, Negocios, Pop/Gaming',
+    'Onboarding completo con selector de meta XP, nivel, enfoque y tema visual',
+    'Carga dinámica de frases desde JSON externo (phraseLoader.js)',
+    'Registro de categorías centralizado (categoriesRegistry.js)'
+  ]},
+  { version: '1.1.1', date: '2026-10-15', title: 'Correcciones y mejoras de estabilidad', changes: [
+    'Fix en phraseLoader: carga correcta de frases al iniciar',
+    'Sincronización del dropdown de categoría en header',
+    'Tema y onboarding persistentes entre sesiones',
+    'Metas diarias realistas y reinicio total funcional',
+    'Auto-scroll en mapa y ajolote por defecto'
+  ]},
+  { version: '1.1.0', date: '2026-10-02', title: 'Mapa de progreso + SRS + Exámenes', changes: [
+    'Mapa de etapas con nodos desbloqueables y exámenes',
+    'Sistema SRS (Repetición Espaciada) para repasar tarjetas',
+    'Exámenes por etapa con vidas y tipos de preguntas variados',
+    'Racha diaria, meta XP configurable, nivel de usuario'
+  ]},
+  { version: '1.0.0', date: '2026-09-18', title: 'Lanzamiento inicial', changes: [
+    'Tarjetas de vocabulario con volteo 3D',
+    'Práctica con calificación (Repasar/Bien/Fácil)',
+    'Estadísticas, racha, exportar/importar datos',
+    'PWA instalable con service worker'
+  ]}
+];
+
+const nBtn = document.getElementById('newsBtn');
+const nPanel = document.getElementById('newsPanel');
+function closeNews(){ nPanel.hidden = true; nBtn.setAttribute('aria-expanded', 'false'); }
+function populateNews(){
+  document.getElementById('newsCurrentVersion').innerHTML =
+    '<span class="newsVersionLabel">Versión actual</span><span class="newsVersionNumber">' + APP_VERSION + '</span>';
+  const changelogEl = document.getElementById('newsChangelog');
+  changelogEl.innerHTML = APP_CHANGELOG.map(entry => `
+    <div class="newsEntry">
+      <div class="newsEntryVersion">v${entry.version} <span class="newsEntryDate">${entry.date}</span></div>
+      <div class="newsEntryTitle">${entry.title}</div>
+      <ul class="newsEntryChanges">${entry.changes.map(c => '<li>' + c + '</li>').join('')}</ul>
+    </div>
+  `).join('');
+}
+nBtn.onclick = (e)=>{
+  e.stopPropagation();
+  const opening = nPanel.hidden;
+  nPanel.hidden = !opening;
+  nBtn.setAttribute('aria-expanded', String(opening));
+  if (opening) {
+    populateNews();
+    nPanel.scrollTo(0, 0);
+    addScrollTopBtn(nPanel);
+  }
+};
+document.getElementById('newsCloseBtn').onclick = closeNews;
+document.addEventListener('click', e=>{
+  if(nPanel.hidden) return;
+  const path = e.composedPath ? e.composedPath() : [];
+  const inside = path.length ? path.indexOf(nPanel) >= 0 : nPanel.contains(e.target);
+  if(!inside) closeNews();
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeNews(); });
 document.getElementById('themesBtn').onclick = ()=>{
   const box = document.getElementById('themesBox');
   box.hidden = !box.hidden;
 };
+
+document.getElementById('catSelectorBtn').onclick = ()=>{
+  const box = document.getElementById('catSelector');
+  const opening = box.hidden;
+  box.hidden = !opening;
+  if (opening) updateCatSelector();
+};
+
 document.addEventListener('click', e=>{
   if(sPanel.hidden) return;
   const path = e.composedPath ? e.composedPath() : [];
@@ -3767,12 +5175,12 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
   currentCat = masterCat;
   localStorage.setItem('ci_current_master_category', masterCat);
 
-  // Actualizar el label del dropdown inmediatamente
+  // Actualizar el label del selector de categorías inmediatamente
   let label = masterCat;
   if (window.VocabriCategories) {
     label = window.VocabriCategories.getCategoryShortLabel(masterCat);
   }
-  const labelEl = document.getElementById('catSelectLabel');
+  const labelEl = document.getElementById('catSelectorLabel');
   if (labelEl) labelEl.textContent = label;
 
   // Establecer el nodo inicial según el nivel
@@ -3784,8 +5192,8 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
   // Aplicar inmediatamente el nodo inicial para la sesión actual
   setUnlockedStage(currentCat, startNode);
 
-  // Actualizar el dropdown del header para reflejar la categoría elegida
-  buildCategoryDropdown();
+  // Actualizar el selector de categoría en el panel de ajustes
+  updateCatSelector();
 
   document.getElementById('onboardingView').style.display = 'none';
   switchView('learn');
@@ -3899,7 +5307,7 @@ document.getElementById('trSaveBtn').onclick = async ()=>{
   if(trSaved){ statusEl.textContent = 'Esta traducción ya está en Mis Tarjetas.'; return; }
   const en = trLastDir === 'en-es' ? trLastSource : trLastResult;
   const es = trLastDir === 'en-es' ? trLastResult : trLastSource;
-  const ok = await addWord(en, es, realCats[0]);
+  const ok = await addWord(en, es, 'general');
   if(ok){ trSaved = true; haptic(); }
   statusEl.textContent = ok ? '✅ Guardada en Mis Tarjetas.' : 'No se pudo guardar.';
   if(ok && view === 'mycards') renderMyCardsHome();
@@ -4608,13 +6016,13 @@ if (savedMasterCat && window.VocabriCategories && window.VocabriCategories.isVal
   if (window.VocabriCategories) {
     label = window.VocabriCategories.getCategoryShortLabel(savedMasterCat);
   }
-  document.getElementById('catSelectLabel').textContent = label;
+  // catSelectLabel removed - category selector moved to settings panel
 } else {
-  document.getElementById('catSelectLabel').textContent = currentCat;
+  // catSelectLabel removed - category selector moved to settings panel
 }
 
-buildCategoryDropdown();
-document.getElementById('headerCatWrap').style.display = (view==='learn') ? '' : 'none';
+updateCatSelector();
+// headerCatWrap removed - category selector moved to settings panel
 updateTrLabels();
 render(true);
 updateGameBar();
@@ -4653,7 +6061,7 @@ const REMINDER_TAG = 'vocabri-daily-reminder';          // periodicSync tag + no
 const REMINDER_STATE_CACHE = 'vocabri-state';            // same as sw.js
 const REMINDER_STATE_URL = './vocabri-reminder-state.json';
 const REMINDER_START_HOUR = 10, REMINDER_END_HOUR = 22;  // keep in sync with sw.js
-const REMINDER_ICON = './icons/icon-192.png';
+const REMINDER_ICON = './assets/origin-logo.png';
 const REMINDER_MESSAGES = [
   '🔥 ¡No pierdas tu racha en Vocabri! Completa tu lección de hoy.',
   '🎯 Tu meta diaria te está esperando en Vocabri. ¡Tú puedes!',
@@ -5005,13 +6413,14 @@ function mergeStageMaps(a, b){             // vocabri_unlocked_stage {category: 
   Object.keys(A).concat(Object.keys(B)).forEach(c=>{ out[c] = Math.max(Number(A[c]) || 0, Number(B[c]) || 0); });
   return JSON.stringify(out);
 }
-function mergeExamResult(a, b){            // vocabri_exam_*  {done, score, total, t}
+function mergeExamResult(a, b){            // vocabri_exam_*  {done, score, total, t, attempts}: gana la MEJOR nota
   const A = cloudParse(a, null), B = cloudParse(b, null);
   if(!A || typeof A !== 'object') return b;
   if(!B || typeof B !== 'object') return a;
-  const ta = Number(A.t) || 0, tb = Number(B.t) || 0;
-  if(ta !== tb) return ta > tb ? a : b;
-  return (Number(A.score) || 0) >= (Number(B.score) || 0) ? a : b;
+  const fa = Number(A.total) ? (Number(A.score) || 0) / Number(A.total) : 0;
+  const fb = Number(B.total) ? (Number(B.score) || 0) / Number(B.total) : 0;
+  const win = fa !== fb ? (fa > fb ? A : B) : ((Number(A.t) || 0) >= (Number(B.t) || 0) ? A : B);
+  return JSON.stringify(Object.assign({}, win, {attempts: Math.max(Number(A.attempts) || 0, Number(B.attempts) || 0), t: Math.max(Number(A.t) || 0, Number(B.t) || 0)}));
 }
 function mergeCustomWords(a, b){           // ci_custom_words: union (by id and by text), this device first
   const out = [], seenId = new Set(), seenText = new Set();

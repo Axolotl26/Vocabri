@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.2';
+const CACHE_VERSION = '1.1.4';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -20,12 +20,16 @@ const STATE_URL = './vocabri-reminder-state.json';
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './styles.css?v=1.1.2',
-  './app.js?v=1.1.2',
+  './styles.css?v=1.1.4',
+  './app.js?v=1.1.4',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
+  './categoriesRegistry.js',
+  './phraseLoader.js',
+  './config.js',
+  './base_de_datos_de_frases_vocabri.json',
+  './assets/origin-logo.png',
+  './assets/ajolote_logo.webp',
+  './assets/ajolote_logo.png',
   // mascot (exam stickers, welcome screen, header) — so they also show offline
   './assets/stickers/ajolotes_emociones/feliz_brazos_arriba.png',
   './assets/stickers/ajolotes_emociones/pensando_idea_o_duda.png',
@@ -163,8 +167,8 @@ async function checkAndNotify() {
   await self.registration.showNotification('Vocabri', {
     body: pickReminderBody(state, now),
     tag: REMINDER_TAG,
-    icon: './icons/icon-192.png',
-    badge: './icons/icon-192.png',
+    icon: './assets/origin-logo.png',
+    badge: './assets/origin-logo.png',
     lang: 'es',
     data: { url: './' }
   });
