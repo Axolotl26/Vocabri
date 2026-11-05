@@ -643,9 +643,6 @@ const DATA = {
 const realCats = Object.keys(DATA);
 const CAT_MODULE_SIZES = {'Casual': [15,20,15,20,30,25,30,25,20,15,30,25,30,25,30,20,25,25,30,25,20,25,25,25,25,25,25,25,25,25,25,25,25,30,25,25,20,25,25,25,25]};
 const CAT_MODULE_NAMES = {'Casual': ["Saludos y Despedidas","Cortesía y Social","Para cuando no entiendes","Información Personal","Situaciones Diarias","Viajes y Transporte","En el Restaurante","De Compras","Direcciones","El Tiempo y la Hora","En el Trabajo","Teléfono y Tecnología","Salud y Emergencias","Sentimientos y Estados de Ánimo","Expresando Opiniones y Gustos","Describiendo Personas","Relaciones y Vida Social","En Casa","En la Cocina y Comida","Hobbies y Tiempo Libre","Preguntas Frecuentes y Misceláneas","Dinero y Finanzas","Planes y Futuro","Hablando del Pasado","Trámites y Documentos","Phrasal Verbs y Expresiones Comunes","Discusiones y Malentendidos","Expresando Certeza y Duda","Deseos y Necesidades","Comparaciones y Cantidades","Eventos y Celebraciones","Describiendo Experiencias","Frases para la Calle y el Entorno","Modismos y Expresiones Idiomáticas","Educación y Aprendizaje","Motivación y Ánimo","Preguntas para Profundizar","Proverbios y Sabiduría Popular","Frases Avanzadas para Debatir","Expresiones para Situaciones Específicas","Despedidas y Cierre Final"]};
-// 'general' usa el contenido de DATA.Casual (ver phraseLoader.js): comparte sus zonas con nombre
-CAT_MODULE_SIZES.general = CAT_MODULE_SIZES.Casual;
-CAT_MODULE_NAMES.general = CAT_MODULE_NAMES.Casual;
 function hasNamedModules(cat){ return !!CAT_MODULE_SIZES[cat]; }
 let customCats = [];
 try{ customCats = JSON.parse(localStorage.getItem('ci_custom_cats')||'[]'); }catch(e){}
@@ -845,443 +842,6 @@ function isStageComplete(cat, stageIdx){
   return items.length > 0 && items.every(it=> (readStored(it[3]).lvl || 0) >= 1);
 }
 
-/* =====================================================================
-   Mapa isométrico 2.5D  (v2 — estilo "torres oscuras")
-   REEMPLAZA en app.js todo el bloque desde el comentario
-   "Mapa isométrico 2.5D" hasta el final de la función buildPathMap().
-   Conserva las clases que usa el resto de app.js: .pathNode
-   (+ active/locked/done/examNode/seccion-cooldown), .nodeTimer,
-   .nodeLabel y .nodeReviewBtn.
-   Capas (atrás → adelante):
-     defs → decoración trasera → pilares → camino → decoración frontal → nodos
-   ===================================================================== */
-const ISO = {
-  SCENE_W: 420,        // ancho lógico de la escena; se escala con CSS al ancho disponible
-  TW: 210, TH: 105,    // rombo de la cara superior (proporción 2:1)
-  STEP: 84,            // separación vertical entre nodos consecutivos
-  ETAPA_GAP: 70,       // espacio extra al empezar una nueva etapa
-  AMP: 84,             // desplazamiento lateral del zigzag
-  OFFSETS: [-1, 0, 1, 0],
-  PUCK_W: 64, PUCK_H: 54, PUCK_LIFT: 9,
-  PAD_TOP: 170, PAD_BOTTOM: 200
-};
-const ISO_AXOLOTLS = [
-  'ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png',
-  'ajolotes_de_colores/ajolote_verde_bailando.png',
-  'ajolotes_de_colores/ajolote_dorado_brillante.png',
-  'ajolotes_de_colores/ajolote_morado_pensativo.png',
-  'ajolotes_de_colores/ajolote_amarillo_flotando_sonriente.png',
-  'ajolotes_emociones/feliz_nadando_saludando.png'
-];
-let _isoStage = null, _isoScene = null, _isoSceneH = 0, _isoResizeBound = false, _isoFreeBuilt = 0;
-
-// Pseudo-aleatorio determinista: la misma posición siempre da la misma decoración.
-function isoRand(n){
-  let x = Math.imul(n + 1, 2654435761) >>> 0;
-  x = (x ^ (x >>> 15)) >>> 0;
-  x = Math.imul(x, 2246822519) >>> 0;
-  return (x % 1000) / 1000;
-}
-const ISO_LOCK_SVG =
-  '<svg class="isoLock" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false">' +
-  '<path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' +
-  '<rect x="5" y="10" width="14" height="11" rx="2.6" fill="currentColor"/>' +
-  '<circle cx="12" cy="15" r="1.7" fill="rgba(255,255,255,.55)"/></svg>';
-
-// Gradientes compartidos (sombras de las caras, brillo de la cara superior).
-function isoDefsSvg(){
-  return '<svg class="isoDefs" width="0" height="0" aria-hidden="true" focusable="false"><defs>' +
-    '<linearGradient id="isoShadeG" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".58"/></linearGradient>' +
-    '<linearGradient id="isoSheenG" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
-  '</defs></svg>';
-}
-// Pilar: dos caras laterales + sombra degradada + cara superior con brillo.
-const ISO_MEDAL_SVG = '<svg class="isoMedal" viewBox="0 0 40 46" width="36" height="41" aria-hidden="true">' +
-  '<polygon points="9,2 21,2 25,22 14,24" fill="#3B82F6" stroke="#1E3A8A" stroke-width="2" stroke-linejoin="round"/>' +
-  '<polygon points="31,2 19,2 15,22 26,24" fill="#EF4444" stroke="#7F1D1D" stroke-width="2" stroke-linejoin="round"/>' +
-  '<circle cx="20" cy="30" r="13.5" fill="#FCD34D" stroke="#7A4A06" stroke-width="2.4"/>' +
-  '<circle cx="20" cy="30" r="9.6" fill="#FBBF24" stroke="#B45309" stroke-width="1.6"/>' +
-  '<polygon points="20.0,22.7 21.7,27.2 26.5,27.4 22.8,30.4 24.0,35.0 20.0,32.4 16.0,35.0 17.2,30.4 13.5,27.4 18.3,27.2" fill="#7A4A06" stroke="#7A4A06" stroke-width="1" stroke-linejoin="round"/>' +
-  '<path d="M12.5 26 A9 9 0 0 1 20 21" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.8" stroke-linecap="round"/></svg>';
-function isoPillarSvg(h, w){
-  const W = w || ISO.TW, T = W / 2, hw = W / 2, hh = T / 2;
-  return '<svg class="isoPillar" viewBox="0 0 ' + W + ' ' + (T + h) + '" width="' + W + '" height="' + (T + h) +
-    '" aria-hidden="true" focusable="false">' +
-    '<polygon class="isoL" points="0,' + hh + ' ' + hw + ',' + T + ' ' + hw + ',' + (T + h) + ' 0,' + (hh + h) + '"/>' +
-    '<polygon class="isoR" points="' + W + ',' + hh + ' ' + hw + ',' + T + ' ' + hw + ',' + (T + h) + ' ' + W + ',' + (hh + h) + '"/>' +
-    '<polygon class="isoSh" points="0,' + hh + ' ' + hw + ',' + T + ' ' + W + ',' + hh + ' ' + W + ',' + (hh + h) + ' ' + hw + ',' + (T + h) + ' 0,' + (hh + h) + '"/>' +
-    '<polygon class="isoT" points="' + hw + ',0 ' + W + ',' + hh + ' ' + hw + ',' + T + ' 0,' + hh + '"/>' +
-    '<polygon class="isoSheen" points="' + hw + ',0 ' + W + ',' + hh + ' ' + hw + ',' + T + ' 0,' + hh + '"/>' +
-  '</svg>';
-}
-// Nube con volumen: sombra inferior + cuerpo + brillo.
-const ISO_CLOUD_SHAPES =
-  '<circle cx="30" cy="36" r="16"/><circle cx="52" cy="26" r="21"/><circle cx="76" cy="36" r="15"/>' +
-  '<rect x="22" y="34" width="62" height="17" rx="8.5"/>';
-function isoCloudSvg(w){
-  return '<svg class="isoCloud" viewBox="0 0 100 62" width="' + w + '" height="' + Math.round(w * 0.62) + '" aria-hidden="true">' +
-    '<g class="cShade" transform="translate(0 6)">' + ISO_CLOUD_SHAPES + '</g>' +
-    '<g class="cMain">' + ISO_CLOUD_SHAPES + '</g>' +
-    '<ellipse class="cHi" cx="48" cy="17" rx="17" ry="6"/></svg>';
-}
-// Grupo de picos con cara clara y cara oscura.
-function isoMountainSvg(w){
-  const peak = (ax, ay, bl, br) => {
-    const m = ax + 7;
-    return '<polygon class="mL" points="' + ax + ',' + ay + ' ' + bl + ',100 ' + m + ',100"/>' +
-           '<polygon class="mR" points="' + ax + ',' + ay + ' ' + m + ',100 ' + br + ',100"/>';
-  };
-  return '<svg class="isoMountain" viewBox="0 0 160 100" width="' + w + '" height="' + Math.round(w * 100 / 160) +
-    '" aria-hidden="true">' + peak(26, 46, 0, 52) + peak(60, 8, 8, 108) + peak(112, 38, 70, 160) + '</svg>';
-}
-// Camino recto entre los centros de los nodos.
-function isoPathD(pts, from, to){
-  let d = '';
-  for(let k = from; k <= to; k++){
-    d += (k === from ? 'M' : ' L') + pts[k].cx + ' ' + (pts[k].cy - ISO.PUCK_LIFT);
-  }
-  return d;
-}
-
-// Puente de madera entre dos zonas: tablones y barandas a lo largo del tramo recto A→B.
-function isoBridgeSvg(A, B, locked, W, H){
-  const ax = A.cx, ay = A.cy, bx = B.cx, by = B.cy;
-  const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
-  const nx = -uy, ny = ux, ang = Math.atan2(dy, dx) * 180 / Math.PI;
-  const tA = 24, tB = 52, L = len - tA - tB, n = Math.max(4, Math.floor(L / 11));   // tB mayor: no pisa la etiqueta del nodo de llegada
-  const half = 21;                       // medio ancho del puente
-  let s = '<svg class="isoBridge' + (locked ? ' lk' : '') + '" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true">';
-  const px = k => ax + ux * (tA + L * k), py = k => ay + uy * (tA + L * k);
-  // sombra
-  s += '<path class="brSh" d="M' + (px(0) + 5) + ' ' + (py(0) + 12) + ' L' + (px(1) + 5) + ' ' + (py(1) + 12) + '"/>';
-  // tablones (con contorno grueso y brillo, estilo cartoon)
-  for(let k = 0; k < n; k++){
-    const t = (k + .5) / n, tr = 'translate(' + px(t).toFixed(1) + ' ' + py(t).toFixed(1) + ') rotate(' + ang.toFixed(1) + ')';
-    s += '<g transform="' + tr + '"><rect class="brPl' + (k % 2 ? ' b' : '') + '" x="-6.5" y="-' + half + '" width="13" height="' + half * 2 + '" rx="4"/>' +
-         '<rect class="brHi" x="-4" y="-' + (half - 3) + '" width="3" height="' + (half * 2 - 6) + '" rx="1.5"/></g>';
-  }
-  // barandas de cuerda + postes con remate
-  [-1, 1].forEach(side => {
-    const o = (half + 1) * side;
-    const d = 'M' + (px(0) + nx * o) + ' ' + (py(0) + ny * o - 14) + ' L' + (px(1) + nx * o) + ' ' + (py(1) + ny * o - 14);
-    s += '<path class="brRailO" d="' + d + '"/><path class="brRail" d="' + d + '"/>';
-    for(let k = 0; k <= 4; k++){
-      const t = k / 4, x = (px(t) + nx * o).toFixed(1), y = (py(t) + ny * o).toFixed(1), y2 = (py(t) + ny * o - 14).toFixed(1);
-      s += '<line class="brPostO" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + y2 + '"/><line class="brPost" x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + y2 + '"/>' +
-           '<circle class="brCap" cx="' + x + '" cy="' + y2 + '" r="4.6"/>';
-    }
-  });
-  return s + '</svg>';
-}
-// Ajusta el tamaño de la escena al ancho disponible (sin reconstruir el mapa).
-// Espacio libre mínimo (unidades de escena) a cada lado para colocar los carteles/islas FUERA de la escena sin que se corten
-// con el borde de la pantalla (la isla mide 112 de ancho y se centra a free/2 del borde de la escena).
-const ISO_FREE_MIN = 114;
-// Escala de la escena: según el ancho disponible, pero sin pasarse del alto visible (móvil horizontal: fichas gigantes).
-function isoScaleK(availW){
-  const sc = document.getElementById('stageMapView');
-  const hh = sc ? sc.clientHeight : 0;
-  const kh = hh > 0 ? hh / 290 : 9;
-  return Math.max(0.62, Math.min(1.5, availW / ISO.SCENE_W, kh));
-}
-function isoApplyScale(){
-  if(!_isoStage || !_isoScene) return;
-  const avail = _isoStage.clientWidth || 340;
-  const k = isoScaleK(avail);
-  _isoScene.style.transform = 'scale(' + k + ')';
-  _isoStage.style.height = Math.round(_isoSceneH * k) + 'px';
-}
-
-// ---- Modo ligero del mapa ----
-// 'lite' = sin desenfoque de fondo ni animaciones decorativas · 'full' = efectos completos (elegido a mano) · '' = automático.
-// Si el dispositivo va justo mientras se hace scroll en el mapa, se avisa UNA vez con la opción de activarlo.
-const FX_KEY = 'vocabri_fx', FX_ASKED_KEY = 'vocabri_fx_asked';
-function fxMode(){ try{ return localStorage.getItem(FX_KEY) || ''; }catch(e){ return ''; } }
-function fxUpdateToggleUi(){
-  const b = document.getElementById('fxToggleBtn');
-  if(b) b.textContent = fxMode() === 'lite' ? '⚡ Efectos del mapa: Modo ligero' : '✨ Efectos del mapa: Completos';
-}
-function fxApply(){
-  document.documentElement.classList.toggle('fxLite', fxMode() === 'lite');
-  fxUpdateToggleUi();
-}
-function fxSet(m){
-  try{ if(m) localStorage.setItem(FX_KEY, m); else localStorage.removeItem(FX_KEY); }catch(e){}
-  fxApply();
-}
-const _fx = { samples: [], active: false, raf: 0, last: 0, timer: 0, prompted: false };
-function fxOnScroll(){
-  if(fxMode() || _fx.prompted || document.hidden) return;                 // ya decidió (o ya se le preguntó en esta sesión)
-  clearTimeout(_fx.timer);
-  _fx.timer = setTimeout(() => { _fx.active = false; cancelAnimationFrame(_fx.raf); }, 180);
-  if(_fx.active) return;
-  _fx.active = true; _fx.last = 0;
-  const tick = t => {
-    if(!_fx.active) return;
-    if(_fx.last){ const d = t - _fx.last; if(d < 200) _fx.samples.push(d); }   // se ignoran pausas largas (pestaña en segundo plano)
-    _fx.last = t;
-    if(_fx.samples.length >= 100){ fxJudge(); return; }
-    _fx.raf = requestAnimationFrame(tick);
-  };
-  _fx.raf = requestAnimationFrame(tick);
-}
-function fxJudge(){
-  _fx.active = false;
-  const s = _fx.samples.slice(10).sort((a, b) => a - b);                    // se descartan los primeros fotogramas (arranque del scroll)
-  _fx.samples = [];
-  if(s.length < 60) return;
-  const med = s[s.length >> 1], slow = s.filter(d => d > 33.4).length / s.length;
-  let weakHw = false;
-  try{ weakHw = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-                (navigator.connection && navigator.connection.saveData); }catch(e){}
-  if(med >= 28 || slow >= 0.4 || (weakHw && (med >= 22 || slow >= 0.25))) fxPrompt();
-}
-function fxPrompt(){
-  let asked = 0;
-  try{ asked = parseInt(localStorage.getItem(FX_ASKED_KEY) || '0', 10) || 0; }catch(e){}
-  if(asked >= 3) return;
-  _fx.prompted = true;
-  const shown = vbPrompt({
-    icon: '⚡', title: '¿El mapa va lento?',
-    text: 'Parece que tu dispositivo va un poco justo. El modo ligero quita el desenfoque y las animaciones del fondo del mapa (el degradado se queda). Puedes cambiarlo cuando quieras en Ajustes.',
-    buttons: [
-      { label: 'Activar modo ligero', primary: true, onClick: () => { fxSet('lite'); showToast('Modo ligero activado', '⚡', 2500); } },
-      { label: 'Mantener efectos', onClick: () => fxSet('full') }
-    ],
-    autoMs: 25000
-  });
-  if(shown){ try{ localStorage.setItem(FX_ASKED_KEY, String(asked + 1)); }catch(e){} }
-  else _fx.prompted = false;
-}
-fxApply();
-{ const fxBtn = document.getElementById('fxToggleBtn'); if(fxBtn) fxBtn.onclick = () => { fxSet(fxMode() === 'lite' ? 'full' : 'lite'); }; }
-// ---- Stickers: variedad por contexto + colocación sin choques ----
-// Carpeta base. Los lotes deben estar en assets/stickers/lote_1, lote_2 y lote_3.
-const ISO_STK_BASE = './assets/stickers/';
-const ISO_STK_FALLBACK = 'ajolotes_de_colores/ajolote_rosa_brazos_abiertos.png';
-// [archivo, ancho, alto, tipo, mira, temas]
-//   tipo: s = un personaje · w = pareja/trío/escena ancha · u = boca abajo / colgando (cuelga bajo una isla)
-//   mira: L / R = hacia dónde mira el dibujo ('' = de frente); se voltea para que mire al camino
-const ISO_STK = [
-  // --- un personaje ---
-  ['lote_1/04_axolotl_amarillo_chef.png', 173, 192, 's', '', 'cocina trabajo'],
-  ['lote_1/05_axolotl_rosa_chef_pintor.png', 181, 186, 's', '', 'cocina hobby'],
-  ['lote_1/26_axolotl_morado_chef.png', 162, 181, 's', '', 'cocina'],
-  ['lote_1/06_axolotl_azul_tubo_ensayo.png', 168, 176, 's', '', 'ciencia'],
-  ['lote_1/20_axolotl_azul_cientifico_bata_gafas.png', 175, 176, 's', '', 'ciencia trabajo'],
-  ['lote_1/12_axolotl_morado_matraz_quimica.png', 183, 186, 's', '', 'ciencia sabio'],
-  ['lote_1/11_axolotl_rosa_estrella_dorada.png', 182, 188, 's', '', 'motiva trabajo futuro fiesta'],
-  ['lote_1/18_axolotl_rosa_nervioso_sudando.png', 180, 185, 's', '', 'salud emocion debate'],
-  ['lote_1/19_axolotl_rosa_bailando_feliz.png', 177, 193, 's', '', 'emocion fiesta motiva'],
-  ['lote_1/29_axolotl_rosa_saludando.png', 166, 175, 's', '', 'saludo social'],
-  ['lote_1/30_axolotl_rosa_caminando_alegre.png', 166, 174, 's', '', 'viaje saludo'],
-  ['lote_1/10_axolotl_rosa_manta_durmiendo.png', 213, 178, 's', '', 'casa salud'],
-  ['lote_1/08_axolotl_rosa_flotando_cola.png', 142, 192, 's', '', 'viaje tiempo futuro'],
-  ['lote_2/03_axolotl_lila_durmiendo_enrollado.png', 295, 291, 's', '', 'casa salud'],
-  ['lote_2/06_axolotl_amarillo_jugando_roca.png', 288, 293, 's', 'L', 'hobby'],
-  ['lote_2/11_axolotl_azul_sosteniendo_concha.png', 283, 257, 's', '', 'viaje tiempo hobby'],
-  ['lote_2/14_axolotl_morado_meditando.png', 301, 301, 's', '', 'sabio duda pasado'],
-  ['lote_2/16_axolotl_verde_menta_confundido_esfera.png', 312, 292, 's', '', 'duda ciencia'],
-  ['lote_2/08_axolotl_turquesa_cargando_tabla_madera.png', 206, 395, 's', '', 'trabajo casa'],
-  ['lote_2/04_axolotl_rosa_flotando_costado.png', 237, 286, 's', '', 'tiempo viaje'],
-  ['lote_3/05_axolotl_amarillo_enojado.png', 172, 172, 's', '', 'debate emocion'],
-  ['lote_3/08_axolotl_rosa_pequeno_manos_juntas.png', 105, 106, 's', '', 'social duda saludo'],
-  ['lote_3/27_axolotl_rosa_pequeno_pensativo.png', 106, 88, 's', '', 'duda pasado'],
-  ['lote_3/30_axolotl_morado_manos_cadera.png', 163, 157, 's', '', 'debate motiva'],
-  ['lote_3/35_axolotl_rosa_musculos_fuerte.png', 161, 162, 's', '', 'motiva salud debate'],
-  ['lote_3/22_axolotl_morado_mago_sombrero_cristal.png', 148, 179, 's', '', 'sabio futuro'],
-  ['lote_3/21_axolotl_rosa_pintando_caballete.png', 140, 160, 's', '', 'hobby'],
-  ['lote_3/34_axolotl_azul_bailando_feliz.png', 165, 173, 's', '', 'emocion fiesta'],
-  // --- parejas / tríos / escenas anchas ---
-  ['lote_1/01_axolotl_rosa_pareja_abrazo.png', 272, 210, 'w', '', 'social'],
-  ['lote_1/09_axolotl_rosa_azul_amigos_sentados.png', 270, 160, 'w', '', 'social saludo'],
-  ['lote_1/15_axolotl_rosa_morado_amigos_abrazo.png', 240, 173, 'w', '', 'social'],
-  ['lote_1/25_axolotl_morado_azul_abrazo.png', 207, 155, 'w', '', 'social'],
-  ['lote_3/17_axolotl_azul_morado_amigos_abrazo.png', 242, 172, 'w', '', 'social'],
-  ['lote_1/14_axolotl_rosa_morado_estrella_compartida.png', 238, 166, 'w', '', 'fiesta motiva'],
-  ['lote_3/16_axolotl_verde_morado_estrella_compartida.png', 237, 166, 'w', '', 'fiesta futuro'],
-  ['lote_2/05_axolotl_verde_morado_chocando_manos.png', 214, 204, 'w', '', 'fiesta trabajo debate'],
-  ['lote_1/24_axolotl_rosa_azul_pergamino.png', 227, 165, 'w', '', 'pasado trabajo sabio'],
-  ['lote_1/28_axolotl_rosa_pareja_pintando_caballete.png', 227, 167, 'w', '', 'hobby'],
-  ['lote_3/32_axolotl_verde_rosa_pintando_caballete.png', 227, 167, 'w', '', 'hobby'],
-  ['lote_1/02_axolotl_trio_rosa_azul_morado_abrazo.png', 251, 237, 'w', '', 'social fiesta'],
-  ['lote_1/03_axolotl_trio_circulo_rosa_morado_verde.png', 267, 263, 'w', '', 'social fiesta'],
-  ['lote_1/17_axolotl_trio_arcoiris_holografico.png', 248, 214, 'w', '', 'fiesta social'],
-  ['lote_1/31_axolotl_rosa_sobre_nube.png', 173, 152, 'w', '', 'tiempo viaje futuro'],
-  ['lote_1/13_axolotl_arcoiris_nadando.png', 291, 126, 'w', 'L', 'viaje hobby tiempo'],
-  ['lote_2/12_axolotl_arcoiris_piedras_serio.png', 417, 215, 'w', 'R', 'hobby pasado debate'],
-  // --- boca abajo / colgando (cuelgan bajo una isla flotante) ---
-  ['lote_2/01_axolotl_rosa_boca_abajo_sorprendido.png', 248, 346, 'u', '', 'emocion tiempo'],
-  ['lote_2/02_axolotl_rosa_boca_abajo_moviendo_cola.png', 238, 347, 'u', '', 'emocion tiempo'],
-  ['lote_2/17_axolotl_magenta_boca_abajo_palillos.png', 240, 330, 'u', '', 'cocina emocion'],
-  ['lote_2/07_axolotl_rosa_estirado_colgando.png', 171, 288, 'u', '', 'trabajo motiva'],
-  ['lote_1/07_axolotl_rosa_estirado_brazos_arriba.png', 102, 190, 'u', '', 'motiva futuro']
-].concat(ISO_AXOLOTLS.map(f => [f, 1, 1, 's', '', '']));   // los ajolotes de siempre (cuadrados) como comodín
-// Nombre de zona (sin acentos) → temas
-const ISO_THEMES = [
-  [/cocina|restaurante|comida/, 'cocina'], [/educacion|aprendizaje|telefono|tecnologia/, 'ciencia'],
-  [/hobbies|tiempo libre|experiencias/, 'hobby'], [/saludos|despedidas|cierre/, 'saludo'],
-  [/salud|emergencias/, 'salud'], [/sentimientos|animo|opiniones|gustos/, 'emocion'],
-  [/discusion|malentendido|debatir/, 'debate'], [/entiendes|frecuentes|profundizar|certeza|duda/, 'duda'],
-  [/motivacion|deseos|necesidades/, 'motiva'], [/proverbio|sabiduria|modismo|expresiones/, 'sabio'],
-  [/relacion|social|cortesia|informacion personal|personas/, 'social'], [/evento|celebracion/, 'fiesta'],
-  [/viaje|transporte|calle|entorno|direcciones/, 'viaje'], [/casa/, 'casa'],
-  [/trabajo|tramite|documento|dinero|finanza|compras/, 'trabajo'], [/plan|futuro/, 'futuro'],
-  [/pasado/, 'pasado'], [/tiempo y la hora|comparaciones|cantidades|phrasal/, 'tiempo']
-];
-function isoZoneThemes(name){
-  const n = String(name || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const t = [];
-  ISO_THEMES.forEach(r => { if(r[0].test(n)) t.push(r[1]); });
-  return t;
-}
-// Elige un sticker: primero los que combinan con la zona, luego el resto; evita repetir los últimos usados.
-function isoStickerChoices(kinds, themes, recent, seed){
-  return ISO_STK.map((e, k) => ({ e: e, k: k }))
-    .filter(o => kinds.indexOf(o.e[3]) >= 0 && recent.indexOf(o.k) < 0)
-    .map(o => ({ o: o, sc: (themes.some(t => o.e[5].split(' ').indexOf(t) >= 0) ? 0 : 1) + isoRand(seed * 17 + o.k * 5) * 0.9 }))
-    .sort((p, q) => p.sc - q.sc).map(x => x.o);
-}
-function isoStickerImg(src, flip, w, h, style){
-  return '<img class="isoAxo' + (flip ? ' flip' : '') + '" src="' + ISO_STK_BASE + src + '" alt="" width="' + w + '" height="' + h +
-         '" loading="lazy" decoding="async" style="' + (style || '') + '" onerror="this.onerror=null;this.src=\'' + ISO_STK_BASE + ISO_STK_FALLBACK + '\'">';
-}
-// tamaño en pantalla (máx. lado = m) respetando la proporción real
-function isoStkSize(e, m){
-  const k = m / Math.max(e[1], e[2]);
-  return { w: Math.round(e[1] * k), h: Math.round(e[2] * k) };
-}
-function isoHit(a, b, m){
-  m = m || 0;
-  return a.x + m < b.x + b.w && a.x + a.w - m > b.x && a.y + m < b.y + b.h && a.y + a.h - m > b.y;
-}
-// Zonas que ningún sticker debe pisar: fichas, etiquetas, temporizadores, botón Repasar, carteles y puentes.
-function isoObstacles(pts, signs){
-  const o = [];
-  pts.forEach((p, i) => {
-    o.push({ x: p.cx - 34, y: p.pcy - 30, w: 68, h: 66 });                       // ficha
-    o.push({ x: p.cx - 64, y: p.pcy + 34, w: 128, h: 40 });                      // etiqueta / temporizador
-    if(p.node.type !== 'exam') o.push({ x: p.cx + 38, y: p.pcy - 46, w: 50, h: 50 });   // botón Repasar
-    if(p.newEtapa && i > 0){                                                      // puente
-      const q = pts[i - 1];
-      o.push({ x: Math.min(p.cx, q.cx) - 28, y: Math.min(p.cy, q.cy) - 40, w: Math.abs(p.cx - q.cx) + 56, h: Math.abs(p.cy - q.cy) + 60 });
-    }
-  });
-  signs.forEach(s => o.push({ x: s.x - 66, y: s.y - 110, w: 132, h: 180, sg: s }));   // cartel + isla completa (hasta su borde inferior)
-  return o;
-}
-// Decoración TRASERA (detrás de los pilares): solo nubes lejanas y montañas (sin stickers).
-function isoDecorBackHtml(pts, total, obst){
-  let html = '';
-  const clear = b => !obst.some(o => o.sg && isoHit(b, o, 0));   // no dejar nubes/montañas a medio tapar por una isla
-  for(let i = 0; i < total; i++){
-    const p = pts[i], r = isoRand(i * 13 + 5), right = ((i / 3) | 0) % 2 === 0;
-    if(i % 4 === 1){                                    // nubes
-      const w = 70 + Math.round(r * 50);
-      const x = right ? 318 + r * 70 : -70 + r * 60;
-      if(clear({ x: x, y: p.cy - 100 + r * 40, w: w, h: w / 2 }))
-        html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy - 100 + r * 40) +
-                'px;--d:' + Math.round(r * 14) + '">' + isoCloudSvg(w) + '</div>';
-    }
-    if(i % 8 === 3){                                    // montañas
-      const x = right ? 300 + r * 40 : -90 - r * 20;
-      if(clear({ x: x, y: p.cy + 24, w: 150, h: 95 }))
-        html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy + 24) + 'px">' +
-                isoMountainSvg(150) + '</div>';
-    }
-  }
-  return html;
-}
-// Decoración FRONTAL (delante de los pilares, detrás de los nodos): todos los stickers van aquí,
-// así nunca quedan ocultos tras pilares o montañas. Cada uno se coloca solo si no choca con nada.
-function isoDecorFrontHtml(pts, total, free, obst, signs, zones){
-  const placed = [], recent = [];
-  const isFree = (r, own) => !obst.some(o => !(own && o.sg === own) && isoHit(r, o, 6)) && !placed.some(o => isoHit(r, o, 4));
-  const used = k => { recent.push(k); if(recent.length > 12) recent.shift(); };
-  let html = '', last = -9;
-  for(let i = 0; i < total; i++){
-    const p = pts[i], themes = zones[i];
-    // 1) ajolote(s) sentados en la esquina del pilar, del lado contrario al nodo siguiente
-    if(i - last >= 2 && (free >= ISO_FREE_MIN ? i % 2 === 0 : i % 3 !== 1)){   // en móvil se intenta más seguido (hay poco espacio)
-      const up = i < total - 1 ? Math.sign(pts[i + 1].cx - p.cx) : 0;
-      const sides = up > 0 ? [-1, 1] : up < 0 ? [1, -1] : (i % 4 === 0 ? [-1, 1] : [1, -1]);
-      const kinds = isoRand(i * 3 + 9) < 0.3 ? ['s', 'w'] : ['s'];
-      let done = false;
-      for(const c of isoStickerChoices(kinds, themes, recent, i)){
-        const e = c.e, wide = e[3] === 'w', sz = isoStkSize(e, wide ? 70 : (e[1] < 130 ? 54 : (e[2] > e[1] * 1.6 ? 86 : 70)));
-        for(const s of sides){
-          const r = { x: p.cx + s * (40 + sz.w / 2) - sz.w / 2, y: p.cy + 4 - sz.h, w: sz.w, h: sz.h };
-          if(!isFree(r)) continue;
-          const want = s < 0 ? 'R' : 'L';                      // que mire hacia el camino
-          const flip = e[4] ? e[4] !== want : isoRand(i * 5 + 2) < 0.5;
-          placed.push(r); used(c.k); last = i; done = true;
-          html += '<div class="isoDeco isoSitter" style="left:' + Math.round(r.x) + 'px;top:' + Math.round(r.y) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px">' +
-                  isoStickerImg(e[0], flip, sz.w, sz.h) + '</div>';
-          break;
-        }
-        if(done) break;
-      }
-    }
-    // 2) islote flotante con personaje(s): solo cuando hay espacio libre a los lados (pantallas anchas)
-    if(free >= ISO_FREE_MIN && i % 4 === 2){
-      const left = ((i / 4) | 0) % 2 === 0, cx = left ? -free * 0.5 : ISO.SCENE_W + free * 0.5;
-      const hang = isoRand(i * 11 + 1) < 0.35;
-      for(const c of isoStickerChoices(hang ? ['u'] : ['s', 'w'], themes, recent, i + 100)){
-        const e = c.e, sz = isoStkSize(e, hang ? 84 : (e[3] === 'w' ? 100 : 66));
-        const top = p.cy - 30;
-        const r = hang ? { x: cx - 54, y: top - 4, w: 108, h: 84 + sz.h - 20 + 4 }
-                       : { x: cx - 54, y: top + 26 - sz.h - 4, w: 108, h: sz.h + 60 };
-        if(!isFree(r)) continue;
-        placed.push(r); used(c.k);
-        const flip = e[4] ? e[4] !== (left ? 'R' : 'L') : isoRand(i * 5 + 3) < 0.5;
-        const img = hang ? isoStickerImg(e[0], flip, sz.w, sz.h, 'left:' + Math.round((left ? 75 : 25) - sz.w / 2) + 'px;top:58px;width:' + sz.w + 'px;height:' + sz.h + 'px;z-index:-1')   // cuelga de la esquina inferior
-                         : isoStickerImg(e[0], flip, sz.w, sz.h, 'left:' + Math.round(50 - sz.w / 2) + 'px;top:' + (26 - sz.h) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px');
-        html += '<div class="isoDeco isoIsland" style="left:' + Math.round(cx - 50) + 'px;top:' + Math.round(top) + 'px">' +
-                isoPillarSvg(34, 100) + img + '</div>';
-        break;
-      }
-    }
-  }
-  // 3) personajes colgando de una esquina inferior de la isla del cartel. Van DENTRO de la isla (coordenadas locales),
-  //    así se mueven con ella al flotar; la parte superior queda escondida tras la cara frontal para que parezca que se agarran.
-  signs.forEach((sg, k) => {
-    if(isoRand(k * 7 + 4) > 0.7) return;
-    const side = isoRand(k * 3 + 8) < 0.5 ? -1 : 1;                 // esquina izquierda o derecha
-    const ex = 56 + side * 30, ey = 58 + (56 - Math.abs(ex - 56)) / 2 + 2;   // punto del borde inferior de la cara (local a la isla)
-    for(const c of isoStickerChoices(['u'], isoZoneThemes(sg.name), recent, k + 300)){
-      const e = c.e, sz = isoStkSize(e, 66);
-      const lx = ex - sz.w / 2, ly = ey - 14;                        // 14 px quedan tapados por la isla
-      const r = { x: sg.x - 56 + lx, y: sg.y - 28 + ly, w: sz.w, h: sz.h };
-      if(!isFree(r, sg)) continue;
-      placed.push(r); used(c.k);
-      sg.hang = '<div class="isoHanger" style="left:' + Math.round(lx) + 'px;top:' + Math.round(ly) + 'px;width:' + sz.w + 'px;height:' + sz.h + 'px">' +
-                isoStickerImg(e[0], isoRand(k * 3 + 1) < 0.5, sz.w, sz.h) + '</div>';
-      break;
-    }
-  });
-  // 4) nubes que rozan el borde del pilar (solo si no tapan un sticker)
-  for(let i = 0; i < total; i++){
-    if(i % 5 !== 2) continue;
-    const p = pts[i], r = isoRand(i * 7 + 11), right = i % 2 === 1;
-    const w = 70 + Math.round(r * 30);
-    const x = right ? p.cx + ISO.TW / 2 - 24 : p.cx - ISO.TW / 2 - w + 24;
-    const box = { x: x, y: p.cy + 34, w: w, h: w / 2 };
-    if(placed.some(o => isoHit(box, o, 0)) || obst.some(o => o.sg && isoHit(box, o, 0))) continue;
-    html += '<div class="isoDeco" style="left:' + Math.round(x) + 'px;top:' + Math.round(p.cy + 34) +
-            'px;--d:' + Math.round(r * 14) + '">' + isoCloudSvg(w) + '</div>';
-  }
-  return html;
-}
-
-function isoUpdateMapSub(cat, total, doneBits){
-  const doneCount = (doneBits.match(/1/g) || []).length;
-  const totalItems = mapItemsFor(cat).length;
-  const masteredN = mapItemsFor(cat).filter(it => isMastered(it[3])).length;
-  document.getElementById('mapSub').textContent =
-    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + totalItems + ' tarjetas dominadas';
-}
 function buildPathMap(){
   const wrap = document.getElementById('pathWrap');
   if(!wrap) return;
@@ -1289,11 +849,13 @@ function buildPathMap(){
   // Esperar a que los datos de frases estén cargados
   if (!window.VocabriPhraseData || !window.VocabriPhraseData.loaded) {
     console.log('[buildPathMap] Esperando datos de frases...');
+    // Escuchar evento de carga completada
     const waitForData = () => {
       window.removeEventListener('vocabri:phrasesLoaded', waitForData);
-      buildPathMap();
+      buildPathMap(); // Reintentar
     };
     window.addEventListener('vocabri:phrasesLoaded', waitForData);
+    // También intentar de nuevo en 100ms por si el evento ya pasó
     setTimeout(() => {
       if (window.VocabriPhraseData && window.VocabriPhraseData.loaded) {
         window.removeEventListener('vocabri:phrasesLoaded', waitForData);
@@ -1308,257 +870,70 @@ function buildPathMap(){
   const total = stageCountFor(cat);
   const unlocked = getUnlockedStage(cat);
   const cooldownMs = cooldownRemainingMs();
+  let doneCount = 0, lastEtapa = null;
+  // Usar label bonito de la categoría maestra
   const catLabel = (window.VocabriCategories && window.VocabriCategories.getCategoryLabel)
     ? window.VocabriCategories.getCategoryLabel(cat)
     : cat;
   document.getElementById('mapCatName').textContent = catLabel;
-
-  // Si el mapa ya está dibujado y nada de lo que lo define cambió (categoría, avance, enfriamiento, espacio lateral),
-  // no se reconstruye: al volver a la pestaña Aprender solo se actualiza el texto y se recentra el nodo activo.
-  const sigW = wrap.clientWidth || 340;
-  const sigFree = (sigW / isoScaleK(sigW) - ISO.SCENE_W) / 2;
-  let doneBits = '';
-  for(let i = 0; i <= unlocked && i < total; i++) doneBits += isStageComplete(cat, i) ? '1' : '0';
-  const sig = [cat, total, unlocked, cooldownMs > 0 ? 1 : 0, doneBits, sigFree >= ISO_FREE_MIN ? Math.round(sigFree / 30) : 'n'].join('|');
-  if(wrap._isoSig === sig && wrap.classList.contains('isoMap') && _isoStage && wrap.contains(_isoStage)){
-    isoApplyScale();
-    isoUpdateMapSub(cat, total, doneBits);
-    requestAnimationFrame(() => {
-      const t = wrap.querySelector('.pathNode.active') || wrap.querySelector('.pathNode.seccion-cooldown') || wrap.querySelector('.pathNode:not(.locked)');
-      if(t) t.scrollIntoView({block: 'center', behavior: 'auto'});
-    });
-    return;
-  }
-
-  // ---- 1) Geometría: posición de cada nodo sobre la malla isométrica ----
-  const pts = [];
-  let up = 0, prevEtapa = null;
-  for(let i = 0; i < total; i++){
+  wrap.innerHTML = '';
+  const posCycle = ['pos-l','pos-c','pos-r','pos-c'];
+  // Iterate from the highest node down to node 1 so the DOM (and the page's
+  // natural top-to-bottom flow) shows the path ascending: node 1 ends up at
+  // the bottom, later nodes stack upward above it.
+  for(let i=total-1; i>=0; i--){
     const node = NL.nodes[i];
-    const newEtapa = node.etapaIdx !== prevEtapa;
-    if(i > 0) up += ISO.STEP + (newEtapa ? ISO.ETAPA_GAP : 0);
-    prevEtapa = node.etapaIdx;
-    pts.push({
-      i: i, node: node, up: up, newEtapa: newEtapa,
-      h: i === 0 ? 190 : 120 + Math.floor(isoRand(i * 7 + 3) * 3) * 40,   // pilares: 120 / 160 / 200 (el primero llega al suelo)
-      cx: ISO.SCENE_W / 2 + ISO.OFFSETS[i % 4] * ISO.AMP
-    });
-  }
-  const H = ISO.PAD_TOP + up + ISO.PAD_BOTTOM;
-  pts.forEach(p => { p.cy = H - ISO.PAD_BOTTOM - p.up; p.pcy = p.cy - ISO.PUCK_LIFT; });   // cy = centro del rombo, pcy = centro del nodo
-
-  // ---- 2) Capas ----
-  const stage = document.createElement('div');
-  stage.className = 'isoStage';
-  const scene = document.createElement('div');
-  scene.className = 'isoScene';
-  scene.style.height = H + 'px';
-  scene.style.width = ISO.SCENE_W + 'px';
-  scene.style.marginLeft = (-ISO.SCENE_W / 2) + 'px';
-
-  const defs = document.createElement('div');
-  defs.className = 'isoLayer';
-  defs.innerHTML = isoDefsSvg();
-
-  const decor = document.createElement('div');
-  decor.className = 'isoLayer isoDecor';
-  // Carteles de zona: islas flotantes en los costados, donde hay espacio libre
-  const availW = wrap.clientWidth || 340;
-  const free = (availW / isoScaleK(availW) - ISO.SCENE_W) / 2;   // espacio libre a cada lado (unidades de escena)
-  _isoFreeBuilt = free;
-  const signs = [];
-  pts.forEach(p => {
-    if(!p.newEtapa) return;
-    const i = p.i, rawName = NL.etapaNames[p.node.etapaIdx];
-    let left;
-    if(i < total - 1 && Math.abs(pts[i + 1].cx - p.cx) > 1) left = pts[i + 1].cx > p.cx;   // lejos del siguiente nodo
-    else left = p.cx >= ISO.SCENE_W / 2;
-    // pantalla ancha: la isla va en el espacio vacío fuera de la escena; pantalla estrecha: en el borde, más arriba para no tocar el nodo
-    const sx = free >= ISO_FREE_MIN ? (left ? -free * 0.5 : ISO.SCENE_W + free * 0.5) : (left ? 62 : ISO.SCENE_W - 62);
-    signs.push({ i: i, left: left, x: sx, y: free >= ISO_FREE_MIN ? p.cy - 34 : p.cy - 100,
-                 name: (rawName === cat || !rawName) ? catLabel : rawName, lk: i > unlocked });
-  });
-  const obst = isoObstacles(pts, signs);
-  decor.innerHTML = isoDecorBackHtml(pts, total, obst);
-
-  // Pilares: del más alto al más bajo, así los de abajo tapan a los de atrás.
-  const pillars = document.createElement('div');
-  pillars.className = 'isoLayer';
-  let pillarsHtml = '';
-  for(let i = total - 1; i >= 0; i--){
-    const p = pts[i];
-    const locked = i > unlocked;
-    const done = !locked && isStageComplete(cat, i);
-    const isExam = p.node.type === 'exam';
-    const isCd = !locked && !done && i === unlocked && cooldownMs > 0;
-    const st = locked ? 'locked' : done ? 'done' : isCd ? 'cd' : isExam ? 'exam' : 'active';
-    pillarsHtml += '<div class="isoPillarBox st-' + st + '" style="left:' + (p.cx - ISO.TW / 2) + 'px;top:' +
-                   (p.cy - ISO.TH / 2) + 'px">' + isoPillarSvg(p.h) + '</div>';
-  }
-  pillars.innerHTML = pillarsHtml;
-
-  // Camino: tramo completo tenue + tramo recorrido con brillo.
-  let pathHtml = '<svg class="isoPath" viewBox="0 0 ' + ISO.SCENE_W + ' ' + H + '" width="' + ISO.SCENE_W +
-                 '" height="' + H + '" aria-hidden="true">';
-  if(total > 1) pathHtml += '<path class="isoPathBase" d="' + isoPathD(pts, 0, total - 1) + '"/>';
-  const reach = Math.min(unlocked, total - 1);
-  if(reach >= 1){
-    const d = isoPathD(pts, 0, reach);
-    pathHtml += '<path class="isoGlow g1" d="' + d + '"/><path class="isoGlow g2" d="' + d + '"/><path class="isoGlow g3" d="' + d + '"/>';
-  }
-  pathHtml += '</svg>';
-  const bridgeLayer = document.createElement('div');
-  bridgeLayer.className = 'isoLayer';
-  let bridgeHtml = '';
-  for(let i = 1; i < total; i++){
-    if(pts[i].newEtapa) bridgeHtml += isoBridgeSvg(pts[i - 1], pts[i], i > unlocked, ISO.SCENE_W, H);
-  }
-  bridgeLayer.innerHTML = bridgeHtml;
-
-  const pathLayer = document.createElement('div');
-  pathLayer.className = 'isoLayer';
-  pathLayer.innerHTML = pathHtml;
-
-  const front = document.createElement('div');
-  front.className = 'isoLayer isoDecor';
-  front.innerHTML = isoDecorFrontHtml(pts, total, free, obst, signs, pts.map(p => isoZoneThemes(NL.etapaNames[p.node.etapaIdx] === cat ? '' : NL.etapaNames[p.node.etapaIdx])));
-
-  // Nodos (botones reales, encima de todo)
-  const nodesLayer = document.createElement('div');
-  nodesLayer.className = 'isoLayer isoNodes';
-  let doneCount = 0;
-  for(let i = 0; i < total; i++){
-    const p = pts[i], node = p.node;
-    const isExam = node.type === 'exam';
+    if(node.etapaIdx !== lastEtapa){
+      lastEtapa = node.etapaIdx;
+      const banner = document.createElement('div');
+      banner.className = 'etapaBanner';
+      banner.textContent = 'ETAPA ' + (node.etapaIdx+1) + ' · ' + NL.etapaNames[node.etapaIdx];
+      wrap.appendChild(banner);
+    }
     const locked = i > unlocked;
     const done = !locked && isStageComplete(cat, i);
     if(done) doneCount++;
     const isCooldownNode = !locked && !done && i === unlocked && cooldownMs > 0;
     const active = !locked && !done && !isCooldownNode;
-
-    if(p.newEtapa){
-      const sg = signs.find(s => s.i === i);
-      const isle = document.createElement('div');
-      isle.className = 'isoSignIsle' + (sg.lk ? ' lk' : '');
-      isle.style.left = Math.round(sg.x - 56) + 'px';
-      isle.style.top = Math.round(sg.y - 28) + 'px';
-      isle.style.setProperty('--d', String(i % 5));
-      isle.innerHTML = isoPillarSvg(30, 112);
-      const sign = document.createElement('div'); sign.className = 'isoSign';
-      const board = document.createElement('div'); board.className = 'isoBoard'; board.textContent = sg.name;
-      const post = document.createElement('div'); post.className = 'isoPost';
-      sign.appendChild(board); sign.appendChild(post);
-      isle.appendChild(sign);
-      if(sg.hang) isle.insertAdjacentHTML('beforeend', sg.hang);
-      nodesLayer.appendChild(isle);
-    }
-
-    // Detalles "blueprint": anillo tenue, puntos laterales y marca de esquina
-    const ring = document.createElement('div');
-    ring.className = 'isoRing' + (active ? ' on' : '');
-    ring.style.left = Math.round(p.cx - 48) + 'px';
-    ring.style.top = Math.round(p.pcy - 40) + 'px';
-    nodesLayer.appendChild(ring);
-    const marks = document.createElement('div');
-    marks.className = 'isoMarks';
-    marks.style.left = Math.round(p.cx - 76) + 'px';
-    marks.style.top = Math.round(p.pcy) + 'px';
-    marks.innerHTML = '<i class="mk mkL"></i><i class="mk mkR"></i><i class="mkTick"></i>';
-    nodesLayer.appendChild(marks);
+    const row = document.createElement('div');
+    row.className = 'pathRow ' + posCycle[i % posCycle.length];
 
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'pathNode' + (active ? ' active' : '') + (locked ? ' locked' : '') + (done ? ' done' : '') +
-                  (isExam ? ' examNode' : '') + (isCooldownNode ? ' seccion-cooldown' : '');
-    b.style.left = Math.round(p.cx - ISO.PUCK_W / 2) + 'px';
-    b.style.top = Math.round(p.pcy - ISO.PUCK_H / 2) + 'px';
-    if(locked) b.innerHTML = ISO_LOCK_SVG;
-    else if(isExam && !done && !isCooldownNode) b.innerHTML = ISO_MEDAL_SVG;
-    else b.textContent = done ? '✓' : (isCooldownNode ? '⏳' : String(i + 1));
-    b.setAttribute('aria-label', stageName(cat, i) + (locked ? ' (bloqueada)' : ''));
+    const isExam = node.type === 'exam';
+    b.className = 'pathNode' + (active?' active':'') + (locked?' locked':'') + (done?' done':'') +
+                  (isExam?' examNode':'') + (isCooldownNode?' seccion-cooldown':'');
+    let icon = locked ? '🔒' : (done ? '✓' : (isCooldownNode ? '⏳' : (isExam ? '🏅' : String(i+1))));
+    let label = '<span class="nodeLabel">' + stageName(cat, i) + '</span>';
+    if(isCooldownNode) label += '<span class="nodeTimer" id="cooldownTimer-'+i+'" data-node="'+i+'">' + fmtHhMmSs(cooldownMs) + '</span>';
+    b.innerHTML = icon + label;
     b.disabled = locked;
-    b.onclick = () => showLesson(cat, i);
-    nodesLayer.appendChild(b);
+    b.onclick = ()=> showLesson(cat, i);
+    row.appendChild(b);
 
-    const lab = document.createElement('span');
-    lab.className = 'nodeLabel';
-    lab.style.left = Math.round(p.cx - 62) + 'px';
-    lab.style.top = Math.round(p.pcy + ISO.PUCK_H / 2 + 12) + 'px';
-    lab.textContent = stageName(cat, i);
-    nodesLayer.appendChild(lab);
-
-    if(isCooldownNode){
-      const t = document.createElement('span');
-      t.className = 'nodeTimer';
-      t.id = 'cooldownTimer-' + i;
-      t.dataset.node = String(i);
-      t.style.left = Math.round(p.cx - 62) + 'px';
-      t.style.top = Math.round(p.pcy + ISO.PUCK_H / 2 + 28) + 'px';
-      t.textContent = fmtHhMmSs(cooldownMs);
-      nodesLayer.appendChild(t);
-    }
-
+    // Botón "Repasar" para secciones completadas (flotante al lado del nodo)
     if(done && !isExam){
       const reviewBtn = document.createElement('button');
       reviewBtn.type = 'button';
       reviewBtn.className = 'nodeReviewBtn';
       reviewBtn.innerHTML = '<img class="nodeReviewIcon" src="./assets/stickers/ajolotes_emociones/sonriente_relajado.png" alt="Repasar" width="24" height="24">';
       reviewBtn.title = 'Repasar esta sección';
-      reviewBtn.style.left = Math.round(p.cx + 44) + 'px';
-      reviewBtn.style.top = Math.round(p.pcy - 38) + 'px';
-      reviewBtn.onclick = (e) => { e.stopPropagation(); startStageReview(cat, i); };
-      nodesLayer.appendChild(reviewBtn);
+      reviewBtn.onclick = (e) => {
+        e.stopPropagation();
+        startStageReview(cat, i);
+      };
+      row.appendChild(reviewBtn);
     }
-  }
 
-  // ---- 3) Montaje ----
-  scene.appendChild(defs);
-  scene.appendChild(decor);
-  scene.appendChild(pillars);
-  scene.appendChild(bridgeLayer);
-  scene.appendChild(pathLayer);
-  scene.appendChild(front);
-  scene.appendChild(nodesLayer);
-  stage.appendChild(scene);
-  wrap.innerHTML = '';
-  wrap.classList.add('isoMap');
-  wrap._isoSig = sig;
-  const fadeTop = document.createElement('div'); fadeTop.className = 'isoFade top';
-  const fadeBot = document.createElement('div'); fadeBot.className = 'isoFade bot';
-  wrap.appendChild(fadeTop);
-  wrap.appendChild(stage);
-  wrap.appendChild(fadeBot);
-  _isoStage = stage; _isoScene = scene; _isoSceneH = H;
-  isoApplyScale();
-  if(!_isoResizeBound){
-    _isoResizeBound = true;
-    const sm = document.getElementById('stageMapView');
-    if(sm) sm.addEventListener('scroll', fxOnScroll, { passive: true });
-    let raf = 0;
-    window.addEventListener('resize', () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        isoApplyScale();
-        // los carteles/islas dependen del espacio libre a los lados: si cambia mucho (p. ej. de escritorio a móvil), se reconstruye
-        const w = document.getElementById('pathWrap'), m = document.getElementById('stageMapView');
-        if(!w || !m || m.style.display === 'none' || !w.classList.contains('isoMap') || !w.clientWidth) return;
-        const f = (w.clientWidth / isoScaleK(w.clientWidth) - ISO.SCENE_W) / 2;
-        if((f >= ISO_FREE_MIN) !== (_isoFreeBuilt >= ISO_FREE_MIN) || (f >= ISO_FREE_MIN && Math.abs(f - _isoFreeBuilt) > 30)){
-          const ratio = m.scrollTop / Math.max(1, m.scrollHeight);
-          buildPathMap();
-          requestAnimationFrame(() => requestAnimationFrame(() => { m.scrollTop = ratio * m.scrollHeight; }));
-        }
-      });
-    });
+    wrap.appendChild(row);
   }
-
-  const totalItems = mapItemsFor(cat).length;
-  const masteredN = mapItemsFor(cat).filter(it => isMastered(it[3])).length;
+  const total_items = mapItemsFor(cat).length;
+  const masteredN = mapItemsFor(cat).filter(it=> isMastered(it[3])).length;
   document.getElementById('mapSub').textContent =
-    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + totalItems + ' tarjetas dominadas';
-  requestAnimationFrame(() => {
+    doneCount + '/' + total + ' secciones completadas · ' + masteredN + '/' + total_items + ' tarjetas dominadas';
+  requestAnimationFrame(()=>{
     const target = wrap.querySelector('.pathNode.active') || wrap.querySelector('.pathNode.seccion-cooldown') || wrap.querySelector('.pathNode:not(.locked)');
-    if(target) target.scrollIntoView({block: 'center', behavior: 'auto'});
+    if(target) target.scrollIntoView({block:'center', behavior:'auto'});
   });
 }
 
@@ -1742,7 +1117,7 @@ function itemsFor(cat, includeCustom){
 function mapItemsFor(cat){ return itemsFor(cat, false); }
 
 function readStored(key){
-  const dflt = {m:false, t:null, mt:null, lvl:0, next:null, iv:0};
+  const dflt = {m:false, t:null, mt:null, lvl:0, next:null};
   let raw;
   try{ raw = localStorage.getItem("ci_master_"+key); }catch(e){ return dflt; }
   if(!raw) return dflt;
@@ -1750,7 +1125,7 @@ function readStored(key){
   if(raw === "0") return dflt;
   try{
     const o = JSON.parse(raw);
-    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null, iv:o.iv||0};
+    return {m:!!o.m, t:o.t||null, mt:o.mt||null, lvl:o.lvl||0, next:o.next||null};
   }catch(e){ return dflt; }
 }
 function isMastered(key){ return readStored(key).m; }
@@ -1802,71 +1177,70 @@ function todayKeyStr(){ return dayKey(new Date()); }
 const GOAL_PRESETS = {relajado:30, normal:50, serio:100, intenso:150};
 
 // ==================== REPASAR HOY (SRS) ====================
-const DAY_MS = 24*3600*1000;
-const REVIEW_AGAIN_MS = 10*60*1000;
-const REVIEW_SESSION_CAP = 25;
-const REVIEW_XP = {1:0, 2:5, 3:10, 4:12};
+const REVIEW_GAPS = {1:10*60*1000, 2:2*24*3600*1000, 3:10*24*3600*1000};
 
-// Intervalo actual (en días) de una tarjeta; las guardadas con el sistema anterior se derivan de su nivel.
-function srsInterval(s){
-  if(s.iv) return s.iv;
-  return {1:0, 2:2, 3:10}[s.lvl] || 0;
-}
-// Calcula el siguiente intervalo (días) según la nota: 1 Otra vez · 2 Difícil · 3 Bien · 4 Fácil
-function srsNextInterval(prev, grade){
-  if(grade === 1) return 0;
-  if(grade === 2) return Math.min(365, Math.max(1, Math.round(prev * 1.2)));
-  if(grade === 3) return Math.min(365, Math.max(2, Math.round(prev * 2.2)));
-  return Math.min(365, Math.max(5, Math.round(prev * 3.5)));
-}
-function srsGapText(days){
-  if(days <= 0) return '10 min';
-  if(days === 1) return '1 día';
-  if(days < 30) return days + ' días';
-  const m = Math.round(days/30);
-  return m + (m === 1 ? ' mes' : ' meses');
-}
-function srsGrade(key, grade){
-  if(!key) return;
-  const cur = readStored(key);
-  const now = Date.now();
-  const iv = srsNextInterval(srsInterval(cur), grade);
-  const m = iv >= 10;
-  const next = grade === 1 ? now + REVIEW_AGAIN_MS : now + iv*DAY_MS;
-  const lvl = grade === 1 ? 1 : (iv >= 10 ? 3 : 2);
-  try{
-    localStorage.setItem("ci_master_"+key, JSON.stringify({m:m, t:now, mt: m ? (cur.mt || now) : cur.mt, lvl:lvl, next:next, iv:iv}));
-  }catch(e){}
-}
-
-// Tarjetas vencidas ahora (única fuente de verdad: lista, contador del menú y sesión usan esto).
+// Obtener todas las cartas vencidas para repasar (SRS)
 function getDueCards(){
   const now = Date.now();
+  const todayStart = new Date();
+  todayStart.setHours(0,0,0,0);
+  const todayStartMs = todayStart.getTime();
+
   const due = [];
+  const recentlyLearned = [];
+
   itemsFor("Todas").forEach(it=>{
     const s = readStored(it[3]);
-    if(s.next && s.next <= now) due.push({it, next:s.next});
+    // Cartas vencidas (SRS normal)
+    if(!s.m && s.next && s.next <= now){
+      due.push({
+        ...it,
+        lvl: s.lvl,
+        next: s.next,
+        source: 'due'
+      });
+    }
+    // Cartas aprendidas hoy (lvl >= 2, rated today) - para repasar inmediatamente
+    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs){
+      recentlyLearned.push({
+        ...it,
+        lvl: s.lvl,
+        next: s.next,
+        source: 'recent'
+      });
+    }
   });
+
+  // Ordenar: vencidas primero (más urgentes), luego recientes
   due.sort((a,b)=> a.next - b.next);
-  return due.map(d=>d.it);
+  recentlyLearned.sort((a,b)=> (b.t || 0) - (a.t || 0)); // más recientes primero
+
+  return [...due, ...recentlyLearned];
 }
-function getDueTodayCount(){ return getDueCards().length; }
-// Próxima tarjeta que vencerá (ms) o null
-function getNextDueTime(){
+
+// Obtener tarjetas que vencen hoy (para badge contador)
+function getDueTodayCount(){
   const now = Date.now();
-  let best = null;
+  const todayStart = new Date();
+  todayStart.setHours(0,0,0,0);
+  const todayStartMs = todayStart.getTime();
+  const endOfDay = new Date();
+  endOfDay.setHours(23,59,59,999);
+  const endOfDayMs = endOfDay.getTime();
+
+  let count = 0;
   itemsFor("Todas").forEach(it=>{
     const s = readStored(it[3]);
-    if(s.next && s.next > now && (best === null || s.next < best)) best = s.next;
+    // Vencidas hoy
+    if(!s.m && s.next && s.next <= endOfDayMs){
+      count++;
+    }
+    // Aprendidas hoy (lvl >= 2, rated today)
+    else if(!s.m && s.lvl && s.lvl >= 2 && s.t && s.t >= todayStartMs && s.t <= endOfDayMs){
+      count++;
+    }
   });
-  return best;
-}
-function fmtWhen(ts){
-  const diff = ts - Date.now();
-  if(diff < 3600*1000) return 'en ' + Math.max(1, Math.round(diff/60000)) + ' min';
-  if(diff < DAY_MS) return 'en ' + Math.round(diff/3600000) + ' h';
-  const d = Math.round(diff/DAY_MS);
-  return d === 1 ? 'mañana' : 'en ' + d + ' días';
+  return count;
 }
 function getXpTotal(){ try{ return parseInt(localStorage.getItem('ci_xp_total')||'0',10); }catch(e){ return 0; } }
 function setXpTotal(v){ try{ localStorage.setItem('ci_xp_total', String(v)); }catch(e){} }
@@ -2163,7 +1537,9 @@ function selectCategory(cat){
   // Legacy function for DATA categories (used by custom categories, etc.)
   currentCat = cat;
   idx = 0; order = [];
-  selectFocusCategory(cat);
+  buildCategoryDropdown();
+  document.getElementById('catSelectLabel').textContent = cat;
+  document.getElementById('catDropdown').hidden = true;
   cardsSubView = 'map';
   renderCardsSubView();
 }
@@ -2180,7 +1556,7 @@ function buildBottomNav(){
     // Render sticker image instead of emoji
     const iconHtml = it.icon.startsWith('./')
       ? '<img class="navIcon navSticker" src="' + it.icon + '" alt="" width="28" height="28">'
-      : '<span class="navIcon">' + it.icon + '</span>';   // SVG propio
+      : '<span class="navIcon">' + it.icon + '</span>';
 
     b.innerHTML = iconHtml + '<span>' + it.label + '</span>';
     if (it.id === 'review') {
@@ -2224,21 +1600,19 @@ function selectFocusCategory(masterCatId) {
 
   currentCat = masterCatId;
   idx = 0; order = [];
+  buildCategoryDropdown();
 
-  // Mostrar el label de la categoría maestra en el botón del panel de ajustes
+  // Mostrar el label de la categoría maestra en el botón
   let label = masterCatId;
+  let emoji = '📚';
   if (window.VocabriCategories) {
+    label = window.VocabriCategories.getCategoryLabel(masterCatId);
+    emoji = window.VocabriCategories.getCategoryEmoji(masterCatId);
+    // Usar shortLabel para el dropdown
     label = window.VocabriCategories.getCategoryShortLabel(masterCatId);
   }
-  const selectorLabel = document.getElementById('catSelectorLabel');
-  if (selectorLabel) selectorLabel.textContent = label;
-
-  // Actualizar selección visual en el panel de ajustes
-  updateCatSelector();
-
-  // Cerrar el selector de categorías
-  const catSelector = document.getElementById('catSelector');
-  if (catSelector) catSelector.hidden = true;
+  document.getElementById('catSelectLabel').textContent = label;
+  document.getElementById('catDropdown').hidden = true;
 
   // Persistir la categoría elegida
   localStorage.setItem('ci_current_master_category', masterCatId);
@@ -2254,6 +1628,43 @@ function selectFocusCategory(masterCatId) {
   renderCardsSubView();
 }
 
+function buildCategoryDropdown(){
+  const el = document.getElementById('catDropdown');
+  if(!el) return;
+  el.innerHTML = '';
+
+  const masterCats = getMasterCategories();
+
+  masterCats.forEach(catId => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    const isSelected = catId === currentCat;
+    b.className = 'catOpt' + (isSelected ? ' sel' : '');
+
+    // Obtener label y emoji del registry
+    let label = catId;
+    let emoji = '📚';
+    if (window.VocabriCategories) {
+      label = window.VocabriCategories.getCategoryShortLabel(catId);
+      emoji = window.VocabriCategories.getCategoryEmoji(catId);
+    }
+
+    b.innerHTML = '<span>' + emoji + '</span><span>' + label + '</span>';
+    b.onclick = ()=> selectFocusCategory(catId);
+    el.appendChild(b);
+  });
+}
+document.getElementById('catSelectBtn').onclick = (e)=>{
+  e.stopPropagation();
+  const dd = document.getElementById('catDropdown');
+  dd.hidden = !dd.hidden;
+};
+document.addEventListener('click', (e)=>{
+  const dd = document.getElementById('catDropdown');
+  if(!dd || dd.hidden) return;
+  if(!dd.contains(e.target) && e.target.id !== 'catSelectBtn') dd.hidden = true;
+});
+
 function freeplayItems(){
   return customWords.map(w=> [w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]);
 }
@@ -2262,7 +1673,6 @@ function currentLessonItems(){
   return stageItems(currentCat, getCurrentStage(currentCat));
 }
 function renderCards(){
-  scrollTopNow('lessonView');
   const cat = currentCat;
   const items = currentLessonItems();
   const backBtn = document.getElementById('backToMapBtn');
@@ -2359,133 +1769,156 @@ function dayKey(d){
 }
 
 // ==================== VISTA REPASAR HOY ====================
-let reviewQueue = [];
-let reviewSession = null;   // {total, done, stats, xp, stage}
-let reviewCurrent = null;
-
-function reviewEl(id){ return document.getElementById(id); }
-
-function reviewShow(part){   // 'card' | 'empty' | 'summary'
-  reviewEl('reviewCard').style.display = part === 'card' ? '' : 'none';
-  reviewEl('reviewActionZone').style.display = part === 'card' ? '' : 'none';
-  reviewEl('reviewProgress').style.display = part === 'card' ? '' : 'none';
-  reviewEl('reviewEmpty').style.display = part === 'empty' ? '' : 'none';
-  reviewEl('reviewSummary').style.display = part === 'summary' ? '' : 'none';
-}
+let reviewCards = [];
+let reviewIdx = 0;
+let reviewOrder = [];
 
 function renderReviewView(){
-  const stage = window.currentReviewStage;
-  let cards;
-  if(stage && stage.items && stage.items.length){
-    cards = stage.items.slice();
+  // Verificar si hay una sección específica para repasar (desde el mapa)
+  const stageReview = window.currentReviewStage;
+
+  if(stageReview && stageReview.items && stageReview.items.length > 0){
+    // Usar las tarjetas de esa sección específica
+    reviewCards = stageReview.items.map(it => [...it]);
+    reviewOrder = reviewCards.map((_,i)=>i);
+    reviewIdx = 0;
+
+    // Limpiar para que no se repita
     window.currentReviewStage = null;
   } else {
-    cards = getDueCards();
+    // Repaso general (SRS + aprendidas hoy)
+    reviewCards = getDueCards();
+    reviewOrder = reviewCards.map((_,i)=>i);
+    reviewIdx = 0;
   }
-  reviewEl('reviewBackBtn').onclick = () => switchView('learn');
-  reviewEl('reviewEmptyLearnBtn').onclick = () => switchView('learn');
-  reviewEl('reviewTitle').textContent = stage ? 'Repasar sección' : 'Repasar hoy';
-  updateReviewBadge();
 
-  if(!cards.length){
-    reviewShow('empty');
-    reviewEl('reviewCount').textContent = 'Al día';
-    const nxt = getNextDueTime();
-    reviewEl('reviewEmptyHint').textContent = nxt
-      ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '. Mientras, sigue aprendiendo en el mapa.'
-      : 'Aún no tienes tarjetas en repaso. Aprende algunas en el mapa y aparecerán aquí.';
+  const emptyEl = document.getElementById('reviewEmpty');
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progressEl = document.getElementById('reviewProgress');
+  const progFill = document.getElementById('reviewProgBarFill');
+
+  if(reviewCards.length === 0){
+    emptyEl.style.display = '';
+    cardEl.style.display = 'none';
+    actionZone.style.display = 'none';
+    progressEl.style.display = 'none';
+    document.getElementById('reviewCount').textContent = '0 tarjetas para repasar';
+    // Back button handler for empty state
+    document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
+    document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
     return;
   }
-  const batch = stage ? cards : cards.slice(0, REVIEW_SESSION_CAP);
-  reviewQueue = batch.slice();
-  reviewSession = {total: batch.length, done:0, stats:{1:0,2:0,3:0,4:0}, xp:0, stage:!!stage, remaining: cards.length - batch.length};
-  showReviewCard();
-}
 
-function updateReviewProgress(){
-  const s = reviewSession;
-  reviewEl('reviewCount').textContent = Math.min(s.done + 1, s.total) + ' / ' + s.total;
-  reviewEl('reviewProgBarFill').style.width = Math.round(s.done / s.total * 100) + '%';
+  emptyEl.style.display = 'none';
+  cardEl.style.display = '';
+  actionZone.style.display = '';
+  progressEl.style.display = '';
+
+  // Mostrar indicador si es repaso de sección específica
+  const countEl = document.getElementById('reviewCount');
+  if(stageReview){
+    countEl.textContent = `Repasando: ${stageReview.items.length} tarjetas de la sección`;
+  } else {
+    countEl.textContent = reviewCards.length + ' tarjetas para repasar';
+  }
+
+  // Back button handler
+  document.getElementById('reviewBackBtn').onclick = () => switchView('learn');
+  document.getElementById('reviewEmptyLearnBtn').onclick = () => switchView('learn');
+
+  showReviewCard();
+  updateReviewBadge();
 }
 
 function showReviewCard(){
-  if(!reviewQueue.length){ finishReviewSession(); return; }
-  reviewShow('card');
-  scrollTopNow('reviewView');
-  reviewCurrent = reviewQueue[0];
-  const cardEl = reviewEl('reviewCard');
-  cardEl.classList.remove('flipped');
-  reviewEl('reviewRateBlock').style.display = 'none';
-  reviewEl('reviewShowAnswerBtn').style.display = '';
-  updateReviewProgress();
-
-  const item = reviewCurrent;
-  reviewEl('reviewFrontText').textContent = item[0];
-  reviewEl('reviewBackText').textContent = item[1];
-  window.currentReviewKey = item[3];
-
-  // Intervalos que se aplicarían con cada botón
-  const prev = srsInterval(readStored(item[3]));
-  [1,2,3,4].forEach(g => {
-    const c = reviewEl('reviewRate'+g+'Cap');
-    if(c) c.textContent = srsGapText(srsNextInterval(prev, g));
-  });
-
-  reviewEl('reviewShowAnswerBtn').onclick = revealReviewAnswer;
-  [1,2,3,4].forEach(g => { reviewEl('reviewRate'+g).onclick = () => rateReviewCard(g); });
-}
-
-function revealReviewAnswer(){
-  if(!reviewCurrent || reviewEl('reviewRateBlock').style.display !== 'none') return;
-  reviewEl('reviewCard').classList.add('flipped');
-  reviewEl('reviewShowAnswerBtn').style.display = 'none';
-  reviewEl('reviewRateBlock').style.display = '';
-}
-
-function rateReviewCard(grade){
-  if(!reviewCurrent || !reviewSession) return;
-  const item = reviewQueue.shift();
-  srsGrade(item[3], grade);
-  const s = reviewSession;
-  s.stats[grade]++;
-  const xp = REVIEW_XP[grade];
-  if(xp){ awardXp(xp); s.xp += xp; }
-  if(grade === 1){
-    // vuelve a aparecer tras unas cartas más (o enseguida si es la última)
-    reviewQueue.splice(Math.min(reviewQueue.length, 3), 0, item);
-  } else {
-    s.done++;
+  if(reviewIdx >= reviewOrder.length){
+    // Sesión terminada
+    finishReviewSession();
+    return;
   }
-  reviewCurrent = null;
-  updateReviewBadge();
+
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progFill = document.getElementById('reviewProgBarFill');
+
+  cardEl.classList.remove('flipped');
+  document.getElementById('reviewRateBlock').style.display = 'none';
+  document.getElementById('reviewShowAnswerBtn').style.display = '';
+
+  progFill.style.width = Math.round((reviewIdx / reviewOrder.length) * 100) + '%';
+
+  const orderIdx = reviewOrder[reviewIdx];
+  const item = reviewCards[orderIdx];
+  const key = item[3];
+
+  // Actualizar textos
+  document.getElementById('reviewFrontText').textContent = item[0]; // EN
+  document.getElementById('reviewBackText').textContent = item[1]; // ES
+
+  // Guardar key actual
+  window.currentReviewKey = key;
+
+  // Botón mostrar respuesta
+  document.getElementById('reviewShowAnswerBtn').onclick = () => {
+    cardEl.classList.add('flipped');
+    document.getElementById('reviewShowAnswerBtn').style.display = 'none';
+    document.getElementById('reviewRateBlock').style.display = '';
+  };
+
+  // Botones de rating
+  setupReviewRateButtons();
+}
+
+function setupReviewRateButtons(){
+  const buttons = [
+    {id: 'reviewRateGood', level: 2},
+    {id: 'reviewRateEasy', level: 3}
+  ];
+
+  buttons.forEach(btn => {
+    const el = document.getElementById(btn.id);
+    if(el) el.onclick = () => rateReviewCard(btn.level);
+  });
+}
+
+function rateReviewCard(level){
+  const key = window.currentReviewKey;
+  if(!key) return;
+
+  // Actualizar SRS
+  rateCard(key, level);
+
+  // XP
+  const xpGain = level === 1 ? 0 : (level === 2 ? 10 : 10);
+  if(xpGain > 0) awardXp(xpGain);
+
+  // Siguiente carta
+  reviewIdx++;
   showReviewCard();
 }
 
 function finishReviewSession(){
-  const s = reviewSession;
-  reviewShow('summary');
-  reviewEl('reviewCount').textContent = '¡Listo!';
-  reviewEl('reviewProgBarFill').style.width = '100%';
-  const answers = s.stats[1] + s.stats[2] + s.stats[3] + s.stats[4];
-  const firstTry = s.total - Math.min(s.total, s.stats[1]);
-  const acc = s.total ? Math.round(firstTry / s.total * 100) : 0;
-  reviewEl('reviewSumDone').textContent = s.total;
-  reviewEl('reviewSumAcc').textContent = acc + '%';
-  reviewEl('reviewSumXp').textContent = '+' + s.xp;
-  reviewEl('reviewSumBreak').innerHTML =
-    '<span class="rvChip rvAgain">🔁 ' + s.stats[1] + ' otra vez</span>' +
-    '<span class="rvChip rvHard">😓 ' + s.stats[2] + ' difícil</span>' +
-    '<span class="rvChip rvGood">🙂 ' + s.stats[3] + ' bien</span>' +
-    '<span class="rvChip rvEasy">🚀 ' + s.stats[4] + ' fácil</span>';
-  const due = s.stage ? 0 : getDueCards().length;
-  const nxt = getNextDueTime();
-  reviewEl('reviewSumNext').textContent = due > 0
-    ? 'Aún tienes ' + due + (due === 1 ? ' tarjeta' : ' tarjetas') + ' pendiente' + (due === 1 ? '' : 's') + '.'
-    : (nxt ? 'Tu próximo repaso llega ' + fmtWhen(nxt) + '.' : 'Todo al día.');
-  const more = reviewEl('reviewMoreBtn');
-  more.style.display = due > 0 ? '' : 'none';
-  more.onclick = () => renderReviewView();
-  reviewEl('reviewSumMapBtn').onclick = () => switchView('learn');
+  const emptyEl = document.getElementById('reviewEmpty');
+  const cardEl = document.getElementById('reviewCard');
+  const actionZone = document.getElementById('reviewActionZone');
+  const progressEl = document.getElementById('reviewProgress');
+
+  emptyEl.style.display = '';
+  cardEl.style.display = 'none';
+  actionZone.style.display = 'none';
+  progressEl.style.display = 'none';
+  document.getElementById('reviewCount').textContent = 'Sesión completada';
+
+  emptyEl.querySelector('p').textContent = '¡Repaso completado!';
+  emptyEl.querySelector('.hint').textContent = 'Has repasado todas las tarjetas pendientes.';
+
+  // Botón volver al mapa
+  document.getElementById('reviewEmptyLearnBtn').onclick = () => {
+    switchView('learn');
+  };
+
+  // Actualizar badge del navbar
   updateReviewBadge();
 }
 
@@ -2493,23 +1926,23 @@ function updateReviewBadge(){
   const count = getDueTodayCount();
   const badge = document.getElementById('reviewNavBadge');
   if(badge){
-    if(count > 0){ badge.textContent = count > 99 ? '99+' : count; badge.style.display = ''; }
-    else badge.style.display = 'none';
+    if(count > 0){
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.style.display = '';
+    }else{
+      badge.style.display = 'none';
+    }
   }
 }
-setInterval(updateReviewBadge, 60000);
 
-// Atajos: Espacio/Enter muestra la respuesta, 1-4 califica
-document.addEventListener('keydown', e => {
-  const v = document.getElementById('reviewView');
-  if(!v || v.style.display === 'none' || !reviewCurrent) return;
-  if(e.ctrlKey || e.metaKey || e.altKey) return;
-  const t = e.target && e.target.tagName;
-  if(t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
-  const rating = document.getElementById('reviewRateBlock').style.display !== 'none';
-  if((e.key === ' ' || e.key === 'Enter') && !rating && t !== 'BUTTON'){ e.preventDefault(); revealReviewAnswer(); }
-  else if(rating && '1234'.includes(e.key) && e.key.length === 1){ e.preventDefault(); rateReviewCard(+e.key); }
-});
+// Actualizar badge al cambiar vista
+const originalSwitchView = switchView;
+function switchView(v){
+  originalSwitchView(v);
+  if(v === 'review'){
+    updateReviewBadge();
+  }
+}
 
 function renderProgress(){
   const allItems = itemsFor("Todas");
@@ -2978,45 +2411,10 @@ document.addEventListener('keydown', (e)=>{
   const ov = document.getElementById('cardModalOverlay');
   if(ov && ov.style.display === 'flex') closeCardModal();
 });
-// ===== Scroll: botón "subir" y reinicio al abrir/cambiar contenido =====
-function addScrollTopBtn(scroller, host){
-  if(!scroller || scroller.querySelector(':scope > .scrollTopBtn')) return;
-  const b = document.createElement('button');
-  b.type = 'button'; b.className = 'scrollTopBtn'; b.setAttribute('aria-label', 'Volver arriba'); b.title = 'Volver arriba'; b.textContent = '↑';
-  (host || scroller).appendChild(b);
-  const upd = () => b.classList.toggle('show', scroller.scrollTop > 220);
-  scroller.addEventListener('scroll', upd, {passive:true});
-  b.onclick = () => { try{ scroller.scrollTo({top:0, behavior:'smooth'}); }catch(e){ scroller.scrollTop = 0; } };
-  upd();
-}
-/* Escritorio: la rueda del ratón desplaza el panel activo aunque el puntero esté fuera de la columna central */
-(function(){
-  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView'];
-  document.addEventListener('wheel', function(e){
-    try{
-      if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
-      const t=e.target;
-      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, textarea, select')) return;
-      for(const id of IDS){
-        const el=document.getElementById(id);
-        if(!el || !el.offsetParent) continue;
-        if(el.contains(t)) return;                    // ya está dentro: scroll nativo
-        const k = e.deltaMode===1 ? 16 : (e.deltaMode===2 ? el.clientHeight : 1);
-        el.scrollBy({top:e.deltaY*k, behavior:'auto'});
-        e.preventDefault();
-        return;
-      }
-    }catch(_){}
-  }, {passive:false});
-})();
-
-function scrollTopNow(id){ try{ const el = typeof id === 'string' ? document.getElementById(id) : id; if(el) el.scrollTo(0,0); }catch(e){} }
 document.getElementById('openTableBtn').onclick = ()=>{
   document.getElementById('progressView').style.display = 'none';
   document.getElementById('tableView').style.display = '';
   renderTable();
-  scrollTopNow('tableView');
-  addScrollTopBtn(document.getElementById('tableView'));
 };
 document.getElementById('backFromTableBtn').onclick = ()=>{
   document.getElementById('tableView').style.display = 'none';
@@ -3134,7 +2532,7 @@ function renderProfileThemeGrid(){
 }
 
 function render(rebuildNav){
-  if(rebuildNav){ buildBottomNav(); updateCatSelector(); }
+  if(rebuildNav){ buildBottomNav(); buildCategoryDropdown(); }
   order = [];
   idx = 0;
   if(view === "learn"){ renderCardsSubView(); }
@@ -3214,8 +2612,8 @@ function openTermsModal(){
   if(!ov) return;
   _termsOpener = document.getElementById('settingsBtn');
   ov.style.display = 'flex';
-  const box = ov.querySelector('.legalContent');
-  if(box){ box.scrollTop = 0; const lm = ov.querySelector('.legalModal'); if(lm) lm.scrollTop = 0; addScrollTopBtn(box); }
+  const box = ov.querySelector('.legalModal');
+  if(box) box.scrollTop = 0;
   const closeBtn = document.getElementById('termsModalClose');
   if(closeBtn) closeBtn.focus();
 }
@@ -3273,12 +2671,6 @@ document.getElementById('speakFrontSlow').onclick = (e)=>{
   speak(document.getElementById('frontText').textContent, 'en-US', 0.6);
 };
 
-// Repaso: botones de audio (antes no hacían nada)
-[['reviewSpeakFront','reviewFrontText','en-US'],['reviewSpeakFrontSlow','reviewFrontText','en-US',0.6],['reviewSpeakBack','reviewBackText','es-ES']].forEach(([b,t,l,r])=>{
-  const el = document.getElementById(b);
-  if(el) el.onclick = (e)=>{ e.stopPropagation(); speak(document.getElementById(t).textContent, l, r); };
-});
-
 // --- Sound effects (Web Audio API, no audio files) and haptic feedback ---
 let sfxEnabled = true;
 try{ sfxEnabled = localStorage.getItem('vocabri_sfx') !== '0'; }catch(e){}
@@ -3331,91 +2723,6 @@ document.getElementById('sfxToggleBtn').onclick = ()=>{
   if(sfxEnabled){ playSfx('correct'); haptic(); }
 };
 updateSfxToggleUi();
-// ---- Avisos flotantes reutilizables (modo ligero, estrella en GitHub) ----
-let _vbPromptEl = null;
-function vbPrompt(o){
-  if(_vbPromptEl) return false;                                  // solo uno a la vez
-  const el = document.createElement('div');
-  el.className = 'vbPrompt'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-live', 'polite');
-  el.innerHTML = '<div class="vbpIcon" aria-hidden="true"></div><div class="vbpBody"><div class="vbpTitle"></div><div class="vbpText"></div><div class="vbpBtns"></div></div>';
-  el.querySelector('.vbpIcon').textContent = o.icon || '';
-  el.querySelector('.vbpTitle').textContent = o.title || '';
-  el.querySelector('.vbpText').textContent = o.text || '';
-  let timer = 0;
-  const close = () => {
-    clearTimeout(timer);
-    el.classList.remove('on');
-    setTimeout(() => { el.remove(); if(_vbPromptEl === el) _vbPromptEl = null; }, 260);
-  };
-  (o.buttons || []).forEach(bd => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'vbpBtn' + (bd.primary ? ' primary' : '') + (bd.quiet ? ' quiet' : '');
-    b.textContent = bd.label;
-    b.onclick = () => { close(); if(bd.onClick) bd.onClick(); };
-    el.querySelector('.vbpBtns').appendChild(b);
-  });
-  document.body.appendChild(el);
-  _vbPromptEl = el;
-  requestAnimationFrame(() => el.classList.add('on'));
-  if(o.autoMs) timer = setTimeout(close, o.autoMs);
-  return true;
-}
-
-// ---- Estrella en GitHub ----
-const REPO_URL = 'https://github.com/Axolotl26/Vocabri';
-const STAR_KEY = 'vocabri_star';                                 // { s: 'done' | 'later' | 'never', t: ms, n: veces que se mostró }
-function starState(){ try{ return JSON.parse(localStorage.getItem(STAR_KEY) || 'null') || {}; }catch(e){ return {}; } }
-function starSave(o){ try{ localStorage.setItem(STAR_KEY, JSON.stringify(o)); }catch(e){} }
-function openRepo(){
-  window.open(REPO_URL, '_blank', 'noopener,noreferrer');
-  starSave({ s: 'done', t: Date.now(), n: starState().n || 0 }); // ya fue al repositorio: no se vuelve a pedir
-}
-// Botón ⭐ del encabezado (junto a Novedades): despliega un panel con la info y el enlace al repositorio.
-{
-  const sBtnStar = document.getElementById('starBtn'), sPanelStar = document.getElementById('starPanel');
-  const closeStar = () => { sPanelStar.hidden = true; sBtnStar.setAttribute('aria-expanded', 'false'); };
-  sBtnStar.onclick = () => {
-    const opening = sPanelStar.hidden;
-    sPanelStar.hidden = !opening;
-    sBtnStar.setAttribute('aria-expanded', String(opening));
-    if(opening){
-      sPanelStar.scrollTo(0, 0);
-      document.getElementById('starVersion').textContent = APP_VERSION;
-      const sp = document.getElementById('settingsPanel'), np = document.getElementById('newsPanel');
-      if(sp) sp.hidden = true; if(np) np.hidden = true;           // un solo desplegable abierto a la vez
-    }
-  };
-  document.getElementById('starOpenBtn').onclick = () => { openRepo(); closeStar(); };
-  document.getElementById('starCloseBtn').onclick = closeStar;
-  ['starRepoLink', 'starIssuesLink'].forEach(id => document.getElementById(id).addEventListener('click', () => starSave({ s: 'done', t: Date.now(), n: starState().n || 0 })));
-  // fase de captura: así también se cierra al tocar Novedades o Ajustes (sus botones detienen la propagación)
-  document.addEventListener('click', e => {
-    if(sPanelStar.hidden) return;
-    if(sPanelStar.contains(e.target) || sBtnStar.contains(e.target)) return;
-    closeStar();
-  }, true);
-  document.addEventListener('keydown', e => { if(e.key === 'Escape' && !sPanelStar.hidden){ closeStar(); sBtnStar.focus(); } });
-}
-// Aviso amable: una sola vez por sesión, tras haber avanzado (3 secciones o más), máx. 2 veces y con 14 días de margen.
-function maybeAskStar(){
-  const st = starState();
-  if(st.s === 'done' || st.s === 'never' || (st.n || 0) >= 2) return;
-  if(st.s === 'later' && Date.now() - (st.t || 0) < 14 * 864e5) return;
-  let passed = 0;
-  try{ passed = Object.values(unlockedStage).reduce((a, b) => a + (+b || 0), 0); }catch(e){}
-  if(passed < 3) return;
-  try{ if(sessionStorage.getItem('vb_star_asked')) return; }catch(e){}
-  const shown = vbPrompt({
-    icon: '⭐', title: '¿Te está gustando Vocabri?',
-    text: 'Es un proyecto de código abierto hecho por un estudiante. Si te sirve, una estrella en GitHub ayuda muchísimo a que más gente lo encuentre.',
-    buttons: [
-      { label: '⭐ Dar una estrella', primary: true, onClick: openRepo },
-      { label: 'Ahora no', onClick: () => starSave({ s: 'later', t: Date.now(), n: (st.n || 0) + 1 }) },
-      { label: 'No mostrar más', quiet: true, onClick: () => starSave({ s: 'never', t: Date.now(), n: (st.n || 0) + 1 }) }
-    ]
-  });
-  if(shown){ try{ sessionStorage.setItem('vb_star_asked', '1'); }catch(e){} }
-}
 
 // Step 1: only "Mostrar respuesta". Step 2 (card flipped): "¿Qué tan bien la sabías?" + 3 buttons.
 const FLIP_COACH_KEY = 'vocabri_flip_coach_done';
@@ -3522,7 +2829,6 @@ document.getElementById('stageCompleteBtn').onclick = ()=>{
   pendingNextStage = null;
   showMap();
   dismissTopModal();
-  setTimeout(maybeAskStar, 700);
 };
 document.getElementById('backToMapBtn').onclick = ()=> backFromLesson();
 function showCooldownModal(){
@@ -3828,7 +3134,6 @@ function startExam(cat, stageIdx){
   renderExamQuestion();
 }
 function renderExamQuestion(){
-  scrollTopNow('examView');
   stopExamRecognition();
   hideExamMascot();
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
@@ -3892,7 +3197,6 @@ function showExamFeedback(ok, failText, okNote){
   const next = document.getElementById('examNextBtn');
   next.textContent = examState.failed ? 'Continuar' : 'Siguiente →';
   next.style.display = '';
-  try{ setTimeout(()=> next.scrollIntoView({behavior:'smooth', block:'nearest'}), 120); }catch(e){}
 }
 // Single place where an answer is scored: sound, score, lives and feedback.
 function resolveExamAnswer(ok, failText, okNote){
@@ -4159,82 +3463,23 @@ document.getElementById('shuffleBtn').onclick = ()=>{
 };
 document.getElementById('search').oninput = renderTable;
 
-// Iconos de la barra inferior (estilo cartoon, como las fichas del mapa): relleno de color, contorno grueso,
-// "borde" inferior más oscuro con volumen y brillo. Colores por pestaña (--c relleno, --e contorno/borde).
-const _ni = (c, e, shapes, extra) =>
-  '<svg viewBox="0 0 28 28" width="30" height="30" aria-hidden="true" focusable="false" style="--c:' + c + ';--e:' + e + '">' +
-  '<g class="niEd" transform="translate(0 2)">' + shapes + '</g><g class="niMn">' + shapes + '</g>' + (extra || '') + '</svg>';
-const _niW = 'fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"';
-const NAV_ICONS = {
-  // brújula: aprender / explorar
-  learn: _ni('#38BDF8', '#0B6190', '<circle cx="14" cy="13.5" r="10.5"/>',
-    '<polygon points="18.8,8.7 15.6,15.1 9.2,18.3 12.4,11.9" fill="#fff" stroke="#0B6190" stroke-width="1.6" stroke-linejoin="round"/>' +
-    '<circle cx="14" cy="13.5" r="1.5" fill="#0B6190"/><path d="M6.8 9.2A8.6 8.6 0 0 1 11.6 5" ' + _niW + ' stroke-opacity=".6" stroke-width="2"/>'),
-  // flechas circulares: repasar
-  review: _ni('#4ADE80', '#15733B',
-    '<path class="niLn" d="M5.2 13.6A8.8 8.8 0 0 1 20.6 7.6"/><path class="niLn" d="M22.8 14.4A8.8 8.8 0 0 1 7.4 20.4"/>' +
-    '<polygon class="niFl" points="17,3.8 24.2,5.6 20.8,12.2"/><polygon class="niFl" points="11,24.2 3.8,22.4 7.2,15.8"/>',
-    '<path d="M7.8 10.2A7 7 0 0 1 12.6 6.8" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>'),
-  // cartas apiladas: mis tarjetas
-  mycards: _ni('#F472B6', '#9B2166',
-    '<rect x="3" y="7.5" width="14" height="17" rx="3.4" transform="rotate(-11 10 16)"/><rect x="9" y="3.5" width="15.5" height="20" rx="3.4"/>',
-    '<path d="M12.6 10h8.2M12.6 14.2h8.2M12.6 18.4h4.6" ' + _niW + ' stroke-width="2.2"/>'),
-  // globo de diálogo con A: traductor
-  translator: _ni('#FBBF24', '#9A5A07',
-    '<path d="M6 4h16a3.5 3.5 0 0 1 3.5 3.5v8.5A3.5 3.5 0 0 1 22 19.5h-7.2L8.6 25v-5.5H6A3.5 3.5 0 0 1 2.5 16V7.5A3.5 3.5 0 0 1 6 4z"/>',
-    '<path d="M9.4 15.4 14 6.8l4.6 8.6M10.9 12.6h6.2" ' + _niW + ' stroke-width="2.4"/>'),
-  // barras ascendentes: progreso
-  progress: _ni('#A78BFA', '#53359F',
-    '<rect x="3" y="14.5" width="6" height="9.5" rx="2.2"/><rect x="11" y="9" width="6" height="15" rx="2.2"/><rect x="19" y="3.5" width="6" height="20.5" rx="2.2"/>',
-    '<path d="M5.2 17.8v3.4M13.2 12.2v6.4M21.2 6.8v9" ' + _niW + ' stroke-opacity=".55" stroke-width="1.7"/>'),
-  // persona: perfil
-  profile: _ni('#FB7185', '#9B2140',
-    '<circle cx="14" cy="8.8" r="5.6"/><path d="M3.6 24.2c0-5.8 4.6-9 10.4-9s10.4 3.2 10.4 9z"/>',
-    '<path d="M11 6.4a3.6 3.6 0 0 1 2.4-1.6M7 20.6a6.2 6.2 0 0 1 2.4-2.4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>')
+// Sticker paths for navbar icons (fresh stickers, correct folders)
+const NAV_STICKERS = {
+  learn: './assets/stickers/ajolotes_emociones/detective_investigando.png',           // 🔍 Investigando/Aprendiendo
+  review: './assets/stickers/ajolotes_emociones/sonriendo_sentado.png',                // 😊 Repaso tranquilo
+  mycards: './assets/stickers/ajolotes_emociones/chef_probando_la_receta.png',         // 👨‍🍳 Colección de recetas
+  translator: './assets/stickers/ajolotes_de_colores/ajolote_amarillo_flotando_sonriente.png', // 🌊 Fluyendo entre idiomas
+  progress: './assets/stickers/ajolotes_emociones/tranquilo_meditando.png',            // 🧘 Progreso/calma
+  profile: './assets/stickers/ajolotes_emociones/enamorado_ojos_de_corazon.png'        // 😍 Perfil/identidad
 };
 
-// Icono cartoon (el mismo de la barra inferior) en el título de cada pestaña
-[['progressView','progress','.viewHeader h2'],['translatorView','translator','.viewHeader h2'],['myCardsView','mycards','.myCardsHeader h2']].forEach(([v,k,sel])=>{
-  const h = document.querySelector('#'+v+' '+sel);
-  if(h && !h.querySelector('.tabIcon')){ const i = document.createElement('span'); i.className = 'tabIcon'; i.setAttribute('aria-hidden','true'); i.innerHTML = NAV_ICONS[k]; h.insertBefore(i, h.firstChild); }
-});
-
-// ===== Pantalla completa (escritorio y móviles que lo permiten) =====
-{
-  const fsBtn = document.getElementById('fsBtn');
-  const root = document.documentElement;
-  const reqFs = root.requestFullscreen || root.webkitRequestFullscreen;
-  const canFs = !!reqFs && (document.fullscreenEnabled || document.webkitFullscreenEnabled);
-  let standalone = false;
-  try{ standalone = window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true; }catch(e){}
-  if(fsBtn && canFs && !standalone){
-    fsBtn.hidden = false;
-    const isFs = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
-    const sync = () => {
-      const on = isFs();
-      fsBtn.classList.toggle('isFs', on);
-      fsBtn.setAttribute('aria-pressed', String(on));
-      const t = on ? 'Salir de pantalla completa' : 'Pantalla completa';
-      fsBtn.setAttribute('aria-label', t); fsBtn.title = t;
-    };
-    fsBtn.onclick = () => {
-      try{
-        if(isFs()){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
-        else { const p = reqFs.call(root); if(p && p.catch) p.catch(()=>{}); }
-      }catch(e){}
-    };
-    document.addEventListener('fullscreenchange', sync);
-    document.addEventListener('webkitfullscreenchange', sync);
-    sync();
-  }
-}
 const MAIN_NAV_ITEMS = [
-  {id:'learn', icon: NAV_ICONS.learn, label:'Aprender'},
-  {id:'review', icon: NAV_ICONS.review, label:'Repasar'},
-  {id:'mycards', icon: NAV_ICONS.mycards, label:'Mis Tarjetas'},
-  {id:'translator', icon: NAV_ICONS.translator, label:'Traductor'},
-  {id:'progress', icon: NAV_ICONS.progress, label:'Progreso'},
-  {id:'profile', icon: NAV_ICONS.profile, label:'Perfil'}
+  {id:'learn', icon: NAV_STICKERS.learn, label:'Aprender'},
+  {id:'review', icon: NAV_STICKERS.review, label:'Repasar'},
+  {id:'mycards', icon: NAV_STICKERS.mycards, label:'Mis Tarjetas'},
+  {id:'translator', icon: NAV_STICKERS.translator, label:'Traductor'},
+  {id:'progress', icon: NAV_STICKERS.progress, label:'Progreso'},
+  {id:'profile', icon: NAV_STICKERS.profile, label:'Perfil'}
 ];
 
 function switchView(v){
@@ -4253,7 +3498,7 @@ function switchView(v){
     document.getElementById('lessonView').style.display = 'none';
     document.getElementById('tableView').style.display = 'none';
     document.getElementById('examView').style.display = 'none';
-    // headerCatWrap removed - category selector moved to settings panel
+    document.getElementById('headerCatWrap').style.display = (v==='learn') ? '' : 'none';
 
     // 3) Estado interno + render
     view = v;
@@ -4387,122 +3632,17 @@ if(mq){
 const sBtn = document.getElementById('settingsBtn');
 const sPanel = document.getElementById('settingsPanel');
 function closeSettings(){ sPanel.hidden = true; sBtn.setAttribute('aria-expanded', 'false'); }
-
-function updateCatSelector(){
-  const current = currentCat;
-  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
-    b.classList.toggle('sel', b.dataset.cat === current);
-  });
-}
-
-function initCatSelector(){
-  document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
-    b.onclick = ()=> selectFocusCategory(b.dataset.cat);
-  });
-}
-
 sBtn.onclick = (e)=>{
   e.stopPropagation();
   const opening = sPanel.hidden;
   sPanel.hidden = !opening;
   sBtn.setAttribute('aria-expanded', String(opening));
-  if (opening) {
-    sPanel.scrollTo(0, 0); // auto-scroll top
-    updateCatSelector(); // refresh category selector
-  }
+  if (opening) sPanel.scrollTo(0, 0); // auto-scroll top
 };
-
-initCatSelector(); // attach category selector handlers
-
-// News/Changelog panel
-const APP_VERSION = '1.1.3';
-const APP_CHANGELOG = [
-  { version: '1.1.3', date: '2026-10-28', title: 'Mapa isométrico 2.5D', changes: [
-    'Nuevo mapa con pilares isométricos, camino brillante y fichas 3D',
-    'Decoración con nubes, montañas e islotes con ajolotes',
-    'El mapa se adapta al ancho de la pantalla',
-    'Zonas con nombre en carteles de madera, separadas por puentes',
-    'Difuminado en los bordes que se funde con el tema',
-    'Más variedad de stickers en el mapa, según el tema de cada zona, sin tapar textos ni quedar ocultos',
-    'Nuevos íconos en la barra inferior, hechos a medida',
-    'Modo ligero: si el mapa va lento te lo proponemos, y puedes activarlo o quitarlo en Ajustes',
-    'El mapa ya no se reconstruye al volver a Aprender si nada cambió',
-    'Botones táctiles más grandes y mejor adaptación a móviles en horizontal',
-    '¿Te gusta Vocabri? Nuevo botón ⭐ en el encabezado para dar una estrella al repositorio de GitHub'
-  ]},
-  { version: '1.1.2', date: '2026-10-28', title: '5 Categorías maestras + Onboarding renovado', changes: [
-    'Nuevo sistema de 5 categorías: General, Viajes, Académico, Negocios, Pop/Gaming',
-    'Onboarding completo con selector de meta XP, nivel, enfoque y tema visual',
-    'Carga dinámica de frases desde JSON externo (phraseLoader.js)',
-    'Registro de categorías centralizado (categoriesRegistry.js)'
-  ]},
-  { version: '1.1.1', date: '2026-10-15', title: 'Correcciones y mejoras de estabilidad', changes: [
-    'Fix en phraseLoader: carga correcta de frases al iniciar',
-    'Sincronización del dropdown de categoría en header',
-    'Tema y onboarding persistentes entre sesiones',
-    'Metas diarias realistas y reinicio total funcional',
-    'Auto-scroll en mapa y ajolote por defecto'
-  ]},
-  { version: '1.1.0', date: '2026-10-02', title: 'Mapa de progreso + SRS + Exámenes', changes: [
-    'Mapa de etapas con nodos desbloqueables y exámenes',
-    'Sistema SRS (Repetición Espaciada) para repasar tarjetas',
-    'Exámenes por etapa con vidas y tipos de preguntas variados',
-    'Racha diaria, meta XP configurable, nivel de usuario'
-  ]},
-  { version: '1.0.0', date: '2026-09-18', title: 'Lanzamiento inicial', changes: [
-    'Tarjetas de vocabulario con volteo 3D',
-    'Práctica con calificación (Repasar/Bien/Fácil)',
-    'Estadísticas, racha, exportar/importar datos',
-    'PWA instalable con service worker'
-  ]}
-];
-
-const nBtn = document.getElementById('newsBtn');
-const nPanel = document.getElementById('newsPanel');
-function closeNews(){ nPanel.hidden = true; nBtn.setAttribute('aria-expanded', 'false'); }
-function populateNews(){
-  document.getElementById('newsCurrentVersion').innerHTML =
-    '<span class="newsVersionLabel">Versión actual</span><span class="newsVersionNumber">' + APP_VERSION + '</span>';
-  const changelogEl = document.getElementById('newsChangelog');
-  changelogEl.innerHTML = APP_CHANGELOG.map(entry => `
-    <div class="newsEntry">
-      <div class="newsEntryVersion">v${entry.version} <span class="newsEntryDate">${entry.date}</span></div>
-      <div class="newsEntryTitle">${entry.title}</div>
-      <ul class="newsEntryChanges">${entry.changes.map(c => '<li>' + c + '</li>').join('')}</ul>
-    </div>
-  `).join('');
-}
-nBtn.onclick = (e)=>{
-  e.stopPropagation();
-  const opening = nPanel.hidden;
-  nPanel.hidden = !opening;
-  nBtn.setAttribute('aria-expanded', String(opening));
-  if (opening) {
-    populateNews();
-    nPanel.scrollTo(0, 0);
-    addScrollTopBtn(nPanel);
-  }
-};
-document.getElementById('newsCloseBtn').onclick = closeNews;
-document.addEventListener('click', e=>{
-  if(nPanel.hidden) return;
-  const path = e.composedPath ? e.composedPath() : [];
-  const inside = path.length ? path.indexOf(nPanel) >= 0 : nPanel.contains(e.target);
-  if(!inside) closeNews();
-});
-document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeNews(); });
 document.getElementById('themesBtn').onclick = ()=>{
   const box = document.getElementById('themesBox');
   box.hidden = !box.hidden;
 };
-
-document.getElementById('catSelectorBtn').onclick = ()=>{
-  const box = document.getElementById('catSelector');
-  const opening = box.hidden;
-  box.hidden = !opening;
-  if (opening) updateCatSelector();
-};
-
 document.addEventListener('click', e=>{
   if(sPanel.hidden) return;
   const path = e.composedPath ? e.composedPath() : [];
@@ -4627,12 +3767,12 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
   currentCat = masterCat;
   localStorage.setItem('ci_current_master_category', masterCat);
 
-  // Actualizar el label del selector de categorías inmediatamente
+  // Actualizar el label del dropdown inmediatamente
   let label = masterCat;
   if (window.VocabriCategories) {
     label = window.VocabriCategories.getCategoryShortLabel(masterCat);
   }
-  const labelEl = document.getElementById('catSelectorLabel');
+  const labelEl = document.getElementById('catSelectLabel');
   if (labelEl) labelEl.textContent = label;
 
   // Establecer el nodo inicial según el nivel
@@ -4644,8 +3784,8 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
   // Aplicar inmediatamente el nodo inicial para la sesión actual
   setUnlockedStage(currentCat, startNode);
 
-  // Actualizar el selector de categoría en el panel de ajustes
-  updateCatSelector();
+  // Actualizar el dropdown del header para reflejar la categoría elegida
+  buildCategoryDropdown();
 
   document.getElementById('onboardingView').style.display = 'none';
   switchView('learn');
@@ -5468,13 +4608,13 @@ if (savedMasterCat && window.VocabriCategories && window.VocabriCategories.isVal
   if (window.VocabriCategories) {
     label = window.VocabriCategories.getCategoryShortLabel(savedMasterCat);
   }
-  // catSelectLabel removed - category selector moved to settings panel
+  document.getElementById('catSelectLabel').textContent = label;
 } else {
-  // catSelectLabel removed - category selector moved to settings panel
+  document.getElementById('catSelectLabel').textContent = currentCat;
 }
 
-updateCatSelector();
-// headerCatWrap removed - category selector moved to settings panel
+buildCategoryDropdown();
+document.getElementById('headerCatWrap').style.display = (view==='learn') ? '' : 'none';
 updateTrLabels();
 render(true);
 updateGameBar();
@@ -5513,7 +4653,7 @@ const REMINDER_TAG = 'vocabri-daily-reminder';          // periodicSync tag + no
 const REMINDER_STATE_CACHE = 'vocabri-state';            // same as sw.js
 const REMINDER_STATE_URL = './vocabri-reminder-state.json';
 const REMINDER_START_HOUR = 10, REMINDER_END_HOUR = 22;  // keep in sync with sw.js
-const REMINDER_ICON = './assets/origin-logo.png';
+const REMINDER_ICON = './icons/icon-192.png';
 const REMINDER_MESSAGES = [
   '🔥 ¡No pierdas tu racha en Vocabri! Completa tu lección de hoy.',
   '🎯 Tu meta diaria te está esperando en Vocabri. ¡Tú puedes!',
