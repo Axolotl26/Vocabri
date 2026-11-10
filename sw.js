@@ -9,24 +9,50 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.4';
+const CACHE_VERSION = '1.1.5';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
-// Small JSON written by the page (app.js) and read here; it must survive version cleanups.
+// Small JSON written by the page (modules) and read here; it must survive version cleanups.
 const STATE_CACHE = 'vocabri-state';
 const STATE_URL = './vocabri-reminder-state.json';
 
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './styles.css?v=1.1.4',
-  './app.js?v=1.1.4',
+  './styles.css?v=1.1.5',
   './manifest.json',
   './categoriesRegistry.js',
   './phraseLoader.js',
   './config.js',
+  './firebase.js',
   './base_de_datos_de_frases_vocabri.json',
+  './app/main.js',
+  './app/core/shared.js',
+  './app/core/dataRegistry.js',
+  './app/core/cloudMerge.js',
+  './app/core/layout.js',
+  './app/core/answerMatch.js',
+  './app/core/srs.js',
+  './app/state.js',
+  './app/ui.js',
+  './app/map.js',
+  './app/mapData.js',
+  './app/mapRenderer.js',
+  './app/lesson.js',
+  './app/exam.js',
+  './app/review.js',
+  './app/progress.js',
+  './app/myCards.js',
+  './app/translator.js',
+  './app/profile.js',
+  './app/settings.js',
+  './app/sync.js',
+  './app/speech.js',
+  './app/categoryOptions.js',
+  './app/dictation.js',
+  './app/mascot.js',
+  './app/shortcuts.js',
   './assets/origin-logo.png',
   './assets/ajolote_logo.webp',
   './assets/ajolote_logo.png',
@@ -37,7 +63,7 @@ const PRECACHE_URLS = [
   './assets/stickers/ajolotes_emociones/asustado_manos_en_mejillas.png'
 ];
 
-// ---- Reminders (keep in sync with app.js) ----
+// ---- Reminders (keep in sync with modules: state.js, progress.js) ----
 const REMINDER_TAG = 'vocabri-daily-reminder';
 const REMINDER_START_HOUR = 10;   // local time window in which a reminder may be sent
 const REMINDER_END_HOUR = 22;

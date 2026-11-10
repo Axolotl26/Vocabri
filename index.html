@@ -8,12 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
 <link rel="icon" href="assets/origin-logo.png">
-<link rel="stylesheet" href="styles.css?v=1.1.4">
+<link rel="stylesheet" href="styles.css?v=1.1.5">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/origin-logo.png">
 <meta name="apple-mobile-web-app-title" content="Vocabri">
 <script src="./categoriesRegistry.js"></script>
-<script src="./phraseLoader.js"></script>
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -645,10 +644,12 @@
       <div class="voiceModalBody">
         <label class="fLabel">Voz en Inglés (EN)</label>
         <select id="voiceEn" class="search focus-glow"></select>
+        <p class="voiceHint" id="voiceEnHint" aria-live="polite"></p>
         <button class="nav hover-scale focus-glow" id="voiceTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en inglés</button>
         
         <label class="fLabel">Voz en Español (ES)</label>
         <select id="voiceEs" class="search focus-glow"></select>
+        <p class="voiceHint" id="voiceEsHint" aria-live="polite"></p> 
         <button class="nav hover-scale focus-glow" id="voiceEsTestBtn" type="button" style="width:100%; margin-bottom:14px;">🔊 Probar voz en español</button>
 
         <div class="infoBox" style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px; margin-top:10px;">
@@ -744,7 +745,6 @@
   <button class="nav updateBtn" id="updateNowBtn" type="button">✨ Nueva versión disponible - Actualizar ahora</button>
 </div>
 
-<script src="app.js?v=1.1.4"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -755,105 +755,7 @@
   }
 </script>
 <script src="config.js"></script>
-<script type="module">
-
-/* =====================================================================
-Firebase (Auth + Firestore) — sincronización en la nube OPCIONAL*/
-
-// Config loaded from config.js (window.VocabriConfig.firebaseConfig)
-const firebaseConfig = window.VocabriConfig?.firebaseConfig || {};
-
-
-const FIREBASE_VERSION = '10.14.1';
-const CDN = 'https://www.gstatic.com/firebasejs/' + FIREBASE_VERSION + '/';
-let loading = null;
-
-function configIsReady(cfg){
-  return !!cfg.apiKey && !!cfg.appId && !/^PEGA_AQUI/.test(cfg.apiKey) && !/^PEGA_AQUI/.test(cfg.appId);
-}
-
-async function loadFirebase(){
-  if(window.VocabriFirebase) return window.VocabriFirebase;
-  if(loading) return loading;
-  loading = (async ()=>{
-    if(!configIsReady(firebaseConfig)){
-      throw Object.assign(new Error('Firebase sin configurar'), {code: 'vocabri/not-configured'});
-    }
-    // Offline: don't even try. A failed import() is remembered by the browser for the whole page session,
-    // so we wait for the 'online' event (app.js calls vocabriLoadFirebase again) to make the first real attempt.
-    if(navigator.onLine === false){
-      throw Object.assign(new Error('Sin conexión'), {code: 'vocabri/offline'});
-    }
-    const [appMod, authMod, fsMod] = await Promise.all([
-      import(CDN + 'firebase-app.js'),
-      import(CDN + 'firebase-auth.js'),
-      import(CDN + 'firebase-firestore.js')
-    ]);
-    const app = appMod.initializeApp(firebaseConfig);
-    const auth = authMod.getAuth(app);
-    const db = fsMod.getFirestore(app);
-    // Offline-first: Firestore keeps a local copy in IndexedDB and queues writes while offline.
-    try{ await fsMod.enableIndexedDbPersistence(db); }
-    catch(e){ console.warn('[Vocabri] Firestore sin caché offline:', e && e.code); }   // e.g. several tabs open
-
-    const provider = new authMod.GoogleAuthProvider();
-    provider.setCustomParameters({prompt: 'select_account'});
-
-    const api = {
-      auth, db,
-      onAuthStateChanged: (cb)=> authMod.onAuthStateChanged(auth, cb),
-      currentUser: ()=> auth.currentUser,
-      async signIn(){
-        try{
-          return await authMod.signInWithPopup(auth, provider);
-        }catch(e){
-          // Some embedded browsers cannot open popups: fall back to a full-page redirect.
-          if(e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')){
-            await authMod.signInWithRedirect(auth, provider);
-            return null;
-          }
-          throw e;
-        }
-      },
-      async redirectResult(){ try{ return await authMod.getRedirectResult(auth); }catch(e){ return null; } },
-      signOut: ()=> authMod.signOut(auth),
-
-      // users/{uid}  → profile of the signed-in user
-      async upsertUser(uid, profile){
-        const ref = fsMod.doc(db, 'users', uid);
-        let isNew = false;
-        try{ isNew = !(await fsMod.getDoc(ref)).exists(); }catch(e){ isNew = false; }   // offline: don't claim "new"
-        const data = Object.assign({}, profile, {app: 'vocabri', lastLoginAt: fsMod.serverTimestamp()});
-        if(isNew) data.createdAt = fsMod.serverTimestamp();
-        await fsMod.setDoc(ref, data, {merge: true});
-      },
-      // users/{uid}/progress/data → the synced progress
-      async getProgress(uid){
-        const snap = await fsMod.getDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'));
-        return snap.exists() ? snap.data() : null;
-      },
-      async setProgress(uid, payload){
-        await fsMod.setDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'),
-          Object.assign({}, payload, {updatedAt: fsMod.serverTimestamp()}));
-      },
-      async deleteProgress(uid){
-        await fsMod.deleteDoc(fsMod.doc(db, 'users', uid, 'progress', 'data'));
-      }
-    };
-    window.VocabriFirebase = api;
-    window.dispatchEvent(new CustomEvent('vocabri-firebase-ready'));
-    return api;
-  })();
-  try{
-    return await loading;
-  }catch(e){
-    loading = null;
-    window.dispatchEvent(new CustomEvent('vocabri-firebase-unavailable', {detail: {code: (e && e.code) || '', message: String((e && e.message) || e)}}));
-    throw e;
-  }
-}
-window.vocabriLoadFirebase = loadFirebase;      // app.js retries this when the connection comes back
-loadFirebase().catch((e)=> console.warn('[Vocabri] Sincronización en la nube no disponible:', (e && e.code) || (e && e.message)));
-</script>
+<script type="module" src="firebase.js"></script> 
+<script type="module" src="app/main.js"></script>
 </body>
 </html>
