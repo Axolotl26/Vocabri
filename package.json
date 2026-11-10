@@ -1,0 +1,25 @@
+{
+  "name": "vocabri",
+  "version": "1.1.5",
+  "description": "Vocabri - English learning app with SRS, phrases, and interactive map",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "vocabulary",
+    "srs",
+    "learning",
+    "english",
+    "pwa"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/ui": "^5.1.0",
+    "happy-dom": "^21.0.4",
+    "vitest": "^5.1.0"
+  }
+}
