@@ -221,30 +221,7 @@ export function hideDictation(){
 
 function wire(){
   const view = ensureView();
-  // Botones de entrada dentro de Repaso: cabecera, pantalla "sin tarjetas" y resumen final.
-  const mk = (id, cls, text, css) => {
-    if(document.getElementById(id)) return document.getElementById(id);
-    const b = document.createElement('button');
-    b.id = id; b.type = 'button'; b.className = cls; b.textContent = text;
-    if(css) b.style.cssText = css;
-    b.onclick = startDictation;
-    return b;
-  };
-  const head = document.querySelector('#reviewView .reviewHeader');
-  if(head && !document.getElementById('reviewDictBtn')){
-    const hb = mk('reviewDictBtn', 'miniBtn hover-scale focus-glow', '🎧', '');
-    hb.setAttribute('aria-label', 'Practicar dictado: Escucha y escribe');
-    hb.title = 'Escucha y escribe';
-    head.insertBefore(hb, document.getElementById('reviewCount'));
-  }
-  const emptyBtn = document.getElementById('reviewEmptyLearnBtn');
-  if(emptyBtn && !document.getElementById('reviewEmptyDictBtn')){
-    emptyBtn.parentNode.insertBefore(mk('reviewEmptyDictBtn', 'nav hover-scale focus-glow', '🎧 Practicar dictado', ''), emptyBtn);
-  }
-  const sumBtn = document.getElementById('reviewSumMapBtn');
-  if(sumBtn && !document.getElementById('reviewSumDictBtn')){
-    sumBtn.parentNode.insertBefore(mk('reviewSumDictBtn', 'showAnswerBtn rvMore hover-scale focus-glow', '🎧 Practicar dictado', ''), sumBtn);
-  }
+  // El acceso a «Escucha y escribe» vive en la fila «Modos de práctica» de Repaso (modes.js).
   view.querySelector('#dictBackBtn').onclick = closeDictation;
   view.querySelector('#dictPlayBtn').onclick = playCurrent;
   view.querySelector('#dictSkipBtn').onclick = () => { if(D && !D.answered) resolve(false, null, true); };

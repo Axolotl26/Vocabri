@@ -177,10 +177,29 @@ export function initCatSelector(){
  // attach category selector handlers
 
 // News/Changelog panel
-export const APP_VERSION = '1.1.5';
+export const APP_VERSION = '1.1.6';
 
 
 export const APP_CHANGELOG = [
+  { version: '1.1.6', date: '2026-11-13', title: 'Escenas, rutas por objetivo, puntos débiles y entrevistas', changes: [
+    'Nuevo modo «Abecedario»: las 26 letras en inglés con su nombre en texto y con sonido, palabra de ejemplo, deletreo y «escuchar todo»',
+    'Repaso ahora tiene un solo botón «Modos de práctica» que abre el menú con todos los modos (Escucha y escribe, Abecedario, Escenas, Rutas y Puntos débiles) con iconos nuevos',
+    'Nuevo panel de actualización: muestra a qué versión vas y qué cambia, con barra de progreso; en Configuración → Actualizaciones puedes buscar si tienes la última versión',
+    'Ajustes renovados: ocupa casi toda la pantalla, tiene botón ✕, secciones ordenadas (Apariencia, Estudio, Sonido y avisos, Experiencia, Datos y cuenta) e iconos cartoon en lugar de emojis',
+    'Escenas ampliadas: ahora son 23 (taxi, farmacia, médico, compras, banco, cafetería, reunión de equipo, soporte técnico, presentar un proyecto y más), con filtros por tema y nivel',
+    'Las escenas ahora se ven como un chat de teléfono: con la persona en línea, su avatar y un fondo de dibujitos según el tema de cada escena',
+    'Menús centrados: Ajustes, Novedades y Apoyo se abren en el centro de la pantalla, de uno en uno, y se cierran con ✕ o tocando fuera',
+    'Tarjetas de Rutas con el mismo estilo que las del mapa, con su propio ambiente azul y barra de progreso del día',
+    'Rutas rediseñadas: iconos cartoon por objetivo, menú más claro la zona de tarjetas más ordenada, el scroll funciona y las tarjetas vuelven a voltearse',
+    'Flecha atrás en Repaso para salir de las tarjetas, y Rutas con su propia pantalla',
+    'Nuevas Escenas (Repaso → Modos de práctica → 🎭 Escenas): 6 conversaciones guiadas (hotel, restaurante, aeropuerto, calle, entrevista y profesor). La otra persona habla con voz y tú eliges o escribes tu parte',
+    'Nuevas Rutas por objetivo (Repaso → Modos de práctica → Rutas): elige para qué quieres el inglés y en cuántos días, y te armo un camino corto con frases que aún no has estudiado',
+    'Nuevo «Puntos débiles» en Repaso: entrena las frases que más fallas y aún no se te asientan; la lista se vacía sola cuando las dominas',
+    'Nueva zona «Entrevistas de Trabajo» en Negocios: 32 frases nuevas para presentarte, hablar de tu experiencia, preguntar por el sueldo y despedirte',
+    'Perfil → «Exportar tus frases»: descarga tu vocabulario para Anki (.txt) o como CSV para Excel y Hojas de cálculo',
+    'Guía de atajos actualizada con las teclas de las Escenas',
+    'Más pruebas automáticas (Escenas, Rutas, Puntos débiles y exportación)'
+  ]},
   { version: '1.1.5', date: '2026-11-10', title: 'Escucha y escribe, ajolote reactivo y atajos de teclado', changes: [
     'Nuevo modo «Escucha y escribe» en Repaso: escuchas la frase, la escribes y ajustas la velocidad del audio',
     'Repaso renovado con el mismo estilo que el resto de pestañas: resumen, meta diaria y gráfica de los próximos 7 días',
@@ -620,23 +639,13 @@ export function showUpdateBanner(worker){
   S._waitingWorker = worker || S._waitingWorker;
   const banner = document.getElementById('updateBanner');
   if(banner) banner.hidden = false;
+  document.dispatchEvent(new Event('vocabri-update-ready'));
 }
 
 
+// El panel de actualización (updater.js) muestra la versión nueva y aplica el cambio con barra de progreso.
 export function applyPwaUpdate(){
-  const btn = document.getElementById('updateNowBtn');
-  if(btn){ btn.disabled = true; btn.textContent = 'Actualizando…'; }
-  let reloaded = false;
-  const reload = ()=>{ if(reloaded) return; reloaded = true; window.location.reload(); };
-  // Reload as soon as the new worker takes control.
-  navigator.serviceWorker.addEventListener('controllerchange', reload);
-  navigator.serviceWorker.getRegistration().then(reg=>{
-    const worker = (reg && reg.waiting) || S._waitingWorker;
-    if(worker) worker.postMessage({type: 'SKIP_WAITING'});
-    else reload();
-  }).catch(reload);
-  // Fallback: never leave the user hanging if that event doesn't arrive.
-  setTimeout(reload, 2500);
+  document.dispatchEvent(new Event('vocabri-open-update'));
 }
 
 

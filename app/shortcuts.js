@@ -37,6 +37,10 @@ export const SHORTCUT_GROUPS = [
   { title: '✍️ Escribir (examen y Escucha y escribe)', rows: [
     [['Enter'], 'Comprobar la respuesta y, después, continuar']
   ]},
+  { title: '🎭 Escenas', rows: [
+    [['1', '2', '3'], 'Elegir una de las frases (modo «Elegir»)'],
+    [['Enter'], 'Comprobar lo que escribiste (modo «Escribirla»)']
+  ]},
   { title: '🧭 En cualquier pantalla', rows: [
     [['Esc'], 'Cerrar el menú o la ventana abierta'],
     [['Tab'], 'Moverte entre botones; Enter o Espacio los activa']

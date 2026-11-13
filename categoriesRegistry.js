@@ -30,9 +30,9 @@ export const MASTER_CATEGORIES = [
   },
   {
     id: 'business', name: 'Negocios y Profesional', emoji: '💼', shortLabel: 'Negocios',
-    description: 'Reuniones, emails, negociación', color: '#22C55E',
+    description: 'Reuniones, emails, entrevistas', color: '#22C55E',
     source: 'business_and_professional', jsonKey: 'business_and_professional',
-    zones: { sizes: [24, 24, 24, 28], names: ['Correos Profesionales', 'Reuniones', 'Finanzas y Ventas', 'Gestión y Estrategia'] }
+    zones: { sizes: [24, 24, 24, 28, 32], names: ['Correos Profesionales', 'Reuniones', 'Finanzas y Ventas', 'Gestión y Estrategia', 'Entrevistas de Trabajo'] }
   },
   {
     id: 'pop', name: 'Cultura pop y Gaming', emoji: '🎮', shortLabel: 'Pop & Gaming',
