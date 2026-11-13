@@ -28,6 +28,7 @@ export function reviewShow(part){   // 'card' | 'empty' | 'summary'
   reviewEl('reviewProgress').style.display = part === 'card' ? '' : 'none';
   reviewEl('reviewEmpty').style.display = part === 'empty' ? '' : 'none';
   reviewEl('reviewSummary').style.display = part === 'summary' ? '' : 'none';
+  reviewEl('reviewView').classList.toggle('rvInSession', part === 'card');   // la flecha «atrás» solo se ve con tarjetas en pantalla
   if(part !== 'card'){
     reviewEl('reviewExample').style.display = 'none';
     reviewEl('reviewLeech').style.display = 'none';
@@ -127,6 +128,9 @@ function renderSummaryExtras(acc){
 }
 
 export function renderReviewView(){
+  // Salir de la sesión (flecha atrás): se muestra el panel de inicio con todos los modos
+  const lobby = !!S.reviewLobby; S.reviewLobby = false;
+  if(lobby) window.currentReviewStage = null;
   const stage = window.currentReviewStage;
   let cards;
   if(stage && stage.items && stage.items.length){
@@ -136,11 +140,27 @@ export function renderReviewView(){
     cards = getDueCards();
   }
   S.reviewUndo = null;
-  reviewEl('reviewBackBtn').onclick = () => switchView('learn');
+  reviewEl('reviewBackBtn').onclick = () => { S.reviewLobby = true; renderReviewView(); scrollTopNow('reviewView'); };
+  const resume = ensureResumeBtn();
+  resume.style.display = 'none';
   reviewEl('reviewEmptyLearnBtn').onclick = () => switchView('learn');
-  setReviewTitle(stage ? (stage.label || 'Repasar sección') : 'Repasar', stage ? 'Repaso de las tarjetas de esta sección del mapa.' : '');
+  setReviewTitle(stage ? (stage.label || 'Repasar sección') : 'Repasar', stage ? (stage.sub || 'Repaso de las tarjetas de esta sección del mapa.') : '');
   updateReviewBadge();
+  document.dispatchEvent(new Event('vocabri-review-render'));
 
+  if(lobby && cards.length){
+    reviewShow('empty');
+    reviewEl('reviewCount').textContent = cards.length + (cards.length === 1 ? ' pendiente' : ' pendientes');
+    reviewEl('reviewEmpty').querySelector('.rvBig').textContent = 'Tu repaso te espera';
+    reviewEl('reviewEmptyHint').textContent = 'Tienes ' + cards.length + (cards.length === 1 ? ' tarjeta' : ' tarjetas') + ' por repasar. Elige un modo de práctica o continúa cuando quieras.';
+    resume.textContent = '▶ Repasar ahora (' + cards.length + ')';
+    resume.style.display = '';
+    resume.onclick = () => renderReviewView();
+    renderReviewOverview();
+    renderReviewForecast('reviewEmptyForecast');
+    return;
+  }
+  reviewEl('reviewEmpty').querySelector('.rvBig').textContent = '¡No hay tarjetas para repasar!';
   if(!cards.length){
     reviewShow('empty');
     reviewEl('reviewCount').textContent = 'Al día';
@@ -159,6 +179,18 @@ export function renderReviewView(){
 }
 
 
+
+function ensureResumeBtn(){
+  let b = document.getElementById('reviewResumeBtn');
+  if(!b){
+    b = document.createElement('button');
+    b.id = 'reviewResumeBtn'; b.type = 'button'; b.className = 'showAnswerBtn hover-scale focus-glow';
+    b.style.cssText = 'margin-top:14px;display:none;';
+    const learn = reviewEl('reviewEmptyLearnBtn');
+    learn.parentNode.insertBefore(b, learn);
+  }
+  return b;
+}
 
 export function updateReviewProgress(){
   const s = S.reviewSession;
@@ -224,6 +256,7 @@ export function revealReviewAnswer(){
     ex.innerHTML = '<p class="rvExEn">“' + rvEsc(it[4]) + '”</p>' + (it[5] ? '<p class="rvExEs">' + rvEsc(it[5]) + '</p>' : '');
     ex.style.display = '';
   }
+  document.dispatchEvent(new Event('vocabri-review-reveal'));
 }
 
 
@@ -345,6 +378,7 @@ export function finishReviewSession(){
   reviewEl('reviewSumMapBtn').onclick = () => switchView('learn');
   renderReviewForecast('reviewSumForecast');
   updateReviewBadge();
+  document.dispatchEvent(new Event('vocabri-review-render'));
 }
 
 

@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.5';
+const CACHE_VERSION = '1.1.6';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -27,6 +27,9 @@ const PRECACHE_URLS = [
   './config.js',
   './firebase.js',
   './base_de_datos_de_frases_vocabri.json',
+  './styles-1.1.6.css?v=1.1.6-r7',
+  './app/updater.js',
+  './app/core/version.js',
   './app/main.js',
   './app/core/shared.js',
   './app/core/dataRegistry.js',
@@ -34,6 +37,12 @@ const PRECACHE_URLS = [
   './app/core/layout.js',
   './app/core/answerMatch.js',
   './app/core/srs.js',
+  './app/core/weakSpots.js',
+  './app/core/exportCards.js',
+  './app/core/routes.js',
+  './app/core/scenes.js',
+  './app/core/scenesData.js',
+  './app/core/alphabet.js',
   './app/state.js',
   './app/ui.js',
   './app/map.js',
@@ -53,6 +62,12 @@ const PRECACHE_URLS = [
   './app/dictation.js',
   './app/mascot.js',
   './app/shortcuts.js',
+  './app/weakSpots.js',
+  './app/exportCards.js',
+  './app/routes.js',
+  './app/scenes.js',
+  './app/alphabet.js',
+  './app/modes.js',
   './assets/origin-logo.png',
   './assets/ajolote_logo.webp',
   './assets/ajolote_logo.png',
@@ -115,6 +130,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;              // fonts, Google sign-in, translation APIs → network
   if (url.pathname.endsWith('/vocabri-reminder-state.json')) return;
+  if (url.pathname.endsWith('/version.json')) return;         // siempre desde la red: sirve para saber si hay versión nueva
 
   if (req.mode === 'navigate') {
     event.respondWith(staleWhileRevalidate(event, req, './index.html'));

@@ -25,9 +25,25 @@ import * as settings from './settings.js';
 import * as translator from './translator.js';
 import * as sync from './sync.js';
 import * as dictation from './dictation.js';
+import * as weakSpots from './weakSpots.js';
+import * as exportCards from './exportCards.js';
+import * as routes from './routes.js';
+import * as scenes from './scenes.js';
+import * as alphabet from './alphabet.js';
+import * as modes from './modes.js';
+import * as updater from './updater.js';
+import * as settingsUi from './settingsUi.js';
 import * as shortcuts from './shortcuts.js';
 
-const MODULES = { dataRegistry, mapData, mapRenderer, map, state, ui, lesson, progress, review, myCards, profile, speech, exam, settings, translator, sync, dictation, shortcuts };
+// Estilos de las funciones de la 1.1.6 (Puntos débiles, Rutas, Escenas, Exportar): archivo aparte, así no hay que pegar nada en styles.css.
+(function(){
+  if(document.querySelector('link[data-vocabri-css="1.1.6"]')) return;
+  const l = document.createElement('link');
+  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r7'; l.setAttribute('data-vocabri-css', '1.1.6');
+  document.head.appendChild(l);
+})();
+
+const MODULES = { dataRegistry, mapData, mapRenderer, map, state, ui, lesson, progress, review, myCards, profile, speech, exam, settings, translator, sync, dictation, shortcuts, weakSpots, exportCards, routes, scenes, alphabet, modes, updater, settingsUi };
 
 function runInits(){
   const all = [];

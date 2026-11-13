@@ -543,6 +543,8 @@ export function switchView(v){
     document.getElementById('tableView').style.display = 'none';
     document.getElementById('examView').style.display = 'none';
     const dictV = document.getElementById('dictView'); if(dictV) dictV.style.display = 'none';
+    const rtV = document.getElementById('routeView'); if(rtV) rtV.style.display = 'none';
+    const abcV = document.getElementById('abcView'); if(abcV) abcV.style.display = 'none';
     try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
     // headerCatWrap removed - category selector moved to settings panel
 
@@ -710,7 +712,7 @@ document.querySelectorAll('.goalOpt').forEach(b=>{
   }],
   [3404, function(){
 (function(){
-  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView'];
+  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView','routeView','abcView'];
   document.addEventListener('wheel', function(e){
     try{
       if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
