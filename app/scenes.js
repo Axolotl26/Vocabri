@@ -4,7 +4,7 @@ import { SCENES, SCENE_GROUPS, SCENE_LEVELS } from './core/scenesData.js';
 import { SCENE_MAX_TRIES, buildOptions, normalizeStore, recordRun, scoreRun, validateScene, youTurns } from './core/scenes.js';
 import { TTS_SUPPORTED, evaluateWrittenAnswer, nearMissNote } from './exam.js';
 import { shortcutsEnabled } from './shortcuts.js';
-import { speak } from './speech.js';
+import { speak, speakAlt } from './speech.js';
 import { awardXp } from './ui.js';
 
 const STORE_KEY = 'vocabri_scenes', PREF_KEY = 'vocabri_scene_prefs';
@@ -16,7 +16,7 @@ function saveStore(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); 
 function loadPrefs(){
   let p = {};
   try{ p = JSON.parse(localStorage.getItem(PREF_KEY) || '{}') || {}; }catch(e){}
-  return { mode: p.mode === 'type' ? 'type' : 'pick', voice: p.voice !== false, tr: p.tr !== false };
+  return { mode: p.mode === 'type' ? 'type' : 'pick', voice: p.voice !== false, alt: p.alt !== false, tr: p.tr !== false };
 }
 function savePrefs(){ try{ localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); }catch(e){} }
 
@@ -29,7 +29,11 @@ const ov = () => document.getElementById('scenesOverlay');
 const body = () => document.getElementById('snBody');
 const later = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); };
 function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-function say(text){ if(prefs.voice && TTS_SUPPORTED) speak(text, 'en-US', 0.92); }
+// who: 'npc' habla con una voz distinta a la tuya (si hay otra disponible)
+function say(text, who){
+  if(!prefs.voice || !TTS_SUPPORTED) return;
+  if(who === 'npc' && prefs.alt) speakAlt(text, 'en-US', 0.92); else speak(text, 'en-US', 0.92);
+}
 
 const GOOD = SCENES.filter(s => !validateScene(s).length);
 
@@ -80,7 +84,7 @@ function showIntro(id){
     '<div class="snLabel">¿Cómo quieres responder?</div><div class="snChips" role="group" aria-label="Modo">' +
       chip('pick', prefs.mode === 'pick', '🧩 Elegir la frase') + chip('type', prefs.mode === 'type', '⌨️ Escribirla') + '</div>' +
     '<div class="snLabel">Ayudas</div><div class="snChips" role="group" aria-label="Ayudas">' +
-      (TTS_SUPPORTED ? chip('voice', prefs.voice, '🔊 Voz') : '') + chip('tr', prefs.tr, '🇪🇸 Traducción') + '</div>' +
+      (TTS_SUPPORTED ? chip('voice', prefs.voice, '🔊 Voz') + chip('alt', prefs.alt, '🎭 Voces distintas') : '') + chip('tr', prefs.tr, '🇪🇸 Traducción') + '</div>' +
     '<button class="nav hover-scale focus-glow snStart" id="snStart" type="button">Empezar la escena</button>' +
     '<button class="snBack hover-scale focus-glow" id="snToList" type="button">← Todas las escenas</button></div>';
   const b = body().querySelector('#snStart'); if(b) b.focus({ preventScroll: true });
@@ -120,7 +124,7 @@ function advance(){
   const s = R.scene, tok = R.token;
   while(R.idx < s.turns.length && s.turns[R.idx].who === 'npc'){
     addBubble(s.turns[R.idx], 'npc');
-    say(s.turns[R.idx].en);
+    say(s.turns[R.idx].en, 'npc');
     R.idx++;
   }
   updateProg();

@@ -2,6 +2,7 @@
 // Vista propia (como Escucha y escribe y Rutas). No toca el calendario de repaso ni guarda nada.
 import { ALPHABET, isVowel, spellSay, spellWord } from './core/alphabet.js';
 import { TTS_SUPPORTED } from './exam.js';
+import { chosenVoice } from './speech.js';
 import { _ni, scrollTopNow, switchView } from './ui.js';
 
 export const ABC_ICON = _ni('#A78BFA', '#4C2C9E',
@@ -19,6 +20,7 @@ function voice(text, rate, onend){
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-US'; u.rate = rate || 0.85;
+    try{ const v = chosenVoice('en'); if(v) u.voice = v; }catch(e){}
     let fired = false;
     const end = () => { if(fired) return; fired = true; if(onend) onend(); };
     u.onend = end; u.onerror = end;

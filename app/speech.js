@@ -1,6 +1,7 @@
 // Vocabri — módulo "speech" (generado a partir de app.js)
 import { S } from './core/shared.js';
 import { closeSettings } from './settings.js';
+import { pickAlternate } from './core/voices.js';
 
 
 export function scoreVoice(v){
@@ -99,19 +100,62 @@ export const voiceModalDoneEl = document.getElementById('voiceModalDoneBtn');
 
 
 
-export function speak(text, lang, rate){
+// Voz elegida por el usuario (o la mejor disponible) para un idioma.
+export function chosenVoice(lang){
+  const l = (lang || 'en').slice(0, 2);
+  const el = document.getElementById(l === 'en' ? 'voiceEn' : 'voiceEs');
+  if(!S.voices || S.voices.length === 0) S.voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  return S.voices.find(v => el && v.voiceURI === el.value) || bestVoiceFor(l);
+}
+// Voz distinta a la principal (para «la otra persona» en las escenas). Si no hay otra, devuelve la principal.
+export function alternateVoice(lang){
+  const main = chosenVoice(lang);
+  return pickAlternate(S.voices, main && main.voiceURI, (lang || 'en').slice(0, 2), scoreVoice) || main;
+}
+let _noVoiceWarned = false;
+function warnNoVoice(){
+  if(_noVoiceWarned) return; _noVoiceWarned = true;
+  import('./ui.js').then(m => m.showToast('No hay voz en inglés en este dispositivo. Instala una en los ajustes de voz del sistema o prueba otro navegador.', '🔇', 5000)).catch(() => {});
+}
+
+// opts: { voice, onend }
+export function speak(text, lang, rate, opts){
   if(!('speechSynthesis' in window) || !text) return;
+  const o = opts || {};
+  const synth = window.speechSynthesis;
+  const run = (voice, retried) => {
+    try{
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = rate || 0.95;
+      if(voice) u.voice = voice;
+      let started = false, done = false;
+      const finish = () => { if(done) return; done = true; if(o.onend) o.onend(); };
+      u.onstart = () => { started = true; };
+      u.onend = finish;
+      u.onerror = (ev) => {
+        const err = ev && ev.error;
+        if(err === 'canceled' || err === 'interrupted'){ finish(); return; }
+        if(!retried){ try{ synth.cancel(); }catch(e){} setTimeout(() => run(null, true), 80); }   // reintento con la voz por defecto
+        else finish();
+      };
+      synth.speak(u);
+      // Algunos navegadores se quedan mudos tras cancel(): si no arrancó, un solo reintento
+      setTimeout(() => {
+        if(!started && !done && !retried && !synth.speaking){ try{ synth.cancel(); }catch(e){} run(voice, true); }
+      }, 1200);
+    }catch(e){ if(o.onend) o.onend(); }
+  };
   try{
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
-    u.rate = rate || 0.95;
-    const selId = lang.startsWith('en') ? 'voiceEn' : 'voiceEs';
-    const chosenURI = document.getElementById(selId).value;
-    const v = S.voices.find(v=> v.voiceURI === chosenURI) || bestVoiceFor(lang.slice(0,2));
-    if(v) u.voice = v;
-    window.speechSynthesis.speak(u);
+    synth.cancel();
+    const v = o.voice || chosenVoice(lang);
+    if(!v && lang.toLowerCase().startsWith('en') && S.voices && S.voices.length > 0) warnNoVoice();
+    setTimeout(() => run(v, false), 40);   // evita que cancel() + speak() inmediatos se pierdan
   }catch(e){}
+}
+
+export function speakAlt(text, lang, rate, opts){
+  speak(text, lang, rate, Object.assign({ voice: alternateVoice(lang) }, opts || {}));
 }
 
 
