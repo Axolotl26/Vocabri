@@ -28,6 +28,7 @@ const ICONS = {
   gamepad: P('#4ADE80', '#14783B', '<path d="M8 8.500h12c3.300 0 5.300 3.500 5.800 8 .3 2.700-.6 5-2.900 5-1.600 0-2.600-1.200-3.700-2.500H8.800c-1.100 1.300-2.100 2.500-3.700 2.500-2.300 0-3.200-2.300-2.900-5C2.700 12 4.700 8.500 8 8.500z"/>', '<path d="M8.800 13.200v4.200M6.700 15.300h4.200" ' + W + ' stroke-width="2.2"/><circle cx="18.200" cy="14.200" r="1.300" fill="#fff"/><circle cx="21" cy="16.600" r="1.300" fill="#fff"/>'),
   star: P('#FBBF24', '#9A5A07', '<polygon points="14,2.600 17.500,10 25.500,10.900 19.600,16.300 21.300,24.200 14,20.200 6.700,24.200 8.400,16.300 2.500,10.900 10.500,10"/>', '<path d="M9.600 9.600l2.800-3.600" ' + W + ' stroke-opacity=".7" stroke-width="1.8"/>'),
   folder: P('#38BDF8', '#0B6190', '<path d="M3.500 8.500a2.500 2.500 0 0 1 2.500-2.500h5.200l2.600 3h8.200a2.500 2.500 0 0 1 2.500 2.500v9.500a2.500 2.500 0 0 1-2.500 2.500H6a2.500 2.500 0 0 1-2.500-2.500z"/>', '<path d="M3.800 12.800h20.400" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.800"/>'),
+  gear: P('#B9CBEE', '#3F5489', '<path fill-rule="evenodd" d="M21.93 11.55 L25.43 12.04 L25.43 15.96 L21.93 16.45 L21.34 17.87 L23.47 20.70 L20.70 23.47 L17.87 21.34 L16.45 21.93 L15.96 25.43 L12.04 25.43 L11.55 21.93 L10.13 21.34 L7.30 23.47 L4.53 20.70 L6.66 17.87 L6.07 16.45 L2.57 15.96 L2.57 12.04 L6.07 11.55 L6.66 10.13 L4.53 7.30 L7.30 4.53 L10.13 6.66 L11.55 6.07 L12.04 2.57 L15.96 2.57 L16.45 6.07 L17.87 6.66 L20.70 4.53 L23.47 7.30 L21.34 10.13 Z M10.40 14.00 a3.60 3.60 0 1 0 7.20 0 a3.60 3.60 0 1 0 -7.20 0 Z"/>', '<path d="M7.600 9.800a7.600 7.600 0 0 1 3.400-3.200" ' + W + ' stroke-opacity=".55" stroke-width="1.8"/>'),
   menu: P('#A78BFA', '#4C2C9E', '<rect x="3" y="5" width="22" height="16" rx="4.500"/>', '<path d="M8.200 10.200h11.600M8.200 13h11.600M8.200 15.800h11.600" ' + W + ' stroke-width="2.2"/>'),
   close: P('#F472B6', '#9D2461', '<rect x="3" y="5" width="22" height="16" rx="4.500"/>', '<path d="M9.800 9.600l8.400 7.200M18.200 9.600l-8.400 7.200" ' + W + ' stroke-width="2.4"/>'),
   news: P('#38BDF8', '#0B6190', '<rect x="3" y="5" width="22" height="16" rx="3.800"/>', '<path d="M7.400 9.600h5.400v4.200H7.400zM15 10.200h5.600M15 13.600h5.600M7.400 17h13.200" ' + W + ' stroke-width="2"/>')
@@ -40,11 +41,17 @@ const q = id => document.getElementById(id);
 // Cambia el emoji inicial de un botón por su SVG (y lo repite si otro código vuelve a escribir el texto)
 function decorate(btn){
   if(!btn || btn.querySelector('small') || btn.querySelector('.spBtnIc')) return;
-  const txt = btn.textContent, m = txt.match(EMOJI_RE);
+  const first = btn.firstChild;
+  if(!first || first.nodeType !== 3) return;
+  const m = first.data.match(EMOJI_RE);
   if(!m) return;
   const key = EMOJI_KEY[m[1].replace(/[️‍]/g, '')];
   if(!key) return;
-  btn.innerHTML = '<span class="spBtnIc" aria-hidden="true">' + ICONS[key] + '</span><span class="spBtnTx">' + esc(txt.slice(m[0].length).trim()) + '</span>';
+  first.data = first.data.slice(m[0].length);                // quita solo el emoji; el resto (p. ej. #catSelectorLabel) se conserva
+  const tx = document.createElement('span'); tx.className = 'spBtnTx';
+  while(btn.firstChild) tx.appendChild(btn.firstChild);
+  const ic = document.createElement('span'); ic.className = 'spBtnIc'; ic.setAttribute('aria-hidden', 'true'); ic.innerHTML = ICONS[key];
+  btn.appendChild(ic); btn.appendChild(tx);
 }
 function decorateAll(root){
   root.querySelectorAll('button.setBtn, button.modeBtn, button.catSelectorBtn').forEach(decorate);
@@ -112,13 +119,13 @@ function restructure(panel){
   q('spClose').addEventListener('click', () => { closeSettings(); const b = q('settingsBtn'); if(b) b.focus({ preventScroll: true }); });
 }
 
-// ☰ y 📰 pasan a ser iconos cartoon (el ☰ se convierte en ✕ cuando el menú está abierto)
+// ⚙ (engranaje) y 📰 pasan a ser iconos cartoon (el ☰ se convierte en ✕ cuando el menú está abierto)
 function swapHeaderIcons(){
   const mk = html => { const s = document.createElement('span'); s.className = 'navIcon hdrIcon'; s.setAttribute('aria-hidden', 'true'); s.innerHTML = html; return s; };
   const sb = q('settingsBtn');
   if(sb && !sb.querySelector('.hdrIcon')){
     [...sb.childNodes].forEach(n => { if(n.nodeType === 3) n.remove(); });
-    const s = mk('<span class="menuOn">' + ICONS.menu + '</span><span class="menuX">' + ICONS.close + '</span>');
+    const s = mk('<span class="menuOn">' + ICONS.gear + '</span><span class="menuX">' + ICONS.close + '</span>');
     s.classList.add('menuIcon'); sb.insertBefore(s, sb.firstChild);
   }
   const nb = q('newsBtn');

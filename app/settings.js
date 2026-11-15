@@ -177,10 +177,26 @@ export function initCatSelector(){
  // attach category selector handlers
 
 // News/Changelog panel
-export const APP_VERSION = '1.1.6';
+export const APP_VERSION = '1.1.7';
 
 
 export const APP_CHANGELOG = [
+  { version: '1.1.7', date: '2026-11-15', title: 'Categoría Médico y Salud y voces más fiables', changes: [
+    'Nueva categoría «Médico y Salud» con 100 frases en 4 zonas: En el Consultorio, Síntomas y Dolor, Farmacia y Tratamiento, Emergencias y Bienestar',
+    'Voz más fiable: la app reintenta si el navegador se queda mudo y avisa cuando el dispositivo no tiene voz en inglés',
+    'Escenas con voces distintas: la otra persona habla con una voz diferente a la tuya (se puede desactivar con «Voces distintas»)',
+    'El Abecedario ahora usa la voz en inglés que hayas elegido en Configurar voces',
+    'Ajustes tiene un engranaje cartoon en la cabecera, y vuelve el botón «Probar voz en español»',
+    'Los ejemplos ahora se abren con una bombilla que brilla, en una burbuja flotante que no ocupa espacio en la tarjeta',
+    'Las 1000 frases de la categoría General ya tienen ejemplo (antes solo lo tenían las otras categorías)',
+    'Corregido: el botón de categoría en Ajustes se queda en «General» al cambiar de categoría',
+    '¿Por qué se dice así? Nuevo botón en la cara trasera con una mini-explicación en español y un comparador Formal / Normal / Informal (todas las frases: las 532 temáticas y las 1000 de General)',
+    'Escucha y escribe: al fallar, ves tu frase palabra por palabra (bien en verde, mal tachadas, faltantes marcadas) y qué cambiar',
+    'Examen: las preguntas de pronunciación y dictado muestran palabra por palabra qué se entendió; toca una palabra para oírla',
+    'Escucha y escribe: nuevo paso opcional «Ahora dila tú» para practicar la pronunciación con feedback por palabra (sin XP ni vidas)',
+    'Corregido: Ajustes (settingsUi.js) no se guardaba para usar sin conexión; ahora una prueba automática vigila que todos los módulos estén en el caché offline',
+    'Más pruebas automáticas para los datos de las categorías y la elección de voces'
+  ] },
   { version: '1.1.6', date: '2026-11-13', title: 'Escenas, rutas por objetivo, puntos débiles y entrevistas', changes: [
     'Nuevo modo «Abecedario»: las 26 letras en inglés con su nombre en texto y con sonido, palabra de ejemplo, deletreo y «escuchar todo»',
     'Repaso ahora tiene un solo botón «Modos de práctica» que abre el menú con todos los modos (Escucha y escribe, Abecedario, Escenas, Rutas y Puntos débiles) con iconos nuevos',

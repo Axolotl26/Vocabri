@@ -5,9 +5,10 @@ import { backFromLesson, checkStageCompletion, dismissTopModal, showMap } from '
 import { etapaNameForSession, isStageComplete, stageCountFor, stageItems, stageName } from './mapData.js';
 import { renderTable } from './progress.js';
 import { haptic } from './speech.js';
+import { registerRows } from './core/why.js';
 import { pickLine } from './mascot.js';
 import { activationKeyFree, isViewShown, shortcutAllowed } from './shortcuts.js';
-import { awardXp, maybeAskStar, scrollTopNow, showMascotToast, showToast } from './ui.js';
+import { _ni, awardXp, maybeAskStar, scrollTopNow, showMascotToast, showToast } from './ui.js';
 
 
 
@@ -21,6 +22,16 @@ export function currentLessonItems(){
   return stageItems(S.currentCat, getCurrentStage(S.currentCat));
 }
 
+
+// Cierra las burbujas de ejemplo (bombillas) de la tarjeta
+export function closeExamples(){
+  const wp = document.getElementById('whyPop'); if(wp) wp.hidden = true;
+  const wt = document.getElementById('whyToggle'); if(wt){ wt.setAttribute('aria-expanded', 'false'); wt.classList.remove('on'); }
+  document.querySelectorAll('#lessonView .face.whyOpen').forEach(f => { f.classList.remove('whyOpen'); f.style.removeProperty('padding-bottom'); });
+  ['exampleText', 'exampleTextEs'].forEach(id => { const t = document.getElementById(id); if(t) t.hidden = true; });
+  ['exToggle', 'exToggleEs'].forEach(id => { const b = document.getElementById(id); if(b){ b.setAttribute('aria-expanded', 'false'); b.classList.remove('on'); } });
+  document.querySelectorAll('#lessonView .face.exOpen').forEach(f => f.classList.remove('exOpen'));
+}
 
 export function renderCards(){
   scrollTopNow('lessonView');
@@ -69,19 +80,29 @@ export function renderCards(){
   document.getElementById('backText').textContent = it[1];
   document.getElementById('progress').textContent = 'Tarjeta ' + (S.idx+1) + ' de ' + items.length + ' — ' + (S.studyMode==='freeplay' ? it[2] : cat);
   document.getElementById('progBarFill').style.width = (((S.idx+1)/items.length)*100) + '%';
+  closeExamples();
   const exWrap = document.getElementById('exWrap');
-  const exText = document.getElementById('exampleText');
-  const exToggle = document.getElementById('exToggle');
-  if(it[4]){
-    exWrap.style.display = '';
-    exText.textContent = it[4];
-    exText.style.display = 'none';
-    exToggle.textContent = 'Ver ejemplo ▾';
-  } else {
-    exWrap.style.display = 'none';
-  }
-  const exEsEl = document.getElementById('exampleTextEs');
-  exEsEl.textContent = it[5] ? '💬 ' + it[5] : '';
+  exWrap.style.display = it[4] ? '' : 'none';
+  document.getElementById('exampleText').textContent = it[4] || '';
+  const exWrapEs = document.getElementById('exWrapEs');
+  const rows = registerRows(it[7], it[0]);
+  const why = !!(it[6] || rows.length);
+  exWrapEs.style.display = (it[5] || why) ? '' : 'none';
+  document.getElementById('exToggleEs').style.display = it[5] ? '' : 'none';
+  document.getElementById('exampleTextEs').textContent = it[5] || '';
+  const wt = document.getElementById('whyToggle');
+  wt.style.display = why ? '' : 'none';
+  wt.classList.toggle('solo', !it[5]);
+  document.getElementById('whyNote').textContent = it[6] || '';
+  document.getElementById('whyNote').style.display = it[6] ? '' : 'none';
+  document.getElementById('whyRegBox').style.display = rows.length ? '' : 'none';
+  const ul = document.getElementById('whyReg'); ul.textContent = '';
+  rows.forEach(r => {
+    const li = document.createElement('li'); if(r.mine) li.className = 'mine';
+    const b = document.createElement('b'); b.textContent = r.label;
+    const sp = document.createElement('span'); sp.textContent = r.text;
+    li.append(b, sp); ul.appendChild(li);
+  });
   // "Dominadas en esta sección": progress of the section (or of your own cards in Mis Tarjetas)
   let mastered = 0;
   items.forEach(x=>{ if(isMastered(x[3])) mastered++; });
@@ -113,6 +134,7 @@ export function setRateUi(flipped){
 
 export function setFlipped(v){
   const c = document.getElementById('card');
+  closeExamples();
   c.classList.toggle('flipped', v);
   if(v){ try{ localStorage.setItem(FLIP_COACH_KEY, '1'); }catch(e){} }
   setRateUi(v);
@@ -225,13 +247,36 @@ document.addEventListener('keydown', e => {
 });
   }],
   [3860, function(){
-document.getElementById('exToggle').onclick = (e)=>{
-  e.stopPropagation();
-  const t = document.getElementById('exampleText');
-  const open = t.style.display === 'block';
-  t.style.display = open ? 'none' : 'block';
-  e.target.textContent = open ? 'Ver ejemplo ▾' : 'Ocultar ejemplo ▴';
-};
+[['exToggle', 'exampleText'], ['exToggleEs', 'exampleTextEs']].forEach(([btnId, textId]) => {
+  document.getElementById(btnId).onclick = (e)=>{
+    e.stopPropagation();
+    const t = document.getElementById(textId), btn = document.getElementById(btnId);
+    const open = t.hidden;                       // estaba cerrado → se abre
+    closeExamples();
+    t.hidden = !open; btn.setAttribute('aria-expanded', String(open)); btn.classList.toggle('on', open);
+    const face = btn.closest('.face'); if(face) face.classList.toggle('exOpen', open);
+  };
+});
+document.addEventListener('click', (e)=>{ if(!e.target.closest('.exWrap')) closeExamples(); });
+(function(){
+  const wt = document.getElementById('whyToggle'), pop = document.getElementById('whyPop');
+  if(!wt || !pop) return;
+  const wc = document.getElementById('whyClose');
+  if(wc){
+    wc.innerHTML = _ni('#F472B6', '#9D2461', '<rect x="3" y="5" width="22" height="16" rx="4.500"/>', '<path d="M9.800 9.600l8.400 7.200M18.200 9.600l-8.400 7.200" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>');
+    wc.onclick = (e)=>{ e.stopPropagation(); closeExamples(); };
+  }
+  wt.onclick = (e)=>{
+    e.stopPropagation();
+    const open = pop.hidden;
+    closeExamples();
+    if(!open) return;
+    pop.hidden = false; wt.setAttribute('aria-expanded', 'true'); wt.classList.add('on');
+    const face = wt.closest('.face');
+    if(face) pop.style.maxHeight = Math.max(120, face.clientHeight + 44) + 'px';
+  };
+  pop.onclick = (e)=> e.stopPropagation();
+})();
   }],
   [3928, function(){
 document.getElementById('rateHard').onclick = ()=> rateAndAdvance(1);

@@ -3,8 +3,10 @@
 // solo recuerda la velocidad elegida (ci_dict_rate) y da un poco de XP por acierto.
 import { S } from './core/shared.js';
 import { isMastered, mapItemsFor, readStored } from './core/dataRegistry.js';
-import { TTS_SUPPORTED, closeCallSuffix, evaluateWrittenAnswer, isSpeakable, nearMissNote } from './exam.js';
+import { SpeechRec, SPEECH_REC_SUPPORTED, TTS_SUPPORTED, closeCallSuffix, evaluateWrittenAnswer, isSpeakable, nearMissNote } from './exam.js';
 import { escapeHtml } from './myCards.js';
+import { diffWords } from './core/wordDiff.js';
+import { buildDiffEl } from './wordDiffUi.js';
 import { haptic, playSfx, speak } from './speech.js';
 import { _ni, _niW, addScrollTopBtn, awardXp, scrollTopNow, switchView } from './ui.js';
 import { catLabel } from './core/dataRegistry.js';
@@ -133,7 +135,48 @@ function showQuestion(){
   setTimeout(() => { playCurrent(); try{ input.focus({preventScroll:true}); }catch(e){} }, 150);
 }
 
-function resolve(ok, r, skipped){
+function diffHtml(typed){
+  const segs = diffWords(typed, D.items[D.idx][0]);
+  if(!segs.length) return '';
+  const tag = (cls, txt, title) => '<span class="dw ' + cls + '"' + (title ? ' title="' + escapeHtml(title) + '"' : '') + '>' + escapeHtml(txt) + '</span>';
+  const line = segs.map(x => x.s === 'ok' ? tag('ok', x.t)
+    : x.s === 'wrong' ? tag('wrong', x.t, 'Era: ' + x.w)
+    : x.s === 'extra' ? tag('extra', x.t, 'Sobra')
+    : tag('missing', '___', 'Falta: ' + x.w)).join(' ');
+  const fix = segs.filter(x => x.s === 'wrong' || x.s === 'missing').map(x => (x.s === 'wrong' ? x.t + ' → ' : 'falta: ') + x.w.replace(/[?!.,;:]+$/, '')).slice(0, 4);
+  return '<span class="dictYou"><em>Tú escribiste</em>' + line + '</span>' + (fix.length ? '<small class="dictFix">' + escapeHtml(fix.join(' · ')) + '</small>' : '');
+}
+
+// «Ahora dila tú»: práctica opcional de pronunciación; no suma XP, no cuenta acierto ni toca el repaso.
+function addSayStep(body){
+  if(!SPEECH_REC_SUPPORTED || !body) return;
+  const box = document.createElement('div'); box.className = 'dictSay';
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'dictSayBtn hover-scale focus-glow';
+  btn.textContent = '🎤 Ahora dila tú';
+  const out = document.createElement('div'); out.className = 'dictSayOut'; out.setAttribute('aria-live', 'polite');
+  const target = D.items[D.idx][0];
+  btn.onclick = () => {
+    let rec;
+    try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); rec = new SpeechRec(); }catch(e){ return; }
+    rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 3;
+    btn.disabled = true; btn.textContent = '🎤 Escuchando…'; out.textContent = '';
+    const done = (heard) => {
+      btn.disabled = false; btn.textContent = '🎤 Intentar otra vez'; out.textContent = '';
+      if(!heard){ out.textContent = 'No te escuchamos. Revisa el micrófono e inténtalo otra vez.'; return; }
+      const segs = diffWords(heard, String(target).split('/')[0]);
+      out.appendChild(buildDiffEl(segs, 'Te escuchamos'));
+      if(segs.every(x => x.s === 'ok')){ const g = document.createElement('small'); g.textContent = '¡Se entendió perfecto!'; out.appendChild(g); }
+    };
+    let got = '';
+    rec.onresult = ev => { try{ got = ev.results[0][0].transcript; }catch(e){} };
+    rec.onerror = () => { done(''); got = null; };
+    rec.onend = () => { if(got !== null) done(got); };
+    try{ rec.start(); }catch(e){ done(''); }
+  };
+  box.append(btn, out); body.appendChild(box);
+}
+
+function resolve(ok, r, skipped, typed){
   if(D.answered) return;
   D.answered = true;
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
@@ -148,9 +191,11 @@ function resolve(ok, r, skipped){
   const title = ok ? '¡Correcto!' : (skipped ? 'Esta era la frase' : (r && r.similarity >= 0.6 ? 'Casi lo tienes' : 'No era esa'));
   fb.innerHTML = '<span class="dictFbIc" aria-hidden="true">' + (ok ? '✅' : skipped ? '👀' : '❌') + '</span>' +
     '<div class="dictFbBody"><b class="dictFbTitle">' + title + '</b>' +
+    (!ok && !skipped && typed ? diffHtml(typed) : '') +
     '<span class="dictEn">' + escapeHtml(it[0]) + '</span><span class="dictEs">' + escapeHtml(it[1]) + '</span>' +
-    (!ok && r && closeCallSuffix(r) ? '<small>' + escapeHtml(closeCallSuffix(r).replace(/^ \(|\)$/g, '')) + '</small>' : '') +
+    (!ok && !(typed && !skipped) && r && closeCallSuffix(r) ? '<small>' + escapeHtml(closeCallSuffix(r).replace(/^ \(|\)$/g, '')) + '</small>' : '') +
     (ok && r && nearMissNote(r) ? '<small>' + escapeHtml(nearMissNote(r)) + '</small>' : '') + '</div>';
+  addSayStep(fb.querySelector('.dictFbBody'));
   document.getElementById('dictInput').disabled = true;
   document.getElementById('dictCheckBtn').style.display = 'none';
   document.getElementById('dictSkipBtn').style.display = 'none';
@@ -235,7 +280,7 @@ function wire(){
     const input = document.getElementById('dictInput');
     if(!input.value.trim()){ input.focus(); return; }
     const r = evaluateWrittenAnswer(input.value, D.items[D.idx][0], 'en');
-    resolve(r.ok, r, false);
+    resolve(r.ok, r, false, input.value);
   };
   view.querySelector('#dictInput').addEventListener('keydown', e => {
     if(e.key === 'Enter'){

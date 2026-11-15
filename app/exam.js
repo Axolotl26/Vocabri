@@ -8,6 +8,8 @@ import { getCurrentStage, itemsFor, readStored, setCurrentStage } from './core/d
 import { closeExamResults, examWrongListHtml, finishExam, showMap, showModalFromTop } from './map.js';
 import { EXAM_DICTATION_COUNT, EXAM_LIVES, EXAM_MC_COUNT, EXAM_QUESTIONS, EXAM_SPEAK_COUNT, SPEAK_MATCH_THRESHOLD, examItemsFor } from './mapData.js';
 import { haptic, playSfx, speak } from './speech.js';
+import { diffWords } from './core/wordDiff.js';
+import { buildDiffEl } from './wordDiffUi.js';
 import { srsGrade } from './state.js';
 import { examMascotKind, hideExamMascot, scrollTopNow, setMascotIn, showExamMascot } from './ui.js';
 
@@ -280,11 +282,12 @@ export function showExamInputHint(msg){
 }
 
 
-export function showExamFeedback(ok, failText, okNote){
+export function showExamFeedback(ok, failText, okNote, diff){
   const el = document.getElementById('examFeedback');
   el.style.display = '';
   el.className = 'examFeedback ' + (ok ? 'ok' : 'bad');
   el.textContent = ok ? ('✅ ¡Correcto!' + (okNote ? ' ' + okNote : '')) : ('❌ ' + failText);
+  if(!ok && diff && diff.segs && diff.segs.length) el.appendChild(buildDiffEl(diff.segs, diff.label));
   showExamMascot(examMascotKind(ok, okNote));
   const next = document.getElementById('examNextBtn');
   next.textContent = S.examState.failed ? 'Continuar' : 'Siguiente →';
@@ -294,7 +297,7 @@ export function showExamFeedback(ok, failText, okNote){
 
 
 // Single place where an answer is scored: sound, score, lives and feedback.
-export function resolveExamAnswer(ok, failText, okNote){
+export function resolveExamAnswer(ok, failText, okNote, diff){
   if(!S.examState || S.examState.answered) return;
   S.examState.answered = true;
   const cq = S.examState.questions[S.examState.idx];
@@ -315,7 +318,7 @@ export function resolveExamAnswer(ok, failText, okNote){
     if(S.examState.lives <= 0) S.examState.failed = true;
     renderExamLives(true);
   }
-  showExamFeedback(ok, failText, okNote);
+  showExamFeedback(ok, failText, okNote, diff);
 }
 
 
@@ -349,6 +352,17 @@ export function playDictation(rate){
 
 
 
+// Si la frase tiene variantes «a / b», se compara con la que mejor encaja.
+function bestDiff(heard, phrase){
+  let best = null, bestBad = 1e9;
+  String(phrase).split('/').map(x => x.trim()).filter(Boolean).forEach(v => {
+    const segs = diffWords(heard, v);
+    const bad = segs.filter(x => x.s !== 'ok').length;
+    if(bad < bestBad){ bestBad = bad; best = segs; }
+  });
+  return best || [];
+}
+
 // --- Pronunciation question (speech recognition, English) ---
 export function finishExamSpeak(heardList){
   if(!S.examState || S.examState.answered) return;
@@ -362,7 +376,9 @@ export function finishExamSpeak(heardList){
   stopExamRecognition();
   document.getElementById('examSpeakBox').style.display = 'none';
   const heardText = heardList.length ? ('«' + heardList[0] + '»') : 'no se detectó tu voz';
-  resolveExamAnswer(ok, 'Esperábamos: «' + q.it[0] + '» — escuchamos: ' + heardText);
+  const best = heardList.find(h => normalizeSpeech(h)) || '';
+  const diff = (!ok && best) ? { segs: bestDiff(best, q.it[0]), label: 'Te escuchamos' } : null;
+  resolveExamAnswer(ok, diff ? 'Esperábamos: «' + q.it[0] + '»' : 'Esperábamos: «' + q.it[0] + '» — escuchamos: ' + heardText, '', diff);
 }
 
 
@@ -507,7 +523,7 @@ document.getElementById('examDictCheckBtn').onclick = ()=>{
   const r = evaluateWrittenAnswer(input.value, q.it[0], 'en');
   document.getElementById('examDictationBox').style.display = 'none';
   showExamInputHint('');
-  resolveExamAnswer(r.ok, 'La frase correcta era: «' + q.it[0] + '»' + closeCallSuffix(r), nearMissNote(r));
+  resolveExamAnswer(r.ok, 'La frase correcta era: «' + q.it[0] + '»' + closeCallSuffix(r), nearMissNote(r), { segs: diffWords(input.value, q.it[0]), label: 'Tú escribiste' });
 };
   }],
   [4455, function(){

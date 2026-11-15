@@ -39,6 +39,12 @@ export const MASTER_CATEGORIES = [
     description: 'Series, memes, videojuegos', color: '#F472B6',
     source: 'pop_culture_and_gaming', jsonKey: 'pop_culture_and_gaming',
     zones: { sizes: [24, 24, 24, 28], names: ['Gaming: Acción y Equipo', 'Gaming Online y Ranked', 'Series, Anime y Cine', 'Streaming y Redes'] }
+  },
+  {
+    id: 'health', name: 'Médico y Salud', emoji: '🩺', shortLabel: 'Salud',
+    description: 'Consultas, síntomas, farmacia, emergencias', color: '#EF4444',
+    source: 'health_and_medical', jsonKey: 'health_and_medical',
+    zones: { sizes: [24, 24, 24, 28], names: ['En el Consultorio', 'Síntomas y Dolor', 'Farmacia y Tratamiento', 'Emergencias y Bienestar'] }
   }
 ].map(c => Object.freeze({ ...c, label: c.emoji + ' ' + c.name }));
 

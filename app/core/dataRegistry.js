@@ -1,6 +1,7 @@
 // Vocabri — módulo "core/dataRegistry" (generado a partir de app.js)
 import { getJsonCategoryMap, getCategoryShortLabel, getValidCategoryIds, getZonesMap, isValidCategory } from '../../categoriesRegistry.js';
 import { S } from './shared.js';
+import { applyExamples, applyNotes } from './examples.js';
 import { MAX_CONSECUTIVE_NORMAL, etapaNameForSession } from '../mapData.js';
 import { dayKey } from '../progress.js';
 import { srsGrade, srsInvalidate } from '../state.js';
@@ -790,7 +791,7 @@ export function setCurrentStage(cat, idx){ S.currentStageByCat[cat] = idx; }
 // Built-in content only (what the stage map is made of). The map has no editing features.
 export function baseItems(c, includeCustom){
   // Clave estable: si la frase trae id (JSON) se usa el id; si no, su posición (datos internos)
-  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+(it[4]||i), it[2]||null, it[3]||null]) : [];
+  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+(it[4]||i), it[2]||null, it[3]||null, it[5]||null, it[6]||null]) : [];
   if(includeCustom !== false){
     S.customWords.filter(w=> w.cat===c).forEach(w=> out.push([w.en, w.es, c, 'custom|'+w.id, w.ex||null, w.exEs||null]));
   }
@@ -992,9 +993,11 @@ export function initializeDataRegistry(jsonData){
   const cats = (jsonData && jsonData.categories) || jsonData || {};
   for(const [jsonKey, catId] of Object.entries(JSON_CATEGORY_MAP)){
     if(Array.isArray(cats[jsonKey])){
-      DATA[catId] = cats[jsonKey].map(it => [it.en, it.es, it.ex || '', it.exEs || '', it.id || '']);
+      DATA[catId] = cats[jsonKey].map(it => [it.en, it.es, it.ex || '', it.exEs || '', it.id || '', it.note || '', it.reg || null]);
     }
   }
+  if(jsonData && Array.isArray(jsonData.general_examples)) applyExamples(DATA.Casual, jsonData.general_examples);   // ejemplos de General
+  if(jsonData && Array.isArray(jsonData.general_notes)) applyNotes(DATA.Casual, jsonData.general_notes);          // ¿Por qué? de General
   DATA.general = DATA.Casual;          // 'general' comparte el contenido de Casual
   return DATA;
 }
