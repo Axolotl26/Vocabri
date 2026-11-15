@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 340" width="520" height="340" role="img" aria-label="Demostración animada de una tarjeta de Vocabri que se voltea">
+  <defs>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D3B34"/><stop offset="1" stop-color="#14261F"/></linearGradient>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2250"/><stop offset="1" stop-color="#1A1538"/></linearGradient>
+  </defs>
+  <style>
+    .t{font-family:'Segoe UI',Nunito,Verdana,sans-serif}
+    @keyframes flipF{0%,38%{transform:scaleX(1)}46%,92%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+    @keyframes flipB{0%,46%{transform:scaleX(0)}54%,88%{transform:scaleX(1)}96%,100%{transform:scaleX(0)}}
+    @keyframes pop{0%,56%{opacity:0;transform:translateY(10px)}64%,88%{opacity:1;transform:none}96%,100%{opacity:0}}
+    @keyframes glow{0%,100%{opacity:.55}50%{opacity:1}}
+    @keyframes tap{0%,30%{opacity:0;transform:scale(.4)}36%{opacity:.9;transform:scale(1)}44%,100%{opacity:0;transform:scale(1.6)}}
+    .f,.b{transform-box:fill-box;transform-origin:center}
+    .f{animation:flipF 8s ease-in-out infinite}.b{animation:flipB 8s ease-in-out infinite}
+    .btns{animation:pop 8s ease-out infinite}
+    .bulb{animation:glow 2s ease-in-out infinite}
+    .ring{animation:tap 8s ease-out infinite;transform-box:fill-box;transform-origin:center}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}.b,.btns{opacity:0}}
+  </style>
+  <rect x="6" y="6" width="508" height="328" rx="26" fill="#0B1020"/>
+  <g class="f">
+    <rect x="60" y="30" width="400" height="190" rx="24" fill="url(#face)" stroke="#34D399" stroke-width="3"/>
+    <rect x="86" y="22" width="52" height="24" rx="12" fill="#34D399"/><text class="t" x="112" y="39" font-size="14" font-weight="800" fill="#0B1020" text-anchor="middle">ES</text>
+    <text class="t" x="260" y="136" font-size="31" font-weight="800" fill="#F1F5F9" text-anchor="middle">¿Dónde está el baño?</text>
+    <circle cx="88" cy="196" r="13" fill="#FBBF24" fill-opacity=".2" stroke="#FBBF24" stroke-width="2"/><circle class="bulb" cx="88" cy="196" r="4.5" fill="#FBBF24"/>
+    <circle class="ring" cx="260" cy="190" r="22" fill="none" stroke="#C4B5FD" stroke-width="3"/>
+  </g>
+  <g class="b">
+    <rect x="60" y="30" width="400" height="190" rx="24" fill="url(#back)" stroke="#A78BFA" stroke-width="3"/>
+    <rect x="86" y="22" width="52" height="24" rx="12" fill="#A78BFA"/><text class="t" x="112" y="39" font-size="14" font-weight="800" fill="#0B1020" text-anchor="middle">EN</text>
+    <text class="t" x="260" y="136" font-size="31" font-weight="800" fill="#F1F5F9" text-anchor="middle">Where is the bathroom?</text>
+    <circle cx="432" cy="196" r="13" fill="#7C9CE0" fill-opacity=".25" stroke="#7C9CE0" stroke-width="2"/><text class="t" x="432" y="201" font-size="15" font-weight="800" fill="#BFD4FF" text-anchor="middle">?</text>
+  </g>
+  <g class="btns">
+    <text class="t" x="260" y="252" font-size="13" font-weight="800" fill="#94A3B8" text-anchor="middle" letter-spacing="1.5">¿QUÉ TAN BIEN LA SABÍAS?</text>
+    <rect x="60" y="266" width="124" height="52" rx="14" fill="#3B1A1F" stroke="#EF4444" stroke-width="2.5"/><text class="t" x="122" y="298" font-size="17" font-weight="800" fill="#FECACA" text-anchor="middle">Repasar</text>
+    <rect x="198" y="266" width="124" height="52" rx="14" fill="#3A2A10" stroke="#F59E0B" stroke-width="2.5"/><text class="t" x="260" y="298" font-size="17" font-weight="800" fill="#FDE68A" text-anchor="middle">Bien</text>
+    <rect x="336" y="266" width="124" height="52" rx="14" fill="#10331F" stroke="#22C55E" stroke-width="2.5"/><text class="t" x="398" y="298" font-size="17" font-weight="800" fill="#BBF7D0" text-anchor="middle">Fácil</text>
+  </g>
+</svg>

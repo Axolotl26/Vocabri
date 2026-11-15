@@ -2,7 +2,7 @@
 
 <img src="ajolote-hero.png" alt="Vocabri, el ajolote" width="150" height="150" />
 
-<img src="docs/banner.svg" alt="Vocabri — Domina frases, no solo palabras" width="100%" />
+<img src="vocabri-banner.svg" alt="Vocabri — Domina frases, no solo palabras" width="100%" />
 
 <br/>
 
@@ -16,7 +16,7 @@
 
 <br/>
 
-<img src="docs/typing.svg" alt="Where is the nearest pharmacy? · I would like to make an appointment. · How's it going?" width="760" />
+<img src="vocabri-typing.svg" alt="Where is the nearest pharmacy? · I would like to make an appointment. · How's it going?" width="760" />
 
 </div>
 
@@ -30,7 +30,7 @@ Está pensada para hispanohablantes, funciona **sin conexión**, no necesita cue
 
 <div align="center">
 
-<img src="docs/flashcard.svg" alt="Una tarjeta de Vocabri se voltea: ¿Dónde está el baño? → Where is the bathroom?" width="520" />
+<img src="vocabri-flashcard.svg" alt="Una tarjeta de Vocabri se voltea: ¿Dónde está el baño? → Where is the bathroom?" width="520" />
 
 <sub>Así se estudia: lees la frase, la volteas, y le dices a la app qué tan bien la sabías.</sub>
 

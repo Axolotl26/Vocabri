@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 220" width="1200" height="220" role="img" aria-label="Vocabri — Domina frases, no solo palabras">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1020"/><stop offset=".55" stop-color="#14213D"/><stop offset="1" stop-color="#1B3B3A"/>
+    </linearGradient>
+    <linearGradient id="ttl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FF9EC7"/><stop offset=".5" stop-color="#C4B5FD"/><stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+    <linearGradient id="w1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EEAD4" stop-opacity=".30"/><stop offset="1" stop-color="#5EEAD4" stop-opacity="0"/></linearGradient>
+    <linearGradient id="w2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9EC7" stop-opacity=".26"/><stop offset="1" stop-color="#FF9EC7" stop-opacity="0"/></linearGradient>
+    <clipPath id="clip"><rect width="1200" height="220" rx="22"/></clipPath>
+  </defs>
+  <style>
+    .t{font-family:'Segoe UI',Nunito,Verdana,sans-serif}
+    .bub{fill:none;stroke:#fff;stroke-opacity:.35;stroke-width:2}
+    @keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-260px);opacity:0}}
+    @keyframes drift1{from{transform:translateX(0)}to{transform:translateX(-600px)}}
+    @keyframes drift2{from{transform:translateX(-600px)}to{transform:translateX(0)}}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes fade{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+    .b1{animation:rise 9s linear infinite}.b2{animation:rise 12s linear infinite 2s}.b3{animation:rise 10s linear infinite 5s}
+    .b4{animation:rise 14s linear infinite 1s}.b5{animation:rise 11s linear infinite 7s}.b6{animation:rise 13s linear infinite 4s}
+    .wv1{animation:drift1 14s linear infinite}.wv2{animation:drift2 20s linear infinite}
+    .mark{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    .h1{animation:fade 1s ease-out both}.h2{animation:fade 1s ease-out .4s both}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+  <g clip-path="url(#clip)">
+    <rect width="1200" height="220" fill="url(#bg)"/>
+    <g class="wv2"><path d="M0 170 Q150 140 300 170 T600 170 T900 170 T1200 170 T1500 170 T1800 170 V220 H0Z" fill="url(#w2)"/></g>
+    <g class="wv1"><path d="M0 188 Q150 160 300 188 T600 188 T900 188 T1200 188 T1500 188 T1800 188 V220 H0Z" fill="url(#w1)"/></g>
+    <circle class="bub b1" cx="120" cy="240" r="14"/><circle class="bub b2" cx="300" cy="240" r="9"/><circle class="bub b3" cx="520" cy="240" r="18"/>
+    <circle class="bub b4" cx="860" cy="240" r="11"/><circle class="bub b5" cx="1010" cy="240" r="16"/><circle class="bub b6" cx="1120" cy="240" r="8"/>
+    <g class="t">
+      <text class="h1" x="600" y="112" font-size="92" font-weight="800" fill="url(#ttl)" text-anchor="middle">Vocabri</text>
+      <text class="h2" x="600" y="158" font-size="30" font-weight="600" fill="#E2E8F0" text-anchor="middle">Domina frases, no solo palabras.</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 56" width="900" height="56" role="img" aria-label="Frases de ejemplo de Vocabri">
+  <style>
+    .t{font-family:'Courier New',Consolas,monospace;font-size:26px;font-weight:700;fill:#5EEAD4}
+    .c{fill:#FF9EC7}
+    @keyframes type{0%{width:0}22%{width:100%}78%{width:100%}92%,100%{width:0}}
+    @keyframes caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+    @keyframes show1{0%,24.9%{opacity:1}25%,100%{opacity:0}}
+    @keyframes show2{0%,24.9%{opacity:0}25%,49.9%{opacity:1}50%,100%{opacity:0}}
+    @keyframes show3{0%,49.9%{opacity:0}50%,74.9%{opacity:1}75%,100%{opacity:0}}
+    @keyframes show4{0%,74.9%{opacity:0}75%,100%{opacity:1}}
+    .s1{animation:show1 16s steps(1) infinite}.s2{animation:show2 16s steps(1) infinite}.s3{animation:show3 16s steps(1) infinite}.s4{animation:show4 16s steps(1) infinite}
+    .w{animation:type 4s steps(30) infinite}.w2{animation:type 4s steps(30) infinite}
+    .caret{animation:caret .8s steps(1) infinite}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}.s2,.s3,.s4{display:none}}
+  </style>
+  <defs>
+    <clipPath id="k1"><rect class="w" x="0" y="0" height="56" width="900"/></clipPath>
+  </defs>
+  <g class="s1"><svg x="10" y="0" width="880" height="56"><clipPath id="a"><rect class="w" height="56" width="880"/></clipPath><text class="t" y="36" clip-path="url(#a)"><tspan class="c">›</tspan> Where is the nearest pharmacy?</text></svg></g>
+  <g class="s2"><svg x="10" y="0" width="880" height="56"><clipPath id="b"><rect class="w" height="56" width="880"/></clipPath><text class="t" y="36" clip-path="url(#b)"><tspan class="c">›</tspan> I would like to make an appointment.</text></svg></g>
+  <g class="s3"><svg x="10" y="0" width="880" height="56"><clipPath id="c"><rect class="w" height="56" width="880"/></clipPath><text class="t" y="36" clip-path="url(#c)"><tspan class="c">›</tspan> How's it going?</text></svg></g>
+  <g class="s4"><svg x="10" y="0" width="880" height="56"><clipPath id="d"><rect class="w" height="56" width="880"/></clipPath><text class="t" y="36" clip-path="url(#d)"><tspan class="c">›</tspan> Could you say that again, please?</text></svg></g>
+</svg>
