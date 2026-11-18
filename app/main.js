@@ -41,7 +41,7 @@ import * as shortcuts from './shortcuts.js';
 (function(){
   if(document.querySelector('link[data-vocabri-css="1.1.6"]')) return;
   const l = document.createElement('link');
-  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r55'; l.setAttribute('data-vocabri-css', '1.1.6');
+  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r56'; l.setAttribute('data-vocabri-css', '1.1.6');
   document.head.appendChild(l);
 })();
 

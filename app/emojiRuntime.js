@@ -6,6 +6,21 @@ const SKIP = 'SCRIPT,STYLE,TEXTAREA,OPTION,TITLE,NOSCRIPT,.ei';
 const SVGNS = 'http://www.w3.org/2000/svg';
 let obs = null;
 
+// Reglas mínimas del icono: van con el JS para que, aunque la hoja de estilos esté en caché
+// o no se haya actualizado, el icono nunca salga negro ni gigante.
+const CORE_CSS = `.ei{display:inline-block;width:1.18em;height:1.18em;vertical-align:-.24em;line-height:0;flex:none}
+.ei svg{width:100%;height:100%;display:block;overflow:visible}
+.ei .niEd *{fill:var(--e);stroke:var(--e);stroke-width:2.2;stroke-linejoin:round}
+.ei .niMn>*{fill:var(--c);stroke:var(--e);stroke-width:2.2;stroke-linejoin:round}
+.ei .niEd .niLn,.ei .niMn .niLn{fill:none;stroke-linecap:round}
+.ei .niEd .niLn{stroke:var(--e);stroke-width:6.6}.ei .niMn .niLn{stroke:var(--c);stroke-width:3.4}
+.ei .niEd .niFl,.ei .niMn .niFl{stroke-width:1.4}`;
+function injectCoreCss() {
+  if (document.getElementById('eiCore')) return;
+  const st = document.createElement('style'); st.id = 'eiCore'; st.textContent = CORE_CSS;
+  document.head.prepend(st);
+}
+
 function convertText(node) {
   const p = node.parentElement;
   if (!p || p.namespaceURI === SVGNS || p.closest(SKIP)) return;
@@ -35,6 +50,7 @@ export function convertTree(root) {
 }
 
 export function startEmojiIcons() {
+  injectCoreCss();
   if (obs || typeof document === 'undefined') return;
   convertTree(document.body);
   obs = new MutationObserver(muts => {
