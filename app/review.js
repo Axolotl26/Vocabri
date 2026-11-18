@@ -293,7 +293,7 @@ export function rateReviewCard(grade){
   if(res.applied){
     xp = s.noXp.has(key) ? 0 : REVIEW_XP[grade];
     srsLog(grade >= 2);
-    if(xp){ awardXp(xp); s.xp += xp; }
+    if(xp){ const g = awardXp(xp, { source: 'review', key }); s.xp += g; }
   }
   let at = -1;
   if(grade === 1){

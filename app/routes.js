@@ -156,7 +156,7 @@ function rate(grade){
   if(res.applied){
     srsLog(grade >= 2);
     const xp = R.failed.has(key) ? 0 : REVIEW_XP[grade];
-    if(xp){ awardXp(xp); R.xp += xp; }
+    if(xp){ const g = awardXp(xp, { source: 'route', key }); R.xp += g; }
   }
   if(grade === 1){ R.failed.add(key); R.queue.splice(Math.min(R.queue.length, 3), 0, item); }
   else R.done++;

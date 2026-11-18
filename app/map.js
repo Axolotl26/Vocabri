@@ -6,6 +6,7 @@ import { celebrate, markJustUnlocked, playPendingUnlock } from './mascot.js';
 import { renderCards, showCooldownModal } from './lesson.js';
 import { isExamNode, isStageComplete, nodeAt, nodeLayout, stageCountFor, stageItems } from './mapData.js';
 import { buildPathMap } from './mapRenderer.js';
+import { renderMissionBanner } from './missions.js';
 import { renderMyCardsHome } from './myCards.js';
 import { playSfx } from './speech.js';
 import { awardXp, maybeAskStar, setMascotIn, switchView } from './ui.js';
@@ -94,6 +95,7 @@ export function renderCardsSubView(){
     mapEl.style.display = '';
     lessonEl.style.display = 'none';
     buildPathMap();
+    try{ renderMissionBanner(); }catch(e){}
   } else {
     mapEl.style.display = 'none';
     lessonEl.style.display = '';
@@ -226,7 +228,7 @@ export function checkStageCompletion(){
   const etapaIdx = nodeAt(cat, stageIdx).etapaIdx;
   const etapaJustFinished = isEtapaComplete(cat, etapaIdx);
   const bonus = etapaJustFinished ? 40 : 20;
-  awardXp(bonus);
+  awardXp(bonus, { source: 'section', key: cat + '|' + stageIdx });
   const total = stageCountFor(cat);
   const hasNext = stageIdx+1 < total;
   if(hasNext) setUnlockedStage(cat, stageIdx+1);
@@ -249,7 +251,7 @@ export function finishExam(score, total, wrong){
   const attemptStars = examStarsFor(score, total);
   const xp = r.first ? EXAM_XP_BY_STARS[r.stars]
                      : Math.max(0, EXAM_XP_BY_STARS[r.stars] - (EXAM_XP_BY_STARS[r.prevStars] || 0));
-  if(xp) awardXp(xp);
+  if(xp) awardXp(xp, { source: 'exam', key: cat + '|' + stageIdx });
   const stageTotal = stageCountFor(cat);
   const hasNext = stageIdx+1 < stageTotal;
   // Nunca retrocede el avance: solo desbloquea si el siguiente nodo aún está cerrado.

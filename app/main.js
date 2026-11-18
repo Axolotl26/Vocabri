@@ -8,6 +8,8 @@
  */
 import { loadPhrasesFromJSON } from '../phraseLoader.js';
 import { renderCategoryOptions } from './categoryOptions.js';
+import { startEmojiIcons } from './emojiRuntime.js';
+import { startA11y } from './a11y.js';
 import * as dataRegistry from './core/dataRegistry.js';
 import * as mapData from './mapData.js';
 import * as mapRenderer from './mapRenderer.js';
@@ -39,7 +41,7 @@ import * as shortcuts from './shortcuts.js';
 (function(){
   if(document.querySelector('link[data-vocabri-css="1.1.6"]')) return;
   const l = document.createElement('link');
-  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r22'; l.setAttribute('data-vocabri-css', '1.1.6');
+  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r55'; l.setAttribute('data-vocabri-css', '1.1.6');
   document.head.appendChild(l);
 })();
 
@@ -61,5 +63,9 @@ function runInits(){
 renderCategoryOptions();
 // 1) Interfaz y eventos listos de inmediato (el botón "Comenzar" no depende de la red).
 runInits();
+// 1b) Los emojis del DOM pasan a iconos SVG cartoon (después de que los módulos retoquen sus botones).
+ui.announceUnlocks();
+startEmojiIcons();
+startA11y();
 // 2) Las frases del JSON se cargan en paralelo; al terminar emiten 'vocabri:phrasesLoaded'.
 loadPhrasesFromJSON();

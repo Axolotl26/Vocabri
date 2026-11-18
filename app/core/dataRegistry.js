@@ -1,10 +1,12 @@
 // Vocabri — módulo "core/dataRegistry" (generado a partir de app.js)
+import { isCategoryUnlocked } from './unlocks.js';
 import { getJsonCategoryMap, getCategoryShortLabel, getValidCategoryIds, getZonesMap, isValidCategory } from '../../categoriesRegistry.js';
 import { S } from './shared.js';
 import { applyExamples, applyNotes } from './examples.js';
 import { MAX_CONSECUTIVE_NORMAL, etapaNameForSession } from '../mapData.js';
 import { dayKey } from '../progress.js';
-import { srsGrade, srsInvalidate } from '../state.js';
+import { getXpTotal, levelFromXp, srsGrade, srsInvalidate } from '../state.js';
+import { MAX_FREEZES, dayToCover, earnedNow, keyOf, streakOf } from './streak.js';
 
 export const DATA = {
   "Casual": [
@@ -680,8 +682,12 @@ export function hasNamedModules(cat){
 export const MASTER_IDS = getValidCategoryIds();
 
 
+// Categorías maestras disponibles para el jugador (las que se desbloquean por nivel no cuentan hasta lograrlo).
+export function unlockedMasterIds(){ return MASTER_IDS.filter(c=> isCategoryUnlocked(c)); }
+
+
 export function allCats(){
-  const m = MASTER_IDS.filter(c=> DATA[c] && DATA[c].length);
+  const m = unlockedMasterIds().filter(c=> DATA[c] && DATA[c].length);
   return m.concat(S.customCats.filter(c=> MASTER_IDS.indexOf(c)<0 && c !== 'Casual'));
 }
 
@@ -905,18 +911,45 @@ export function allMasteredTimestamps(){
 }
 
 
-export function computeStreak(){
+// ── Racha con Protector ──
+const _jget = (k, d) => { try{ const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; }catch(e){ return d; } };
+const _jset = (k, v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+
+export function getFreezes(){ return Math.max(0, parseInt(_jget('vocabri_freezes', 0), 10) || 0); }
+
+function activeDays(){
   const days = new Set();
   itemsFor("Todas").forEach(it=>{ const s = readStored(it[3]); if(s.t) days.add(dayKey(new Date(s.t))); });
+  return days;
+}
+
+// Gasta un protector si ayer faltó y gana los nuevos. Es idempotente: se puede llamar cuantas veces haga falta.
+function maintainFreezes(active){
   const today = new Date();
-  let cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  if(!days.has(dayKey(cursor))){
-    cursor.setDate(cursor.getDate()-1);
-    if(!days.has(dayKey(cursor))) return 0;
+  const covered = new Set(_jget('vocabri_freeze_covered', []));
+  let freezes = getFreezes();
+  const k = dayToCover(active, covered, today, freezes);
+  if(k){
+    covered.add(k); freezes--;
+    _jset('vocabri_freeze_covered', [...covered].slice(-60)); _jset('vocabri_freezes', freezes);
+    import('../ui.js').then(u => u.showToast('Tu 🧊 Protector de Racha salvó tu racha de ayer. Te quedan ' + freezes + '.', '🧊', 5000)).catch(()=>{});
   }
-  let streak = 0;
-  while(days.has(dayKey(cursor))){ streak++; cursor.setDate(cursor.getDate()-1); }
-  return streak;
+  const claimed = new Set(_jget('vocabri_freeze_claimed', []));
+  const fresh = earnedNow(levelFromXp(getXpTotal()), streakOf(active, covered, today), claimed);
+  if(fresh.length){
+    fresh.forEach(id => claimed.add(id));
+    _jset('vocabri_freeze_claimed', [...claimed]);
+    _jset('vocabri_freezes', Math.min(MAX_FREEZES, freezes + fresh.length));
+    import('../ui.js').then(u => u.showToast('¡Ganaste un 🧊 Protector de Racha! Perdona un día sin estudiar.', '🧊', 5000)).catch(()=>{});
+  }
+  return covered;
+}
+
+export function computeStreak(){
+  const active = activeDays();
+  let covered;
+  try{ maintainFreezes(active); covered = maintainFreezes(active); }catch(e){ covered = new Set(); }   // 2.ª pasada: gasta el protector recién ganado si ya hacía falta
+  return streakOf(active, covered, new Date());
 }
 
 

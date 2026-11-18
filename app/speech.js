@@ -195,7 +195,19 @@ export function playSfx(kind){
   if(!S.sfxEnabled) return;
   try{
     if(kind === 'correct'){ tone(660, 0, .10, 'sine'); tone(880, .09, .18, 'sine'); }
-    else if(kind === 'levelup'){ [523.25, 659.25, 783.99, 1046.5].forEach((f,i)=> tone(f, i*.11, .22, 'triangle', .2)); }
+    else if(kind === 'levelup'){
+      [523.25, 659.25, 783.99, 1046.5].forEach((f,i)=> tone(f, i*.11, .22, 'triangle', .2));
+      [1046.5, 1318.5, 1568].forEach(f=> tone(f, .46, .55, 'sine', .11));          // acorde final
+    }
+    else if(kind === 'levelupBig'){
+      [392, 523.25, 659.25, 783.99, 1046.5, 1318.5, 1568].forEach((f,i)=> tone(f, i*.09, .24, 'triangle', .2));
+      [523.25, 659.25, 783.99, 1046.5, 1568].forEach(f=> tone(f, .7, .9, 'sine', .1));  // acorde largo
+      [2093, 2637, 3136].forEach((f,i)=> tone(f, .95 + i*.07, .2, 'sine', .06));      // destellos
+    }
+    else if(kind === 'chest'){
+      tone(150, 0, .12, 'sawtooth', .08); tone(210, .1, .14, 'sawtooth', .08);       // crujido de la tapa
+      [783.99, 1046.5, 1318.5, 1568, 2093].forEach((f,i)=> tone(f, .3 + i*.08, .26, 'triangle', .16));
+    }
     else if(kind === 'wrong'){ tone(220, 0, .18, 'sawtooth', .14); tone(155, .14, .30, 'sawtooth', .14); }
   }catch(e){}
 }

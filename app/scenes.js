@@ -207,11 +207,11 @@ function finish(){
   const s = R.scene, sum = scoreRun(R.results);
   const rec = recordRun(loadStore(), s.id, sum, Date.now());
   saveStore(rec.store);
-  if(rec.xp > 0) awardXp(rec.xp);
+  let sceneXp = 0; if(rec.xp > 0) sceneXp = awardXp(rec.xp, { source: 'scene', key: s.id });
   const msg = sum.pct === 100 ? '¡Perfecta! Todo a la primera 🎉' : (sum.pct >= 60 ? '¡Muy bien! Repítela para llegar al 100%.' : 'Buen comienzo. Repetirla te ayudará a fijar las frases.');
   body().innerHTML = '<div class="snEnd"><div class="snEndIc" aria-hidden="true">' + s.emoji + '</div><h4>' + esc(s.title) + '</h4>' +
     '<p class="snScore"><b>' + sum.firstTry + '</b> de ' + sum.total + ' a la primera · ' + sum.pct + '%</p><p class="snMsg">' + msg + '</p>' +
-    '<p class="snXp">' + (rec.xp > 0 ? '+' + rec.xp + ' XP' : 'XP de esta escena ya cobrado hoy (vuelve mañana)') + '</p>' +
+    '<p class="snXp">' + (sceneXp > 0 ? '+' + sceneXp + ' XP' : 'XP de esta escena ya cobrado hoy (vuelve mañana)') + '</p>' +
     '<div class="snLabel">Tus frases en esta escena</div><ul class="snLines">' + youTurns(s).map(t => '<li><span>' + esc(t.en) + '</span><small>' + esc(t.es) + '</small></li>').join('') + '</ul>' +
     '<button class="nav hover-scale focus-glow" id="snAgain" type="button">Repetir la escena</button>' +
     '<button class="snBack hover-scale focus-glow" id="snToList" type="button">← Todas las escenas</button></div>';

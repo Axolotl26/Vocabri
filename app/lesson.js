@@ -201,7 +201,7 @@ export function rateAndAdvance(level){
   haptic();
   const rated = rateCard(S.curKey, level);
   showMascotToast(level >= 2 ? 'happy' : 'thinking', pickLine(level >= 3 ? 'easy' : level >= 2 ? 'good' : 'hard'));
-  if(level >= 2 && rated && rated.applied) awardXp(10);   // XP solo si la nota cuenta (tarjeta nueva o vencida): no se puede farmear repitiendo
+  if(level >= 2 && rated && rated.applied) awardXp(10, { source: 'lesson', key: S.curKey });   // XP solo si la nota cuenta (tarjeta nueva o vencida): no se puede farmear repitiendo
   refreshStageProgressText();
   const stageJustCompleted = (level >= 2 && S.studyMode === 'lesson') ? checkStageCompletion() : false;
   if(!stageJustCompleted) afterRate();
