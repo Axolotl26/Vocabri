@@ -77,7 +77,7 @@ function restructure(panel){
   panel.insertBefore(head, panel.firstChild);
 
   const look = section('palette', 'Apariencia', 1);
-  mv(look, get('themesBtn'), get('themesBox'));
+  mv(look, get('themesBtn'), get('themesBox'), get('cbBtn'));
 
   const study = section('books', 'Estudio', 2);
   const goalRow = panel.querySelector('.goalRow');
@@ -124,19 +124,19 @@ function swapHeaderIcons(){
   const mk = html => { const s = document.createElement('span'); s.className = 'navIcon hdrIcon'; s.setAttribute('aria-hidden', 'true'); s.innerHTML = html; return s; };
   const sb = q('settingsBtn');
   if(sb && !sb.querySelector('.hdrIcon')){
-    [...sb.childNodes].forEach(n => { if(n.nodeType === 3) n.remove(); });
+    [...sb.childNodes].forEach(n => { if(n.nodeType === 3 || (n.classList && n.classList.contains('ei'))) n.remove(); });
     const s = mk('<span class="menuOn">' + ICONS.gear + '</span><span class="menuX">' + ICONS.close + '</span>');
     s.classList.add('menuIcon'); sb.insertBefore(s, sb.firstChild);
   }
   const nb = q('newsBtn');
   if(nb && !nb.querySelector('.hdrIcon')){
-    [...nb.childNodes].forEach(n => { if(n.nodeType === 3) n.remove(); });
+    [...nb.childNodes].forEach(n => { if(n.nodeType === 3 || (n.classList && n.classList.contains('ei'))) n.remove(); });
     nb.insertBefore(mk(ICONS.news), nb.firstChild);
   }
 }
 
 // ---- Menús del encabezado: se abren en el centro, de uno en uno, con fondo oscuro ----
-const MENUS = [['settingsPanel', 'settingsBtn', 'Ajustes'], ['newsPanel', 'newsBtn', 'Novedades'], ['starPanel', 'starBtn', 'Apoya el proyecto']];
+const MENUS = [['settingsPanel', 'settingsBtn', 'Ajustes'], ['newsPanel', 'newsBtn', 'Novedades'], ['starPanel', 'starBtn', 'Apoya el proyecto'], ['collectionPanel', 'collectionOpenBtn', 'Colección'], ['situationsPanel', 'situationsOpenBtn', 'Mapa de situaciones'], ['missionsHallPanel', 'missionsHallBtn', 'Salón de misiones']];
 function centerMenus(){
   const header = document.querySelector('header'); if(!header || q('hdrBackdrop')) return;
   const back = document.createElement('div');
@@ -153,7 +153,8 @@ function centerMenus(){
       h.querySelector('.spClose').addEventListener('click', () => { m.p.hidden = true; if(m.b){ m.b.setAttribute('aria-expanded', 'false'); m.b.focus({ preventScroll: true }); } });
       const t = m.p.querySelector('.setTitle'); if(t) t.classList.add('spHideTitle');
     }
-    new MutationObserver(() => { if(!m.p.hidden) closeAll(m.p); sync(); }).observe(m.p, { attributes: true, attributeFilter: ['hidden'] });
+    const toTop = () => { m.p.scrollTop = 0; m.p.querySelectorAll('*').forEach(el => { if(el.scrollTop > 0) el.scrollTop = 0; }); };
+    new MutationObserver(() => { if(!m.p.hidden){ closeAll(m.p); toTop(); requestAnimationFrame(() => { toTop(); requestAnimationFrame(toTop); }); } sync(); }).observe(m.p, { attributes: true, attributeFilter: ['hidden'] });   // al abrir, siempre desde arriba
   });
   back.addEventListener('click', e => { e.stopPropagation(); closeAll(null); sync(); });
   const ico = document.querySelector('#starPanel .starRepoIco'); if(ico) ico.innerHTML = ICONS.folder;

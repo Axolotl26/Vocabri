@@ -185,7 +185,7 @@ function resolve(ok, r, skipped, typed){
   document.getElementById('dictPlayBtn').classList.remove('playing');
   const it = D.items[D.idx];
   const fb = document.getElementById('dictFeedback');
-  if(ok){ D.ok++; awardXp(DICT_XP); playSfx('correct'); }
+  if(ok){ D.ok++; const g = awardXp(DICT_XP, { source: 'dictation', key: it[3] }); D.xp = (D.xp || 0) + g; D.noXp = (D.noXp || 0) + (g ? 0 : 1); playSfx('correct'); }
   else { D.fails.push(it); playSfx('wrong'); }
   fb.className = 'dictFeedback ' + (ok ? 'good' : 'bad');
   const title = ok ? '¡Correcto!' : (skipped ? 'Esta era la frase' : (r && r.similarity >= 0.6 ? 'Casi lo tienes' : 'No era esa'));
@@ -212,7 +212,7 @@ function finish(){
   const msg = pct === 100 ? '¡Oído de águila! 🦅' : pct >= 70 ? '¡Muy bien! Tu oído mejora.' : 'Sigue practicando: cada ronda cuenta.';
   done.innerHTML =
     '<div class="dictSummary"><div class="dictRing" style="--p:' + pct + '"><b>' + D.ok + '/' + total + '</b><span>' + pct + '%</span></div><p class="dictMsg">' + msg + '</p>' +
-    '<p class="dictXp">+' + (D.ok * DICT_XP) + ' XP</p>' +
+    '<p class="dictXp">+' + (D.xp || 0) + ' XP' + (D.noXp ? ' <small>(' + D.noXp + (D.noXp === 1 ? ' frase ya cobrada hoy o tope diario' : ' frases ya cobradas hoy o tope diario') + ')</small>' : '') + '</p>' +
     (D.fails.length ? '<div class="dictFails"><b>Para repasar:</b><ul>' + D.fails.map(it => '<li>' + escapeHtml(it[0]) + ' — <i>' + escapeHtml(it[1]) + '</i></li>').join('') + '</ul></div>' : '') +
     '<button class="nav dictCheck hover-scale focus-glow" id="dictAgainBtn" type="button">🔁 Otra ronda</button>' +
     '<button class="nav examFailBack hover-scale focus-glow" id="dictExitBtn" type="button" style="width:100%;margin-top:8px;">Volver a Repaso</button></div>';
@@ -244,7 +244,7 @@ export function startDictation(){
     done.innerHTML = '<p class="hint">Aún no hay frases para practicar en esta categoría.</p>';
     return;
   }
-  D = { items: pickRound(pool), idx: 0, ok: 0, fails: [], results: [], answered: false };
+  D = { items: pickRound(pool), idx: 0, ok: 0, xp: 0, noXp: 0, fails: [], results: [], answered: false };
   renderSpeed();
   showQuestion();
   scrollTopNow('dictView');

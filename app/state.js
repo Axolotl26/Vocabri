@@ -1,5 +1,6 @@
 // Vocabri — módulo "state" (generado a partir de app.js)
 import { S } from './core/shared.js';
+import { xpForLevel, levelFromXp } from './core/levels.js';
 import { DATA, itemsFor, readStored, todayKeyStr, writeCard } from './core/dataRegistry.js';
 import { dayKey } from './progress.js';
 import { scheduleReminderStatePublish } from './settings.js';
@@ -124,14 +125,7 @@ export function setXpTotal(v){ try{ localStorage.setItem('ci_xp_total', String(v
 // Progressive XP curve: the XP needed to clear level n (go from n to n+1)
 // grows with n, so reaching high levels takes real, sustained practice.
 // n=1:100, n=2:~246, n=3:~417, n=4:~606  (cumulative to reach level 5 ≈ 1369)
-export function xpForLevel(n){ return Math.round(100 * Math.pow(n, 1.3)); }
-
-
-export function levelFromXp(xp){
-  let lvl = 1, remaining = xp;
-  while(remaining >= xpForLevel(lvl)){ remaining -= xpForLevel(lvl); lvl++; }
-  return lvl;
-}
+export { xpForLevel, levelFromXp };
 
 
 export function xpIntoLevel(xp){

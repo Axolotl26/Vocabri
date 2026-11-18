@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.7';
+const CACHE_VERSION = '1.1.8';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -20,14 +20,14 @@ const STATE_URL = './vocabri-reminder-state.json';
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './styles.css?v=1.1.5',
+  './styles.css?v=1.1.8-r55',
   './manifest.json',
   './categoriesRegistry.js',
   './phraseLoader.js',
   './config.js',
   './firebase.js',
   './base_de_datos_de_frases_vocabri.json',
-  './styles-1.1.6.css?v=1.1.6-r22',
+  './styles-1.1.6.css?v=1.1.6-r55',
   './app/updater.js',
   './app/core/version.js',
   './app/main.js',
@@ -45,6 +45,25 @@ const PRECACHE_URLS = [
   './app/core/voices.js',
   './app/core/examples.js',
   './app/core/why.js',
+  './app/core/xpLedger.js',
+  './app/core/streak.js',
+  './app/core/collection.js',
+  './app/collection.js',
+  './app/missions.js',
+  './app/missionsHall.js',
+  './app/emojiIcons.js',
+  './app/shareCard.js',
+  './app/weeklyChest.js',
+  './app/levelUp.js',
+  './app/core/weekly.js',
+  './app/core/qr.js',
+  './app/emojiRuntime.js',
+  './app/a11y.js',
+  './app/core/unlocks.js',
+  './app/core/levels.js',
+  './app/core/missions.js',
+  './app/learning.js',
+  './app/core/learning.js',
   './app/core/wordDiff.js',
   './app/wordDiffUi.js',
   './app/settingsUi.js',

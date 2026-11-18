@@ -45,6 +45,12 @@ export const MASTER_CATEGORIES = [
     description: 'Consultas, síntomas, farmacia, emergencias', color: '#EF4444',
     source: 'health_and_medical', jsonKey: 'health_and_medical',
     zones: { sizes: [24, 24, 24, 28], names: ['En el Consultorio', 'Síntomas y Dolor', 'Farmacia y Tratamiento', 'Emergencias y Bienestar'] }
+  },
+  {
+    id: 'exam', name: 'Exámenes: TOEFL · IELTS · Cambridge', emoji: '📝', shortLabel: 'Exámenes',
+    description: 'Speaking, writing y estrategias de examen', color: '#14B8A6',
+    source: 'exam_prep', jsonKey: 'exam_prep', unlockLevel: 8,   // se desbloquea al llegar al nivel 8 (permanente)
+    zones: { sizes: [24, 24, 24, 28], names: ['Speaking: Opiniones y Argumentos', 'Writing: Estructura y Conectores', 'Listening y Reading: Estrategias', 'Vocabulario Académico'] }
   }
 ].map(c => Object.freeze({ ...c, label: c.emoji + ' ' + c.name }));
 
@@ -68,7 +74,12 @@ export function isValidLevel(level) { return level in START_NODE_BY_LEVEL; }
 export function getCategoryEmoji(catId) { const c = getMasterCategory(catId); return c ? c.emoji : (catId === CUSTOM_CATEGORY.id ? CUSTOM_CATEGORY.emoji : '📚'); }
 export function getCategoryShortLabel(catId) { const c = getMasterCategory(catId); return c ? c.shortLabel : catId; }
 export function getCategoryLabel(catId) { const c = getMasterCategory(catId); return c ? c.label : catId; }
-export function getCategoryColor(catId) { const c = getMasterCategory(catId); return c ? c.color : (catId === CUSTOM_CATEGORY.id ? CUSTOM_CATEGORY.color : '#94A3B8'); }
+// Paleta Okabe-Ito (distinguible con deuteranopía, protanopía y tritanopía). Se activa con data-cb="1" en <html>.
+const CB_COLORS = { general: '#E69F00', travel: '#56B4E9', academic: '#CC79A7', business: '#009E73', pop: '#D55E00', health: '#0072B2', exam: '#999999', custom: '#F0E442' };
+export function getCategoryColor(catId) {
+  try { if (document.documentElement.dataset.cb === '1' && CB_COLORS[catId]) return CB_COLORS[catId]; } catch (e) {}
+  const c = getMasterCategory(catId); return c ? c.color : (catId === CUSTOM_CATEGORY.id ? CUSTOM_CATEGORY.color : '#94A3B8');
+}
 
 /** Categorías cuyo contenido viene del JSON de frases. */
 export function getJsonCategories() { return MASTER_CATEGORIES.filter(c => c.jsonKey); }

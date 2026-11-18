@@ -1,0 +1,50 @@
+// Vocabri — sustituye los emojis del DOM por iconos SVG cartoon (ver emojiIcons.js).
+// Recorre el texto ya presente y observa los cambios, así también cubre lo que se pinta con innerHTML.
+import { splitEmoji } from './emojiIcons.js';
+
+const SKIP = 'SCRIPT,STYLE,TEXTAREA,OPTION,TITLE,NOSCRIPT,.ei';
+const SVGNS = 'http://www.w3.org/2000/svg';
+let obs = null;
+
+function convertText(node) {
+  const p = node.parentElement;
+  if (!p || p.namespaceURI === SVGNS || p.closest(SKIP)) return;
+  const v = node.nodeValue;
+  if (!v || v.length > 4000) return;
+  const parts = splitEmoji(v);
+  if (!parts.some(x => x.e)) return;
+  const frag = document.createDocumentFragment();
+  for (const x of parts) {
+    if (x.e) {
+      const sp = document.createElement('span');
+      sp.className = 'ei'; sp.setAttribute('aria-hidden', 'true'); sp.dataset.e = x.e; sp.innerHTML = x.svg;
+      frag.appendChild(sp);
+    } else frag.appendChild(document.createTextNode(x.t));
+  }
+  node.replaceWith(frag);
+}
+
+export function convertTree(root) {
+  if (!root) return;
+  if (root.nodeType === 3) { convertText(root); return; }
+  if (root.nodeType !== 1 || root.closest?.(SKIP)) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const list = []; let n;
+  while ((n = w.nextNode())) list.push(n);
+  list.forEach(convertText);
+}
+
+export function startEmojiIcons() {
+  if (obs || typeof document === 'undefined') return;
+  convertTree(document.body);
+  obs = new MutationObserver(muts => {
+    obs.disconnect();
+    try {
+      for (const m of muts) {
+        if (m.type === 'characterData') convertText(m.target);
+        else m.addedNodes.forEach(n => convertTree(n));
+      }
+    } finally { obs.observe(document.body, { childList: true, subtree: true, characterData: true }); }
+  });
+  obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+}

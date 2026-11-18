@@ -1,11 +1,12 @@
 // Vocabri — módulo "progress" (generado a partir de app.js)
 import { getCategoryColor, getCategoryEmoji } from '../categoriesRegistry.js';
 import { S } from './core/shared.js';
-import { DATA, MASTER_IDS, allMasteredTimestamps, catLabel, computeStreak, isMastered, itemsFor, mapItemsFor, readStored } from './core/dataRegistry.js';
+import { DATA, unlockedMasterIds, allMasteredTimestamps, catLabel, computeStreak, isMastered, itemsFor, mapItemsFor, readStored } from './core/dataRegistry.js';
 import { isStageComplete, nodeLayout } from './mapData.js';
 import { escapeHtml } from './myCards.js';
 import { speak } from './speech.js';
 import { studyMinutesToday } from './ui.js';
+import { renderLearning, wireLearningUi } from './learning.js';
 
 
 
@@ -50,7 +51,7 @@ export function renderCategoryProgress(allItems){
   const box = document.getElementById('catProgress');
   if(!box) return;
   const rows = [];
-  MASTER_IDS.forEach(c=>{
+  unlockedMasterIds().forEach(c=>{
     if(!DATA[c] || !DATA[c].length) return;
     const items = mapItemsFor(c);
     const done = items.filter(it=> isMastered(it[3])).length;
@@ -91,6 +92,7 @@ export function renderProgress(){
   document.getElementById('statTime').textContent = studyMinutesToday() + ' min';
 
   renderCategoryProgress(allItems);
+  try{ wireLearningUi(); renderLearning(); }catch(e){}
 
   const wrap = document.getElementById('chartWrap');
   const empty = document.getElementById('progEmpty');
@@ -158,6 +160,8 @@ export function renderProgress(){
     '</svg>';
   wrap.innerHTML = svg;
 }
+
+window.addEventListener('vocabri-cb', () => { try{ renderProgress(); }catch(e){} });
 
 // Sentencias de nivel superior del original, en su orden de ejecución (main.js las ordena por línea).
 export const __inits = [

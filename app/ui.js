@@ -1,14 +1,18 @@
 // Vocabri — módulo "ui" (generado a partir de app.js)
 import { getValidCategoryIds } from '../categoriesRegistry.js';
+import { checkUnlocks, isCategoryUnlocked, unlockLevelOf } from './core/unlocks.js';
 import { celebrate, pickLine, setMascotBubble } from './mascot.js';
 import { S } from './core/shared.js';
+import { grant as grantXp, XP_RULES } from './core/xpLedger.js';
 import { allCats, itemsFor, readStored, setUnlockedStage, todayKeyStr } from './core/dataRegistry.js';
 import { dismissTopModal, enqueueModal, renderCardsSubView } from './map.js';
 import { populateCardModalCats, renderMyCardsHome } from './myCards.js';
 import { renderProfile } from './profile.js';
 import { renderProgress, renderTable } from './progress.js';
 import { renderReviewView, updateReviewBadge } from './review.js';
-import { APP_VERSION, applyTheme, scheduleReminderStatePublish, updateCatSelector } from './settings.js';
+import { APP_VERSION, applyTheme, initCatSelector, scheduleReminderStatePublish, updateCatSelector } from './settings.js';
+import { renderCategoryOptions } from './categoryOptions.js';
+import { showLevelUp } from './levelUp.js';
 import { playSfx } from './speech.js';
 import { addXpToday, getDailyGoalTarget, getXpToday, getXpTotal, goalAlreadyCelebratedToday, levelFromXp, markGoalCelebrated, setDailyGoalTarget, setXpTotal, xpForLevel, xpIntoLevel } from './state.js';
 
@@ -189,6 +193,7 @@ export function updateDailyGoalProgress(xpGained){
   addXpToday(xpGained);
   updateGameBar();
   const nowComplete = getXpToday() >= target;
+  if(nowComplete && !wasComplete){ import('./weeklyChest.js').then(m => m.recordGoalDay()).catch(() => {}); }   // cuenta para el cofre semanal
   if(nowComplete && !wasComplete && !goalAlreadyCelebratedToday()){
     markGoalCelebrated();
     showDailyGoalToast();
@@ -203,20 +208,50 @@ export function refreshGoalButtons(){
 }
 
 
-export function awardXp(amount){
-  if(!amount) return;
+const _capWarned = new Set();
+function ledgerGrant(source, amount, key){
+  let raw = null; try{ raw = JSON.parse(localStorage.getItem('vocabri_xp_ledger') || 'null'); }catch(e){}
+  const today = todayKeyStr();
+  const r = grantXp(raw, source, amount, key, today);
+  try{ localStorage.setItem('vocabri_xp_ledger', JSON.stringify(r.ledger)); }catch(e){}
+  if(r.reason === 'cap' && !_capWarned.has(today + r.source)){
+    _capWarned.add(today + r.source);
+    const label = (XP_RULES[r.source] || {}).label || 'este modo';
+    showToast('Tope diario de XP en ' + label + ' alcanzado. Puedes seguir practicando, pero hoy ya no suma.', '🏁', 5000);
+  }
+  return r.granted;
+}
+
+
+// awardXp(cantidad, {source, key}): con source pasa por el libro de XP (topes y una vez por día).
+// Sin opciones se comporta como antes. Devuelve el XP realmente concedido.
+export function awardXp(amount, opts){
+  if(!amount) return 0;
+  if(opts && opts.source){ amount = ledgerGrant(opts.source, amount, opts.key); if(!amount) return 0; }
   const beforeLevel = levelFromXp(getXpTotal());
   setXpTotal(getXpTotal() + amount);
   showXpFloat(amount);
   updateDailyGoalProgress(amount);
   const afterLevel = levelFromXp(getXpTotal());
   if(afterLevel > beforeLevel){
-    setTimeout(()=> enqueueModal(()=>{
-      playSfx('levelup');
-      celebrate();
-      showGameModal('mascot:happy', '¡Subiste de nivel!', 'Ahora eres nivel ' + afterLevel + '. ¡Sigue así!');
-    }), 450);
+    setTimeout(()=> enqueueModal(()=> showLevelUp(afterLevel)), 450);
+    announceUnlocks();
   }
+  setTimeout(() => { import('./collection.js').then(c => c.refreshCollection()).catch(() => {}); }, 700);
+  return amount;
+}
+
+
+// Categorías que se desbloquean por nivel: guarda el desbloqueo (permanente), refresca el selector y avisa una vez.
+export function announceUnlocks(){
+  let fresh = [];
+  try{ fresh = checkUnlocks(); }catch(e){}
+  if(!fresh.length) return;
+  try{ renderCategoryOptions(); initCatSelector(); updateCatSelector(); }catch(e){}
+  fresh.forEach(id => {
+    const c = window.VocabriCategories && window.VocabriCategories.getMasterCategory(id);
+    if(c) setTimeout(()=> enqueueModal(()=> showGameModal('mascot:happy', '¡Categoría desbloqueada!', c.name + ' ya está disponible en Ajustes → Estudio.')), 900);
+  });
 }
 
 
@@ -323,6 +358,11 @@ export function selectFocusCategory(masterCatId) {
   if (!window.VocabriCategories || !window.VocabriCategories.isValidCategory(masterCatId)) {
     console.warn('[selectFocusCategory] Categoría no válida:', masterCatId);
     masterCatId = 'general';
+  }
+  if (!isCategoryUnlocked(masterCatId)) {
+    const need = unlockLevelOf(masterCatId);
+    showToast('Se desbloquea al llegar al nivel ' + need + '. ¡Sigue practicando!', '🔒');
+    return;
   }
 
   S.currentCat = masterCatId;
@@ -542,6 +582,7 @@ export function switchView(v){
     document.getElementById('lessonView').style.display = 'none';
     document.getElementById('tableView').style.display = 'none';
     document.getElementById('examView').style.display = 'none';
+    const misV = document.getElementById('missionView'); if(misV) misV.style.display = 'none';
     const dictV = document.getElementById('dictView'); if(dictV) dictV.style.display = 'none';
     const rtV = document.getElementById('routeView'); if(rtV) rtV.style.display = 'none';
     const abcV = document.getElementById('abcView'); if(abcV) abcV.style.display = 'none';
@@ -712,12 +753,12 @@ document.querySelectorAll('.goalOpt').forEach(b=>{
   }],
   [3404, function(){
 (function(){
-  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView','routeView','abcView'];
+  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView','routeView','abcView','missionView'];
   document.addEventListener('wheel', function(e){
     try{
       if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
       const t=e.target;
-      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, textarea, select')) return;
+      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, #collectionPanel, #situationsPanel, #missionsHallPanel, textarea, select')) return;
       for(const id of IDS){
         const el=document.getElementById(id);
         if(!el || !el.offsetParent) continue;

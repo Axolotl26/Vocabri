@@ -54,7 +54,11 @@ Está pensada para hispanohablantes, funciona **sin conexión**, no necesita cue
 | 🎯 **Puntos débiles** | Entrena justo las frases que más fallas. |
 | 🔤 **Abecedario** | Practica el alfabeto con la voz en inglés que elijas. |
 | 🃏 **Mis Tarjetas** | Crea tus propias frases, impórtalas/expórtalas en JSON o llévalas a Anki/CSV. |
-| 📊 **Progreso y racha** | Estadísticas, XP, racha diaria y un ajolote que reacciona a tus aciertos. |
+| 📊 **Progreso, XP y racha** | Estadísticas, XP con topes diarios justos, racha con Protector de Racha y un panel «Mi aprendizaje» con tus puntos débiles. |
+| 🎯 **Misiones y cofre semanal** | Misiones especiales en el mapa (Ordena la frase, Detective de registro, Contrarreloj, Supervivencia), Salón de misiones y un cofre de +150 XP si cumples tu meta 4 días a la semana. |
+| 🏅 **Recompensas y niveles** | Temas, marcos, sellos, títulos y ajolotes de colores que se desbloquean por nivel, racha y estrellas, con ventana de subida de nivel. |
+| 🖼️ **Tarjeta de progreso** | Imagen para compartir con varios estilos y un QR a la página oficial; se comparte directo a otras apps. |
+| ♿ **Accesibilidad** | Paleta para daltonismo, ventanas anunciadas como diálogos para lectores de pantalla y controles con nombre. |
 | ☁️ **Sincronización opcional** | Guarda tu progreso en la nube si inicias sesión; si no, todo queda en tu dispositivo. |
 
 ---
@@ -70,6 +74,8 @@ Está pensada para hispanohablantes, funciona **sin conexión**, no necesita cue
 | Reuniones, correos, entrevistas | Series, música, videojuegos | Consultorio, síntomas, farmacia, emergencias |
 
 </div>
+
+Además, el pack **📝 Exámenes** (TOEFL, IELTS y Cambridge, 100 frases) se desbloquea al llegar al nivel 8.
 
 Las categorías se registran en un único archivo (`categoriesRegistry.js`), así que añadir una nueva no requiere tocar el resto del código.
 
@@ -131,7 +137,7 @@ Las pruebas cubren la lógica pura (repaso espaciado, comparación de respuestas
 ```text
 Vocabri/
 ├── index.html                      # Shell de la aplicación
-├── styles.css · styles-1.1.6.css   # Estilos
+├── styles.css · styles-1.1.6.css   # Estilos (íconos cartoon propios en app/emojiIcons.js)
 ├── sw.js · manifest.json           # PWA: caché sin conexión e instalación
 ├── categoriesRegistry.js           # Registro único de categorías
 ├── base_de_datos_de_frases_vocabri.json
@@ -149,7 +155,7 @@ Vocabri/
 - [x] **1.1.5** — Escucha y escribe, ajolote reactivo, atajos de teclado
 - [x] **1.1.6** — Escenas, rutas por objetivo, puntos débiles, exportar a Anki/CSV
 - [x] **1.1.7** — Categoría Médico y Salud, voces más fiables, «¿Por qué?» y feedback por palabra
-- [ ] **1.1.8** — Panel «Mi aprendizaje», mapa de cobertura, paquetes de la comunidad, modos Contrarreloj y Supervivencia
+- [x] **1.1.8** — «Tus datos, tu motivación»: XP justo y Protector de Racha, misiones y Salón de misiones, cofre semanal, recompensas, pack de Exámenes, íconos cartoon, tarjeta de progreso con QR y mejoras de accesibilidad
 - [ ] **1.1.9** — Retos con un amigo y tutor opcional con tu propia clave
 
 ---

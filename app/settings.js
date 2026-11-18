@@ -75,8 +75,36 @@ export const THEMES = {
     dark:{bg:'#18181B', paper:'#27272A', primary:'#FBBF24', secondary:'#F472B6', ink:'#FAFAFA'}},
   indigo:{name:'Electric Indigo', tag:'Tecnología y gamificación',
     light:{bg:'#F5F3FF', paper:'#FFFFFF', primary:'#6366F1', secondary:'#10B981', ink:'#1E1B4B'},
-    dark:{bg:'#09090B', paper:'#18181B', primary:'#818CF8', secondary:'#34D399', ink:'#F4F4F5'}}
+    dark:{bg:'#09090B', paper:'#18181B', primary:'#818CF8', secondary:'#34D399', ink:'#F4F4F5'}},
+  // Temas de colección: se desbloquean jugando (ver app/core/collection.js). `lock` = id de la recompensa.
+  ocean:{name:'Océano Profundo', tag:'Calma y concentración', lock:'theme:ocean',
+    light:{bg:'#EFF8FF', paper:'#FFFFFF', primary:'#0EA5E9', secondary:'#14B8A6', ink:'#0C2A43'},
+    dark:{bg:'#04202F', paper:'#0A3247', primary:'#38BDF8', secondary:'#2DD4BF', ink:'#E6F6FF'}},
+  midnight:{name:'Medianoche', tag:'Para estudiar de noche', lock:'theme:midnight',
+    light:{bg:'#F4F1FA', paper:'#FFFFFF', primary:'#7C3AED', secondary:'#D4A017', ink:'#1E1B3A'},
+    dark:{bg:'#0E0B1F', paper:'#1A1536', primary:'#A78BFA', secondary:'#FBBF24', ink:'#F3EEFF'}},
+  sakura:{name:'Sakura', tag:'Suave y delicado', lock:'theme:sakura',
+    light:{bg:'#FFF5F7', paper:'#FFFFFF', primary:'#F06292', secondary:'#4DB6AC', ink:'#3B1F2B'},
+    dark:{bg:'#2A1420', paper:'#3A1E2D', primary:'#F48FB1', secondary:'#80CBC4', ink:'#FFEFF4'}},
+  holo:{name:'Holográfico', tag:'Solo para leyendas', lock:'theme:holo',
+    light:{bg:'#F7F3FF', paper:'#FFFFFF', primary:'#8B5CF6', secondary:'#06B6D4', ink:'#1E1B4B'},
+    dark:{bg:'#0B0B1A', paper:'#161630', primary:'#C084FC', secondary:'#22D3EE', ink:'#F5F3FF'}}
 };
+
+// ¿Se puede usar este tema? Los de colección exigen haberlo desbloqueado.
+export function themeUnlocked(key){
+  const t = THEMES[key];
+  if(!t) return false;
+  if(!t.lock) return true;
+  try{ return (JSON.parse(localStorage.getItem('vocabri_collection') || '[]')).indexOf(t.lock) >= 0; }catch(e){ return false; }
+}
+
+export function chooseTheme(key){
+  if(!themeUnlocked(key)) return false;
+  S.themeKey = key; try{ localStorage.setItem('ci_theme', key); }catch(e){}
+  applyTheme();
+  return true;
+}
 
 
 export const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
@@ -96,10 +124,12 @@ export function contrastRatio(a,b){ const x = lum(a), y = lum(b); return (Math.m
 
 
 export function applyTheme(){
+  if(!themeUnlocked(S.themeKey)){ S.themeKey = 'axolotl'; try{ localStorage.setItem('ci_theme', 'axolotl'); }catch(e){} }
   const m = resolvedMode();
   const t = THEMES[S.themeKey][m];
   const r = document.documentElement;
   r.setAttribute('data-theme', m);
+  try{ if(localStorage.getItem('ci_cb') === '1') r.dataset.cb = '1'; else delete r.dataset.cb; }catch(e){}
   r.style.colorScheme = m;
   r.style.setProperty('--bg', t.bg);
   r.style.setProperty('--paper', t.paper);
@@ -118,7 +148,11 @@ export const THEME_STICKERS = {
   vitality: 'ajolote_rojo_caminando_saludando.png', // rojo/naranja para vitality
   emerald: 'ajolote_verde_bailando.png',
   sunset: 'ajolote_dorado_brillante.png', // dorado para sunset
-  indigo: 'ajolote_morado_pensativo.png'
+  indigo: 'ajolote_morado_pensativo.png',
+  ocean: 'ajolote_azul_marino_con_estrella.png',
+  midnight: 'ajolote_morado_pensativo.png',
+  sakura: 'ajolote_rosa_brazos_abiertos.png',
+  holo: 'ajolote_arcoiris_holografico.png'
 };
 
 
@@ -135,13 +169,14 @@ export function renderThemeList(){
   box.innerHTML = '';
   const m = resolvedMode();
   Object.keys(THEMES).forEach(k=>{
+    if(!themeUnlocked(k)) return;                      // los bloqueados se ven (con candado) en la Colección del perfil
     const t = THEMES[k], c = t[m];
     const b = document.createElement('button');
     b.className = 'themeOpt' + (k === S.themeKey ? ' sel' : '');
     const stickerPath = getThemeStickerPath(k);
     b.innerHTML = '<span class="themeStickerWrap"><img class="themeSticker" src="'+stickerPath+'" alt="'+t.name+'" loading="lazy"></span>' +
                   '<span class="tn">'+t.name+'<small>'+t.tag+'</small></span>';
-    b.onclick = ()=>{ S.themeKey = k; try{ localStorage.setItem('ci_theme', k); }catch(e){} applyTheme(); };
+    b.onclick = ()=>{ chooseTheme(k); };
     box.appendChild(b);
   });
   document.querySelectorAll('.modeBtn').forEach(x=> x.classList.toggle('sel', x.dataset.mode === S.modeSel));
@@ -177,10 +212,25 @@ export function initCatSelector(){
  // attach category selector handlers
 
 // News/Changelog panel
-export const APP_VERSION = '1.1.7';
+export const APP_VERSION = '1.1.8';
 
 
 export const APP_CHANGELOG = [
+  { version: '1.1.8', date: '2026-11-17', title: 'Tus datos, tu motivación', changes: [
+    'Nuevo pack «Exámenes: TOEFL · IELTS · Cambridge» con 100 frases en 4 zonas; se desbloquea al llegar al nivel 8',
+    'Tarjeta de progreso para compartir: elige entre varios estilos de color, incluye un QR que lleva a la página oficial y se comparte como imagen directo a otras apps',
+    'Cofre semanal: cumple tu meta diaria 4 días en la semana (lunes a domingo) y abre el cofre para ganar +150 XP',
+    'Nueva ventana al subir de nivel, con sonido y celebración especial cada 5 niveles',
+    'Todos los emojis ahora son íconos cartoon propios de Vocabri',
+    'XP más justo: topes diarios por modo y las repeticiones del mismo día ya no suman. Tu XP anterior no cambia',
+    'El Protector de Racha funciona: se gana en el nivel 3 y cada 7 días de racha (máximo 2) y perdona un día sin estudiar',
+    'Misiones especiales en el mapa (Ordena la frase, Detective de registro, Contrarreloj y Supervivencia) y Salón de misiones en tu perfil con tu historial',
+    'Colección de recompensas: 4 temas nuevos, marcos, sellos, títulos y ajolotes de colores, permanentes una vez desbloqueados',
+    'Progreso tiene la pestaña «Mi aprendizaje»: frases vistas, repasos pendientes, mapa de situaciones y puntos débiles',
+    'Nueva paleta para daltonismo en Ajustes',
+    'Mejor lectura con lector de pantalla: las ventanas y menús se anuncian como diálogos y todos los controles tienen nombre',
+    'La pantalla de configuración inicial ahora se desplaza bien y el botón Empezar ya no tapa las opciones'
+  ] },
   { version: '1.1.7', date: '2026-11-15', title: 'Categoría Médico y Salud y voces más fiables', changes: [
     'Nueva categoría «Médico y Salud» con 100 frases en 4 zonas: En el Consultorio, Síntomas y Dolor, Farmacia y Tratamiento, Emergencias y Bienestar',
     'Voz más fiable: la app reintenta si el navegador se queda mudo y avisa cuando el dispositivo no tiene voz en inglés',
@@ -323,7 +373,7 @@ export const RESET_PROGRESS_KEYS = [
   'ci_xp_total', 'vocabri_xp_today', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date',
   'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits',
   'vocabri_language', 'ci_daily_goal_xp', 'ci_user_level', 'ci_user_focus', 'ci_theme',
-  'onboardingDone', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
+  'onboardingDone', 'vocabri_missions', 'vocabri_weekly', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
 ];
 
 
@@ -966,3 +1016,18 @@ initReminders();
 initPwaUpdates();
   }]
 ];
+
+
+// --- Paleta para daltonismo (colores Okabe-Ito en categorías y tarjetas de números) ---
+(function wireColorblind(){
+  const btn = document.getElementById('cbBtn');
+  if(!btn) return;
+  const paint = ()=>{ let on = false; try{ on = localStorage.getItem('ci_cb') === '1'; }catch(e){} btn.setAttribute('aria-pressed', String(on)); btn.textContent = '👁️ Paleta para daltonismo: ' + (on ? 'Sí' : 'No'); btn.title = 'Cambia los verdes y rojos (acierto/error) por azul y naranja, y usa colores distinguibles en las categorías'; };
+  btn.addEventListener('click', ()=>{
+    let on = false; try{ on = localStorage.getItem('ci_cb') === '1'; localStorage.setItem('ci_cb', on ? '0' : '1'); }catch(e){}
+    applyTheme(); paint();
+    try{ window.dispatchEvent(new Event('vocabri-cb')); }catch(e){}
+    setTimeout(() => { try{ location.reload(); }catch(e){} }, 250);
+  });
+  paint();
+})();
