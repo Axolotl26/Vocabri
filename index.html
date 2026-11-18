@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <title>Vocabri</title>
 <link rel="icon" href="assets/origin-logo.png">
-<link rel="stylesheet" href="styles.css?v=1.1.5">
+<link rel="stylesheet" href="styles.css?v=1.1.8-r55">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/origin-logo.png">
 <meta name="apple-mobile-web-app-title" content="Vocabri">
@@ -186,6 +186,7 @@
           </div>
           <div id="themeList"></div>
         </div>
+        <button class="nav setBtn hover-scale focus-glow" id="cbBtn" type="button" aria-pressed="false" style="margin-top:8px;">👁️ Paleta para daltonismo: No</button>
       </div>
       <div class="setSec" style="--i:2;">
         <div class="setTitle">Categoría</div>
@@ -231,6 +232,25 @@
     </div>
 
     <!-- News/Changelog Panel -->
+    <div class="settingsPanel stagger-settings" id="collectionPanel" role="dialog" aria-label="Colección" hidden>
+      <div class="setSec" style="--i:1; border-bottom:none; margin-bottom:0;">
+        <div class="setTitle">Colección</div>
+        <div class="collection" id="collectionBox"></div>
+      </div>
+    </div>
+
+    <div class="settingsPanel stagger-settings" id="situationsPanel" role="dialog" aria-label="Mapa de situaciones" hidden>
+      <div class="setSec" style="--i:1; border-bottom:none; margin-bottom:0;">
+        <div id="situationsBox"></div>
+      </div>
+    </div>
+
+    <div class="settingsPanel stagger-settings" id="missionsHallPanel" role="dialog" aria-label="Salón de misiones" hidden>
+      <div class="setSec" style="--i:1; border-bottom:none; margin-bottom:0;">
+        <div id="missionsHallBox"></div>
+      </div>
+    </div>
+
     <div class="settingsPanel stagger-settings" id="newsPanel" data-testid="news-dropdown" hidden>
       <div class="setSec" style="--i:1;">
         <div class="setTitle">Novedades</div>
@@ -411,6 +431,14 @@
     <button class="nav hover-scale focus-glow" id="examNextBtn" type="button" style="width:100%; display:none;">Siguiente →</button>
   </div>
 
+  <div id="missionView" style="display:none;">
+    <button class="backToMapBtn hover-scale focus-glow" id="missionBackBtn" type="button">← Mapa</button>
+    <h2 class="mapTitle" id="missionTitle"></h2>
+    <div class="examTopRow"><p class="hint" id="missionProgText" style="text-align:left; margin:0;"></p></div>
+    <div class="progBarOuter"><div class="progBarFill" id="missionBar"></div></div>
+    <div class="examCard" id="missionCard"></div>
+  </div>
+
   <div id="tableView" style="display:none;">
     <button class="backToMapBtn hover-scale focus-glow" id="backFromTableBtn" type="button">← Progreso</button>
     <input type="text" id="search" class="search focus-glow" placeholder="Buscar en inglés o español...">
@@ -428,6 +456,12 @@
       <h2 style="margin:0 0 4px; font-family:var(--font-ui); color:var(--ink);">Progreso</h2>
       <p class="hint" style="margin:0 0 16px; text-align:left;">Tu avance, racha y dominio de frases.</p>
     </div>
+    <div class="progTabs" role="tablist" aria-label="Secciones de Progreso">
+      <button type="button" role="tab" id="progTabSummary" class="progTab" aria-selected="true" aria-controls="progSummaryPane">Resumen</button>
+      <button type="button" role="tab" id="progTabLearn" class="progTab" aria-selected="false" aria-controls="learningPane" tabindex="-1">Mi aprendizaje</button>
+    </div>
+    <div id="learningPane" role="tabpanel" aria-labelledby="progTabLearn" hidden></div>
+    <div id="progSummaryPane" role="tabpanel" aria-labelledby="progTabSummary">
     <div class="gLevel" style="margin-bottom:14px;">
       <div class="gLevelTop"><span id="gLevelNum">Nivel 1</span><span id="gXpText">0/100 XP</span></div>
       <div class="gBarOuter"><div class="gBarFill" id="gLevelFill"></div></div>
@@ -453,6 +487,7 @@
   <img class="rateSticker" src="./assets/stickers/ajolotes_emociones/mente_explotando_confeti.png" alt="Fácil" width="24" height="24" style="vertical-align:middle;margin:0 2px;">
   para empezar a ver tu progreso aquí.</p>
     <button class="nav hover-scale focus-glow" id="openTableBtn" type="button" style="width:100%; margin-top:16px;">📋 Ver tabla completa</button>
+    </div>
   </div>
 
   <div id="reviewView" class="stagger-review" style="display:none;">
@@ -579,6 +614,7 @@
     <div class="setTitle" style="margin:18px 0 8px;">Nivel y experiencia</div>
     <div class="gLevel" style="margin-bottom:6px;">
       <div class="gLevelTop"><span id="pfLevelNum">Nivel 1</span><span id="pfXpText">0/100 XP</span></div>
+      <p class="pfTitle" id="pfTitle" style="display:none;"></p>
       <div class="gBarOuter"><div class="gBarFill" id="pfLevelFill"></div></div>
     </div>
     <p class="hint" id="pfXpDetail" style="text-align:left; margin-top:4px;"></p>
@@ -592,6 +628,11 @@
 
     <div class="setTitle" style="margin:18px 0 8px;">Recompensas</div>
     <div class="rewardsGrid stagger-rewards" id="rewardsGrid"></div>
+
+    <button type="button" class="sitBtn colBtn hover-scale focus-glow" id="collectionOpenBtn" aria-haspopup="dialog" aria-expanded="false" style="--cc:#F59E0B; margin-top:22px;"><span class="sitIc"><svg viewBox="0 0 28 28" width="46" height="46" focusable="false" aria-hidden="true" class="sitIcon"><g transform="translate(0 2)" fill="#8A4B05" stroke="#8A4B05" stroke-width="5" stroke-linejoin="round"><rect x="4" y="11" width="20" height="13" rx="2.5"/><rect x="3" y="7.5" width="22" height="6" rx="2"/></g><rect x="4" y="11" width="20" height="13" rx="2.5" fill="#FBBF24"/><rect x="3" y="7.5" width="22" height="6" rx="2" fill="#FCD34D"/><rect x="12" y="7.5" width="4" height="16.5" fill="#F472B6"/><path d="M14 7.5C11 3 6.5 3.6 7.6 6.2c.7 1.6 3.8 1.3 6.4 1.3zM14 7.5c3-4.5 7.5-3.9 6.4-1.3-.7 1.6-3.8 1.3-6.4 1.3z" fill="#F472B6" stroke="#8E1F57" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="sitTx"><b>Colección</b><small id="colCount"></small><span class="sitBar" aria-hidden="true"><span id="colBarFill" style="width:0%"></span></span></span><span class="sitGo" aria-hidden="true">›</span></button>
+    <button type="button" class="sitBtn hallBtn hover-scale focus-glow" id="missionsHallBtn" aria-haspopup="dialog" aria-expanded="false" style="--cc:#A78BFA; margin-top:14px;"><span class="sitIc"><svg viewBox="0 0 28 28" width="46" height="46" focusable="false" aria-hidden="true" class="sitIcon"><g transform="translate(0 2)" fill="#4C2A9E" stroke="#4C2A9E" stroke-width="5" stroke-linejoin="round"><path d="M7 3h14v8c0 4.4-3.1 7-7 7s-7-2.6-7-7z"/><path d="M11 18h6v3h3v3H8v-3h3z"/></g><path d="M7 3h14v8c0 4.4-3.1 7-7 7s-7-2.6-7-7z" fill="#C4B5FD"/><path d="M11 18h6v3h3v3H8v-3h3z" fill="#A78BFA"/><path d="M14 6.2l1.4 2.9 3.1.4-2.3 2.1.6 3.1L14 13.2l-2.8 1.5.6-3.1-2.3-2.1 3.1-.4z" fill="#FBBF24" stroke="#8A4B05" stroke-width="1.2" stroke-linejoin="round"/></svg></span><span class="sitTx"><b>Salón de misiones</b><small id="hallCount"></small><span class="sitBar" aria-hidden="true"><span id="hallBarFill" style="width:0%"></span></span></span><span class="sitGo" aria-hidden="true">›</span></button>
+
+    <button type="button" class="sitBtn chestBtn hover-scale focus-glow" id="weeklyChestBtn" aria-haspopup="dialog" aria-expanded="false" style="--cc:#F97316; margin-top:14px;"><span class="sitIc"></span><span class="sitTx"><b>Cofre semanal</b><small id="chestCount"></small><span class="sitBar" aria-hidden="true"><span id="chestBarFill" style="width:0%"></span></span></span><span class="sitGo" aria-hidden="true">›</span></button>
 
     <div class="setTitle" style="margin:22px 0 8px;">Compartir progreso</div>
     <button class="nav ripple hover-scale focus-glow" id="shareProgressBtn" type="button" style="width:100%;">📤 Generar tarjeta de progreso</button>
