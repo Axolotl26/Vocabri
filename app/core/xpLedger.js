@@ -8,14 +8,17 @@ export const XP_RULES = {
   lesson:    { label: 'lecciones',        daily: 400 },
   review:    { label: 'repaso',           daily: 300 },
   dictation: { label: 'Escucha y escribe', daily: 60, oncePerDay: true },
+  cloze:     { label: 'Completa el hueco', daily: 30, oncePerDay: true },
   scene:     { label: 'escenas',          daily: 120 },
   route:     { label: 'rutas',            daily: 200 },
+  challenge: { label: 'retos',            daily: 60, oncePerDay: true },
   custom:    { label: 'tarjetas propias', daily: 30, factor: 0.3 },
   // Sin tope diario: ya son de una sola vez por naturaleza (examen mejorado, bono de sección, misión)
   exam:      { label: 'exámenes',         daily: Infinity },
   section:   { label: 'secciones',        daily: Infinity },
   mission:   { label: 'misiones',         daily: Infinity },
   weekly:    { label: 'cofre semanal',    daily: Infinity },
+  event:     { label: 'evento semanal',   daily: Infinity },
   other:     { label: 'otros',            daily: Infinity }
 };
 

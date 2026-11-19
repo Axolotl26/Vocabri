@@ -1,7 +1,7 @@
 // Vocabri — Escenas: diálogos guiados. La otra persona habla (con voz) y tú eliges o escribes tu parte.
 // La lógica pura está en core/scenes.js y los guiones en core/scenesData.js. Guarda solo tus resultados (vocabri_scenes) y tus preferencias.
 import { SCENES, SCENE_GROUPS, SCENE_LEVELS } from './core/scenesData.js';
-import { SCENE_MAX_TRIES, buildOptions, normalizeStore, recordRun, scoreRun, validateScene, youTurns } from './core/scenes.js';
+import { SCENE_MAX_TRIES, buildOptions, choiceTurns, normalizeStore, recordRun, scoreRun, toneSummary, validateScene, youTurns } from './core/scenes.js';
 import { TTS_SUPPORTED, evaluateWrittenAnswer, nearMissNote } from './exam.js';
 import { shortcutsEnabled } from './shortcuts.js';
 import { speak, speakAlt } from './speech.js';
@@ -59,7 +59,7 @@ function showList(){
   setTitle('Escenas');
   const st = loadStore();
   const done = GOOD.filter(s => st[s.id] && st[s.id].best === 100).length;
-  const shown = GOOD.filter(s => listGroup === 'all' || s.group === listGroup);
+  const shown = GOOD.filter(s => listGroup === 'all' || (listGroup === 'decisiones' ? choiceTurns(s).length > 0 : s.group === listGroup));
   body().innerHTML = '<p class="snIntro">Conversaciones cortas para practicar situaciones reales. La otra persona habla y tú respondes con tu parte. <b>' + done + ' de ' + GOOD.length + '</b> dominadas ⭐</p>' +
     '<div class="snChips snFilter" role="group" aria-label="Filtrar por tema">' + SCENE_GROUPS.map(g =>
       '<button type="button" class="snChip hover-scale focus-glow" data-group="' + g.id + '" aria-pressed="' + (listGroup === g.id) + '">' + g.label + '</button>').join('') + '</div>' +
@@ -68,7 +68,7 @@ function showList(){
       const r = st[s.id], n = youTurns(s).length;
       return '<li><button type="button" class="snCard hover-scale focus-glow" data-scene="' + s.id + '"><span class="snCardIc" aria-hidden="true">' + s.emoji + '</span>' +
         '<span class="snCardTx"><strong>' + esc(s.title) + '</strong><small>' + esc(s.blurb) + '</small>' +
-        '<em>' + (SCENE_LEVELS[s.level] || '') + ' · ' + n + ' respuestas' + (r ? ' · mejor: ' + r.best + '%' + (r.best === 100 ? ' ⭐' : '') : '') + '</em></span></button></li>';
+        '<em>' + (SCENE_LEVELS[s.level] || '') + ' · ' + n + ' respuestas' + (choiceTurns(s).length ? ' · 🔀 decisiones' : '') + (r ? ' · mejor: ' + r.best + '%' + (r.best === 100 ? ' ⭐' : '') : '') + '</em></span></button></li>';
     }).join('') + '</ul>';
   const f = body().querySelector('.snCard'); if(f) f.focus({ preventScroll: true });
 }
@@ -79,7 +79,7 @@ function showIntro(id){
   const s = GOOD.find(x => x.id === id); if(!s) return;
   phoneMode(false); clearTimers(); R = { scene: s, idx: 0, results: [], tries: 0, answered: false, token: Math.random() };
   setTitle(s.title);
-  body().innerHTML = '<div class="snIntroWrap"><div class="snHero"><span class="snCardIc" aria-hidden="true">' + s.emoji + '</span><div><strong>' + esc(s.blurb) + '</strong><small>Hablas con: ' + esc(s.partner) + ' · ' + youTurns(s).length + ' respuestas</small></div></div>' +
+  body().innerHTML = '<div class="snIntroWrap"><div class="snHero"><span class="snCardIc" aria-hidden="true">' + s.emoji + '</span><div><strong>' + esc(s.blurb) + '</strong><small>Hablas con: ' + esc(s.partner) + ' · ' + youTurns(s).length + ' respuestas' + (choiceTurns(s).length ? ' · tú eliges el tono' : '') + '</small></div></div>' +
     '<div class="snDoodles" aria-hidden="true" style="--snWall:' + wallpaper(s.doodles) + '"><span>' + esc(Array.from(s.doodles || '').slice(0, 5).join(' ')) + '</span></div>' +
     '<div class="snLabel">¿Cómo quieres responder?</div><div class="snChips" role="group" aria-label="Modo">' +
       chip('pick', prefs.mode === 'pick', '🧩 Elegir la frase') + chip('type', prefs.mode === 'type', '⌨️ Escribirla') + '</div>' +
@@ -106,38 +106,71 @@ function startChat(){
       '<button type="button" class="snHBtn hover-scale focus-glow" id="snPhoneX" aria-label="Cerrar">✕</button></div>' +
     '<div class="snProg" aria-hidden="true"><i id="snProgBar"></i></div>' +
     '<div class="snLog" id="snLog" role="log" aria-live="polite"></div><div class="snPanel" id="snPanel"></div></div>';
-  R.idx = 0; R.results = []; advance();
+  R.idx = 0; R.results = []; R.picks = []; advance();
 }
 
 function updateProg(){
   const bar = document.getElementById('snProgBar'); if(!bar) return;
-  bar.style.width = Math.round(R.results.length / youTurns(R.scene).length * 100) + '%';
+  bar.style.width = Math.round((R.results.length + R.picks.length) / (youTurns(R.scene).length + choiceTurns(R.scene).length) * 100) + '%';
 }
 
 function addBubble(turn, side){
   const log = document.getElementById('snLog'); if(!log) return;
   log.insertAdjacentHTML('beforeend', bubbleHtml(turn, side));
-  log.scrollTop = log.scrollHeight;
+  toBottom();
+}
+
+// Muestra «escribiendo…» y luego el mensaje, como en un chat real. Con «movimiento reducido» sale al instante.
+const reduced = () => { try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
+// Mantiene el final de la conversación a la vista: cuando el panel de respuestas aparece y es alto, el registro se encoge y taparía lo último.
+function toBottom(){
+  const log = document.getElementById('snLog'); if(!log) return;
+  const go = () => { log.scrollTop = log.scrollHeight; };
+  go(); requestAnimationFrame(go); setTimeout(go, 120);
+}
+function typingOn(){
+  const log = document.getElementById('snLog'); if(!log || document.getElementById('snTyping')) return;
+  log.insertAdjacentHTML('beforeend', '<div class="snBubble npc snTyping" id="snTyping" aria-hidden="true"><div class="snWho">' + esc(R.scene.partner) + ' está escribiendo…</div><span class="snDots"><i></i><i></i><i></i></span></div>');
+  toBottom();
+}
+function typingOff(){ const t = document.getElementById('snTyping'); if(t) t.remove(); }
+
+// Entrega una lista de mensajes de la otra persona (uno a uno) y luego ejecuta done().
+function deliver(list, done){
+  const tok = R.token;
+  if(!list.length) return done();
+  const panel = document.getElementById('snPanel'); if(panel) panel.innerHTML = '';
+  const next = i => {
+    if(!R || R.token !== tok) return;
+    if(i >= list.length) return done();
+    const t = list[i];
+    if(reduced()){ addBubble(t, 'npc'); say(t.en, 'npc'); return next(i + 1); }
+    typingOn();
+    later(() => { if(!R || R.token !== tok) return; typingOff(); addBubble(t, 'npc'); say(t.en, 'npc'); later(() => next(i + 1), 250); }, Math.min(1200, 500 + t.en.length * 11));
+  };
+  next(0);
 }
 
 function advance(){
-  const s = R.scene, tok = R.token;
-  while(R.idx < s.turns.length && s.turns[R.idx].who === 'npc'){
-    addBubble(s.turns[R.idx], 'npc');
-    say(s.turns[R.idx].en, 'npc');
-    R.idx++;
-  }
-  updateProg();
-  if(R.idx >= s.turns.length) return finish();
-  R.tries = 0; R.answered = false;
-  renderPanel();
+  const s = R.scene;
+  const batch = [];
+  while(R.idx < s.turns.length && s.turns[R.idx].who === 'npc'){ batch.push(s.turns[R.idx]); R.idx++; }
+  deliver(batch, () => {
+    updateProg();
+    if(R.idx >= s.turns.length) return finish();
+    R.tries = 0; R.answered = false;
+    renderPanel();
+  });
 }
 
 function renderPanel(){
   const panel = document.getElementById('snPanel'); if(!panel) return;
   const t = R.scene.turns[R.idx];
-  let h = '<div class="snGoal"><span>Tu turno</span> ' + esc(t.goal) + '</div>';
-  if(prefs.mode === 'pick'){
+  let h = '<div class="snGoal"><span>' + (t.choice ? 'Tú decides' : 'Tu turno') + '</span> ' + esc(t.goal) + '</div>';
+  if(t.choice){
+    h += '<div class="snOpts snChoices" role="group" aria-label="Elige cómo responder">' + t.choice.map((o, i) =>
+      '<button type="button" class="snOpt snChoice hover-scale focus-glow" data-choice="' + i + '"><kbd>' + (i + 1) + '</kbd><span>' + esc(o.en) + (prefs.tr ? '<small>' + esc(o.es) + '</small>' : '') + '</span></button>').join('') + '</div>';
+  }else if(prefs.mode === 'pick'){
     R.options = buildOptions(R.scene, R.idx);
     h += '<div class="snOpts" role="group" aria-label="Opciones">' + R.options.map((o, i) =>
       '<button type="button" class="snOpt hover-scale focus-glow" data-opt="' + i + '"><kbd>' + (i + 1) + '</kbd><span>' + esc(o.en) + '</span></button>').join('') + '</div>';
@@ -149,6 +182,7 @@ function renderPanel(){
   h += '<p class="snNote" id="snNote" aria-live="polite"></p>';
   panel.innerHTML = h;
   const f = panel.querySelector('#snInput, .snOpt'); if(f) f.focus({ preventScroll: true });
+  toBottom();
 }
 
 function note(t){ const n = document.getElementById('snNote'); if(n) n.textContent = t || ''; }
@@ -191,6 +225,22 @@ function choose(i){
   failTurn('Esa no encaja aquí. Fíjate en lo que te dicen y en tu objetivo.');
 }
 
+const FIT_LABEL = { great: 'Muy buen tono ✨', ok: 'Funciona ✅', off: 'Poco adecuado ⚠️' };
+// Eliges el tono: todas las opciones son válidas, pero la otra persona reacciona distinto.
+function pickChoice(i){
+  if(!R || R.answered) return;
+  const t = R.scene.turns[R.idx], o = t && t.choice && t.choice[i]; if(!o) return;
+  R.answered = true; const tok = R.token;
+  R.picks.push({ fit: o.fit, en: o.en, tip: o.tip });
+  lockPanel();
+  document.querySelectorAll('#snPanel .snChoice').forEach((b, k) => { if(k === i) b.classList.add('pick'); });
+  addBubble(o, 'you'); say(o.en);
+  const log = document.getElementById('snLog');
+  if(log){ log.insertAdjacentHTML('beforeend', '<p class="snTone ' + o.fit + '"><b>' + FIT_LABEL[o.fit] + '</b> ' + esc(o.tip) + '</p>'); toBottom(); }
+  updateProg();
+  later(() => { if(!R || R.token !== tok) return; deliver(o.reply, () => { R.idx++; advance(); }); }, Math.min(3000, 1100 + o.en.length * 30));
+}
+
 function check(){
   if(!R || R.answered) return;
   const input = document.getElementById('snInput');
@@ -200,6 +250,13 @@ function check(){
   if(r.ok) return resolveTurn(false);
   failTurn(nearMissNote(r) || 'Casi. Revisa tu frase e inténtalo otra vez.');
   if(R && !R.answered){ input.select(); input.focus(); }
+}
+
+function toneRecap(){
+  if(!R.picks.length) return '';
+  const t = toneSummary(R.picks);
+  const head = t.great === t.total ? 'Elegiste el mejor tono en todas tus decisiones.' : 'Elegiste el mejor tono en ' + t.great + ' de ' + t.total + ' decisiones.';
+  return '<div class="snLabel">Tus decisiones</div><ul class="snLines snPicks">' + R.picks.map(p => '<li class="' + p.fit + '"><span>' + esc(p.en) + '</span><small>' + FIT_LABEL[p.fit].replace(/ \S+$/, '') + ' · ' + esc(p.tip) + '</small></li>').join('') + '</ul><p class="snMsg">' + head + ' Repite la escena para probar otro camino.</p>';
 }
 
 function finish(){
@@ -212,6 +269,7 @@ function finish(){
   body().innerHTML = '<div class="snEnd"><div class="snEndIc" aria-hidden="true">' + s.emoji + '</div><h4>' + esc(s.title) + '</h4>' +
     '<p class="snScore"><b>' + sum.firstTry + '</b> de ' + sum.total + ' a la primera · ' + sum.pct + '%</p><p class="snMsg">' + msg + '</p>' +
     '<p class="snXp">' + (sceneXp > 0 ? '+' + sceneXp + ' XP' : 'XP de esta escena ya cobrado hoy (vuelve mañana)') + '</p>' +
+    toneRecap() +
     '<div class="snLabel">Tus frases en esta escena</div><ul class="snLines">' + youTurns(s).map(t => '<li><span>' + esc(t.en) + '</span><small>' + esc(t.es) + '</small></li>').join('') + '</ul>' +
     '<button class="nav hover-scale focus-glow" id="snAgain" type="button">Repetir la escena</button>' +
     '<button class="snBack hover-scale focus-glow" id="snToList" type="button">← Todas las escenas</button></div>';
@@ -260,6 +318,7 @@ function wire(){
       savePrefs();
       body().querySelectorAll('[data-pref]').forEach(b => { const kk = b.dataset.pref; b.setAttribute('aria-pressed', (kk === 'pick' || kk === 'type') ? String(prefs.mode === kk) : String(!!prefs[kk])); });
     }
+    else if(t.dataset.choice != null) pickChoice(+t.dataset.choice);
     else if(t.dataset.opt != null) choose(+t.dataset.opt);
     else if(t.id === 'snCheck') check();
     else if(t.id === 'snShow'){ if(R && !R.answered){ note('Esta era la respuesta. ¡Sigue!'); R.tries = SCENE_MAX_TRIES; resolveTurn(true); } }
@@ -269,7 +328,11 @@ function wire(){
     if(e.key === 'Escape'){ closeScenes(); return; }
     if(e.target && e.target.id === 'snInput'){ if(e.key === 'Enter'){ e.preventDefault(); check(); } return; }
     if(!shortcutsEnabled() || e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
-    if(prefs.mode === 'pick' && R && !R.answered && /^[1-3]$/.test(e.key)){ e.preventDefault(); choose(+e.key - 1); }
+    if(R && !R.answered && R.scene && /^[1-3]$/.test(e.key)){
+      const cur = R.scene.turns[R.idx];
+      if(cur && cur.choice){ e.preventDefault(); pickChoice(+e.key - 1); }
+      else if(prefs.mode === 'pick'){ e.preventDefault(); choose(+e.key - 1); }
+    }
   });
 }
 

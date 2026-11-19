@@ -212,10 +212,22 @@ export function initCatSelector(){
  // attach category selector handlers
 
 // News/Changelog panel
-export const APP_VERSION = '1.1.8';
+export const APP_VERSION = '1.1.9';
 
 
 export const APP_CHANGELOG = [
+  { version: '1.1.9', date: '2026-11-18', title: 'Retos, eventos y escenas con decisiones', changes: [
+    'Retos con un amigo: un duelo de 10 frases iguales para los dos; el resultado viaja en un enlace (por WhatsApp, por ejemplo), sin servidor y sin cuentas. Da un XP pequeño con tope diario',
+    'Evento de la semana: un tema distinto cada semana con meta de 15 frases diferentes; al cumplirla ganas una insignia permanente y +100 XP',
+    'Nuevo modo «Completa el hueco» en Repasar → Modos de práctica: elige la palabra que falta en 10 frases (3 XP por acierto, máximo 30 al día)',
+    'Nueva ruta «Voy al médico» para practicar frases de consultorio y farmacia',
+    '6 escenas nuevas con decisiones: tú eliges el tono (formal, normal o brusco) y la otra persona reacciona distinto. Nuevo filtro «Decisiones» en la lista de escenas',
+    'Las escenas muestran «escribiendo…» antes de cada mensaje y la conversación baja sola para no tapar lo último que se dijo',
+    'Animaciones más fluidas en móviles: se quitó el desenfoque de fondo, el mapa deja quietas nubes e islas mientras haces scroll y los botones responden al primer toque',
+    'Ya no aparece el recuadro azul de «Copiar» al mantener presionado un botón o tarjeta en el teléfono',
+    'Progreso siempre abre en la pestaña Resumen',
+    'Términos y privacidad actualizados con retos y eventos'
+  ] },
   { version: '1.1.8', date: '2026-11-17', title: 'Tus datos, tu motivación', changes: [
     'Nuevo pack «Exámenes: TOEFL · IELTS · Cambridge» con 100 frases en 4 zonas; se desbloquea al llegar al nivel 8',
     'Tarjeta de progreso para compartir: elige entre varios estilos de color, incluye un QR que lleva a la página oficial y se comparte como imagen directo a otras apps',
@@ -373,7 +385,7 @@ export const RESET_PROGRESS_KEYS = [
   'ci_xp_total', 'vocabri_xp_today', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date',
   'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits',
   'vocabri_language', 'ci_daily_goal_xp', 'ci_user_level', 'ci_user_focus', 'ci_theme',
-  'onboardingDone', 'vocabri_missions', 'vocabri_weekly', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
+  'onboardingDone', 'vocabri_missions', 'vocabri_weekly', 'vocabri_events', 'vocabri_challenges', 'vocabri_challenge_name', 'vocabri_pending_challenge', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
 ];
 
 

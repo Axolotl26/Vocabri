@@ -19,7 +19,6 @@ export function selectProgTab(which){
   a.setAttribute('aria-selected', String(!learn)); b.setAttribute('aria-selected', String(learn));
   a.tabIndex = learn ? -1 : 0; b.tabIndex = learn ? 0 : -1;
   p1.hidden = learn; p2.hidden = !learn;
-  try{ localStorage.setItem('vocabri_prog_tab', which); }catch(e){}
   if(learn) renderLearning();
 }
 
@@ -33,8 +32,7 @@ export function wireLearningUi(){
   [a, b].forEach(t => t.addEventListener('keydown', e => {
     if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){ const to = t === a ? b : a; to.focus(); to.click(); e.preventDefault(); }
   }));
-  let saved = 'summary'; try{ saved = localStorage.getItem('vocabri_prog_tab') || 'summary'; }catch(e){}
-  selectProgTab(saved === 'learn' ? 'learn' : 'summary');
+  selectProgTab('summary');                      // Progreso siempre empieza en «Resumen»
 }
 
 function catRows(){

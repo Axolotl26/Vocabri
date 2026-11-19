@@ -38,7 +38,8 @@ export function collectStats(){
   }catch(e){}
   let missions = 0, missionModes = 0, missionRun = 0;
   try{ const ms = missionStats(normalizeMissions(JSON.parse(localStorage.getItem('vocabri_missions') || 'null'))); missions = ms.done; missionModes = ms.modes; missionRun = ms.bestRun; }catch(e){}
-  return { level: levelFromXp(getXpTotal()), bestStreak: best, examThreeStars: three, mastered, cats, missions, missionModes, missionRun };
+  let eventBadges = {}; try{ eventBadges = (JSON.parse(localStorage.getItem('vocabri_events') || 'null') || {}).badges || {}; }catch(e){}
+  return { eventBadges, level: levelFromXp(getXpTotal()), bestStreak: best, examThreeStars: three, mastered, cats, missions, missionModes, missionRun };
 }
 
 // Calcula desbloqueos nuevos, los guarda (permanentes) y avisa con un aviso por cada uno (máx. 2 + resumen).
@@ -105,7 +106,7 @@ export function wireCollectionUi(){
 }
 
 const GROUPS = [
-  ['theme', 'Temas'], ['frame', 'Marcos de perfil'], ['seal', 'Sellos de categoría'], ['title', 'Títulos'], ['sticker', 'Ajolotes']
+  ['theme', 'Temas'], ['frame', 'Marcos de perfil'], ['seal', 'Sellos de categoría'], ['title', 'Títulos'], ['badge', 'Insignias de eventos'], ['sticker', 'Ajolotes']
 ];
 
 export function renderCollection(){
