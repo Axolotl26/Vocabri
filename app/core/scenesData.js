@@ -4,6 +4,10 @@
 //   you: { who:'you', goal:'lo que tienes que lograr (en español)', en, es, ref?:'id de la frase del mapa' }
 // `ref` es el id de una frase que ya existe en el JSON (p. ej. 'trav_026'): los tests comprueban que el texto coincide.
 const N = (en, es) => ({ who: 'npc', en, es });
+// Decisión: eliges cómo hablar. Cada opción O(tono, en, es, consejo, [respuestas de la otra persona]) es válida, pero el tono cambia la reacción.
+//   tono: 'great' (ideal) · 'ok' (aceptable) · 'off' (poco adecuado). No se castiga con XP: se explica el porqué.
+const CH = (goal, choice) => ({ who: 'you', goal, choice });
+const O = (fit, en, es, tip, reply) => ({ fit, en, es, tip, reply });
 const Y = (goal, en, es, ref) => ref ? { who: 'you', goal, en, es, ref } : { who: 'you', goal, en, es };
 
 export const SCENES = [
@@ -396,13 +400,134 @@ export const SCENES = [
       Y('Pregunta si necesitas pagar un depósito.', 'Do I need to pay a deposit?', '¿Necesito pagar un depósito?'),
       N('Yes, one month in advance.', 'Sí, un mes por adelantado.'),
       Y('Di que lo pensarás y la llamarás mañana.', 'I will think about it and call you tomorrow.', 'Lo pensaré y la llamaré mañana.')
-    ] }
+    ] },
 
+  // ───── Escenas con decisiones (elige el tono) ─────
+  { id: 'dayoff', avatar: '👩‍💼', doodles: '📅☀️💼🗓️✅', emoji: '🗓️', title: 'Pedirle un día libre a tu jefa', cat: 'business', group: 'trabajo', level: 2, partner: 'Tu jefa, Ms. Carter',
+    blurb: 'Necesitas un día libre y tienes que elegir bien cómo pedirlo.',
+    turns: [
+      N('Good morning! Come in. What can I do for you?', 'Buenos días. Pasa. ¿En qué puedo ayudarte?'),
+      CH('Pídele un momento para hablar.', [
+        O('great', 'Do you have a moment? I would like to ask you something.', '¿Tiene un momento? Me gustaría pedirle algo.', 'Formal y amable: ideal para hablar con tu jefa.', [N('Of course. Please, sit down.', 'Claro. Por favor, siéntate.')]),
+        O('ok', 'Can I ask you something quickly?', '¿Puedo preguntarle algo rápido?', 'Correcto, aunque un poco directo.', [N('Sure, go ahead.', 'Claro, adelante.')]),
+        O('off', 'Hey boss! I need a day off, okay?', '¡Oye, jefa! Necesito un día libre, ¿vale?', 'Demasiado informal y brusco para tu jefa.', [N('Hmm. Okay... tell me more.', 'Mmm. Vale... cuéntame más.')])
+      ]),
+      Y('Explica que necesitas el próximo viernes libre.', 'I need to take next Friday off.', 'Necesito tomarme libre el próximo viernes.'),
+      N('I see. Is it for a special reason?', 'Entiendo. ¿Es por alguna razón especial?'),
+      Y('Explica que tienes una cita con tu médico.', 'Yes, I have an appointment with my doctor.', 'Sí, tengo una cita con mi médico.'),
+      N('Okay. Can you finish your report before you leave?', 'De acuerdo. ¿Puedes terminar tu informe antes de irte?'),
+      CH('Responde si podrás entregarlo antes.', [
+        O('great', 'Yes, I will finish it by Thursday afternoon.', 'Sí, lo terminaré el jueves por la tarde.', 'Claro y profesional: das una fecha concreta.', [N('Perfect. Then it is approved.', 'Perfecto. Entonces está aprobado.')]),
+        O('ok', 'I will try to finish it before Friday.', 'Intentaré terminarlo antes del viernes.', '«I will try» suena menos seguro que «I will».', [N('Alright. It is approved, but please send it on time.', 'De acuerdo. Está aprobado, pero por favor envíalo a tiempo.')]),
+        O('off', 'Maybe. I have a lot of work.', 'Quizás. Tengo mucho trabajo.', 'Suena a excusa: mejor comprometerte con una fecha.', [N('Hmm. I will approve it, but I need it on time, please.', 'Mmm. Lo aprobaré, pero lo necesito a tiempo, por favor.')])
+      ]),
+      Y('Agradece que te lo permita.', 'Thank you so much for understanding.', 'Muchas gracias por entenderlo.')
+    ] },
+
+  { id: 'lateclass', avatar: '👨‍🏫', doodles: '⏱📚🚏✏️🎓', emoji: '⏱', title: 'Llegar tarde a clase', cat: 'academic', group: 'estudio', level: 2, partner: 'Profesor Davis',
+    blurb: 'Llegas tarde y tienes que disculparte con tu profesor.',
+    turns: [
+      N('You are late. The class started twenty minutes ago.', 'Llegas tarde. La clase empezó hace veinte minutos.'),
+      CH('Pide disculpas por llegar tarde.', [
+        O('great', 'I am very sorry for being late, Professor.', 'Lamento mucho llegar tarde, profesor.', 'Formal y respetuoso: justo lo que espera un profesor.', [N('Thank you for apologizing. What happened?', 'Gracias por disculparte. ¿Qué pasó?')]),
+        O('ok', 'Sorry I am late.', 'Perdón por llegar tarde.', 'Correcto, pero algo corto para un profesor.', [N('Okay. What happened?', 'Bien. ¿Qué pasó?')]),
+        O('off', 'Yeah, whatever. The traffic was crazy.', 'Sí, bueno. El tráfico estaba loco.', 'Suena a que no te importa: mala idea con un profesor.', [N('That is not a great way to start. What happened?', 'Esa no es una buena forma de empezar. ¿Qué pasó?')])
+      ]),
+      Y('Explica que tu autobús se retrasó.', 'My bus was delayed this morning.', 'Mi autobús se retrasó esta mañana.'),
+      N('I see. Please sit down. We are on page forty.', 'Entiendo. Siéntate, por favor. Estamos en la página cuarenta.'),
+      Y('Pregunta si puedes conseguir los apuntes de la primera parte.', 'May I get the notes from the first part of the class?', '¿Puedo conseguir los apuntes de la primera parte de la clase?'),
+      N('Ask your classmate Anna. She always takes good notes.', 'Pídeselos a tu compañera Anna. Siempre toma buenos apuntes.'),
+      CH('Responde al profesor.', [
+        O('great', 'Thank you, Professor. I will ask her right after class.', 'Gracias, profesor. Se los pediré justo después de clase.', 'Cortés y claro.', [N('Good. And please try to arrive on time next week.', 'Bien. Y por favor trata de llegar a tiempo la próxima semana.')]),
+        O('ok', 'Okay, thanks.', 'Vale, gracias.', 'Aceptable, aunque algo seco con un profesor.', [N('Good. And please try to arrive on time next week.', 'Bien. Y por favor trata de llegar a tiempo la próxima semana.')]),
+        O('off', 'Fine. I will ask her. It is no big deal.', 'Bien. Se los pediré. No es para tanto.', 'Suena despreocupado: muestra más respeto.', [N('It is a big deal for me. Please arrive on time next week.', 'Para mí sí es importante. Por favor llega a tiempo la próxima semana.')])
+      ]),
+      Y('Promete llegar a tiempo la próxima semana.', 'I promise I will be on time next week.', 'Prometo que llegaré a tiempo la próxima semana.')
+    ] },
+
+  { id: 'coldsoup', avatar: '🧑‍🍳', doodles: '🍝🍽️🍽️🔥💳', emoji: '🍝', title: 'La sopa llega fría', cat: 'travel', group: 'viaje', level: 2, partner: 'Camarero',
+    blurb: 'Tu sopa está fría. Cómo lo digas cambia cómo te atienden.',
+    turns: [
+      N('Is everything all right with your meal?', '¿Todo está bien con su comida?'),
+      CH('Dile que tu sopa está fría.', [
+        O('great', 'Excuse me, my soup is cold. Could you heat it up, please?', 'Disculpe, mi sopa está fría. ¿Podría calentarla, por favor?', 'Cortés y claro: así consigues ayuda enseguida.', [N('I am so sorry! Of course. I will take it back right away.', '¡Lo siento mucho! Claro. Me la llevo enseguida.')]),
+        O('ok', 'My soup is cold. Can you fix it?', 'Mi sopa está fría. ¿Puede arreglarlo?', 'Funciona, pero suena un poco seco.', [N('Sorry about that. I will take it back.', 'Disculpe. Me la llevo.')]),
+        O('off', 'This soup is terrible! It is freezing!', '¡Esta sopa es horrible! ¡Está helada!', 'Muy agresivo: el camarero no tiene la culpa.', [N('I am sorry. I will bring you a new one.', 'Lo siento. Le traeré una nueva.')])
+      ]),
+      N('Here is your new soup. It is very hot. Is it better now?', 'Aquí tiene su sopa nueva. Está muy caliente. ¿Está mejor ahora?'),
+      Y('Di que ahora está perfecta.', 'Yes, it is perfect now. Thank you.', 'Sí, ahora está perfecta. Gracias.'),
+      N('Wonderful. Would you like some dessert?', 'Maravilloso. ¿Desean algo de postre?'),
+      Y('Rechaza el postre y pide la cuenta.', 'No, thank you. Could we have the check, please?', 'No, gracias. ¿Nos trae la cuenta, por favor?'),
+      N('Of course. Would you like to pay by card or in cash?', 'Claro. ¿Desean pagar con tarjeta o en efectivo?'),
+      CH('Elige cómo pagar.', [
+        O('great', 'By card, please.', 'Con tarjeta, por favor.', 'Corto y cortés: justo lo que se espera.', [N('Perfect. Here is the card machine.', 'Perfecto. Aquí está la terminal de pago.')]),
+        O('ok', 'Card.', 'Tarjeta.', 'Se entiende, pero seco: añade «please».', [N('Sure. Here is the card machine.', 'Claro. Aquí está la terminal de pago.')]),
+        O('off', 'Give me the card machine.', 'Dame la terminal de pago.', 'Suena a una orden: mejor «By card, please».', [N('Of course. Here you are.', 'Por supuesto. Aquí tiene.')])
+      ]),
+      Y('Agradece y deja el cambio de propina.', 'Thank you. Keep the change.', 'Gracias. Quédese con el cambio.')
+    ] },
+
+  { id: 'declineparty', avatar: '🧑‍💻', doodles: '🍰🎁🎁📅💬', emoji: '🍰', title: 'Rechazar una invitación', cat: 'social', group: 'social', level: 2, partner: 'Tu compañera Mia',
+    blurb: 'Te invitan a una fiesta, pero no puedes ir.',
+    turns: [
+      N('Hi! I am having a birthday party on Saturday. Can you come?', '¡Hola! Voy a hacer una fiesta de cumpleaños el sábado. ¿Puedes venir?'),
+      CH('Responde que no puedes ir.', [
+        O('great', 'Thank you for inviting me! Unfortunately, I cannot make it.', '¡Gracias por invitarme! Por desgracia, no puedo ir.', 'Agradecer primero suaviza el rechazo.', [N('Oh, that is too bad! Do you have other plans?', '¡Qué pena! ¿Tienes otros planes?')]),
+        O('ok', 'Sorry, I cannot come.', 'Lo siento, no puedo ir.', 'Claro, pero algo seco: agradece la invitación.', [N('Oh, okay. Do you have other plans?', 'Ah, vale. ¿Tienes otros planes?')]),
+        O('off', 'No. I do not like parties.', 'No. No me gustan las fiestas.', 'Demasiado brusco: puede ofender aunque sea verdad.', [N('Oh... okay. Do you have other plans?', 'Ah... vale. ¿Tienes otros planes?')])
+      ]),
+      Y('Explica que tienes un examen el lunes.', 'Yes, I have an exam on Monday and I need to study.', 'Sí, tengo un examen el lunes y necesito estudiar.'),
+      N('I understand. Good luck with it!', 'Lo entiendo. ¡Mucha suerte con eso!'),
+      Y('Propón celebrar juntos otro día.', 'Can we celebrate together next week?', '¿Podemos celebrar juntos la próxima semana?'),
+      N('Sure! That sounds great.', '¡Claro! Suena genial.'),
+      CH('Desea un buen cumpleaños.', [
+        O('great', 'Happy birthday! Have an amazing party.', '¡Feliz cumpleaños! Que tengas una fiesta increíble.', 'Cálido y amable: deja buen sabor.', [N('Thank you! That is so kind.', '¡Gracias! Qué amable.')]),
+        O('ok', 'Okay, bye.', 'Vale, adiós.', 'Correcto, pero frío para una felicitación.', [N('Bye! Thanks anyway.', '¡Adiós! Gracias de todos modos.')])
+      ]),
+      Y('Despídete hasta la próxima semana.', 'See you next week!', '¡Nos vemos la próxima semana!')
+    ] },
+
+  { id: 'noisyneighbor', avatar: '🧑‍🔧', doodles: '🔊🎶🔑🌙🌙', emoji: '🔊', title: 'Pedirle a un vecino que baje la música', cat: 'social', group: 'social', level: 3, partner: 'Tu vecino Tom',
+    blurb: 'La música está muy alta. Un buen tono evita el conflicto.',
+    turns: [
+      N('Hello! Can I help you?', '¡Hola! ¿Puedo ayudarte?'),
+      CH('Dile que la música está muy alta.', [
+        O('great', 'Hi, sorry to bother you. The music is a bit loud. Could you turn it down?', 'Hola, perdón por molestarte. La música está un poco alta. ¿Podrías bajarla?', 'Amable y claro: así se resuelven los problemas con vecinos.', [N('Oh, I am so sorry! I did not realize it was that loud.', '¡Lo siento mucho! No me di cuenta de que estaba tan alta.')]),
+        O('ok', 'Your music is too loud. Please turn it down.', 'Tu música está muy alta. Por favor, bájala.', 'Directo pero educado: aceptable.', [N('Oh, sorry. I did not realize it was that loud.', 'Ah, perdón. No me di cuenta de que estaba tan alta.')]),
+        O('off', 'Turn that noise off right now! I cannot sleep!', '¡Apaga ese ruido ahora mismo! ¡No puedo dormir!', 'Una orden agresiva suele empeorar el conflicto.', [N('Hey, calm down! I did not realize it was that loud.', '¡Oye, cálmate! No me di cuenta de que estaba tan alta.')])
+      ]),
+      Y('Explica que mañana tienes que trabajar temprano.', 'I have to wake up early for work tomorrow.', 'Tengo que despertarme temprano para trabajar mañana.'),
+      N('I understand. I will turn it down now.', 'Entiendo. La bajaré ahora mismo.'),
+      Y('Pide que la mantenga baja después de las diez.', 'Could you keep it quiet after ten at night?', '¿Podrías mantenerla baja después de las diez de la noche?'),
+      N('Sure, no problem. Sorry again.', 'Claro, sin problema. Perdón otra vez.'),
+      Y('Cierra con amabilidad.', 'Thank you for understanding. Good night!', 'Gracias por entenderlo. ¡Buenas noches!')
+    ] },
+
+  { id: 'meetclient', avatar: '🧑‍💼', doodles: '🤝💼☕📊📈', emoji: '🤝', title: 'Recibir a un cliente importante', cat: 'business', group: 'trabajo', level: 3, partner: 'Mr. Wilson (cliente)',
+    blurb: 'Recibes a un cliente nuevo: el tono formal marca la diferencia.',
+    turns: [
+      N('Hello, I am Daniel Wilson. It is a pleasure to meet you.', 'Hola, soy Daniel Wilson. Es un placer conocerlo.'),
+      CH('Preséntate.', [
+        O('great', 'It is a pleasure to meet you too, Mr. Wilson. I work in the sales team.', 'Es un placer conocerlo también, señor Wilson. Trabajo en el equipo de ventas.', 'Formal y profesional: perfecto para un cliente.', [N('Wonderful. Thank you for having me.', 'Excelente. Gracias por recibirme.')]),
+        O('ok', 'Nice to meet you! I work in sales.', '¡Mucho gusto! Trabajo en ventas.', 'Amable y válido, aunque menos formal.', [N('Great. Thank you for having me.', 'Genial. Gracias por recibirme.')]),
+        O('off', 'Yo, what is up? I am in sales, bro.', 'Ey, ¿qué onda? Estoy en ventas, hermano.', 'Es jerga de amigos: evítala con clientes.', [N('Ah... nice to meet you. Thank you for having me.', 'Ah... un gusto. Gracias por recibirme.')])
+      ]),
+      Y('Ofrécele algo de beber.', 'Would you like some coffee or water?', '¿Le gustaría un café o agua?'),
+      N('Water, please. Thank you.', 'Agua, por favor. Gracias.'),
+      Y('Propón empezar con la presentación.', 'Shall we start with the presentation?', '¿Empezamos con la presentación?'),
+      N('Yes, please. I am very interested in your proposal.', 'Sí, por favor. Me interesa mucho su propuesta.'),
+      CH('Responde a su interés.', [
+        O('great', 'I am glad to hear that. Let me show you the main points.', 'Me alegra oír eso. Permítame mostrarle los puntos principales.', 'Seguro y cortés.', [N('Please go ahead.', 'Adelante, por favor.')]),
+        O('ok', 'Cool, I will show you the slides.', 'Genial, le mostraré las diapositivas.', 'Natural, pero más casual de lo ideal.', [N('Please go ahead.', 'Adelante, por favor.')])
+      ]),
+      Y('Después de presentar, pregunta si tiene dudas.', 'Do you have any questions so far?', '¿Tiene alguna pregunta hasta ahora?')
+    ] }
 ];
 
 // Grupos para filtrar la lista y niveles de dificultad (1 básico · 2 intermedio · 3 avanzado)
 export const SCENE_GROUPS = [
   { id: 'all', label: 'Todas' }, { id: 'viaje', label: '✈️ Viaje' }, { id: 'diario', label: '🏠 Día a día' },
-  { id: 'estudio', label: '🎓 Estudio' }, { id: 'trabajo', label: '💼 Trabajo' }, { id: 'social', label: '💬 Social' }
+  { id: 'estudio', label: '🎓 Estudio' }, { id: 'trabajo', label: '💼 Trabajo' }, { id: 'social', label: '💬 Social' },
+  { id: 'decisiones', label: '🔀 Decisiones' }
 ];
 export const SCENE_LEVELS = { 1: 'Básico', 2: 'Intermedio', 3: 'Avanzado' };

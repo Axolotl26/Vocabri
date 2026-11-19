@@ -3,23 +3,51 @@ export const SCENE_XP_FIRST = 4;    // XP por acertar a la primera
 export const SCENE_XP_SECOND = 2;   // XP por acertar al segundo intento
 export const SCENE_MAX_TRIES = 2;   // tras estos fallos se muestra la respuesta y se sigue
 
-export function youTurns(scene){ return scene.turns.filter(t => t.who === 'you'); }
+// Líneas tuyas «normales» (con respuesta correcta). Las decisiones (turnos con `choice`) no cuentan aquí.
+export function youTurns(scene){ return scene.turns.filter(t => t.who === 'you' && !t.choice); }
+// Decisiones: turnos tuyos donde eliges cómo hablar (varias opciones válidas con distinto tono). Cada opción trae la respuesta de la otra persona.
+export function choiceTurns(scene){ return scene.turns.filter(t => t.who === 'you' && Array.isArray(t.choice)); }
+export const FITS = ['great', 'ok', 'off'];
 
 // Estructura válida: empieza y alterna npc/tú, cada línea tuya tiene objetivo y texto.
+// Una decisión cuenta como «tú» y su respuesta (reply) hace de turno de la otra persona: tras ella puede venir otra línea tuya o de la otra persona.
 export function validateScene(scene){
   const errs = [];
   if(!scene || !scene.id || !scene.title || !Array.isArray(scene.turns)) return ['escena incompleta'];
   const t = scene.turns;
   if(t.length < 4) errs.push('muy corta');
   if(t[0].who !== 'npc') errs.push('debe empezar la otra persona');
-  if(t[t.length - 1].who !== 'you') errs.push('debe terminar tu línea');
+  if(t[t.length - 1].who !== 'you' || t[t.length - 1].choice) errs.push('debe terminar tu línea');
   t.forEach((x, i) => {
-    if(i > 0 && x.who === t[i - 1].who) errs.push('turnos seguidos del mismo lado en ' + i);
+    const prev = t[i - 1];
+    if(i > 0 && x.who === prev.who && !(prev.choice)) errs.push('turnos seguidos del mismo lado en ' + i);
+    if(x.choice){
+      if(x.who !== 'you') errs.push('una decisión debe ser tuya en ' + i);
+      if(prev && prev.who !== 'npc') errs.push('una decisión debe seguir a la otra persona en ' + i);
+      if(!x.goal) errs.push('falta objetivo en ' + i);
+      if(!Array.isArray(x.choice) || x.choice.length < 2 || x.choice.length > 3) errs.push('la decisión ' + i + ' necesita 2 o 3 opciones');
+      else {
+        if(!x.choice.some(o => o.fit === 'great')) errs.push('la decisión ' + i + ' necesita una opción ideal');
+        if(new Set(x.choice.map(o => o.en)).size !== x.choice.length) errs.push('opciones repetidas en ' + i);
+        x.choice.forEach((o, k) => {
+          if(!o.en || !o.es || !o.tip) errs.push('opción incompleta ' + i + '.' + k);
+          if(FITS.indexOf(o.fit) < 0) errs.push('tono inválido ' + i + '.' + k);
+          if(!Array.isArray(o.reply) || !o.reply.length || o.reply.some(r => !r.en || !r.es)) errs.push('falta respuesta en ' + i + '.' + k);
+        });
+      }
+      return;
+    }
     if(!x.en || !x.es) errs.push('falta texto en ' + i);
     if(x.who === 'you' && !x.goal) errs.push('falta objetivo en ' + i);
   });
   if(youTurns(scene).length < 3) errs.push('necesita al menos 3 líneas tuyas');
   return errs;
+}
+
+// Resumen de tus decisiones: picks = [{fit}]. great = elegiste el tono ideal.
+export function toneSummary(picks){
+  const total = picks.length, great = picks.filter(p => p.fit === 'great').length;
+  return { total, great, off: picks.filter(p => p.fit === 'off').length };
 }
 
 // Mezcla Fisher-Yates con `rng` inyectable (tests deterministas).

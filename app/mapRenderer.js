@@ -791,6 +791,11 @@ export function buildPathMap(){
     S._isoResizeBound = true;
     const sm = document.getElementById('stageMapView');
     if(sm) sm.addEventListener('scroll', fxOnScroll, { passive: true });
+    // Mientras se hace scroll en el mapa se pausan las animaciones decorativas (nubes, islas): el scroll queda libre de trabajo extra.
+    if(sm){
+      let t = 0; const root = document.documentElement;
+      sm.addEventListener('scroll', () => { if(!root.classList.contains('mapScrolling')) root.classList.add('mapScrolling'); clearTimeout(t); t = setTimeout(() => root.classList.remove('mapScrolling'), 160); }, { passive: true });
+    }
     let raf = 0;
     window.addEventListener('resize', () => {
       cancelAnimationFrame(raf);

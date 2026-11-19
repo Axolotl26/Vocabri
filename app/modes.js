@@ -1,6 +1,7 @@
 // Vocabri — «Modos de práctica» en Repaso: todos los modos aparte del mapa en una sola fila.
 // Escucha y escribe · Escenas · Rutas por objetivo · Puntos débiles. Los botones se crean aquí, sin tocar index.html.
 import { startDictation } from './dictation.js';
+import { startCloze } from './cloze.js';
 import { loadRoute, openRoutes } from './routes.js';
 import { openScenes } from './scenes.js';
 import { ABC_ICON, openAlphabet } from './alphabet.js';
@@ -20,6 +21,9 @@ const IC = {
   routes: _ni('#38BDF8', '#0B6190',
     '<path d="M14 2.6c-5 0-8.6 3.7-8.6 8.4 0 6.2 8.6 14.4 8.6 14.4s8.6-8.2 8.6-14.4c0-4.7-3.6-8.4-8.6-8.4z"/>',
     '<circle cx="14" cy="11" r="3.4" fill="#fff" stroke="#0B6190" stroke-width="1.6"/><path d="M8.4 7a6.6 6.6 0 0 1 3.4-2.4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>'),
+  cloze: _ni('#A3E635', '#3F6212',
+    '<rect x="2.6" y="6" width="22.8" height="16" rx="4.6"/>',
+    '<rect x="8.2" y="11.2" width="11.6" height="5.8" rx="2" fill="#fff" stroke="#3F6212" stroke-width="1.6" stroke-dasharray="2.4 2"/><path d="M5.6 9.2h4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>'),
   abc: ABC_ICON,
   weak: _ni('#F59E0B', '#8A4B05',
     '<rect x="1.8" y="9" width="24.4" height="10" rx="5" transform="rotate(-38 14 14)"/>',
@@ -30,6 +34,7 @@ const IC = {
 
 const MODES = [
   { id: 'dict',   icon: IC.dict,   label: 'Escucha y escribe', desc: 'Oye una frase y escríbela', tone: 'teal' },
+  { id: 'cloze',  icon: IC.cloze,  label: 'Completa el hueco', desc: 'Elige la palabra que falta', tone: 'lime' },
   { id: 'abc',    icon: IC.abc,    label: 'Abecedario',        desc: 'Las 26 letras con su sonido', tone: 'violet' },
   { id: 'scenes', icon: IC.scenes, label: 'Escenas',           desc: 'Conversaciones por turnos', tone: 'pink' },
   { id: 'routes', icon: IC.routes, label: 'Rutas',             desc: 'Un camino corto por objetivo', tone: 'sky' },
@@ -128,6 +133,7 @@ function wire(){
     closeSheet(true);
     const m = b.dataset.mode;
     if(m === 'dict') startDictation();
+    else if(m === 'cloze') startCloze();
     else if(m === 'abc') openAlphabet();
     else if(m === 'scenes') openScenes(box.querySelector('#rvModesBtn'));
     else if(m === 'routes') openRoutes();

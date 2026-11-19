@@ -595,7 +595,7 @@ export function switchView(v){
     if(v==='learn'){ S.cardsSubView='map'; renderCardsSubView(); }
     else if(v==='review'){ renderReviewView(); }
     else if(v==='mycards') renderMyCardsHome();
-    else if(v==='progress') renderProgress();
+    else if(v==='progress'){ renderProgress(); const t = document.getElementById('progTabSummary'); if(t && t.getAttribute('aria-selected') !== 'true') t.click(); }   // siempre abre en «Resumen»
     else if(v==='profile') renderProfile();
 
     // 4) Auto-scroll SÍNCRONO al panel NUEVO (cada panel es su propio scroll container)
@@ -934,6 +934,7 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
   localStorage.setItem('ci_user_focus', masterCat); // guardar categoría maestra elegida
   localStorage.setItem('ci_theme', theme); // guardar tema visual elegido
   localStorage.setItem('onboardingDone', 'true');
+  setTimeout(() => { import('./challenge.js').then(m => m.checkIncomingChallenge()).catch(() => {}); }, 900);   // reto pendiente de un enlace
 
   // Aplicar el tema inmediatamente
   S.themeKey = theme;

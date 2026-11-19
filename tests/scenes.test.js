@@ -87,6 +87,35 @@ describe('catálogo ampliado', () => {
     SCENES.forEach(s => { expect(ids, s.id).toContain(s.group); expect(SCENE_LEVELS[s.level], s.id).toBeTruthy(); });
   });
   it('cada grupo (salvo «Todas») tiene al menos una escena', () => {
-    SCENE_GROUPS.filter(g => g.id !== 'all').forEach(g => expect(SCENES.some(s => s.group === g.id), g.id).toBe(true));
+    SCENE_GROUPS.filter(g => g.id !== 'all' && g.id !== 'decisiones').forEach(g => expect(SCENES.some(s => s.group === g.id), g.id).toBe(true));
+    expect(SCENES.some(s => s.turns.some(t => t.choice))).toBe(true);
+  });
+});
+
+
+import { choiceTurns, toneSummary, FITS } from '../app/core/scenes.js';
+describe('escenas con decisiones', () => {
+  const branching = SCENES.filter(s => choiceTurns(s).length);
+  it('hay al menos 6 escenas con decisiones y todas son válidas', () => {
+    expect(branching.length).toBeGreaterThanOrEqual(6);
+    branching.forEach(s => expect(validateScene(s)).toEqual([]));
+  });
+  it('youTurns excluye las decisiones', () => {
+    branching.forEach(s => { expect(youTurns(s).every(t => !t.choice)).toBe(true); });
+  });
+  it('cada decisión tiene 2–3 opciones, una ideal y respuestas de la otra persona', () => {
+    branching.forEach(s => choiceTurns(s).forEach(t => {
+      expect(t.choice.length).toBeGreaterThanOrEqual(2); expect(t.choice.length).toBeLessThanOrEqual(3);
+      expect(t.choice.some(o => o.fit === 'great')).toBe(true);
+      t.choice.forEach(o => { expect(FITS).toContain(o.fit); expect(o.reply.length).toBeGreaterThan(0); expect(o.tip.length).toBeGreaterThan(5); });
+    }));
+  });
+  it('validateScene rechaza una decisión sin opción ideal', () => {
+    const s = JSON.parse(JSON.stringify(branching[0]));
+    choiceTurns(s)[0].choice.forEach(o => { o.fit = 'ok'; });
+    expect(validateScene(s).length).toBeGreaterThan(0);
+  });
+  it('toneSummary cuenta ideales y poco adecuadas', () => {
+    expect(toneSummary([{ fit: 'great' }, { fit: 'off' }, { fit: 'ok' }])).toEqual({ total: 3, great: 1, off: 1 });
   });
 });

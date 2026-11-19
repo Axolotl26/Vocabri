@@ -13,6 +13,11 @@ export const ROUTE_GOALS = [
     { cat: 'travel' },
     { cat: 'general', zones: ['Viajes y Transporte', 'En el Restaurante', 'Direcciones', 'Salud y Emergencias'] }
   ]},
+  { id: 'health', emoji: '🩺', name: 'Voy al médico', desc: 'Consulta, síntomas, farmacia y emergencias', sources: [
+    { cat: 'general', zones: ['Saludos y Despedidas', 'Para cuando no entiendes'] },
+    { cat: 'health' },
+    { cat: 'general', zones: ['Salud y Emergencias'] }
+  ]},
   { id: 'work', emoji: '💼', name: 'Busco trabajo', desc: 'Entrevistas, correos profesionales y reuniones', sources: [
     { cat: 'business', zones: ['Entrevistas de Trabajo'] },
     { cat: 'business', zones: ['Correos Profesionales', 'Reuniones'] },

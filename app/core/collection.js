@@ -44,6 +44,16 @@ export const STICKER_ITEMS = [
   { id: 'sticker:holo',   kind: 'sticker', icon: '🌈', name: 'Ajolote holográfico', file: 'ajolotes_de_colores/ajolote_arcoiris_holografico.png',  hint: 'Llega al nivel 20',                  test: s => s.level >= 20 }
 ];
 
+// Insignias del evento semanal (una por tema; se ganan cumpliendo la meta de la semana).
+export const BADGE_ITEMS = [
+  { id: 'badge:travel',   kind: 'badge', icon: '✈️', name: 'Insignia Viajero',    hint: 'Cumple el evento «Semana de Viajes»',      test: s => ((s.eventBadges || {}).travel || 0) >= 1 },
+  { id: 'badge:academic', kind: 'badge', icon: '🎓', name: 'Insignia Estudiante', hint: 'Cumple el evento «Semana de Académico»',   test: s => ((s.eventBadges || {}).academic || 0) >= 1 },
+  { id: 'badge:business', kind: 'badge', icon: '💼', name: 'Insignia Ejecutivo',  hint: 'Cumple el evento «Semana de Negocios»',    test: s => ((s.eventBadges || {}).business || 0) >= 1 },
+  { id: 'badge:pop',      kind: 'badge', icon: '🎮', name: 'Insignia Jugador',    hint: 'Cumple el evento «Semana de Cultura pop»', test: s => ((s.eventBadges || {}).pop || 0) >= 1 },
+  { id: 'badge:health',   kind: 'badge', icon: '🩺', name: 'Insignia Sanador',    hint: 'Cumple el evento «Semana de Salud»',       test: s => ((s.eventBadges || {}).health || 0) >= 1 },
+  { id: 'badge:general',  kind: 'badge', icon: '🌍', name: 'Insignia Explorador', hint: 'Cumple el evento «Semana de General»',     test: s => ((s.eventBadges || {}).general || 0) >= 1 }
+];
+
 function pctOf(s, id){ const c = (s.cats || []).find(x => x.id === id); return c ? c.pct : 0; }
 function sealCount(s){ return (s.cats || []).filter(c => c.pct >= SEAL_PCT).length; }
 
@@ -56,7 +66,7 @@ export function sealItems(stats){
 }
 
 export function catalog(stats){
-  return [].concat(THEME_ITEMS, FRAME_ITEMS, sealItems(stats || {}), TITLE_ITEMS, STICKER_ITEMS);
+  return [].concat(THEME_ITEMS, FRAME_ITEMS, sealItems(stats || {}), TITLE_ITEMS, BADGE_ITEMS, STICKER_ITEMS);
 }
 
 // Devuelve { owned: Set (con lo ya poseído + lo nuevo), fresh: [items nuevos] }

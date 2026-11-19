@@ -7,6 +7,8 @@ import { THEMES, applyTheme, getThemeStickerPath, themeUnlocked, updateCatSelect
 import { applyFrame, refreshCollection, renderCollection, wireCollectionUi } from './collection.js';
 import { wireMissionsHall } from './missionsHall.js';
 import { wireWeeklyChest, syncToday } from './weeklyChest.js';
+import { wireChallenge } from './challenge.js';
+import { wireEvents } from './events.js';
 import { getDailyGoalTarget, getXpToday, getXpTotal, levelFromXp, xpForLevel, xpIntoLevel } from './state.js';
 import { buildBottomNav } from './ui.js';
 import { renderShareCard } from './shareCard.js';
@@ -40,7 +42,7 @@ export function renderProfile(){
   allItems.forEach(it=>{ const s = readStored(it[3]); if(s.t) days.add(dayKey(new Date(s.t))); });
   document.getElementById('pfActiveDays').textContent = days.size;
 
-  try{ wireWeeklyChest(); syncToday(); wireMissionsHall(); wireCollectionUi(); refreshCollection(); renderCollection(); applyFrame(); }catch(e){}
+  try{ wireWeeklyChest(); syncToday(); wireChallenge(); wireEvents(); wireMissionsHall(); wireCollectionUi(); refreshCollection(); renderCollection(); applyFrame(); }catch(e){}
   const grid = document.getElementById('rewardsGrid');
   grid.innerHTML = '';
   let nextEl = document.getElementById('rewardNext');

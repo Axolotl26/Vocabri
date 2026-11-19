@@ -41,7 +41,7 @@ import * as shortcuts from './shortcuts.js';
 (function(){
   if(document.querySelector('link[data-vocabri-css="1.1.6"]')) return;
   const l = document.createElement('link');
-  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r56'; l.setAttribute('data-vocabri-css', '1.1.6');
+  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r64'; l.setAttribute('data-vocabri-css', '1.1.6');
   document.head.appendChild(l);
 })();
 
@@ -69,3 +69,7 @@ startEmojiIcons();
 startA11y();
 // 2) Las frases del JSON se cargan en paralelo; al terminar emiten 'vocabri:phrasesLoaded'.
 loadPhrasesFromJSON();
+// 2b) Evento de la semana: escucha los repasos desde el arranque (no hace falta abrir el perfil).
+import('./events.js').then(m => m.wireEvents()).catch(() => {});
+// 3) Retos con un amigo: un enlace con #reto=… se abre cuando las frases ya están cargadas.
+window.addEventListener('vocabri:phrasesLoaded', () => { import('./challenge.js').then(m => m.checkIncomingChallenge()).catch(() => {}); }, { once: true });

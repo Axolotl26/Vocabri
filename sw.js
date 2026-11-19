@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.8';
+const CACHE_VERSION = '1.1.9';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -27,7 +27,7 @@ const PRECACHE_URLS = [
   './config.js',
   './firebase.js',
   './base_de_datos_de_frases_vocabri.json',
-  './styles-1.1.6.css?v=1.1.6-r56',
+  './styles-1.1.6.css?v=1.1.6-r64',
   './app/updater.js',
   './app/core/version.js',
   './app/main.js',
@@ -59,6 +59,12 @@ const PRECACHE_URLS = [
   './app/core/qr.js',
   './app/emojiRuntime.js',
   './app/a11y.js',
+  './app/challenge.js',
+  './app/events.js',
+  './app/cloze.js',
+  './app/core/cloze.js',
+  './app/core/events.js',
+  './app/core/challenge.js',
   './app/core/unlocks.js',
   './app/core/levels.js',
   './app/core/missions.js',

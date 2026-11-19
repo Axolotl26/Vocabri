@@ -22,7 +22,9 @@ export function srsGrade(key, grade, opts){
   if(!key) return {applied:false};
   const cur = readStored(key);
   const plan = srsPlanGrade(cur, grade, Date.now(), opts);
-  writeCard(key, plan.record);   // si no se aplica, cuenta como actividad (racha) y deja el calendario intacto
+  writeCard(key, plan.record);
+  try{ window.dispatchEvent(new CustomEvent('vocabri:graded', { detail: { key, grade, applied: !!plan.applied } })); }catch(e){}
+  // (si no se aplica, cuenta como actividad —racha— y deja el calendario intacto)
   return plan.applied ? {applied:true, leech:plan.leech, lapses:plan.lapses} : {applied:false, leech:plan.leech};
 }
 
