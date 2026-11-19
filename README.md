@@ -49,13 +49,16 @@ Está pensada para hispanohablantes, funciona **sin conexión**, no necesita cue
 | 🎧 **Escucha y escribe** | Oyes una frase a distintas velocidades y la escribes. Al fallar ves **palabra por palabra** qué corregir, y puedes practicar tu pronunciación. |
 | 🎤 **Pronunciación** | Reconocimiento de voz con feedback por palabra; toca una palabra para oír cómo se dice. |
 | 📝 **Exámenes por sección** | Mezcla opción múltiple, escritura, dictado y pronunciación, con vidas. |
-| 💬 **Escenas de chat** | 23 conversaciones guiadas con aspecto de teléfono: la app habla por la otra persona con una voz distinta a la tuya. |
+| 💬 **Escenas de chat** | 29 conversaciones guiadas con aspecto de teléfono y «escribiendo…»: la app habla por la otra persona con una voz distinta a la tuya. 6 de ellas tienen **decisiones**: eliges el tono y la otra persona reacciona distinto. |
 | 🧭 **Rutas por objetivo** | "Viajo en dos semanas": un camino ordenado de frases según para qué necesitas el inglés. |
 | 🎯 **Puntos débiles** | Entrena justo las frases que más fallas. |
 | 🔤 **Abecedario** | Practica el alfabeto con la voz en inglés que elijas. |
 | 🃏 **Mis Tarjetas** | Crea tus propias frases, impórtalas/expórtalas en JSON o llévalas a Anki/CSV. |
 | 📊 **Progreso, XP y racha** | Estadísticas, XP con topes diarios justos, racha con Protector de Racha y un panel «Mi aprendizaje» con tus puntos débiles. |
 | 🎯 **Misiones y cofre semanal** | Misiones especiales en el mapa (Ordena la frase, Detective de registro, Contrarreloj, Supervivencia), Salón de misiones y un cofre de +150 XP si cumples tu meta 4 días a la semana. |
+| ⚔️ **Retos con un amigo** | Duelo de 10 frases iguales para los dos; el resultado viaja en un enlace, sin servidor ni cuentas. |
+| 📅 **Evento de la semana** | Un tema distinto cada semana: cumple la meta de frases y gana una insignia permanente. |
+| 🧩 **Completa el hueco** | Elige la palabra que falta en la frase (Repasar → Modos de práctica). |
 | 🏅 **Recompensas y niveles** | Temas, marcos, sellos, títulos y ajolotes de colores que se desbloquean por nivel, racha y estrellas, con ventana de subida de nivel. |
 | 🖼️ **Tarjeta de progreso** | Imagen para compartir con varios estilos y un QR a la página oficial; se comparte directo a otras apps. |
 | ♿ **Accesibilidad** | Paleta para daltonismo, ventanas anunciadas como diálogos para lectores de pantalla y controles con nombre. |
@@ -156,7 +159,7 @@ Vocabri/
 - [x] **1.1.6** — Escenas, rutas por objetivo, puntos débiles, exportar a Anki/CSV
 - [x] **1.1.7** — Categoría Médico y Salud, voces más fiables, «¿Por qué?» y feedback por palabra
 - [x] **1.1.8** — «Tus datos, tu motivación»: XP justo y Protector de Racha, misiones y Salón de misiones, cofre semanal, recompensas, pack de Exámenes, íconos cartoon, tarjeta de progreso con QR y mejoras de accesibilidad
-- [ ] **1.1.9** — Retos con un amigo y tutor opcional con tu propia clave
+- [x] **1.1.9** — Retos con un amigo (sin servidor), evento semanal con insignia, «Completa el hueco», ruta «Voy al médico», escenas con decisiones y animaciones más fluidas
 
 ---
 

@@ -957,3 +957,150 @@ html[data-cb="1"]{ --cb-ok:#0072B2; --cb-ok2:#56B4E9; --cb-ok3:#005A8C; --cb-bad
 @keyframes lvlSpin{ to{ transform:rotate(360deg); } }
 @keyframes lvlMedal{ 0%{ transform:scale(.2) rotate(-40deg); opacity:0; } 60%{ transform:scale(1.15) rotate(8deg); opacity:1; } 100%{ transform:scale(1) rotate(0); } }
 @media (prefers-reduced-motion:reduce){ .lvlRays, .lvlMedal{ animation:none; } }
+
+/* ===== Retos con un amigo (1.1.9) ===== */
+.gModal.chModal{ max-width:400px; text-align:center; padding:24px 18px 20px; max-height:92vh; overflow-y:auto; }
+.chModal .chClose{ position:absolute; top:12px; right:12px; }
+.chModal h3{ margin:4px 0 6px; }
+.chHero{ display:flex; justify-content:center; margin-bottom:4px; }
+.chHero .chBig.ei{ width:84px; height:84px; filter:drop-shadow(0 6px 0 rgba(0,0,0,.16)); }
+.chRes.win .chBig.ei{ animation:chestIdle 2.4s ease-in-out infinite; }
+.chLead{ margin:0 0 12px; font-weight:700; font-size:.92rem; color:var(--muted); line-height:1.35; }
+.chLbl{ display:block; text-align:left; margin:10px 2px 4px; font-weight:900; font-size:.8rem; letter-spacing:.02em; }
+.chModal input.search, .chModal select.search{ width:100%; box-sizing:border-box; margin:0; }
+.chModal button.nav{ width:100%; margin-top:12px; }
+.chModal button.nav.chGhost{ background:var(--paper); color:var(--ink); }
+.chRow{ display:flex; gap:10px; } .chRow button.nav{ flex:1; }
+.chSep{ display:flex; align-items:center; gap:10px; margin:18px 0 0; color:var(--muted); font-weight:900; font-size:.8rem; }
+.chSep::before, .chSep::after{ content:""; flex:1; border-top:2.5px dashed color-mix(in srgb, var(--muted) 45%, transparent); }
+.chErr{ min-height:1.1em; margin:6px 0 0; font-weight:800; font-size:.82rem; color:var(--cb-bad,#EF4444); }
+.chErr.chOkMsg{ color:var(--cb-ok,#22C55E); }
+.chStats{ margin-top:16px; font-weight:800; font-size:.9rem; }
+.chHistList{ list-style:none; margin:8px 0 0; padding:0; display:grid; gap:6px; }
+.chHist{ display:grid; grid-template-columns:1fr auto auto; gap:10px; align-items:center; padding:8px 12px; border-radius:14px; font-weight:800; font-size:.85rem; text-align:left; background:color-mix(in srgb, var(--primary) 8%, var(--paper)); border:2px solid color-mix(in srgb, var(--primary) 30%, transparent); }
+.chHist i{ font-style:normal; font-size:.72rem; opacity:.75; }
+.chHist.win b{ color:var(--cb-ok,#22C55E); } .chHist.lose b{ color:var(--cb-bad,#EF4444); }
+.chDots{ display:flex; gap:6px; justify-content:center; margin:6px 0 14px; }
+.chDot{ width:14px; height:14px; border-radius:50%; background:color-mix(in srgb, var(--muted) 30%, transparent); border:2px solid color-mix(in srgb, var(--muted) 50%, #000); }
+.chDot.cur{ background:var(--primary); transform:scale(1.2); }
+.chDot.ok{ background:var(--cb-ok,#22C55E); } .chDot.bad{ background:var(--cb-bad,#EF4444); }
+.chQTitle{ font-size:.85rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.chPrompt{ font-family:var(--font-ui); font-weight:900; font-size:1.25rem; line-height:1.25; margin:6px 0 14px; }
+.chOpts{ display:grid; gap:10px; }
+.chModal button.nav.chOpt{ margin-top:0; min-height:54px; padding:10px 14px; line-height:1.2; text-align:center; }
+.chModal button.nav.chOpt:disabled{ opacity:.6; filter:saturate(.5); }
+.chModal button.nav.chOpt.isRight{ opacity:1; filter:none; outline:4px solid var(--cb-ok,#22C55E); outline-offset:2px; }
+.chModal button.nav.chOpt.isWrong{ opacity:.9; outline:4px solid var(--cb-bad,#EF4444); outline-offset:2px; }
+.chFeed{ min-height:1.3em; margin:10px 0 0; font-weight:800; }
+.chVs{ display:flex; align-items:stretch; justify-content:center; gap:10px; margin:6px 0 12px; }
+.chSide{ flex:1; padding:10px 8px; border-radius:18px; border:3px solid color-mix(in srgb, var(--primary) 50%, #000); background:color-mix(in srgb, var(--primary) 10%, var(--paper)); box-shadow:0 4px 0 color-mix(in srgb, var(--primary) 50%, #000); display:grid; gap:2px; }
+.chSide.me{ background:color-mix(in srgb, var(--primary) 28%, var(--paper)); }
+.chSide small{ font-weight:900; opacity:.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chSide b{ font-family:var(--font-ui); font-size:2rem; line-height:1; }
+.chSide span{ font-size:.74rem; font-weight:800; opacity:.75; }
+.chX{ align-self:center; font-family:var(--font-ui); font-weight:900; opacity:.6; }
+.chBtn .sitIc .ei{ width:44px; height:44px; }
+@media (prefers-reduced-motion:reduce){ .chRes.win .chBig.ei{ animation:none; } }
+
+/* ===== Evento de la semana (1.1.9) ===== */
+.evBtn .sitIc .ei, .chBtn .sitIc .ei{ width:44px; height:44px; }
+.evBtn.evDone .sitTx small{ color:var(--cb-ok,#22C55E); font-weight:900; }
+.gModal.evModal{ max-width:400px; text-align:center; padding:24px 18px 20px; max-height:92vh; overflow-y:auto; }
+.evModal .evClose{ position:absolute; top:12px; right:12px; }
+.evHero{ display:flex; justify-content:center; }
+.evHero .evBig.ei{ width:84px; height:84px; filter:drop-shadow(0 6px 0 rgba(0,0,0,.16)); }
+.evModal h3{ margin:4px 0 6px; }
+.evLead{ margin:0 0 12px; font-weight:700; font-size:.92rem; color:var(--muted); line-height:1.35; }
+.evBar{ height:16px; border-radius:999px; overflow:hidden; border:3px solid color-mix(in srgb, var(--primary) 50%, #000); background:color-mix(in srgb, var(--ink) 10%, transparent); }
+.evBar > span{ display:block; height:100%; background:linear-gradient(180deg, color-mix(in srgb, var(--primary) 60%, #fff), var(--primary)); transition:width .4s ease; }
+.evCount{ margin:6px 0 4px; font-weight:800; font-size:.85rem; }
+.evModal button.nav{ width:100%; margin-top:12px; }
+.evH{ margin:20px 0 8px; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+.evBadges{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.evBadge{ position:relative; display:grid; justify-items:center; gap:2px; padding:10px 4px 8px; border-radius:16px; border:2.5px dashed color-mix(in srgb, var(--muted) 45%, transparent); opacity:.6; }
+.evBadge.got{ opacity:1; border-style:solid; border-color:color-mix(in srgb, var(--primary) 55%, #000); background:color-mix(in srgb, var(--primary) 14%, var(--paper)); }
+.evBadgeIc .ei{ width:34px; height:34px; }
+.evBadge small{ font-weight:800; font-size:.72rem; }
+.evBadge b{ position:absolute; top:4px; right:6px; font-size:.72rem; }
+
+/* ===== Completa el hueco (1.1.9) ===== */
+.rvMode.lime{ --mc:#84CC16; }
+.gModal.clzModal{ max-width:420px; text-align:center; padding:24px 18px 20px; max-height:92vh; overflow-y:auto; }
+.clzModal .clzClose{ position:absolute; top:12px; right:12px; }
+.clzEs{ margin:4px 0 8px; font-weight:800; font-size:.9rem; color:var(--muted); }
+.clzSent{ font-family:var(--font-ui); font-weight:900; font-size:1.3rem; line-height:1.5; margin:6px 0 16px; }
+.clzGap{ display:inline-block; min-width:5.2em; padding:0 8px; border-radius:10px; border:3px dashed color-mix(in srgb, var(--primary) 70%, #000); background:color-mix(in srgb, var(--primary) 14%, var(--paper)); vertical-align:baseline; }
+.clzGap.ok{ border-style:solid; border-color:var(--cb-ok,#22C55E); background:color-mix(in srgb, var(--cb-ok,#22C55E) 22%, var(--paper)); }
+.clzGap.bad{ border-style:solid; border-color:var(--cb-bad,#EF4444); background:color-mix(in srgb, var(--cb-bad,#EF4444) 18%, var(--paper)); }
+.clzModal .chOpts{ grid-template-columns:1fr 1fr; }
+.clzModal button.nav{ width:100%; margin-top:12px; }
+.clzModal .chRow button.nav{ margin-top:12px; }
+.clzModal button.nav.chGhost{ background:var(--paper); color:var(--ink); }
+.clzLead{ margin:0 0 12px; font-weight:700; font-size:.92rem; color:var(--muted); line-height:1.35; }
+.clzScore{ display:grid; justify-items:center; margin:8px 0; } .clzScore b{ font-family:var(--font-ui); font-size:2.6rem; line-height:1; } .clzScore span{ font-weight:900; opacity:.7; }
+.clzFails{ text-align:left; margin:10px 0; font-size:.85rem; } .clzFails ul{ margin:6px 0 0; padding-left:18px; } .clzFails li{ margin:3px 0; }
+.clzModal button.nav, .chModal button.nav, .evModal button.nav{ box-sizing:border-box; }
+.clzModal .chQTitle{ padding-right:40px; padding-left:40px; }
+.clzModal .chFeed{ margin-top:14px; }
+
+/* ===== Escenas con decisiones + «escribiendo…» ===== */
+.snTyping{ padding:10px 14px; }
+.snTyping .snWho{ margin-bottom:4px; }
+.snDots{ display:inline-flex; gap:5px; align-items:center; height:14px; }
+.snDots i{ width:8px; height:8px; border-radius:50%; background:var(--tabE); opacity:.35; animation:snDot 1s infinite ease-in-out; }
+.snDots i:nth-child(2){ animation-delay:.18s; } .snDots i:nth-child(3){ animation-delay:.36s; }
+@keyframes snDot{ 0%,80%,100%{ transform:translateY(0); opacity:.35; } 40%{ transform:translateY(-5px); opacity:1; } }
+@media (prefers-reduced-motion: reduce){ .snDots i{ animation:none; opacity:.7; } }
+.snChoice span{ display:flex; flex-direction:column; gap:2px; }
+.snChoice small{ font-weight:700; font-size:.78rem; opacity:.75; }
+.snChoice.pick{ background:color-mix(in srgb, var(--tab) 35%, var(--paper)); }
+.snTone{ align-self:center; max-width:92%; margin:2px 0 !important; padding:6px 11px; border-radius:12px; font-size:.78rem; font-weight:700; text-align:left; border:2px dashed var(--tabE); background:var(--paper); animation:snIn .25s ease both; }
+.snTone.great{ border-color:color-mix(in srgb, var(--cb-ok,#22C55E) 60%, #000); }
+.snTone.off{ border-color:color-mix(in srgb, #F59E0B 70%, #000); }
+.snPicks li.great small{ color:color-mix(in srgb, var(--cb-ok,#22C55E) 70%, var(--ink)); }
+
+/* ===== Fluidez (1.1.9) =====
+   Quita lo que más trabaja a la GPU/CPU en móviles y deja solo animaciones de transform/opacity. */
+
+/* 1) Sin desenfoque de fondo ni mezcla de capas en pantallas táctiles: el scroll y las ventanas abren mucho más fluido */
+@media (hover: none), (max-width: 820px){
+  header::before, .hdrBackdrop, .gModalOverlay, .isoFade{ -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+  .gModalOverlay, .hdrBackdrop{ background:rgba(8,4,16,.74); }
+  .isoStage::before{ display:none; }
+}
+
+/* 2) Mientras se hace scroll en el mapa, nubes e islas se quedan quietas */
+.mapScrolling .isoCloud, .mapScrolling .isoIsland, .mapScrolling .isoSignIsle{ animation-play-state:paused; }
+
+/* 3) Respuesta al toque inmediata (sin esperar el doble toque) y sin destello gris */
+button, a, summary, [role="button"], .snCard, .snOpt, .rvMode, .navItem{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+
+/* 4) Ventanas y paneles con scroll propio no arrastran la página de atrás */
+.gModal, .snBody, .snLog, .chModal, .evModal{ overscroll-behavior:contain; }
+
+/* 5) transition:all → solo las propiedades que cambian (evita recalcular layout) */
+.nodeReviewBtn{ transition:background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.modalCloseBtn, .myCardBtn{ transition:background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease; }
+
+/* 6) Pulsos que animaban box-shadow (repintan cada fotograma) → anillo con transform/opacity */
+.micBtn.listening{ animation:none; position:relative; }
+.micBtn.listening::after{ content:''; position:absolute; inset:0; border-radius:50%; border:3px solid rgba(239,68,68,.6); pointer-events:none; animation:fxRing 1.2s ease-out infinite; }
+@keyframes fxRing{ from{ transform:scale(1); opacity:.7; } to{ transform:scale(1.7); opacity:0; } }
+#profileView .gLevel[data-frame="legend"]{ animation:none; }
+
+/* 7) Con «reducir movimiento» del sistema, todo se vuelve instantáneo */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+}
+
+/* ===== Sin recuadro azul de «Copiar» al mantener presionado (táctil) =====
+   La interfaz no se selecciona; se mantiene el texto editable y el resultado del traductor. */
+@media (hover: none){
+  body, button, a, .card, .navItem, .bottomNav, header, .gModal, .snBubble, .rvMode, .snCard, .snOpt{
+    -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
+  }
+  input, textarea, [contenteditable="true"], #trResultText, #trResultText *, .selectable, .selectable *{
+    -webkit-user-select:text; user-select:text; -webkit-touch-callout:default;
+  }
+  img, svg{ -webkit-touch-callout:none; -webkit-user-drag:none; }
+}
