@@ -68,6 +68,7 @@ function askDismiss(from){
 // Aviso en el mapa: la misión activa espera aquí hasta que se completa.
 function leftTxt(a){ const n = daysLeft(a, Date.now()); return n <= 1 ? '¡ÚLTIMO DÍA!' : 'QUEDAN ' + n + ' DÍAS'; }
 
+import { isJa } from './lang.js';
 export function renderMissionBanner(){
   const host = document.getElementById('stageMapView');
   if(!host) return;
@@ -77,6 +78,7 @@ export function renderMissionBanner(){
     const wrap = document.getElementById('pathWrap');
     host.insertBefore(box, wrap || null);
   }
+  if(isJa()){ box.hidden = true; box.innerHTML = ''; return; }   // las misiones usan frases en inglés: no aparecen en japonés
   let m = loadMissions();
   const aged = expireIfNeeded(m, Date.now());
   if(aged !== m){ m = aged; saveMissions(m); }

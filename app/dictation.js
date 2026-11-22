@@ -10,6 +10,8 @@ import { buildDiffEl } from './wordDiffUi.js';
 import { haptic, playSfx, speak } from './speech.js';
 import { _ni, _niW, addScrollTopBtn, awardXp, scrollTopNow, switchView } from './ui.js';
 import { catLabel } from './core/dataRegistry.js';
+import { isJa } from './lang.js';
+import { romajiMatches, stripRuby } from './core/course.js';
 
 // Bocina cartoon (mismo estilo que los iconos de la barra inferior), en el teal del modo
 const DICT_ICON = _ni('#2DD4BF', '#0B6B60',
@@ -40,8 +42,10 @@ export function getDictRate(){
 export function setDictRate(v){ try{ localStorage.setItem(RATE_KEY, String(v)); }catch(e){} }
 
 // Frases "dictables" de la categoría actual: primero las que ya has visto; si hay pocas, las primeras de la categoría.
+export const dictRead = it => String(it[9] || '').trim();
+export const dictShown = it => isJa() ? stripRuby(String(it[0])) : String(it[0]);
 export function dictationPool(cat){
-  const items = mapItemsFor(cat).filter(isSpeakable);
+  const items = mapItemsFor(cat).filter(it => isJa() ? !!dictRead(it) : isSpeakable(it));
   const seen = items.filter(it => { const s = readStored(it[3]); return s.reps > 0 || s.lvl > 0 || s.m; });
   return seen.length >= DICT_MIN_POOL ? seen : items.slice(0, Math.max(DICT_MIN_POOL, 24));
 }
@@ -50,7 +54,7 @@ export function pickRound(pool, n = DICT_ROUND_SIZE, rnd = Math.random){
   for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a.slice(0, Math.min(n, a.length));
 }
-export function dictationTarget(it){ return (String(it[0]).split('/')[0] || it[0]).trim(); }
+export function dictationTarget(it){ if(isJa()) return stripRuby(String(it[0])); return (String(it[0]).split('/')[0] || it[0]).trim(); }
 
 function ensureView(){
   let v = document.getElementById('dictView');
@@ -116,7 +120,7 @@ function playCurrent(){
   if(!D) return;
   haptic();
   const txt = dictationTarget(D.items[D.idx]);
-  speak(txt, 'en-US', getDictRate());
+  if(isJa()) speak(txt, 'ja-JP', getDictRate(), { rom: dictRead(D.items[D.idx]) }); else speak(txt, 'en-US', getDictRate());
   pulsePlay(txt, getDictRate());
 }
 
@@ -126,6 +130,7 @@ function showQuestion(){
   renderPips();
   const input = document.getElementById('dictInput');
   input.value = ''; input.disabled = false;
+  input.placeholder = isJa() ? 'Escribe lo que oyes en romaji (o en japonés)...' : 'Escribe lo que oyes, en inglés...'; input.lang = isJa() ? 'ja' : 'en';
   document.getElementById('dictFeedback').innerHTML = '';
   document.getElementById('dictFeedback').className = 'dictFeedback';
   document.getElementById('dictCheckBtn').style.display = '';
@@ -136,6 +141,7 @@ function showQuestion(){
 }
 
 function diffHtml(typed){
+  if(isJa()) return '';
   const segs = diffWords(typed, D.items[D.idx][0]);
   if(!segs.length) return '';
   const tag = (cls, txt, title) => '<span class="dw ' + cls + '"' + (title ? ' title="' + escapeHtml(title) + '"' : '') + '>' + escapeHtml(txt) + '</span>';
@@ -149,7 +155,7 @@ function diffHtml(typed){
 
 // «Ahora dila tú»: práctica opcional de pronunciación; no suma XP, no cuenta acierto ni toca el repaso.
 function addSayStep(body){
-  if(!SPEECH_REC_SUPPORTED || !body) return;
+  if(!SPEECH_REC_SUPPORTED || !body || isJa()) return;
   const box = document.createElement('div'); box.className = 'dictSay';
   const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'dictSayBtn hover-scale focus-glow';
   btn.textContent = '🎤 Ahora dila tú';
@@ -192,7 +198,7 @@ function resolve(ok, r, skipped, typed){
   fb.innerHTML = '<span class="dictFbIc" aria-hidden="true">' + (ok ? '✅' : skipped ? '👀' : '❌') + '</span>' +
     '<div class="dictFbBody"><b class="dictFbTitle">' + title + '</b>' +
     (!ok && !skipped && typed ? diffHtml(typed) : '') +
-    '<span class="dictEn">' + escapeHtml(it[0]) + '</span><span class="dictEs">' + escapeHtml(it[1]) + '</span>' +
+    '<span class="dictEn">' + escapeHtml(dictShown(it)) + '</span>' + (isJa() ? '<span class="dictEn" style="font-size:.85em;opacity:.8">' + escapeHtml(dictRead(it)) + '</span>' : '') + '<span class="dictEs">' + escapeHtml(it[1]) + '</span>' +
     (!ok && !(typed && !skipped) && r && closeCallSuffix(r) ? '<small>' + escapeHtml(closeCallSuffix(r).replace(/^ \(|\)$/g, '')) + '</small>' : '') +
     (ok && r && nearMissNote(r) ? '<small>' + escapeHtml(nearMissNote(r)) + '</small>' : '') + '</div>';
   addSayStep(fb.querySelector('.dictFbBody'));
@@ -213,7 +219,7 @@ function finish(){
   done.innerHTML =
     '<div class="dictSummary"><div class="dictRing" style="--p:' + pct + '"><b>' + D.ok + '/' + total + '</b><span>' + pct + '%</span></div><p class="dictMsg">' + msg + '</p>' +
     '<p class="dictXp">+' + (D.xp || 0) + ' XP' + (D.noXp ? ' <small>(' + D.noXp + (D.noXp === 1 ? ' frase ya cobrada hoy o tope diario' : ' frases ya cobradas hoy o tope diario') + ')</small>' : '') + '</p>' +
-    (D.fails.length ? '<div class="dictFails"><b>Para repasar:</b><ul>' + D.fails.map(it => '<li>' + escapeHtml(it[0]) + ' — <i>' + escapeHtml(it[1]) + '</i></li>').join('') + '</ul></div>' : '') +
+    (D.fails.length ? '<div class="dictFails"><b>Para repasar:</b><ul>' + D.fails.map(it => '<li>' + escapeHtml(dictShown(it)) + (isJa() ? ' (' + escapeHtml(dictRead(it)) + ')' : '') + ' — <i>' + escapeHtml(it[1]) + '</i></li>').join('') + '</ul></div>' : '') +
     '<button class="nav dictCheck hover-scale focus-glow" id="dictAgainBtn" type="button">🔁 Otra ronda</button>' +
     '<button class="nav examFailBack hover-scale focus-glow" id="dictExitBtn" type="button" style="width:100%;margin-top:8px;">Volver a Repaso</button></div>';
   done.style.display = '';
@@ -228,7 +234,7 @@ export function startDictation(){
   view.style.display = '';
   document.getElementById('dictDone').style.display = 'none';
   document.getElementById('dictPlay').style.display = '';
-  document.getElementById('dictSub').textContent = catLabel(cat) + ' · escucha, escribe y ajusta la velocidad';
+  document.getElementById('dictSub').textContent = catLabel(cat) + (isJa() ? ' · escucha y escribe en romaji' : ' · escucha, escribe y ajusta la velocidad');
   if(!TTS_SUPPORTED){
     document.getElementById('dictPlay').style.display = 'none';
     const done = document.getElementById('dictDone');
@@ -279,6 +285,11 @@ function wire(){
     if(!D || D.answered) return;
     const input = document.getElementById('dictInput');
     if(!input.value.trim()){ input.focus(); return; }
+    if(isJa()){
+      const it = D.items[D.idx], t = input.value.trim().replace(/\s+/g, '');
+      const ok = romajiMatches(input.value, dictRead(it)) || t === dictShown(it).replace(/\s+/g, '');
+      resolve(ok, { ok, similarity: 0 }, false, input.value); return;
+    }
     const r = evaluateWrittenAnswer(input.value, D.items[D.idx][0], 'en');
     resolve(r.ok, r, false, input.value);
   };

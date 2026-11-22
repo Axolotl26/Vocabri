@@ -5,6 +5,7 @@ import { DATA, unlockedMasterIds, allMasteredTimestamps, catLabel, computeStreak
 import { isStageComplete, nodeLayout } from './mapData.js';
 import { escapeHtml } from './myCards.js';
 import { speak } from './speech.js';
+import { isJa } from './lang.js';
 import { studyMinutesToday } from './ui.js';
 import { renderLearning, wireLearningUi } from './learning.js';
 
@@ -23,7 +24,7 @@ export function renderTable(){
     const tdEn = document.createElement('td');
     const enWrap = document.createElement('span'); enWrap.className = 'tRow';
     const btn = document.createElement('button'); btn.className = 'rowSpeak'; btn.textContent = '🔊';
-    btn.onclick = ()=> speak(it[0], 'en-US');
+    btn.onclick = ()=> speak(it[0], isJa() ? 'ja-JP' : 'en-US', undefined, isJa() && it[9] ? { rom: it[9] } : undefined);
     const enText = document.createElement('span'); enText.textContent = it[0];
     enWrap.appendChild(btn); enWrap.appendChild(enText); tdEn.appendChild(enWrap);
     const tdEs = document.createElement('td'); tdEs.textContent = it[1];

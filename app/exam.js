@@ -9,6 +9,23 @@ import { closeExamResults, examWrongListHtml, finishExam, showMap, showModalFrom
 import { EXAM_DICTATION_COUNT, EXAM_LIVES, EXAM_MC_COUNT, EXAM_QUESTIONS, EXAM_SPEAK_COUNT, SPEAK_MATCH_THRESHOLD, examItemsFor } from './mapData.js';
 import { haptic, playSfx, speak } from './speech.js';
 import { diffWords } from './core/wordDiff.js';
+import { getCategoryLang } from '../categoriesRegistry.js';
+import { romajiMatches, stripRuby } from './core/course.js';
+
+// Cursos de japonés: el frente es japonés, la lectura (romaji) está en it[9]; se responde en romaji.
+const jaText = it => stripRuby(String(it[0]));
+const jaRead = it => String(it[9] || '').trim();
+export const examIsJa = () => !!(S.examState && getCategoryLang(S.examState.cat) === 'ja');
+function jaDistractors(it, col, count){
+  const same = itemsFor(S.examState.cat).filter(o => o[3] !== it[3] && o[col]);
+  const right = col === 0 ? jaText(it) : String(it[1]);
+  const seen = new Set([right]), out = [];
+  for(const o of shuffledCopy(same)){
+    const t = col === 0 ? jaText(o) : String(o[1]);
+    if(!t || seen.has(t)) continue; seen.add(t); out.push(t); if(out.length >= count) break;
+  }
+  return out;
+}
 import { buildDiffEl } from './wordDiffUi.js';
 import { srsGrade } from './state.js';
 import { examMascotKind, hideExamMascot, scrollTopNow, setMascotIn, showExamMascot } from './ui.js';
@@ -154,7 +171,7 @@ export function startExam(cat, stageIdx, opts){
   const shuffledPool = shuffledCopy(pool);
   // Pronunciation questions need speech recognition and phrases that can be read aloud.
   const speakItems = [];
-  if(SPEECH_REC_SUPPORTED){
+  if(SPEECH_REC_SUPPORTED && getCategoryLang(cat) !== 'ja'){
     for(const it of shuffledPool){
       if(speakItems.length >= EXAM_SPEAK_COUNT) break;
       if(isSpeakable(it)) speakItems.push(it);
@@ -165,7 +182,7 @@ export function startExam(cat, stageIdx, opts){
   if(TTS_SUPPORTED){
     for(const it of shuffledPool){
       if(dictationItems.length >= EXAM_DICTATION_COUNT) break;
-      if(isSpeakable(it) && speakItems.indexOf(it) < 0) dictationItems.push(it);
+      if((getCategoryLang(cat) === 'ja' ? !!jaRead(it) : isSpeakable(it)) && speakItems.indexOf(it) < 0) dictationItems.push(it);
     }
   }
   const used = speakItems.concat(dictationItems);
@@ -196,7 +213,7 @@ export function startExam(cat, stageIdx, opts){
     }
   }
   const avoid = {es:new Set(), en:new Set()};
-  shuffled.forEach(q=>{ avoid.es.add(normalizeForCompare(String(q.it[1]), 'es')); avoid.en.add(normalizeForCompare(String(q.it[0]), 'en')); });
+  shuffled.forEach(q=>{ avoid.es.add(normalizeForCompare(String(q.it[1]), 'es')); if(getCategoryLang(cat) !== 'ja') avoid.en.add(normalizeForCompare(String(q.it[0]), 'en')); });
   S.examState = {
     cat, stageIdx, questions: shuffled, avoid, wrong:[],
     idx:0, score:0, lives:EXAM_LIVES, answered:false, failed:false
@@ -224,8 +241,14 @@ export function renderExamQuestion(){
   document.getElementById('examProgBarFill').style.width = Math.round((S.examState.idx/S.examState.questions.length)*100) + '%';
   // Dictation never shows the English text: the player has to listen.
   const es2en = (q.dir === 'es2en');
-  document.getElementById('examPrompt').textContent = (q.mode === 'dictation') ? '🎧 ¿Qué dice?' : ((q.mode === 'mc' || q.mode === 'write') && es2en ? q.it[1] : q.it[0]);
+  const ja = examIsJa();
+  const front = ja ? jaText(q.it) : q.it[0];
+  document.getElementById('examPrompt').textContent = (q.mode === 'dictation') ? '🎧 ¿Qué dice?' : ((q.mode === 'mc' || q.mode === 'write') && es2en ? q.it[1] : front);
+  document.getElementById('examPrompt').lang = (ja && !(q.mode === 'dictation') && !es2en) ? 'ja' : '';
   document.getElementById('examInstruction').textContent =
+    ja ? (q.mode === 'mc' ? (es2en ? 'Elige la palabra en japonés' : 'Elige la traducción correcta') :
+         q.mode === 'write' ? (es2en ? 'Escribe en romaji cómo se dice en japonés' : 'Escribe la traducción en español') :
+         'Escucha y escribe la lectura en romaji') :
     q.mode === 'mc' ? (es2en ? 'Elige la traducción en inglés' : 'Elige la traducción correcta') :
     q.mode === 'write' ? (es2en ? 'Escribe la traducción en inglés' : 'Escribe la traducción en español') :
     q.mode === 'dictation' ? 'Escucha y escribe lo que oigas, en inglés' :
@@ -248,19 +271,22 @@ export function renderExamQuestion(){
     mcBox.style.display = '';
     const col = es2en ? 0 : 1;
     const right = q.it[col];
-    const options = shuffledCopy(examDistractors(q.it, col, 3, S.examState.avoid[es2en ? 'en' : 'es']).concat([right]));
+    const rightShown = ja && col === 0 ? jaText(q.it) : right;
+    const dis = ja ? jaDistractors(q.it, col, 3) : examDistractors(q.it, col, 3, S.examState.avoid[es2en ? 'en' : 'es']);
+    const options = shuffledCopy(dis.concat([rightShown]));
     options.forEach(opt=>{
       const b = document.createElement('button');
       b.className = 'examMcBtn'; b.type = 'button'; b.textContent = opt;
-      b.onclick = ()=> answerMc(b, opt, right);
+      if(ja && col === 0) b.lang = 'ja';
+      b.onclick = ()=> answerMc(b, opt, rightShown);
       mcBox.appendChild(b);
     });
   } else if(q.mode === 'write'){
     writeBox.style.display = '';
     const wi = document.getElementById('examWriteInput');
     wi.value = '';
-    wi.placeholder = es2en ? 'Escribe la traducción en inglés...' : 'Escribe la traducción...';
-    wi.lang = es2en ? 'en' : 'es';
+    wi.placeholder = ja && es2en ? 'Escribe en romaji...' : (es2en ? 'Escribe la traducción en inglés...' : 'Escribe la traducción...');
+    wi.lang = ja && es2en ? 'en' : (es2en ? 'en' : 'es');
     wi.setAttribute('autocapitalize', es2en ? 'off' : 'sentences');
     wi.setAttribute('autocorrect', es2en ? 'off' : 'on');
     wi.spellcheck = !es2en;
@@ -339,7 +365,7 @@ export function answerMc(btn, chosen, correct){
 // --- Dictation question: "Escucha y Escribe" ---
 // Plays the English phrase (first alternative if it has "a / b"); the player types it and the same
 // flexible check used for typed translations decides.
-export function dictationText(q){ return (String(q.it[0]).split('/')[0] || q.it[0]).trim(); }
+export function dictationText(q){ if(examIsJa()) return jaText(q.it); return (String(q.it[0]).split('/')[0] || q.it[0]).trim(); }
 
 
 export function playDictation(rate){
@@ -347,7 +373,7 @@ export function playDictation(rate){
   const q = S.examState.questions[S.examState.idx];
   if(!q || q.mode !== 'dictation') return;
   haptic();
-  speak(dictationText(q), 'en-US', rate);
+  speak(dictationText(q), examIsJa() ? 'ja-JP' : 'en-US', rate, examIsJa() ? { rom: jaRead(q.it) } : undefined);
 }
 
 
@@ -486,9 +512,16 @@ document.getElementById('examCheckBtn').onclick = ()=>{
   haptic();
   const q = S.examState.questions[S.examState.idx];
   const toEn = (q.dir === 'es2en');
+  if(examIsJa() && toEn){
+    const rd = jaRead(q.it), okJa = romajiMatches(input.value, rd);
+    document.getElementById('examWriteBox').style.display = 'none';
+    showExamInputHint('');
+    resolveExamAnswer(okJa, 'Se escribe: ' + jaText(q.it) + ' (' + rd + ')');
+    return;
+  }
   const target = toEn ? q.it[0] : q.it[1];
   let r = evaluateWrittenAnswer(input.value, target, toEn ? 'en' : 'es');
-  if(!r.ok){
+  if(!r.ok && !examIsJa()){
     // Varias frases pueden compartir la misma traducción: se acepta cualquiera de ellas
     const lang = toEn ? 'en' : 'es', fromCol = toEn ? 1 : 0, toCol = toEn ? 0 : 1;
     const pn = normalizeForCompare(String(q.it[fromCol]), toEn ? 'es' : 'en');
@@ -520,6 +553,13 @@ document.getElementById('examDictCheckBtn').onclick = ()=>{
   if(!input.value.trim()){ showExamInputHint('Escribe lo que escuchaste antes de verificar.'); input.focus(); return; }
   haptic();
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
+  if(examIsJa()){
+    const rd = jaRead(q.it), okJa = romajiMatches(input.value, rd);
+    document.getElementById('examDictationBox').style.display = 'none';
+    showExamInputHint('');
+    resolveExamAnswer(okJa, 'Decía: ' + jaText(q.it) + ' (' + rd + ')');
+    return;
+  }
   const r = evaluateWrittenAnswer(input.value, q.it[0], 'en');
   document.getElementById('examDictationBox').style.display = 'none';
   showExamInputHint('');
@@ -540,7 +580,7 @@ document.getElementById('examDictSkipBtn').onclick = ()=>{
   try{ if(TTS_SUPPORTED) window.speechSynthesis.cancel(); }catch(e){}
   document.getElementById('examDictationBox').style.display = 'none';
   showExamInputHint('');
-  resolveExamAnswer(false, 'Pregunta omitida. La frase era: «' + q.it[0] + '»');
+  resolveExamAnswer(false, 'Pregunta omitida. La frase era: «' + (examIsJa() ? jaText(q.it) + ' (' + jaRead(q.it) + ')' : q.it[0]) + '»');
 };
   }],
   [4551, function(){

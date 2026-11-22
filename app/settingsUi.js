@@ -2,6 +2,7 @@
 // en lugar de emojis y botones ☰ / Novedades en SVG. Reordena el DOM existente (los botones conservan sus eventos).
 import { closeSettings } from './settings.js';
 import { _ni } from './ui.js';
+import { isJa } from './lang.js';
 
 const P = (c, e, shapes, extra) => _ni(c, e, shapes, extra || '');
 const W = 'fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"';
@@ -79,10 +80,10 @@ function restructure(panel){
   const look = section('palette', 'Apariencia', 1);
   mv(look, get('themesBtn'), get('themesBox'), get('cbBtn'));
 
-  const study = section('books', 'Estudio', 2);
-  const goalRow = panel.querySelector('.goalRow');
-  const goalLbl = document.createElement('div'); goalLbl.className = 'spSub'; goalLbl.textContent = 'Meta diaria';
-  mv(study, get('catSelectorBtn'), get('catSelector'), goalLbl, goalRow);
+  const study = section('globe', 'Idioma que estudias', 2);
+  mv(study, get('langSwitch'), get('catSelectorBtn'), get('catSelector'), get('langExtras'));
+  const goal = section('star', isJa() ? 'Meta diaria · Japonés' : 'Meta diaria', 2);
+  mv(goal, panel.querySelector('.goalRow'));
 
   const sound = section('speaker', 'Sonido y avisos', 3);
   mv(sound, get('sfxToggleBtn'), get('voiceConfigBtn'), get('notifToggleBtn'), get('notifStatus'));
@@ -97,7 +98,7 @@ function restructure(panel){
   const about = section('doc', 'Acerca de', 7);
   mv(about, get('termsBtn'));
 
-  [look, study, sound, exp, data].forEach(s => panel.appendChild(s));
+  [look, study, goal, sound, exp, data].forEach(s => panel.appendChild(s));
   if(upd){
     const t = upd.querySelector('.setTitle'); if(t){ t.classList.add('spTitle'); t.innerHTML = titleHtml('refresh', 'Actualizaciones'); }
     upd.classList.add('spSec'); panel.appendChild(upd);

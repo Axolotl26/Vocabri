@@ -1,7 +1,8 @@
 // Vocabri — módulo "state" (generado a partir de app.js)
 import { S } from './core/shared.js';
+import { langSuffix } from './lang.js';
 import { xpForLevel, levelFromXp } from './core/levels.js';
-import { DATA, itemsFor, readStored, todayKeyStr, writeCard } from './core/dataRegistry.js';
+import { DATA, courseItems, itemsFor, readStored, todayKeyStr, writeCard } from './core/dataRegistry.js';
 import { dayKey } from './progress.js';
 import { scheduleReminderStatePublish } from './settings.js';
 import { mergeCardRecord, mergeExamResult } from './sync.js';
@@ -139,13 +140,13 @@ export function xpIntoLevel(xp){
 
 
 export function getDailyGoalTarget(){
-  try{ const v = parseInt(localStorage.getItem('ci_daily_goal_xp')||'0',10); return v>0 ? v : 200; }
+  try{ const v = parseInt(localStorage.getItem('ci_daily_goal_xp' + langSuffix()) || localStorage.getItem('ci_daily_goal_xp') || '0',10); return v>0 ? v : 200; }
   catch(e){ return 200; }
 }
 
 
 export function setDailyGoalTarget(v){
-  try{ localStorage.setItem('ci_daily_goal_xp', String(v)); }catch(e){}
+  try{ localStorage.setItem('ci_daily_goal_xp' + langSuffix(), String(v)); }catch(e){}
   updateGameBar();
   scheduleReminderStatePublish();
 }
@@ -159,6 +160,7 @@ export function checkDailyReset(){
   if(last !== today){
     try{
       localStorage.setItem('vocabri_xp_today', '0');
+      localStorage.setItem('vocabri_xp_today_ja', '0');
       localStorage.setItem('vocabri_last_study_date', today);
     }catch(e){}
   }
@@ -167,26 +169,26 @@ export function checkDailyReset(){
 
 export function getXpToday(){
   checkDailyReset();
-  try{ return parseInt(localStorage.getItem('vocabri_xp_today')||'0',10); }catch(e){ return 0; }
+  try{ return parseInt(localStorage.getItem('vocabri_xp_today' + langSuffix())||'0',10); }catch(e){ return 0; }
 }
 
 
 export function addXpToday(amount){
   checkDailyReset();
   try{
-    localStorage.setItem('vocabri_xp_today', String(getXpToday()+amount));
+    localStorage.setItem('vocabri_xp_today' + langSuffix(), String(getXpToday()+amount));
     localStorage.setItem('vocabri_last_study_date', todayKeyStr());
   }catch(e){}
 }
 
 
 export function goalAlreadyCelebratedToday(){
-  try{ return localStorage.getItem('vocabri_goal_celebrated_date') === todayKeyStr(); }catch(e){ return false; }
+  try{ return localStorage.getItem('vocabri_goal_celebrated_date' + langSuffix()) === todayKeyStr(); }catch(e){ return false; }
 }
 
 
 export function markGoalCelebrated(){
-  try{ localStorage.setItem('vocabri_goal_celebrated_date', todayKeyStr()); }catch(e){}
+  try{ localStorage.setItem('vocabri_goal_celebrated_date' + langSuffix(), todayKeyStr()); }catch(e){}
 }
 
 

@@ -1,5 +1,6 @@
 // Vocabri — módulo "lesson" (generado a partir de app.js)
 import { S } from './core/shared.js';
+import { renderFront } from './cardFace.js';
 import { cooldownRemainingMs, fmtHhMmSs, getCurrentStage, isMastered, rateCard, readStored } from './core/dataRegistry.js';
 import { backFromLesson, checkStageCompletion, dismissTopModal, showMap } from './map.js';
 import { etapaNameForSession, isStageComplete, stageCountFor, stageItems, stageName } from './mapData.js';
@@ -76,7 +77,7 @@ export function renderCards(){
   const pos = S.order[S.idx];
   const it = items[pos];
   S.curKey = it[3];
-  document.getElementById('frontText').textContent = it[0];
+  renderFront(document.getElementById('frontText'), it);
   document.getElementById('backText').textContent = it[1];
   document.getElementById('progress').textContent = 'Tarjeta ' + (S.idx+1) + ' de ' + items.length + ' — ' + (S.studyMode==='freeplay' ? it[2] : cat);
   document.getElementById('progBarFill').style.width = (((S.idx+1)/items.length)*100) + '%';

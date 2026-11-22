@@ -1,4 +1,5 @@
 // Vocabri — pestaña «Mi aprendizaje» de Progreso. Solo lee datos que ya existen (no guarda nada nuevo).
+import { isJa } from './lang.js';
 import { getCategoryEmoji, getCategoryShortLabel } from '../categoriesRegistry.js';
 import { unlockedMasterIds, DATA, catLabel, itemsFor, mapItemsFor, readStored, isMastered } from './core/dataRegistry.js';
 import { masteredPerDay, dueSummary, summary, topWeak, bestWorst } from './core/learning.js';
@@ -161,7 +162,7 @@ export function renderLearning(){
     '<div class="setTitle">MAPA DE SITUACIONES</div>' +
     sitButtonHtml() +
     '<div class="setTitle">LO QUE MÁS TE CUESTA</div>' + weakHtml;
-  box.querySelectorAll('[data-say]').forEach(b => b.addEventListener('click', () => speak(b.getAttribute('data-say'), 'en-US')));
+  box.querySelectorAll('[data-say]').forEach(b => b.addEventListener('click', () => speak(b.getAttribute('data-say'), isJa() ? 'ja-JP' : 'en-US')));
   const sbtn = box.querySelector('#situationsOpenBtn'), spanel = document.getElementById('situationsPanel');
   if(sbtn && spanel){
     sbtn.addEventListener('click', e => {

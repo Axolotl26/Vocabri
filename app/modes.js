@@ -5,8 +5,11 @@ import { startCloze } from './cloze.js';
 import { loadRoute, openRoutes } from './routes.js';
 import { openScenes } from './scenes.js';
 import { ABC_ICON, openAlphabet } from './alphabet.js';
+import { KANA_ICON, openKana } from './kana.js';
 import { startWeakTraining, weakCount } from './weakSpots.js';
 import { _ni, _niW } from './ui.js';
+import { S } from './core/shared.js';
+import { activeLang } from './lang.js';
 
 // Iconos cartoon (mismo sistema que la barra inferior: relleno, contorno grueso, borde con volumen y brillo)
 const IC = {
@@ -25,6 +28,7 @@ const IC = {
     '<rect x="2.6" y="6" width="22.8" height="16" rx="4.6"/>',
     '<rect x="8.2" y="11.2" width="11.6" height="5.8" rx="2" fill="#fff" stroke="#3F6212" stroke-width="1.6" stroke-dasharray="2.4 2"/><path d="M5.6 9.2h4" ' + _niW + ' stroke-opacity=".6" stroke-width="1.8"/>'),
   abc: ABC_ICON,
+  kana: KANA_ICON,
   weak: _ni('#F59E0B', '#8A4B05',
     '<rect x="1.8" y="9" width="24.4" height="10" rx="5" transform="rotate(-38 14 14)"/>',
     '<g transform="rotate(-38 14 14)"><rect x="9.6" y="9" width="8.8" height="10" fill="#FDE68A" stroke="#8A4B05" stroke-width="1.6"/>' +
@@ -32,7 +36,7 @@ const IC = {
     '<path d="M4.2 11.4h2.6" ' + _niW + ' stroke-opacity=".6" stroke-width="1.6"/></g>')
 };
 
-const MODES = [
+const MODES_EN = [
   { id: 'dict',   icon: IC.dict,   label: 'Escucha y escribe', desc: 'Oye una frase y escríbela', tone: 'teal' },
   { id: 'cloze',  icon: IC.cloze,  label: 'Completa el hueco', desc: 'Elige la palabra que falta', tone: 'lime' },
   { id: 'abc',    icon: IC.abc,    label: 'Abecedario',        desc: 'Las 26 letras con su sonido', tone: 'violet' },
@@ -40,11 +44,19 @@ const MODES = [
   { id: 'routes', icon: IC.routes, label: 'Rutas',             desc: 'Un camino corto por objetivo', tone: 'sky' },
   { id: 'weak',   icon: IC.weak,   label: 'Puntos débiles',    desc: 'Las frases que más te cuestan', tone: 'amber' }
 ];
+// En japonés el «Abecedario» pasa a ser el del kana (con su ruta) y los modos que aún solo existen en inglés se marcan como próximos.
+const JA_OFF = { scenes: 1, routes: 1 };
+const MODES = MODES_EN.map(m => {
+  if(activeLang() !== 'ja') return m;
+  if(m.id === 'abc') return { ...m, icon: IC.kana, label: 'Abecedario japonés', desc: 'Hiragana y katakana: ruta, examen y sonido', tone: 'pink', id: 'abc' };
+  if(JA_OFF[m.id]) return { ...m, off: true, desc: 'Próximamente en japonés' };
+  return m;
+});
 const idOf = m => 'rvMode' + m.id.charAt(0).toUpperCase() + m.id.slice(1);
 
 export function updateModes(){
   const r = document.getElementById('rvModeRoutes');
-  if(r){
+  if(r && !r.classList.contains('isOff')){
     const has = !!loadRoute();
     r.querySelector('.rvModeLbl').textContent = has ? 'Mi ruta' : 'Rutas';
     r.querySelector('.msDesc').textContent = has ? 'Sigue con tu ruta' : 'Un camino corto por objetivo';
@@ -119,7 +131,7 @@ function wire(){
     '<div class="modalHeader"><h3 id="msTitle">Modos de práctica</h3><button class="modalCloseBtn hover-scale focus-glow" id="msClose" type="button" aria-label="Cerrar">✕</button></div>' +
     '<p class="msIntro">Elige cómo quieres practicar hoy.</p>' +
     '<div class="msList" id="rvModes">' +
-    MODES.map(m => '<button type="button" class="msRow rvMode ' + m.tone + ' hover-scale focus-glow" id="' + idOf(m) + '" data-mode="' + m.id + '">' +
+    MODES.map(m => '<button type="button" class="msRow rvMode ' + m.tone + (m.off ? ' isOff' : '') + ' hover-scale focus-glow" id="' + idOf(m) + '" data-mode="' + m.id + '"' + (m.off ? ' aria-disabled="true"' : '') + '>' +
       '<span class="rvModeIc" aria-hidden="true">' + m.icon + '</span>' +
       '<span class="msTx"><strong class="rvModeLbl">' + m.label + '</strong><small class="msDesc">' + m.desc + '</small></span>' +
       '<span class="rvModesGo" aria-hidden="true">›</span></button>').join('') +
@@ -132,9 +144,10 @@ function wire(){
     const b = e.target.closest('.msRow'); if(!b) return;
     closeSheet(true);
     const m = b.dataset.mode;
+    if(b.classList.contains('isOff')){ note('Este modo todavía solo existe en inglés. Llegará al japonés en una próxima versión.'); return; }
     if(m === 'dict') startDictation();
     else if(m === 'cloze') startCloze();
-    else if(m === 'abc') openAlphabet();
+    else if(m === 'abc'){ if(activeLang() === 'ja'){ S.kanaFrom = null; openKana(); } else openAlphabet(); }
     else if(m === 'scenes') openScenes(box.querySelector('#rvModesBtn'));
     else if(m === 'routes') openRoutes();
     else if(m === 'weak'){
