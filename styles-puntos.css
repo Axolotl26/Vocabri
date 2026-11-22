@@ -1,0 +1,10 @@
+
+/* ===== 1.1.6 · Puntos débiles y exportación ===== */
+#reviewView .rvWeakChip{
+  display:inline-flex; align-items:center; gap:6px; margin:-4px 0 14px; padding:7px 14px;
+  border-radius:999px; border:2.5px solid var(--tabE); box-shadow:0 3px 0 var(--tabE);
+  background:color-mix(in srgb, #F59E0B 24%, var(--paper)); color:inherit;
+  font:inherit; font-size:13px; font-weight:900; cursor:pointer; transition:transform .12s, box-shadow .12s;
+}
+#reviewView .rvWeakChip:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--tabE); }
+@media (prefers-reduced-motion: reduce){ #reviewView .rvWeakChip{ transition:none; } }

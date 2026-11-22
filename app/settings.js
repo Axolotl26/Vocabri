@@ -1,5 +1,8 @@
 // Vocabri — módulo "settings" (generado a partir de app.js)
 import { S } from './core/shared.js';
+import { courseReady, ensureCourse, isCourse } from './courses.js';
+import { activeLang, rememberedCat } from './lang.js';
+import { getCategoryLang } from '../categoriesRegistry.js';
 import { computeStreak, cooldownRemainingMs, fmtHhMmSs, setUnlockedStage, todayKeyStr } from './core/dataRegistry.js';
 import { buildPathMap } from './mapRenderer.js';
 import { render } from './profile.js';
@@ -199,6 +202,7 @@ export function updateCatSelector(){
   document.querySelectorAll('#catSelector .catSelectorBtn').forEach(b=>{
     b.classList.toggle('sel', b.dataset.cat === current);
   });
+  document.querySelectorAll('#catSelector .langPanel').forEach(p => p.classList.toggle('isActive', !!p.querySelector('.catSelectorBtn.sel')));
 }
 
 
@@ -212,10 +216,19 @@ export function initCatSelector(){
  // attach category selector handlers
 
 // News/Changelog panel
-export const APP_VERSION = '1.1.9';
+export const APP_VERSION = '1.2.0';
 
 
 export const APP_CHANGELOG = [
+  { version: '1.2.0', date: '2026-11-22', title: 'Japonés', changes: [
+    'Japonés: un selector de idioma en Ajustes cambia de golpe las categorías, la meta diaria, el progreso, el repaso, el traductor y el abecedario (kana). Inglés y japonés van completamente separados',
+    'Cursos Japonés N5, Kanji N5 y Japonés N4 con furigana, romaji y trazos de kanji; el abecedario japonés es un mapa 2.5D hacia el Monte Fuji con hiragana y katakana',
+    '«Escucha y escribe» y «Completa el hueco» ya funcionan en japonés (escribe en romaji o en japonés; el hueco se elige entre 4 palabras)',
+    'Traductor japonés ⇄ español, con intento de traducción del navegador y varios servicios de respaldo; puedes añadir tu correo para ampliar el límite gratuito',
+    'Escenas y Rutas aparecen como «Próximamente» en japonés',
+    'Mapa del Fuji más ancho, con colinas desenfocadas y pinos solo en las laderas; se adapta a móviles, tablets y pantallas grandes',
+    'Términos y privacidad actualizados con las atribuciones del contenido en japonés'
+  ] },
   { version: '1.1.9', date: '2026-11-18', title: 'Retos, eventos y escenas con decisiones', changes: [
     'Retos con un amigo: un duelo de 10 frases iguales para los dos; el resultado viaja en un enlace (por WhatsApp, por ejemplo), sin servidor y sin cuentas. Da un XP pequeño con tope diario',
     'Evento de la semana: un tema distinto cada semana con meta de 15 frases diferentes; al cumplirla ganas una insignia permanente y +100 XP',
@@ -382,9 +395,9 @@ export function populateNews(){
 // "Progress" = study data. Preferences (theme, voices, sound, reminders, daily-goal size) and the
 // Google session are always kept. The user's own cards are only deleted if they opt in.
 export const RESET_PROGRESS_KEYS = [
-  'ci_xp_total', 'vocabri_xp_today', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date',
+  'ci_xp_total', 'vocabri_xp_today', 'vocabri_xp_today_ja', 'vocabri_last_study_date', 'vocabri_goal_celebrated_date', 'vocabri_goal_celebrated_date_ja', 'ci_kana', 'ci_kana_intro',
   'vocabri_unlocked_stage', 'vocabriProgress', 'vocabri_flip_coach_done', 'ci_edits',
-  'vocabri_language', 'ci_daily_goal_xp', 'ci_user_level', 'ci_user_focus', 'ci_theme',
+  'vocabri_language', 'ci_daily_goal_xp', 'ci_daily_goal_xp_ja', 'ci_cat_en', 'ci_cat_ja', 'ci_user_level', 'ci_user_focus', 'ci_theme',
   'onboardingDone', 'vocabri_missions', 'vocabri_weekly', 'vocabri_events', 'vocabri_challenges', 'vocabri_challenge_name', 'vocabri_pending_challenge', 'ci_current_master_category', 'ci_master_categories', 'ci_start_node'
 ];
 
@@ -486,7 +499,12 @@ export const resetOverlayEl = document.getElementById('resetModalOverlay');
 
 
 // Inicializar categoría maestra guardada
-export const savedMasterCat = localStorage.getItem('ci_current_master_category');
+export const savedMasterCat = (() => {   // el curso guardado debe ser del idioma activo (si no, se abre el último de ese idioma)
+  const c = localStorage.getItem('ci_current_master_category');
+  if(activeLang() === 'ja' && (!c || getCategoryLang(c) !== 'ja')) return rememberedCat('ja');
+  if(activeLang() === 'en' && c && getCategoryLang(c) !== 'en') return rememberedCat('en');
+  return c;
+})();
 
 
 
@@ -949,7 +967,12 @@ applyTheme();
   }],
   [6011, function(){
 if (savedMasterCat && window.VocabriCategories && window.VocabriCategories.isValidCategory(savedMasterCat)) {
-  S.currentCat = savedMasterCat;
+  if (isCourse(savedMasterCat) && !courseReady(savedMasterCat)) {   // curso de otro idioma: se carga y luego se abre
+    S.currentCat = 'general';
+    ensureCourse(savedMasterCat).then(ok => { if (ok) selectFocusCategory(savedMasterCat); });
+  } else {
+    S.currentCat = savedMasterCat;
+  }
 
   // Mostrar label de la categoría maestra
   let label = savedMasterCat;

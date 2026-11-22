@@ -32,6 +32,7 @@ import * as exportCards from './exportCards.js';
 import * as routes from './routes.js';
 import * as scenes from './scenes.js';
 import * as alphabet from './alphabet.js';
+import * as kana from './kana.js';
 import * as modes from './modes.js';
 import * as updater from './updater.js';
 import * as settingsUi from './settingsUi.js';
@@ -41,11 +42,11 @@ import * as shortcuts from './shortcuts.js';
 (function(){
   if(document.querySelector('link[data-vocabri-css="1.1.6"]')) return;
   const l = document.createElement('link');
-  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r64'; l.setAttribute('data-vocabri-css', '1.1.6');
+  l.rel = 'stylesheet'; l.href = 'styles-1.1.6.css?v=1.1.6-r85'; l.setAttribute('data-vocabri-css', '1.1.6');
   document.head.appendChild(l);
 })();
 
-const MODULES = { dataRegistry, mapData, mapRenderer, map, state, ui, lesson, progress, review, myCards, profile, speech, exam, settings, translator, sync, dictation, shortcuts, weakSpots, exportCards, routes, scenes, alphabet, modes, updater, settingsUi };
+const MODULES = { dataRegistry, mapData, mapRenderer, map, state, ui, lesson, progress, review, myCards, profile, speech, exam, settings, translator, sync, dictation, shortcuts, weakSpots, exportCards, routes, scenes, alphabet, kana, modes, updater, settingsUi };
 
 function runInits(){
   const all = [];
@@ -71,5 +72,7 @@ startA11y();
 loadPhrasesFromJSON();
 // 2b) Evento de la semana: escucha los repasos desde el arranque (no hace falta abrir el perfil).
 import('./events.js').then(m => m.wireEvents()).catch(() => {});
+import('./trace.js').then(m => m.initTrace()).catch(() => {});
+import('./courses.js').then(m => m.preloadActiveCourses()).catch(() => {});
 // 3) Retos con un amigo: un enlace con #reto=… se abre cuando las frases ya están cargadas.
 window.addEventListener('vocabri:phrasesLoaded', () => { import('./challenge.js').then(m => m.checkIncomingChallenge()).catch(() => {}); }, { once: true });

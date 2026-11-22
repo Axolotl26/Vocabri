@@ -160,6 +160,7 @@ Vocabri/
 - [x] **1.1.7** — Categoría Médico y Salud, voces más fiables, «¿Por qué?» y feedback por palabra
 - [x] **1.1.8** — «Tus datos, tu motivación»: XP justo y Protector de Racha, misiones y Salón de misiones, cofre semanal, recompensas, pack de Exámenes, íconos cartoon, tarjeta de progreso con QR y mejoras de accesibilidad
 - [x] **1.1.9** — Retos con un amigo (sin servidor), evento semanal con insignia, «Completa el hueco», ruta «Voy al médico», escenas con decisiones y animaciones más fluidas
+- [x] **1.2.0** — Japonés: selector de idioma, cursos N5/Kanji N5/N4, mapa 2.5D del Fuji, traductor japonés y modos «Escucha y escribe» y «Completa el hueco» en japonés (Escenas y Rutas próximamente)
 
 ---
 
@@ -170,6 +171,8 @@ Vocabri/
 ---
 
 ## 📄 Licencia
+
+Los trazos del orden de escritura del japonés (carpeta `data/kanjivg/`, que se genera con `node tools/fetch-kanjivg.mjs`) proceden de [KanjiVG](https://kanjivg.tagaini.net/) y se distribuyen bajo **CC BY-SA 3.0**; el resto del proyecto, bajo MIT.
 
 Distribuido bajo la licencia **MIT**. Consulta el archivo [`LICENSE`](LICENSE) para más información.
 

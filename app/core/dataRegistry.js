@@ -1,7 +1,8 @@
 // Vocabri — módulo "core/dataRegistry" (generado a partir de app.js)
 import { isCategoryUnlocked } from './unlocks.js';
-import { getJsonCategoryMap, getCategoryShortLabel, getValidCategoryIds, getZonesMap, isValidCategory } from '../../categoriesRegistry.js';
+import { getCategoryLang, getCourseIds, getJsonCategoryMap, getCategoryShortLabel, getValidCategoryIds, getZonesMap, isValidCategory } from '../../categoriesRegistry.js';
 import { S } from './shared.js';
+import { activeLang } from '../lang.js';
 import { applyExamples, applyNotes } from './examples.js';
 import { MAX_CONSECUTIVE_NORMAL, etapaNameForSession } from '../mapData.js';
 import { dayKey } from '../progress.js';
@@ -683,11 +684,23 @@ export const MASTER_IDS = getValidCategoryIds();
 
 
 // Categorías maestras disponibles para el jugador (las que se desbloquean por nivel no cuentan hasta lograrlo).
-export function unlockedMasterIds(){ return MASTER_IDS.filter(c=> isCategoryUnlocked(c)); }
+export function unlockedMasterIds(){
+  if(activeLang() !== 'en') return getCourseIds().filter(c => getCategoryLang(c) === activeLang());   // idioma activo ≠ inglés: solo sus cursos
+  return MASTER_IDS.filter(c=> isCategoryUnlocked(c));
+}
+
+
+/** Tarjetas de los cursos de otros idiomas que ya están cargados (entran al repaso, pero no a «Todas» de inglés). */
+export function courseItems(){
+  let out = [];
+  getCourseIds().forEach(c => { if(getCategoryLang(c) === activeLang() && DATA[c] && DATA[c].length) out = out.concat(baseItems(c, false)); });
+  return out;
+}
 
 
 export function allCats(){
   const m = unlockedMasterIds().filter(c=> DATA[c] && DATA[c].length);
+  if(activeLang() !== 'en') return m;
   return m.concat(S.customCats.filter(c=> MASTER_IDS.indexOf(c)<0 && c !== 'Casual'));
 }
 
@@ -797,7 +810,7 @@ export function setCurrentStage(cat, idx){ S.currentStageByCat[cat] = idx; }
 // Built-in content only (what the stage map is made of). The map has no editing features.
 export function baseItems(c, includeCustom){
   // Clave estable: si la frase trae id (JSON) se usa el id; si no, su posición (datos internos)
-  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+(it[4]||i), it[2]||null, it[3]||null, it[5]||null, it[6]||null]) : [];
+  const out = DATA[c] ? DATA[c].map((it,i)=> [it[0], it[1], c, c+'|'+(it[4]||i), it[2]||null, it[3]||null, it[5]||null, it[6]||null, it[7]||'', it[8]||'']) : [];
   if(includeCustom !== false){
     S.customWords.filter(w=> w.cat===c).forEach(w=> out.push([w.en, w.es, c, 'custom|'+w.id, w.ex||null, w.exEs||null]));
   }
@@ -809,9 +822,9 @@ export function baseItems(c, includeCustom){
 export function itemsFor(cat, includeCustom){
   if(cat === "Todas"){
     let all = [];
-    allCats().forEach(c=> { if(MASTER_IDS.indexOf(c) >= 0) all = all.concat(baseItems(c, false)); });
-    // Tarjetas propias: todas, una sola vez, sea cual sea su etiqueta
-    if(includeCustom !== false) S.customWords.forEach(w=> all.push([w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]));
+    allCats().forEach(c=> { if(MASTER_IDS.indexOf(c) >= 0 || getCategoryLang(c) === activeLang()) all = all.concat(baseItems(c, false)); });
+    // Tarjetas propias (son de inglés): todas, una sola vez, sea cual sea su etiqueta
+    if(includeCustom !== false && activeLang() === 'en') S.customWords.forEach(w=> all.push([w.en, w.es, w.cat, 'custom|'+w.id, w.ex||null, w.exEs||null]));
     return all;
   }
   return baseItems(cat, includeCustom);

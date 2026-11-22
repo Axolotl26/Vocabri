@@ -95,6 +95,7 @@ export function renderCardsSubView(){
     mapEl.style.display = '';
     lessonEl.style.display = 'none';
     buildPathMap();
+    try{ document.dispatchEvent(new CustomEvent('vocabri-map-built')); }catch(e){}
     try{ renderMissionBanner(); }catch(e){}
   } else {
     mapEl.style.display = 'none';

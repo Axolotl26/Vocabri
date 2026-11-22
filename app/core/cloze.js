@@ -66,3 +66,27 @@ export function pickRound(items, n, rng){
   for(let i = 0; i < a.length && out.length < n; i++){ const q = buildCloze(a[i], bank, rng); if(q) out.push(q); }
   return out;
 }
+
+// ── Japonés: la tarjeta (palabra) debe aparecer en su frase de ejemplo; se tapa y se elige entre 4 palabras. ──
+const stripR = h => String(h || '').replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '');
+export function buildClozeJa(it, fronts, rng){
+  const w = stripR(it[0]).trim(), ex = String(it[4] || '').trim();
+  if(!w || !ex) return null;
+  const at = ex.indexOf(w); if(at < 0) return null;
+  const rest = fronts.filter(f => f !== w && ex.indexOf(f) < 0 && Math.abs(f.length - w.length) <= 2);
+  const loose = fronts.filter(f => f !== w && ex.indexOf(f) < 0);
+  const pool = rest.length >= 3 ? rest : loose;
+  if(pool.length < 3) return null;
+  const a = pool.slice();
+  for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  const opts = [w].concat(a.slice(0, 3));
+  for(let i = opts.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); const t = opts[i]; opts[i] = opts[j]; opts[j] = t; }
+  return { key: it[3], es: String(it[5] || it[1]), en: ex, ja: true, read: String(it[9] || ''), before: ex.slice(0, at), after: ex.slice(at + w.length), answer: w, options: opts, answerIndex: opts.indexOf(w) };
+}
+export function pickRoundJa(items, n, rng){
+  const fronts = Array.from(new Set(items.map(it => stripR(it[0]).trim()).filter(Boolean))), a = items.slice();
+  for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  const out = [];
+  for(let i = 0; i < a.length && out.length < n; i++){ const q = buildClozeJa(a[i], fronts, rng); if(q) out.push(q); }
+  return out;
+}

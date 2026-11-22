@@ -66,7 +66,15 @@ export function updateVoiceHint(sel, lang){
 }
 export function loadVoices(){
   S.voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  if(S.voices.length === 0) return;
+  if(S.voices.length === 0){
+    // Sin ninguna voz: se dice claro en el panel en vez de dejar listas vacías.
+    ['voiceEn', 'voiceEs'].forEach(id => {
+      const sel = document.getElementById(id), hint = document.getElementById(id + 'Hint');
+      if(sel && !sel.options.length) sel.innerHTML = '<option value="">Sin voces instaladas</option>';
+      if(hint){ hint.className = 'voiceHint basic'; hint.textContent = NO_VOICES_MSG; }
+    });
+    return;
+  }
   fillVoiceSelect(document.getElementById('voiceEn'), 'en', 'ci_voice_en');
   fillVoiceSelect(document.getElementById('voiceEs'), 'es', 'ci_voice_es');
 }
@@ -103,7 +111,7 @@ export const voiceModalDoneEl = document.getElementById('voiceModalDoneBtn');
 // Voz elegida por el usuario (o la mejor disponible) para un idioma.
 export function chosenVoice(lang){
   const l = (lang || 'en').slice(0, 2);
-  const el = document.getElementById(l === 'en' ? 'voiceEn' : 'voiceEs');
+  const el = (l === 'en' || l === 'es') ? document.getElementById(l === 'en' ? 'voiceEn' : 'voiceEs') : null;
   if(!S.voices || S.voices.length === 0) S.voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
   return S.voices.find(v => el && v.voiceURI === el.value) || bestVoiceFor(l);
 }
@@ -112,10 +120,34 @@ export function alternateVoice(lang){
   const main = chosenVoice(lang);
   return pickAlternate(S.voices, main && main.voiceURI, (lang || 'en').slice(0, 2), scoreVoice) || main;
 }
-let _noVoiceWarned = false;
-function warnNoVoice(){
+export const NO_VOICES_MSG = '⚠️ Este navegador no tiene ninguna voz de síntesis, por eso no suena nada. En Linux instala «speech-dispatcher» y «espeak-ng» (p. ej. sudo pacman -S speech-dispatcher espeak-ng, o sudo apt install speech-dispatcher espeak-ng) y reinicia el navegador, o usa Google Chrome / Edge (tienen voces en línea). En Windows, Android, iOS y macOS suelen venir de serie.';
+/** ¿El navegador no ofrece ninguna voz (o no tiene síntesis)? */
+export function noVoicesAtAll(){
+  try{ return !('speechSynthesis' in window) || window.speechSynthesis.getVoices().length === 0; }catch(e){ return true; }
+}
+let _noVoiceWarned = false, _noneAt = 0;
+function warnNoVoice(lang){
+  if(lang === 'none'){
+    const t = Date.now(); if(t - _noneAt < 8000) return; _noneAt = t;
+    import('./ui.js').then(m => m.showToast('No hay ninguna voz instalada en este navegador: no se puede reproducir sonido. Mira Ajustes → Configurar voces para ver cómo arreglarlo.', '🔇', 7000)).catch(() => {});
+    return;
+  }
   if(_noVoiceWarned) return; _noVoiceWarned = true;
-  import('./ui.js').then(m => m.showToast('No hay voz en inglés en este dispositivo. Instala una en los ajustes de voz del sistema o prueba otro navegador.', '🔇', 5000)).catch(() => {});
+  const name = lang === 'ja' ? 'japonés' : 'inglés';
+  const msg = lang === 'ja-approx' ? 'Tu dispositivo no tiene voz japonesa: se usa una aproximación con voz en español. Para el sonido real instala una voz japonesa en el sistema.' : 'No hay voz en ' + name + ' en este dispositivo. Instala una en los ajustes de voz del sistema o prueba otro navegador.';
+  import('./ui.js').then(m => m.showToast(msg, '🔇', 6000)).catch(() => {});
+}
+/** ¿Hay alguna voz japonesa instalada? */
+export function hasJaVoice(){
+  try{
+    const list = (S.voices && S.voices.length) ? S.voices : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
+    return list.some(v => (v.lang || '').toLowerCase().replace('_', '-').startsWith('ja'));
+  }catch(e){ return false; }
+}
+/** Romaji → texto que una voz en español lee de forma parecida al japonés. */
+export function romajiForEs(rom){
+  return String(rom || '').split('/')[0].toLowerCase().replace(/[āâ]/g, 'a').replace(/[īî]/g, 'i').replace(/[ūû]/g, 'u').replace(/[ēê]/g, 'e').replace(/[ōô]/g, 'o')
+    .replace(/[^a-z ]/g, '').replace(/j/g, 'y').replace(/\s+/g, ' ').trim();
 }
 
 // opts: { voice, onend }
@@ -142,14 +174,21 @@ export function speak(text, lang, rate, opts){
       synth.speak(u);
       // Algunos navegadores se quedan mudos tras cancel(): si no arrancó, un solo reintento
       setTimeout(() => {
-        if(!started && !done && !retried && !synth.speaking){ try{ synth.cancel(); }catch(e){} run(voice, true); }
+        if(!started && !done){
+          if(!synth.getVoices().length){ warnNoVoice('none'); finish(); }
+          else if(!retried && !synth.speaking){ try{ synth.cancel(); }catch(e){} run(voice, true); }
+        }
       }, 1200);
     }catch(e){ if(o.onend) o.onend(); }
   };
   try{
     synth.cancel();
-    const v = o.voice || chosenVoice(lang);
-    if(!v && lang.toLowerCase().startsWith('en') && S.voices && S.voices.length > 0) warnNoVoice();
+    let v = o.voice || chosenVoice(lang);
+    const l2 = lang.toLowerCase().slice(0, 2);
+    if(l2 === 'ja' && !v && o.rom && S.voices && S.voices.length > 0){
+      // Sin voz japonesa: se lee el romaji con la voz en español (las vocales y la mayoría de sílabas suenan parecido)
+      text = romajiForEs(o.rom); lang = 'es-ES'; v = chosenVoice('es'); warnNoVoice('ja-approx');
+    } else if(!v && (l2 === 'en' || l2 === 'ja') && S.voices && S.voices.length > 0) warnNoVoice(l2);
     setTimeout(() => run(v, false), 40);   // evita que cancel() + speak() inmediatos se pierdan
   }catch(e){}
 }
@@ -265,7 +304,7 @@ if(voiceModalDoneEl) voiceModalDoneEl.onclick = ()=> document.getElementById('vo
   [3673, function(){
 document.getElementById('speakFront').onclick = (e)=>{
   e.stopPropagation();
-  speak(document.getElementById('frontText').textContent, 'en-US');
+  { const f = document.getElementById('frontText'); speak(f.dataset.say || f.textContent, f.dataset.lang || 'en-US', undefined, { rom: f.dataset.rom }); }
 };
   }],
   [3677, function(){
@@ -279,7 +318,7 @@ document.getElementById('speakBack').onclick = (e)=>{
 // 🐢 Slow playback of the English phrase (rate 0.6)
 document.getElementById('speakFrontSlow').onclick = (e)=>{
   e.stopPropagation();
-  speak(document.getElementById('frontText').textContent, 'en-US', 0.6);
+  { const f = document.getElementById('frontText'); speak(f.dataset.say || f.textContent, f.dataset.lang || 'en-US', 0.6, { rom: f.dataset.rom }); }
 };
   }],
   [3688, function(){
@@ -288,7 +327,7 @@ document.getElementById('speakFrontSlow').onclick = (e)=>{
 // Repaso: botones de audio (antes no hacían nada)
 [['reviewSpeakFront','reviewFrontText','en-US'],['reviewSpeakFrontSlow','reviewFrontText','en-US',0.6],['reviewSpeakBack','reviewBackText','es-ES']].forEach(([b,t,l,r])=>{
   const el = document.getElementById(b);
-  if(el) el.onclick = (e)=>{ e.stopPropagation(); speak(document.getElementById(t).textContent, l, r); };
+  if(el) el.onclick = (e)=>{ e.stopPropagation(); const f = document.getElementById(t); speak(f.dataset.say || f.textContent, (f.dataset.lang && l === 'en-US') ? f.dataset.lang : l, r, { rom: f.dataset.rom }); };
 });
   }],
   [3694, function(){

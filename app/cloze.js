@@ -2,7 +2,8 @@
 // Ventana propia (no toca el calendario de repaso). Da XP chico por acierto, con tope diario propio.
 import { S } from './core/shared.js';
 import { mapItemsFor, readStored, catLabel } from './core/dataRegistry.js';
-import { CLOZE_ROUND, CLOZE_XP, pickRound } from './core/cloze.js';
+import { CLOZE_ROUND, CLOZE_XP, pickRound, pickRoundJa } from './core/cloze.js';
+import { isJa } from './lang.js';
 import { awardXp } from './ui.js';
 import { haptic, playSfx, speak } from './speech.js';
 
@@ -10,7 +11,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 let C = null, overlay = null;
 
 function pool(cat){
-  const all = mapItemsFor(cat).filter(it => String(it[3]).indexOf('custom|') !== 0);
+    const all = mapItemsFor(cat).filter(it => String(it[3]).indexOf('custom|') !== 0);
   const seen = all.filter(it => { const s = readStored(it[3]); return s.reps > 0 || s.lvl > 0 || s.m; });
   return { items: seen.length >= 12 ? seen : all, all };
 }
@@ -37,7 +38,7 @@ const body = () => document.getElementById('clzBody');
 
 export function startCloze(){
   const cat = S.currentCat, p = pool(cat);
-  const qs = pickRound(p.items, CLOZE_ROUND, Math.random);
+  const qs = isJa() ? pickRoundJa(p.items.length >= 12 ? p.items : p.all, CLOZE_ROUND, Math.random) : pickRound(p.items, CLOZE_ROUND, Math.random);
   frame();
   if(qs.length < 4){
     body().innerHTML = '<h3 id="clzTitle">Completa el hueco</h3><p class="clzLead">Aún no hay frases suficientes en esta categoría para este modo. Estudia unas cuantas en el mapa y vuelve.</p><button type="button" class="nav hover-scale focus-glow" id="clzBye" data-autofocus>Entendido</button>';
@@ -54,7 +55,7 @@ function renderQ(){
     '<h3 id="clzTitle" class="chQTitle">Pregunta ' + (C.idx + 1) + ' de ' + n + '</h3>' +
     '<div class="chDots" aria-hidden="true">' + dots + '</div>' +
     '<p class="clzEs">' + esc(q.es) + '</p>' +
-    '<p class="clzSent" id="clzSent" aria-label="Frase con un hueco">' + esc(q.before) + '<span class="clzGap" id="clzGap">' + '&nbsp;'.repeat(6) + '</span>' + esc(q.after) + '</p>' +
+    '<p class="clzSent" id="clzSent" lang="' + (q.ja ? 'ja' : 'en') + '" aria-label="Frase con un hueco">' + esc(q.before) + '<span class="clzGap" id="clzGap">' + '&nbsp;'.repeat(6) + '</span>' + esc(q.after) + '</p>' +
     '<div class="chOpts" role="group" aria-label="Elige la palabra que falta">' +
     q.options.map((t, i) => '<button type="button" class="nav chOpt hover-scale focus-glow" data-i="' + i + '">' + esc(t) + '</button>').join('') + '</div>' +
     '<p class="chFeed" id="clzFeed" role="status" aria-live="polite"></p><div id="clzAfter"></div>';
@@ -80,7 +81,7 @@ function answer(i){
   body().querySelector('#clzAfter').innerHTML =
     '<div class="chRow"><button type="button" class="nav chGhost hover-scale focus-glow" id="clzSay">🔊 Escuchar</button>' +
     '<button type="button" class="nav hover-scale focus-glow" id="clzNext" data-autofocus>' + (last ? 'Ver resultado' : 'Siguiente →') + '</button></div>';
-  body().querySelector('#clzSay').onclick = () => { try{ speak(q.en, 'en-US', 0.95); }catch(e){} };
+  body().querySelector('#clzSay').onclick = () => { try{ if(q.ja) speak(q.before + q.answer + q.after, 'ja-JP', 0.9, { rom: q.read }); else speak(q.en, 'en-US', 0.95); }catch(e){} };
   const nx = body().querySelector('#clzNext');
   nx.onclick = () => { C.idx++; if(C.idx >= C.qs.length) finish(); else renderQ(); };
   nx.focus({ preventScroll: true });
@@ -93,7 +94,7 @@ function finish(){
     '<h3 id="clzTitle">Resultado</h3>' +
     '<div class="clzScore"><b>' + C.ok + '/' + total + '</b><span>' + pct + '%</span></div>' +
     '<p class="clzLead" role="status">' + msg + ' +' + C.xp + ' XP' + (C.noXp ? ' <small>(' + C.noXp + ' ya cobrada' + (C.noXp > 1 ? 's' : '') + ' hoy o tope diario)</small>' : '') + '</p>' +
-    (C.fails.length ? '<div class="clzFails"><b>Para repasar</b><ul>' + C.fails.map(q => '<li>' + esc(q.en) + ' — <i>' + esc(q.es) + '</i></li>').join('') + '</ul></div>' : '') +
+    (C.fails.length ? '<div class="clzFails"><b>Para repasar</b><ul>' + C.fails.map(q => '<li>' + esc(q.ja ? q.before + q.answer + q.after : q.en) + ' — <i>' + esc(q.es) + '</i></li>').join('') + '</ul></div>' : '') +
     '<button type="button" class="nav hover-scale focus-glow" id="clzAgain" data-autofocus>Otra ronda</button>' +
     '<button type="button" class="nav chGhost hover-scale focus-glow" id="clzDone">Volver a Repaso</button>';
   body().querySelector('#clzAgain').onclick = startCloze;

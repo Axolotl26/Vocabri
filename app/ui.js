@@ -1,5 +1,6 @@
 // Vocabri — módulo "ui" (generado a partir de app.js)
-import { getValidCategoryIds } from '../categoriesRegistry.js';
+import { getCategoryLang, getValidCategoryIds } from '../categoriesRegistry.js';
+import { courseReady, ensureCourse, isCourse, markCourseActive } from './courses.js';
 import { checkUnlocks, isCategoryUnlocked, unlockLevelOf } from './core/unlocks.js';
 import { celebrate, pickLine, setMascotBubble } from './mascot.js';
 import { S } from './core/shared.js';
@@ -12,6 +13,7 @@ import { renderProgress, renderTable } from './progress.js';
 import { renderReviewView, updateReviewBadge } from './review.js';
 import { APP_VERSION, applyTheme, initCatSelector, scheduleReminderStatePublish, updateCatSelector } from './settings.js';
 import { renderCategoryOptions } from './categoryOptions.js';
+import { activeLang, rememberCat } from './lang.js';
 import { showLevelUp } from './levelUp.js';
 import { playSfx } from './speech.js';
 import { addXpToday, getDailyGoalTarget, getXpToday, getXpTotal, goalAlreadyCelebratedToday, levelFromXp, markGoalCelebrated, setDailyGoalTarget, setXpTotal, xpForLevel, xpIntoLevel } from './state.js';
@@ -359,6 +361,15 @@ export function selectFocusCategory(masterCatId) {
     console.warn('[selectFocusCategory] Categoría no válida:', masterCatId);
     masterCatId = 'general';
   }
+  if (getCategoryLang(masterCatId) !== activeLang()) {   // un curso de otro idioma no se abre sin cambiar de idioma en Ajustes
+    showToast('Ese curso es de otro idioma. Cámbialo en Ajustes → Idioma que estudias.', '🌐', 3500);
+    return;
+  }
+  if (isCourse(masterCatId) && !courseReady(masterCatId)) {   // curso de otro idioma: se descarga la primera vez
+    showToast('Cargando curso…', '🌸', 2000);
+    ensureCourse(masterCatId).then(ok => { if (ok) { markCourseActive(masterCatId); selectFocusCategory(masterCatId); } else showToast('No se pudo cargar el curso. Revisa tu conexión e inténtalo de nuevo.', '⚠', 4000); });
+    return;
+  }
   if (!isCategoryUnlocked(masterCatId)) {
     const need = unlockLevelOf(masterCatId);
     showToast('Se desbloquea al llegar al nivel ' + need + '. ¡Sigue practicando!', '🔒');
@@ -366,6 +377,7 @@ export function selectFocusCategory(masterCatId) {
   }
 
   S.currentCat = masterCatId;
+  markCourseActive(masterCatId);
   S.idx = 0; S.order = [];
 
   // Mostrar el label de la categoría maestra en el botón del panel de ajustes
@@ -385,6 +397,7 @@ export function selectFocusCategory(masterCatId) {
 
   // Persistir la categoría elegida
   localStorage.setItem('ci_current_master_category', masterCatId);
+  rememberCat(activeLang(), masterCatId);
 
   // Establecer el nodo inicial si es la primera vez (ci_start_node se aplica una sola vez)
   const startNode = parseInt(localStorage.getItem('ci_start_node') || '0', 10);
@@ -586,6 +599,7 @@ export function switchView(v){
     const dictV = document.getElementById('dictView'); if(dictV) dictV.style.display = 'none';
     const rtV = document.getElementById('routeView'); if(rtV) rtV.style.display = 'none';
     const abcV = document.getElementById('abcView'); if(abcV) abcV.style.display = 'none';
+    const knV = document.getElementById('kanaView'); if(knV) knV.style.display = 'none';
     try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
     // headerCatWrap removed - category selector moved to settings panel
 
@@ -652,6 +666,10 @@ export function showOnboardingView() {
   document.getElementById('selectedLevel').value = 'beginner';
   document.getElementById('selectedFocus').value = 'general';
   document.getElementById('selectedTheme').value = 'axolotl';
+  // En japonés no se elige nivel ni enfoque: se empieza por el curso N5 (tras el abecedario)
+  const ja = localStorage.getItem('vocabri_language') === 'ja';
+  ['.obC2', '.obC3'].forEach(sel => { const f = document.querySelector('#onboardingView ' + sel); if(f) f.style.display = ja ? 'none' : ''; });
+  if(ja) document.getElementById('selectedFocus').value = 'jp_n5';
 }
 
 
@@ -753,12 +771,12 @@ document.querySelectorAll('.goalOpt').forEach(b=>{
   }],
   [3404, function(){
 (function(){
-  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView','routeView','abcView','missionView'];
+  const IDS=['tableView','lessonView','examView','stageMapView','reviewView','myCardsView','translatorView','progressView','profileView','dictView','routeView','abcView','kanaView','missionView'];
   document.addEventListener('wheel', function(e){
     try{
       if(e.defaultPrevented || e.ctrlKey || e.shiftKey || !e.deltaY) return;
       const t=e.target;
-      if(t.closest && t.closest('.gModalOverlay, #settingsPanel, #starPanel, #newsPanel, #collectionPanel, #situationsPanel, #missionsHallPanel, textarea, select')) return;
+      if(t.closest && t.closest('.gModalOverlay, .obScreen, #welcome-screen, #settingsPanel, #starPanel, #newsPanel, #collectionPanel, #situationsPanel, #missionsHallPanel, textarea, select')) return;
       for(const id of IDS){
         const el=document.getElementById(id);
         if(!el || !el.offsetParent) continue;
@@ -883,13 +901,8 @@ document.getElementById('welcomeStartBtn').onclick = ()=>{
 document.querySelectorAll('.langCard').forEach(card => {
   card.addEventListener('click', () => {
     const lang = card.dataset.lang;
-    if (lang === 'ja') {
-      // Japonés - mostrar toast "Próximamente"
-      showToast('🇯🇵 ¡Japonés estará disponible muy pronto!', '', 3000);
-      return;
-    }
-    // Inglés - mostrar onboarding
-    localStorage.setItem('vocabri_language', 'en');
+    // Inglés o japonés: guardar el idioma y pasar al onboarding (en japonés se salta nivel y enfoque)
+    localStorage.setItem('vocabri_language', lang === 'ja' ? 'ja' : 'en');
     document.getElementById('languageView').style.display = 'none';
     showOnboardingView();
   });
@@ -970,6 +983,7 @@ document.getElementById('onboardingStartBtn').addEventListener('click', () => {
 
   document.getElementById('onboardingView').style.display = 'none';
   switchView('learn');
+  if(masterCat === 'jp_n5') selectFocusCategory('jp_n5');
 });
   }],
   [6295, function(){

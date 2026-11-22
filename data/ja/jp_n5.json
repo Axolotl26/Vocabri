@@ -1,0 +1,5413 @@
+{
+ "course": "jp_n5",
+ "lang": "ja",
+ "name": "Japonés N5",
+ "version": "1.2.0-beta",
+ "zones": [
+  {
+   "name": "Primeros Pasos y Saludos",
+   "items": [
+    {
+     "id": "j1_1",
+     "ja": "おはようございます",
+     "furi": "",
+     "romaji": "Ohayou gozaimasu",
+     "es": "Buenos días (formal)",
+     "ex": "おはようございます。今日もいい天気ですね。",
+     "exEs": "Buenos días. Hoy también hace buen tiempo.",
+     "note": ""
+    },
+    {
+     "id": "j1_2",
+     "ja": "こんにちは",
+     "furi": "",
+     "romaji": "Konnichiwa",
+     "es": "Hola / Buenas tardes",
+     "ex": "こんにちは。お元気ですか。",
+     "exEs": "Buenas tardes. ¿Cómo está?",
+     "note": ""
+    },
+    {
+     "id": "j1_3",
+     "ja": "こんばんは",
+     "furi": "",
+     "romaji": "Konbanwa",
+     "es": "Buenas noches (saludo)",
+     "ex": "こんばんは。今晩は寒いですね。",
+     "exEs": "Buenas noches. Esta noche hace frío.",
+     "note": ""
+    },
+    {
+     "id": "j1_4",
+     "ja": "さようなら",
+     "furi": "",
+     "romaji": "Sayounara",
+     "es": "Adiós",
+     "ex": "先生、さようなら。",
+     "exEs": "Adiós, profesor.",
+     "note": ""
+    },
+    {
+     "id": "j2_1",
+     "ja": "ありがとうございます",
+     "furi": "",
+     "romaji": "Arigatou gozaimasu",
+     "es": "Muchas gracias",
+     "ex": "手伝ってくれて、ありがとうございます。",
+     "exEs": "Gracias por ayudarme.",
+     "note": ""
+    },
+    {
+     "id": "j2_2",
+     "ja": "すみません",
+     "furi": "",
+     "romaji": "Sumimasen",
+     "es": "Disculpa / Perdón",
+     "ex": "すみません、駅はどこですか。",
+     "exEs": "Disculpe, ¿dónde está la estación?",
+     "note": ""
+    },
+    {
+     "id": "j2_3",
+     "ja": "ごめんなさい",
+     "furi": "",
+     "romaji": "Gomen nasai",
+     "es": "Lo siento",
+     "ex": "遅れて、ごめんなさい。",
+     "exEs": "Perdón por llegar tarde.",
+     "note": ""
+    },
+    {
+     "id": "j3_1",
+     "ja": "これ",
+     "furi": "",
+     "romaji": "Kore",
+     "es": "Esto (cerca de mí)",
+     "ex": "これは私の本です。",
+     "exEs": "Esto es mi libro.",
+     "note": ""
+    },
+    {
+     "id": "j3_2",
+     "ja": "それ",
+     "furi": "",
+     "romaji": "Sore",
+     "es": "Eso (cerca de ti)",
+     "ex": "それは何ですか。",
+     "exEs": "¿Qué es eso?",
+     "note": ""
+    },
+    {
+     "id": "j3_3",
+     "ja": "あれ",
+     "furi": "",
+     "romaji": "Are",
+     "es": "Aquello (lejos de ambos)",
+     "ex": "あれは学校です。",
+     "exEs": "Aquello es la escuela.",
+     "note": ""
+    },
+    {
+     "id": "j4_1",
+     "ja": "わたしは",
+     "furi": "",
+     "romaji": "Watashi wa",
+     "es": "Yo (marcando el tema)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j4_2",
+     "ja": "です",
+     "furi": "",
+     "romaji": "Desu",
+     "es": "Es / Ser (cópula formal)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j4_7",
+     "ja": "はい",
+     "furi": "",
+     "romaji": "Hai",
+     "es": "Sí",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j4_8",
+     "ja": "いいえ",
+     "furi": "",
+     "romaji": "Iie",
+     "es": "No",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_1",
+     "ja": "おやすみなさい",
+     "furi": "",
+     "romaji": "Oyasuminasai",
+     "es": "Buenas noches (al dormir)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_2",
+     "ja": "いただきます",
+     "furi": "",
+     "romaji": "Itadakimasu",
+     "es": "Buen provecho (al comer)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_3",
+     "ja": "ごちそうさまでした",
+     "furi": "",
+     "romaji": "Gochisousama deshita",
+     "es": "Gracias por la comida",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_4",
+     "ja": "はじめまして",
+     "furi": "",
+     "romaji": "Hajimemashite",
+     "es": "Mucho gusto",
+     "ex": "はじめまして。田中です。",
+     "exEs": "Mucho gusto. Soy Tanaka.",
+     "note": ""
+    },
+    {
+     "id": "j5_5",
+     "ja": "よろしくおねがいします",
+     "furi": "",
+     "romaji": "Yoroshiku onegaishimasu",
+     "es": "Encantado de conocerle",
+     "ex": "どうぞ、よろしくお願いします。",
+     "exEs": "Encantado/a de conocerle.",
+     "note": ""
+    },
+    {
+     "id": "j5_6",
+     "ja": "ただいま",
+     "furi": "",
+     "romaji": "Tadaima",
+     "es": "Ya llegué",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_7",
+     "ja": "おかえりなさい",
+     "furi": "",
+     "romaji": "Okaerinasai",
+     "es": "Bienvenido a casa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j5_8",
+     "ja": "じゃあね",
+     "furi": "",
+     "romaji": "Jaa ne",
+     "es": "Nos vemos / Chao",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j6_1",
+     "ja": "ここ",
+     "furi": "",
+     "romaji": "Koko",
+     "es": "Aquí",
+     "ex": "ここは図書館です。",
+     "exEs": "Aquí es la biblioteca.",
+     "note": ""
+    },
+    {
+     "id": "j6_2",
+     "ja": "そこ",
+     "furi": "",
+     "romaji": "Soko",
+     "es": "Ahí (cerca de ti)",
+     "ex": "そこに座ってください。",
+     "exEs": "Siéntese ahí, por favor.",
+     "note": ""
+    },
+    {
+     "id": "j6_3",
+     "ja": "あそこ",
+     "furi": "",
+     "romaji": "Asoko",
+     "es": "Allí (lejos)",
+     "ex": "トイレはあそこです。",
+     "exEs": "El baño está allá.",
+     "note": ""
+    },
+    {
+     "id": "j6_4",
+     "ja": "どこ",
+     "furi": "",
+     "romaji": "Doko",
+     "es": "¿Dónde?",
+     "ex": "駅はどこですか。",
+     "exEs": "¿Dónde está la estación?",
+     "note": ""
+    },
+    {
+     "id": "j6_5",
+     "ja": "こちら",
+     "furi": "",
+     "romaji": "Kochira",
+     "es": "Por aquí (cortés)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j6_6",
+     "ja": "そちら",
+     "furi": "",
+     "romaji": "Sochira",
+     "es": "Por ahí (cortés)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j6_7",
+     "ja": "あちら",
+     "furi": "",
+     "romaji": "Achira",
+     "es": "Por allí (cortés)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j6_8",
+     "ja": "どちら",
+     "furi": "",
+     "romaji": "Dochira",
+     "es": "¿Por dónde? / ¿Cuál?",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_1",
+     "ja": "だれ",
+     "furi": "",
+     "romaji": "Dare",
+     "es": "¿Quién?",
+     "ex": "あの人はだれですか。",
+     "exEs": "¿Quién es esa persona?",
+     "note": ""
+    },
+    {
+     "id": "j7_2",
+     "ja": "どなた",
+     "furi": "",
+     "romaji": "Donata",
+     "es": "¿Quién? (formal)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_3",
+     "ja": "なに",
+     "furi": "",
+     "romaji": "Nani",
+     "es": "¿Qué?",
+     "ex": "これは何ですか。",
+     "exEs": "¿Qué es esto?",
+     "note": ""
+    },
+    {
+     "id": "j7_4",
+     "ja": "なんの",
+     "furi": "",
+     "romaji": "Nan no",
+     "es": "¿De qué (tipo)?",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_5",
+     "ja": "だれのかばん",
+     "furi": "",
+     "romaji": "Dare no kaban",
+     "es": "¿De quién es el bolso?",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_6",
+     "ja": "私の本",
+     "furi": "<ruby>私<rt>わたし</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>",
+     "romaji": "Watashi no hon",
+     "es": "Mi libro",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_7",
+     "ja": "あなたのです",
+     "furi": "",
+     "romaji": "Anata no desu",
+     "es": "Es tuyo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j7_8",
+     "ja": "だれですか",
+     "furi": "",
+     "romaji": "Dare desu ka",
+     "es": "¿Quién es?",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j1_x1",
+     "ja": "いってきます",
+     "furi": "",
+     "romaji": "Ittekimasu",
+     "es": "Me voy (y vuelvo)",
+     "ex": "いってきます！",
+     "exEs": "¡Ya me voy!",
+     "note": "Lo dice quien sale de casa."
+    },
+    {
+     "id": "j1_x2",
+     "ja": "いってらっしゃい",
+     "furi": "",
+     "romaji": "Itterasshai",
+     "es": "Que te vaya bien",
+     "ex": "いってらっしゃい。",
+     "exEs": "Que te vaya bien.",
+     "note": "Respuesta a いってきます."
+    }
+   ]
+  },
+  {
+   "name": "Entorno, Familia y Ciudad",
+   "items": [
+    {
+     "id": "j9_1",
+     "ja": "父",
+     "furi": "<ruby>父<rt>ちち</rt></ruby>",
+     "romaji": "Chichi / Otousan",
+     "es": "Padre / Mi papá",
+     "ex": "父は医者です。",
+     "exEs": "Mi padre es médico.",
+     "note": ""
+    },
+    {
+     "id": "j9_2",
+     "ja": "母",
+     "furi": "<ruby>母<rt>はは</rt></ruby>",
+     "romaji": "Haha / Okaasan",
+     "es": "Madre / Mi mamá",
+     "ex": "母は料理が上手です。",
+     "exEs": "Mi madre cocina bien.",
+     "note": ""
+    },
+    {
+     "id": "j9_3",
+     "ja": "兄",
+     "furi": "<ruby>兄<rt>あに</rt></ruby>",
+     "romaji": "Ani / Oniisan",
+     "es": "Hermano mayor",
+     "ex": "兄は大学生です。",
+     "exEs": "Mi hermano mayor es universitario.",
+     "note": ""
+    },
+    {
+     "id": "j9_4",
+     "ja": "姉",
+     "furi": "<ruby>姉<rt>あね</rt></ruby>",
+     "romaji": "Ane / Oneesan",
+     "es": "Hermana mayor",
+     "ex": "姉は会社員です。",
+     "exEs": "Mi hermana mayor trabaja en una empresa.",
+     "note": ""
+    },
+    {
+     "id": "j9_5",
+     "ja": "弟",
+     "furi": "<ruby>弟<rt>おとうと</rt></ruby>",
+     "romaji": "Otouto",
+     "es": "Hermano menor",
+     "ex": "弟は十歳です。",
+     "exEs": "Mi hermano menor tiene diez años.",
+     "note": ""
+    },
+    {
+     "id": "j9_6",
+     "ja": "妹",
+     "furi": "<ruby>妹<rt>いもうと</rt></ruby>",
+     "romaji": "Imouto",
+     "es": "Hermana menor",
+     "ex": "妹はピアノを習っています。",
+     "exEs": "Mi hermana menor aprende piano.",
+     "note": ""
+    },
+    {
+     "id": "j9_7",
+     "ja": "家族",
+     "furi": "<ruby>家族<rt>かぞく</rt></ruby>",
+     "romaji": "Kazoku",
+     "es": "Familia",
+     "ex": "家族は四人です。",
+     "exEs": "Mi familia es de cuatro.",
+     "note": ""
+    },
+    {
+     "id": "j9_8",
+     "ja": "両親",
+     "furi": "<ruby>両親<rt>りょうしん</rt></ruby>",
+     "romaji": "Ryoushin",
+     "es": "Padres",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_1",
+     "ja": "祖父",
+     "furi": "<ruby>祖父<rt>そふ</rt></ruby>",
+     "romaji": "Sofu / Ojiisan",
+     "es": "Abuelo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_2",
+     "ja": "祖母",
+     "furi": "<ruby>祖母<rt>そぼ</rt></ruby>",
+     "romaji": "Sobo / Obaasan",
+     "es": "Abuela",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_3",
+     "ja": "夫",
+     "furi": "<ruby>夫<rt>おっと</rt></ruby>",
+     "romaji": "Otto / Danna",
+     "es": "Esposo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_4",
+     "ja": "妻",
+     "furi": "<ruby>妻<rt>つま</rt></ruby>",
+     "romaji": "Tsuma / Kanai",
+     "es": "Esposa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_5",
+     "ja": "子供",
+     "furi": "<ruby>子供<rt>こども</rt></ruby>",
+     "romaji": "Kodomo",
+     "es": "Niño / Hijo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_6",
+     "ja": "友達",
+     "furi": "<ruby>友達<rt>ともだち</rt></ruby>",
+     "romaji": "Tomodachi",
+     "es": "Amigo",
+     "ex": "友達と映画を見ます。",
+     "exEs": "Veo una película con un amigo.",
+     "note": ""
+    },
+    {
+     "id": "j10_7",
+     "ja": "人",
+     "furi": "<ruby>人<rt>ひと</rt></ruby>",
+     "romaji": "Hito",
+     "es": "Persona",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j10_8",
+     "ja": "皆さん",
+     "furi": "<ruby>皆<rt>みな</rt></ruby>さん",
+     "romaji": "Minasan",
+     "es": "Todos / Ustedes",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_1",
+     "ja": "家",
+     "furi": "<ruby>家<rt>いえ</rt></ruby>",
+     "romaji": "Ie / Uchi",
+     "es": "Casa / Hogar",
+     "ex": "家に帰ります。",
+     "exEs": "Vuelvo a casa.",
+     "note": ""
+    },
+    {
+     "id": "j11_2",
+     "ja": "部屋",
+     "furi": "<ruby>部屋<rt>へや</rt></ruby>",
+     "romaji": "Heya",
+     "es": "Habitación",
+     "ex": "私の部屋は広いです。",
+     "exEs": "Mi habitación es amplia.",
+     "note": ""
+    },
+    {
+     "id": "j11_3",
+     "ja": "台所",
+     "furi": "<ruby>台所<rt>だいどころ</rt></ruby>",
+     "romaji": "Daidokoro",
+     "es": "Cocina",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_4",
+     "ja": "風呂",
+     "furi": "<ruby>風呂<rt>ふろ</rt></ruby>",
+     "romaji": "Furo",
+     "es": "Baño / Bañera",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_5",
+     "ja": "机",
+     "furi": "<ruby>机<rt>つくえ</rt></ruby>",
+     "romaji": "Tsukue",
+     "es": "Escritorio",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_6",
+     "ja": "椅子",
+     "furi": "<ruby>椅子<rt>いす</rt></ruby>",
+     "romaji": "Isu",
+     "es": "Silla",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_7",
+     "ja": "ベッド",
+     "furi": "",
+     "romaji": "Beddo",
+     "es": "Cama",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j11_8",
+     "ja": "窓",
+     "furi": "<ruby>窓<rt>まど</rt></ruby>",
+     "romaji": "Mado",
+     "es": "Ventana",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j12_1",
+     "ja": "駅",
+     "furi": "<ruby>駅<rt>えき</rt></ruby>",
+     "romaji": "Eki",
+     "es": "Estación de tren",
+     "ex": "駅で友達を待ちます。",
+     "exEs": "Espero a un amigo en la estación.",
+     "note": ""
+    },
+    {
+     "id": "j12_2",
+     "ja": "学校",
+     "furi": "<ruby>学校<rt>がっこう</rt></ruby>",
+     "romaji": "Gakkou",
+     "es": "Escuela",
+     "ex": "学校へ行きます。",
+     "exEs": "Voy a la escuela.",
+     "note": ""
+    },
+    {
+     "id": "j12_3",
+     "ja": "病院",
+     "furi": "<ruby>病院<rt>びょういん</rt></ruby>",
+     "romaji": "Byouin",
+     "es": "Hospital",
+     "ex": "病院は駅の近くです。",
+     "exEs": "El hospital está cerca de la estación.",
+     "note": ""
+    },
+    {
+     "id": "j12_4",
+     "ja": "銀行",
+     "furi": "<ruby>銀行<rt>ぎんこう</rt></ruby>",
+     "romaji": "Ginkou",
+     "es": "Banco",
+     "ex": "銀行でお金を借ります。",
+     "exEs": "Pido dinero en el banco.",
+     "note": ""
+    },
+    {
+     "id": "j12_5",
+     "ja": "郵便局",
+     "furi": "<ruby>郵便局<rt>ゆうびんきょく</rt></ruby>",
+     "romaji": "Yuubinkyoku",
+     "es": "Oficina de correos",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j12_6",
+     "ja": "図書館",
+     "furi": "<ruby>図書館<rt>としょかん</rt></ruby>",
+     "romaji": "Toshokan",
+     "es": "Biblioteca",
+     "ex": "図書館で本を読みます。",
+     "exEs": "Leo en la biblioteca.",
+     "note": ""
+    },
+    {
+     "id": "j12_7",
+     "ja": "公園",
+     "furi": "<ruby>公園<rt>こうえん</rt></ruby>",
+     "romaji": "Kouen",
+     "es": "Parque",
+     "ex": "公園を散歩します。",
+     "exEs": "Paseo por el parque.",
+     "note": ""
+    },
+    {
+     "id": "j12_8",
+     "ja": "店",
+     "furi": "<ruby>店<rt>みせ</rt></ruby>",
+     "romaji": "Mise",
+     "es": "Tienda / Local",
+     "ex": "あの店は安いです。",
+     "exEs": "Esa tienda es barata.",
+     "note": ""
+    },
+    {
+     "id": "j13_1",
+     "ja": "スーパー",
+     "furi": "",
+     "romaji": "Suupaa",
+     "es": "Supermercado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_2",
+     "ja": "コンビニ",
+     "furi": "",
+     "romaji": "Konbini",
+     "es": "Tienda de conveniencia",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_3",
+     "ja": "レストラン",
+     "furi": "",
+     "romaji": "Resutoran",
+     "es": "Restaurante",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_4",
+     "ja": "ホテル",
+     "furi": "",
+     "romaji": "Hoteru",
+     "es": "Hotel",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_5",
+     "ja": "空港",
+     "furi": "<ruby>空港<rt>くうこう</rt></ruby>",
+     "romaji": "Kuukou",
+     "es": "Aeropuerto",
+     "ex": "空港まで電車で行きます。",
+     "exEs": "Voy al aeropuerto en tren.",
+     "note": ""
+    },
+    {
+     "id": "j13_6",
+     "ja": "道",
+     "furi": "<ruby>道<rt>みち</rt></ruby>",
+     "romaji": "Michi",
+     "es": "Calle / Camino",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_7",
+     "ja": "警察署",
+     "furi": "<ruby>警察署<rt>けいさつしょ</rt></ruby>",
+     "romaji": "Keisatsusho",
+     "es": "Estación de policía",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j13_8",
+     "ja": "市役所",
+     "furi": "<ruby>市役所<rt>しやくしょ</rt></ruby>",
+     "romaji": "Shiyakusho",
+     "es": "Alcaldía / Ayuntamiento",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_1",
+     "ja": "学生",
+     "furi": "<ruby>学生<rt>がくせい</rt></ruby>",
+     "romaji": "Gakusei",
+     "es": "Estudiante",
+     "ex": "私は学生です。",
+     "exEs": "Soy estudiante.",
+     "note": ""
+    },
+    {
+     "id": "j14_2",
+     "ja": "先生",
+     "furi": "<ruby>先生<rt>せんせい</rt></ruby>",
+     "romaji": "Sensei",
+     "es": "Profesor / Maestro",
+     "ex": "先生は親切です。",
+     "exEs": "El profesor es amable.",
+     "note": ""
+    },
+    {
+     "id": "j14_3",
+     "ja": "会社員",
+     "furi": "<ruby>会社員<rt>かいしゃいん</rt></ruby>",
+     "romaji": "Kaishain",
+     "es": "Empleado de empresa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_4",
+     "ja": "医者",
+     "furi": "<ruby>医者<rt>いしゃ</rt></ruby>",
+     "romaji": "Isha",
+     "es": "Médico / Doctor",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_5",
+     "ja": "警察官",
+     "furi": "<ruby>警察官<rt>けいさつかん</rt></ruby>",
+     "romaji": "Keisatsukan",
+     "es": "Policía",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_6",
+     "ja": "料理人",
+     "furi": "<ruby>料理人<rt>りょうりにん</rt></ruby>",
+     "romaji": "Ryourinin",
+     "es": "Cocinero / Chef",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_7",
+     "ja": "弁護士",
+     "furi": "<ruby>弁護士<rt>べんごし</rt></ruby>",
+     "romaji": "Bengoshi",
+     "es": "Abogado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j14_8",
+     "ja": "主婦",
+     "furi": "<ruby>主婦<rt>しゅふ</rt></ruby>",
+     "romaji": "Shufu",
+     "es": "Ama de casa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j15_1",
+     "ja": "犬",
+     "furi": "<ruby>犬<rt>いぬ</rt></ruby>",
+     "romaji": "Inu",
+     "es": "Perro",
+     "ex": "犬が好きです。",
+     "exEs": "Me gustan los perros.",
+     "note": ""
+    },
+    {
+     "id": "j15_2",
+     "ja": "猫",
+     "furi": "<ruby>猫<rt>ねこ</rt></ruby>",
+     "romaji": "Neko",
+     "es": "Gato",
+     "ex": "猫が二匹います。",
+     "exEs": "Tengo dos gatos.",
+     "note": ""
+    },
+    {
+     "id": "j15_3",
+     "ja": "鳥",
+     "furi": "<ruby>鳥<rt>とり</rt></ruby>",
+     "romaji": "Tori",
+     "es": "Pájaro",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j15_4",
+     "ja": "水",
+     "furi": "<ruby>水<rt>みず</rt></ruby>",
+     "romaji": "Mizu",
+     "es": "Agua",
+     "ex": "水を飲みます。",
+     "exEs": "Bebo agua.",
+     "note": ""
+    },
+    {
+     "id": "j15_5",
+     "ja": "木",
+     "furi": "<ruby>木<rt>き</rt></ruby>",
+     "romaji": "Ki",
+     "es": "Árbol",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j15_6",
+     "ja": "花",
+     "furi": "<ruby>花<rt>はな</rt></ruby>",
+     "romaji": "Hana",
+     "es": "Flor",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j15_7",
+     "ja": "山",
+     "furi": "<ruby>山<rt>やま</rt></ruby>",
+     "romaji": "Yama",
+     "es": "Montaña",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j15_8",
+     "ja": "川",
+     "furi": "<ruby>川<rt>かわ</rt></ruby>",
+     "romaji": "Kawa",
+     "es": "Río",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Comida, Restaurantes y Movimiento",
+   "items": [
+    {
+     "id": "j17_1",
+     "ja": "ご飯",
+     "furi": "ご<ruby>飯<rt>はん</rt></ruby>",
+     "romaji": "Gohan",
+     "es": "Arroz cocido / Comida",
+     "ex": "ご飯を食べます。",
+     "exEs": "Como arroz (o la comida).",
+     "note": ""
+    },
+    {
+     "id": "j17_2",
+     "ja": "パン",
+     "furi": "",
+     "romaji": "Pan",
+     "es": "Pan",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j17_3",
+     "ja": "肉",
+     "furi": "<ruby>肉<rt>にく</rt></ruby>",
+     "romaji": "Niku",
+     "es": "Carne",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j17_4",
+     "ja": "魚",
+     "furi": "<ruby>魚<rt>さかな</rt></ruby>",
+     "romaji": "Sakana",
+     "es": "Pescado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j17_5",
+     "ja": "卵",
+     "furi": "<ruby>卵<rt>たまご</rt></ruby>",
+     "romaji": "Tamago",
+     "es": "Huevo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j17_6",
+     "ja": "朝ご飯",
+     "furi": "<ruby>朝<rt>あさ</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>",
+     "romaji": "Asagohan",
+     "es": "Desayuno",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j17_7",
+     "ja": "お茶",
+     "furi": "お<ruby>茶<rt>ちゃ</rt></ruby>",
+     "romaji": "Ocha",
+     "es": "Té verde",
+     "ex": "お茶をください。",
+     "exEs": "Deme té, por favor.",
+     "note": ""
+    },
+    {
+     "id": "j17_8",
+     "ja": "牛乳",
+     "furi": "<ruby>牛乳<rt>ぎゅうにゅう</rt></ruby>",
+     "romaji": "Gyuunyuu",
+     "es": "Leche de vaca",
+     "ex": "毎朝牛乳を飲みます。",
+     "exEs": "Bebo leche cada mañana.",
+     "note": ""
+    },
+    {
+     "id": "j18_1",
+     "ja": "野菜",
+     "furi": "<ruby>野菜<rt>やさい</rt></ruby>",
+     "romaji": "Yasai",
+     "es": "Verduras",
+     "ex": "野菜が好きです。",
+     "exEs": "Me gustan las verduras.",
+     "note": ""
+    },
+    {
+     "id": "j18_2",
+     "ja": "果物",
+     "furi": "<ruby>果物<rt>くだもの</rt></ruby>",
+     "romaji": "Kudamono",
+     "es": "Fruta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j18_3",
+     "ja": "りんご",
+     "furi": "",
+     "romaji": "Ringo",
+     "es": "Manzana",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j18_4",
+     "ja": "美味しい",
+     "furi": "<ruby>美味<rt>おい</rt></ruby>しい",
+     "romaji": "Oishii",
+     "es": "Delicioso / Sabroso",
+     "ex": "このケーキは美味しいです。",
+     "exEs": "Este pastel está rico.",
+     "note": ""
+    },
+    {
+     "id": "j18_5",
+     "ja": "まずい",
+     "furi": "",
+     "romaji": "Mazui",
+     "es": "Feo de sabor / Malo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j18_6",
+     "ja": "甘い",
+     "furi": "<ruby>甘<rt>あま</rt></ruby>い",
+     "romaji": "Amai",
+     "es": "Dulce",
+     "ex": "このお菓子は甘いです。",
+     "exEs": "Este dulce es muy dulce.",
+     "note": ""
+    },
+    {
+     "id": "j18_7",
+     "ja": "辛い",
+     "furi": "<ruby>辛<rt>から</rt></ruby>い",
+     "romaji": "Karai",
+     "es": "Picante",
+     "ex": "カレーが辛いです。",
+     "exEs": "El curry pica.",
+     "note": ""
+    },
+    {
+     "id": "j18_8",
+     "ja": "しょっぱい",
+     "furi": "",
+     "romaji": "Shoppai",
+     "es": "Salado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_1",
+     "ja": "メニュー",
+     "furi": "",
+     "romaji": "Menyuu",
+     "es": "Menú / Carta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_2",
+     "ja": "お会計",
+     "furi": "お<ruby>会計<rt>かいけい</rt></ruby>",
+     "romaji": "Okaikei",
+     "es": "La cuenta / El pago",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_3",
+     "ja": "ください",
+     "furi": "",
+     "romaji": "Kudasai",
+     "es": "Por favor dame",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_4",
+     "ja": "これをお願いします",
+     "furi": "これをお<ruby>願<rt>ねが</rt></ruby>いします",
+     "romaji": "Kore wo onegaishimasu",
+     "es": "Este, por favor",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_5",
+     "ja": "水をお願いします",
+     "furi": "<ruby>水<rt>みず</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします",
+     "romaji": "Mizu wo onegaishimasu",
+     "es": "Agua, por favor",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_6",
+     "ja": "おすすめは何ですか",
+     "furi": "おすすめは<ruby>何<rt>なん</rt></ruby>ですか",
+     "romaji": "Osusume wa nan desu ka",
+     "es": "¿Cuál es la recomendación?",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_7",
+     "ja": "いらっしゃいませ",
+     "furi": "",
+     "romaji": "Irasshaimase",
+     "es": "Bienvenido (en tiendas/restaurantes)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j19_8",
+     "ja": "お腹が空きました",
+     "furi": "お<ruby>腹<rt>なか</rt></ruby>が<ruby>空<rt>す</rt></ruby>きました",
+     "romaji": "Onaka ga sukimashita",
+     "es": "Tengo hambre",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j20_1",
+     "ja": "食べる",
+     "furi": "<ruby>食<rt>た</rt></ruby>べる",
+     "romaji": "Taberu / Tabemasu",
+     "es": "Comer",
+     "ex": "朝ご飯を食べます。",
+     "exEs": "Desayuno.",
+     "note": ""
+    },
+    {
+     "id": "j20_2",
+     "ja": "飲む",
+     "furi": "<ruby>飲<rt>の</rt></ruby>む",
+     "romaji": "Nomu / Nomimasu",
+     "es": "Beber",
+     "ex": "水を飲みます。",
+     "exEs": "Bebo agua.",
+     "note": ""
+    },
+    {
+     "id": "j20_3",
+     "ja": "買う",
+     "furi": "<ruby>買<rt>か</rt></ruby>う",
+     "romaji": "Kau / Kaimasu",
+     "es": "Comprar",
+     "ex": "本を買います。",
+     "exEs": "Compro un libro.",
+     "note": ""
+    },
+    {
+     "id": "j20_4",
+     "ja": "見る",
+     "furi": "<ruby>見<rt>み</rt></ruby>る",
+     "romaji": "Miru / Mimasu",
+     "es": "Ver / Mirar",
+     "ex": "テレビを見ます。",
+     "exEs": "Veo la televisión.",
+     "note": ""
+    },
+    {
+     "id": "j20_5",
+     "ja": "聞く",
+     "furi": "<ruby>聞<rt>き</rt></ruby>く",
+     "romaji": "Kiku / Kikimasu",
+     "es": "Escuchar / Preguntar",
+     "ex": "音楽を聞きます。",
+     "exEs": "Escucho música.",
+     "note": ""
+    },
+    {
+     "id": "j20_6",
+     "ja": "読む",
+     "furi": "<ruby>読<rt>よ</rt></ruby>む",
+     "romaji": "Yomu / Yomimasu",
+     "es": "Leer",
+     "ex": "新聞を読みます。",
+     "exEs": "Leo el periódico.",
+     "note": ""
+    },
+    {
+     "id": "j20_7",
+     "ja": "書く",
+     "furi": "<ruby>書<rt>か</rt></ruby>く",
+     "romaji": "Kaku / Kakimasu",
+     "es": "Escribir",
+     "ex": "手紙を書きます。",
+     "exEs": "Escribo una carta.",
+     "note": ""
+    },
+    {
+     "id": "j20_8",
+     "ja": "する",
+     "furi": "",
+     "romaji": "Suru / Shimasu",
+     "es": "Hacer",
+     "ex": "毎日勉強をします。",
+     "exEs": "Estudio todos los días.",
+     "note": ""
+    },
+    {
+     "id": "j21_1",
+     "ja": "行く",
+     "furi": "<ruby>行<rt>い</rt></ruby>く",
+     "romaji": "Iku / Ikimasu",
+     "es": "Ir",
+     "ex": "学校へ行きます。",
+     "exEs": "Voy a la escuela.",
+     "note": ""
+    },
+    {
+     "id": "j21_2",
+     "ja": "来る",
+     "furi": "<ruby>来<rt>く</rt></ruby>る",
+     "romaji": "Kuru / Kimasu",
+     "es": "Venir",
+     "ex": "友達が来ます。",
+     "exEs": "Viene un amigo.",
+     "note": ""
+    },
+    {
+     "id": "j21_3",
+     "ja": "帰る",
+     "furi": "<ruby>帰<rt>かえ</rt></ruby>る",
+     "romaji": "Kaeru / Kaerimasu",
+     "es": "Regresar a casa",
+     "ex": "六時に家へ帰ります。",
+     "exEs": "Vuelvo a casa a las seis.",
+     "note": ""
+    },
+    {
+     "id": "j21_4",
+     "ja": "歩く",
+     "furi": "<ruby>歩<rt>ある</rt></ruby>く",
+     "romaji": "Aruku / Arukimasu",
+     "es": "Caminar",
+     "ex": "駅まで歩きます。",
+     "exEs": "Camino hasta la estación.",
+     "note": ""
+    },
+    {
+     "id": "j21_5",
+     "ja": "乗る",
+     "furi": "<ruby>乗<rt>の</rt></ruby>る",
+     "romaji": "Noru / Norimasu",
+     "es": "Subirse (a un transporte)",
+     "ex": "バスに乗ります。",
+     "exEs": "Subo al autobús.",
+     "note": ""
+    },
+    {
+     "id": "j21_6",
+     "ja": "降りる",
+     "furi": "<ruby>降<rt>お</rt></ruby>りる",
+     "romaji": "Oriru / Orimasu",
+     "es": "Bajarse (de un transporte)",
+     "ex": "駅で電車を降ります。",
+     "exEs": "Me bajo del tren en la estación.",
+     "note": ""
+    },
+    {
+     "id": "j21_7",
+     "ja": "曲がる",
+     "furi": "<ruby>曲<rt>ま</rt></ruby>がる",
+     "romaji": "Magaru / Magarimasu",
+     "es": "Girar / Doblar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j21_8",
+     "ja": "止まる",
+     "furi": "<ruby>止<rt>と</rt></ruby>まる",
+     "romaji": "Tomaru / Tomarimasu",
+     "es": "Detenerse / Parar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_1",
+     "ja": "電車",
+     "furi": "<ruby>電車<rt>でんしゃ</rt></ruby>",
+     "romaji": "Densha",
+     "es": "Tren eléctrico",
+     "ex": "電車で会社へ行きます。",
+     "exEs": "Voy a la empresa en tren.",
+     "note": ""
+    },
+    {
+     "id": "j22_2",
+     "ja": "バス",
+     "furi": "",
+     "romaji": "Basu",
+     "es": "Autobús",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_3",
+     "ja": "タクシー",
+     "furi": "",
+     "romaji": "Takushii",
+     "es": "Taxi",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_4",
+     "ja": "新幹線",
+     "furi": "<ruby>新幹線<rt>しんかんせん</rt></ruby>",
+     "romaji": "Shinkansen",
+     "es": "Tren bala",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_5",
+     "ja": "右",
+     "furi": "<ruby>右<rt>みぎ</rt></ruby>",
+     "romaji": "Migi",
+     "es": "Derecha",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_6",
+     "ja": "左",
+     "furi": "<ruby>左<rt>ひだり</rt></ruby>",
+     "romaji": "Hidari",
+     "es": "Izquierda",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_7",
+     "ja": "まっすぐ",
+     "furi": "",
+     "romaji": "Massugu",
+     "es": "Derecho / En línea recta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j22_8",
+     "ja": "近く",
+     "furi": "<ruby>近<rt>ちか</rt></ruby>く",
+     "romaji": "Chikaku",
+     "es": "Cerca de",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j23_1",
+     "ja": "大きい",
+     "furi": "<ruby>大<rt>おお</rt></ruby>きい",
+     "romaji": "Ookii",
+     "es": "Grande",
+     "ex": "大きい犬です。",
+     "exEs": "Es un perro grande.",
+     "note": ""
+    },
+    {
+     "id": "j23_2",
+     "ja": "小さい",
+     "furi": "<ruby>小<rt>ちい</rt></ruby>さい",
+     "romaji": "Chiisai",
+     "es": "Pequeño",
+     "ex": "小さい家です。",
+     "exEs": "Es una casa pequeña.",
+     "note": ""
+    },
+    {
+     "id": "j23_3",
+     "ja": "新しい",
+     "furi": "<ruby>新<rt>あたら</rt></ruby>しい",
+     "romaji": "Atarashii",
+     "es": "Nuevo",
+     "ex": "新しい靴を買いました。",
+     "exEs": "Compré zapatos nuevos.",
+     "note": ""
+    },
+    {
+     "id": "j23_4",
+     "ja": "古い",
+     "furi": "<ruby>古<rt>ふる</rt></ruby>い",
+     "romaji": "Furui",
+     "es": "Viejo / Antiguo",
+     "ex": "古い本です。",
+     "exEs": "Es un libro viejo.",
+     "note": ""
+    },
+    {
+     "id": "j23_5",
+     "ja": "高い",
+     "furi": "<ruby>高<rt>たか</rt></ruby>い",
+     "romaji": "Takai",
+     "es": "Caro / Alto",
+     "ex": "この時計は高いです。",
+     "exEs": "Este reloj es caro.",
+     "note": ""
+    },
+    {
+     "id": "j23_6",
+     "ja": "安い",
+     "furi": "<ruby>安<rt>やす</rt></ruby>い",
+     "romaji": "Yasui",
+     "es": "Barato",
+     "ex": "あの店は安いです。",
+     "exEs": "Esa tienda es barata.",
+     "note": ""
+    },
+    {
+     "id": "j23_7",
+     "ja": "良い",
+     "furi": "<ruby>良<rt>よ</rt></ruby>い",
+     "romaji": "Yoi / Ii",
+     "es": "Bueno",
+     "ex": "天気が良いです。",
+     "exEs": "Hace buen tiempo.",
+     "note": ""
+    },
+    {
+     "id": "j23_8",
+     "ja": "悪い",
+     "furi": "<ruby>悪<rt>わる</rt></ruby>い",
+     "romaji": "Warui",
+     "es": "Malo",
+     "ex": "天気が悪いです。",
+     "exEs": "Hace mal tiempo.",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Números y contadores",
+   "items": [
+    {
+     "id": "n5_a1",
+     "ja": "一",
+     "furi": "<ruby>一<rt>いち</rt></ruby>",
+     "romaji": "Ichi",
+     "es": "uno",
+     "ex": "一つください。",
+     "exEs": "Uno, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_a2",
+     "ja": "二",
+     "furi": "<ruby>二<rt>に</rt></ruby>",
+     "romaji": "Ni",
+     "es": "dos",
+     "ex": "二人です。",
+     "exEs": "Somos dos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a3",
+     "ja": "三",
+     "furi": "<ruby>三<rt>さん</rt></ruby>",
+     "romaji": "San",
+     "es": "tres",
+     "ex": "三時に会います。",
+     "exEs": "Nos vemos a las tres.",
+     "note": ""
+    },
+    {
+     "id": "n5_a4",
+     "ja": "四",
+     "furi": "<ruby>四<rt>よん</rt></ruby>",
+     "romaji": "Yon",
+     "es": "cuatro",
+     "ex": "四つあります。",
+     "exEs": "Hay cuatro.",
+     "note": "También se lee し (shi), pero yon es lo más común."
+    },
+    {
+     "id": "n5_a5",
+     "ja": "五",
+     "furi": "<ruby>五<rt>ご</rt></ruby>",
+     "romaji": "Go",
+     "es": "cinco",
+     "ex": "五円です。",
+     "exEs": "Son cinco yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a6",
+     "ja": "六",
+     "furi": "<ruby>六<rt>ろく</rt></ruby>",
+     "romaji": "Roku",
+     "es": "seis",
+     "ex": "六時に起きます。",
+     "exEs": "Me levanto a las seis.",
+     "note": ""
+    },
+    {
+     "id": "n5_a7",
+     "ja": "七",
+     "furi": "<ruby>七<rt>なな</rt></ruby>",
+     "romaji": "Nana",
+     "es": "siete",
+     "ex": "七人います。",
+     "exEs": "Hay siete personas.",
+     "note": "También se lee しち (shichi)."
+    },
+    {
+     "id": "n5_a8",
+     "ja": "八",
+     "furi": "<ruby>八<rt>はち</rt></ruby>",
+     "romaji": "Hachi",
+     "es": "ocho",
+     "ex": "八時です。",
+     "exEs": "Son las ocho.",
+     "note": ""
+    },
+    {
+     "id": "n5_a9",
+     "ja": "九",
+     "furi": "<ruby>九<rt>きゅう</rt></ruby>",
+     "romaji": "Kyuu",
+     "es": "nueve",
+     "ex": "九月です。",
+     "exEs": "Es septiembre.",
+     "note": "También se lee く (ku), por ejemplo en 九時 (kuji, las nueve)."
+    },
+    {
+     "id": "n5_a10",
+     "ja": "十",
+     "furi": "<ruby>十<rt>じゅう</rt></ruby>",
+     "romaji": "Juu",
+     "es": "diez",
+     "ex": "十分待ちます。",
+     "exEs": "Espero diez minutos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a11",
+     "ja": "ゼロ",
+     "furi": "",
+     "romaji": "Zero",
+     "es": "cero",
+     "ex": "ゼロです。",
+     "exEs": "Es cero.",
+     "note": "También se dice 零 (rei)."
+    },
+    {
+     "id": "n5_a12",
+     "ja": "十一",
+     "furi": "<ruby>十一<rt>じゅういち</rt></ruby>",
+     "romaji": "Juuichi",
+     "es": "once",
+     "ex": "十一時です。",
+     "exEs": "Son las once.",
+     "note": "Del 11 al 19 se dice diez + número: 十二 (juuni), 十三 (juusan)…"
+    },
+    {
+     "id": "n5_a13",
+     "ja": "二十",
+     "furi": "<ruby>二十<rt>にじゅう</rt></ruby>",
+     "romaji": "Nijuu",
+     "es": "veinte",
+     "ex": "二十歳です。",
+     "exEs": "Tengo veinte años.",
+     "note": ""
+    },
+    {
+     "id": "n5_a14",
+     "ja": "百",
+     "furi": "<ruby>百<rt>ひゃく</rt></ruby>",
+     "romaji": "Hyaku",
+     "es": "cien",
+     "ex": "百円です。",
+     "exEs": "Son cien yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a15",
+     "ja": "千",
+     "furi": "<ruby>千<rt>せん</rt></ruby>",
+     "romaji": "Sen",
+     "es": "mil",
+     "ex": "千円です。",
+     "exEs": "Son mil yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a16",
+     "ja": "万",
+     "furi": "<ruby>万<rt>まん</rt></ruby>",
+     "romaji": "Man",
+     "es": "diez mil",
+     "ex": "一万円です。",
+     "exEs": "Son diez mil yenes.",
+     "note": "Se cuenta de diez mil en diez mil: 一万 = 10 000."
+    },
+    {
+     "id": "n5_a17",
+     "ja": "円",
+     "furi": "<ruby>円<rt>えん</rt></ruby>",
+     "romaji": "En",
+     "es": "yen",
+     "ex": "いくらですか。五百円です。",
+     "exEs": "¿Cuánto cuesta? Quinientos yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a18",
+     "ja": "いくら",
+     "furi": "",
+     "romaji": "Ikura",
+     "es": "¿cuánto cuesta?",
+     "ex": "これはいくらですか。",
+     "exEs": "¿Cuánto cuesta esto?",
+     "note": ""
+    },
+    {
+     "id": "n5_a19",
+     "ja": "いくつ",
+     "furi": "",
+     "romaji": "Ikutsu",
+     "es": "¿cuántos?",
+     "ex": "りんごはいくつありますか。",
+     "exEs": "¿Cuántas manzanas hay?",
+     "note": ""
+    },
+    {
+     "id": "n5_a20",
+     "ja": "何人",
+     "furi": "<ruby>何人<rt>なんにん</rt></ruby>",
+     "romaji": "Nannin",
+     "es": "¿cuántas personas?",
+     "ex": "何人ですか。",
+     "exEs": "¿Cuántas personas son?",
+     "note": ""
+    },
+    {
+     "id": "n5_a21",
+     "ja": "何時",
+     "furi": "<ruby>何時<rt>なんじ</rt></ruby>",
+     "romaji": "Nanji",
+     "es": "¿qué hora?",
+     "ex": "今、何時ですか。",
+     "exEs": "¿Qué hora es ahora?",
+     "note": ""
+    },
+    {
+     "id": "n5_a22",
+     "ja": "何歳",
+     "furi": "<ruby>何歳<rt>なんさい</rt></ruby>",
+     "romaji": "Nansai",
+     "es": "¿cuántos años?",
+     "ex": "何歳ですか。",
+     "exEs": "¿Cuántos años tiene?",
+     "note": ""
+    },
+    {
+     "id": "n5_a23",
+     "ja": "一つ",
+     "furi": "<ruby>一つ<rt>ひとつ</rt></ruby>",
+     "romaji": "Hitotsu",
+     "es": "un objeto (contador)",
+     "ex": "りんごを一つください。",
+     "exEs": "Deme una manzana.",
+     "note": "Del 1 al 9 los objetos se cuentan con la serie hitotsu, futatsu…"
+    },
+    {
+     "id": "n5_a24",
+     "ja": "二つ",
+     "furi": "<ruby>二つ<rt>ふたつ</rt></ruby>",
+     "romaji": "Futatsu",
+     "es": "dos objetos",
+     "ex": "ケーキを二つください。",
+     "exEs": "Deme dos pasteles.",
+     "note": ""
+    },
+    {
+     "id": "n5_a25",
+     "ja": "三つ",
+     "furi": "<ruby>三つ<rt>みっつ</rt></ruby>",
+     "romaji": "Mittsu",
+     "es": "tres objetos",
+     "ex": "卵を三つ買います。",
+     "exEs": "Compro tres huevos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a26",
+     "ja": "四つ",
+     "furi": "<ruby>四つ<rt>よっつ</rt></ruby>",
+     "romaji": "Yottsu",
+     "es": "cuatro objetos",
+     "ex": "四つで千円です。",
+     "exEs": "Cuatro cuestan mil yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a27",
+     "ja": "五つ",
+     "furi": "<ruby>五つ<rt>いつつ</rt></ruby>",
+     "romaji": "Itsutsu",
+     "es": "cinco objetos",
+     "ex": "五つください。",
+     "exEs": "Deme cinco.",
+     "note": ""
+    },
+    {
+     "id": "n5_a28",
+     "ja": "六つ",
+     "furi": "<ruby>六つ<rt>むっつ</rt></ruby>",
+     "romaji": "Muttsu",
+     "es": "seis objetos",
+     "ex": "六つあります。",
+     "exEs": "Hay seis.",
+     "note": ""
+    },
+    {
+     "id": "n5_a29",
+     "ja": "七つ",
+     "furi": "<ruby>七つ<rt>ななつ</rt></ruby>",
+     "romaji": "Nanatsu",
+     "es": "siete objetos",
+     "ex": "七つ食べました。",
+     "exEs": "Comí siete.",
+     "note": ""
+    },
+    {
+     "id": "n5_a30",
+     "ja": "八つ",
+     "furi": "<ruby>八つ<rt>やっつ</rt></ruby>",
+     "romaji": "Yattsu",
+     "es": "ocho objetos",
+     "ex": "八つ買いました。",
+     "exEs": "Compré ocho.",
+     "note": ""
+    },
+    {
+     "id": "n5_a31",
+     "ja": "九つ",
+     "furi": "<ruby>九つ<rt>ここのつ</rt></ruby>",
+     "romaji": "Kokonotsu",
+     "es": "nueve objetos",
+     "ex": "九つあります。",
+     "exEs": "Hay nueve.",
+     "note": ""
+    },
+    {
+     "id": "n5_a32",
+     "ja": "とお",
+     "furi": "",
+     "romaji": "Too",
+     "es": "diez objetos",
+     "ex": "とおください。",
+     "exEs": "Deme diez.",
+     "note": "Se escribe 十 pero en esta serie se lee too."
+    },
+    {
+     "id": "n5_a33",
+     "ja": "一人",
+     "furi": "<ruby>一人<rt>ひとり</rt></ruby>",
+     "romaji": "Hitori",
+     "es": "una persona",
+     "ex": "一人で行きます。",
+     "exEs": "Voy solo/a.",
+     "note": "También significa «solo/a»."
+    },
+    {
+     "id": "n5_a34",
+     "ja": "二人",
+     "furi": "<ruby>二人<rt>ふたり</rt></ruby>",
+     "romaji": "Futari",
+     "es": "dos personas",
+     "ex": "二人で食べます。",
+     "exEs": "Comemos entre los dos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a35",
+     "ja": "三人",
+     "furi": "<ruby>三人<rt>さんにん</rt></ruby>",
+     "romaji": "Sannin",
+     "es": "tres personas",
+     "ex": "家族は三人です。",
+     "exEs": "Mi familia es de tres.",
+     "note": "Desde tres se usa número + 人 (nin)."
+    },
+    {
+     "id": "n5_a36",
+     "ja": "〜個",
+     "furi": "〜<ruby>個<rt>こ</rt></ruby>",
+     "romaji": "Ko",
+     "es": "contador de objetos pequeños",
+     "ex": "りんごを三個買いました。",
+     "exEs": "Compré tres manzanas.",
+     "note": ""
+    },
+    {
+     "id": "n5_a37",
+     "ja": "〜枚",
+     "furi": "〜<ruby>枚<rt>まい</rt></ruby>",
+     "romaji": "Mai",
+     "es": "contador de cosas planas",
+     "ex": "切手を二枚ください。",
+     "exEs": "Deme dos sellos.",
+     "note": "Para papel, camisetas, platos, entradas…"
+    },
+    {
+     "id": "n5_a38",
+     "ja": "〜冊",
+     "furi": "〜<ruby>冊<rt>さつ</rt></ruby>",
+     "romaji": "Satsu",
+     "es": "contador de libros",
+     "ex": "本を三冊借りました。",
+     "exEs": "Pedí prestados tres libros.",
+     "note": ""
+    },
+    {
+     "id": "n5_a39",
+     "ja": "〜本",
+     "furi": "〜<ruby>本<rt>ほん</rt></ruby>",
+     "romaji": "Hon",
+     "es": "contador de cosas largas",
+     "ex": "ペンを二本買いました。",
+     "exEs": "Compré dos bolígrafos.",
+     "note": "Botellas, lápices, paraguas, árboles… Cambia a pon/bon según el número."
+    },
+    {
+     "id": "n5_a40",
+     "ja": "〜台",
+     "furi": "〜<ruby>台<rt>だい</rt></ruby>",
+     "romaji": "Dai",
+     "es": "contador de máquinas",
+     "ex": "車が一台あります。",
+     "exEs": "Hay un coche.",
+     "note": "Coches, ordenadores, bicicletas."
+    },
+    {
+     "id": "n5_a41",
+     "ja": "〜匹",
+     "furi": "〜<ruby>匹<rt>ひき</rt></ruby>",
+     "romaji": "Hiki",
+     "es": "contador de animales pequeños",
+     "ex": "猫が二匹います。",
+     "exEs": "Hay dos gatos.",
+     "note": "Cambia a piki/biki según el número."
+    },
+    {
+     "id": "n5_a42",
+     "ja": "〜杯",
+     "furi": "〜<ruby>杯<rt>はい</rt></ruby>",
+     "romaji": "Hai",
+     "es": "contador de vasos o tazas",
+     "ex": "水を一杯ください。",
+     "exEs": "Deme un vaso de agua.",
+     "note": ""
+    },
+    {
+     "id": "n5_a43",
+     "ja": "〜歳",
+     "furi": "〜<ruby>歳<rt>さい</rt></ruby>",
+     "romaji": "Sai",
+     "es": "años de edad",
+     "ex": "十八歳です。",
+     "exEs": "Tengo dieciocho años.",
+     "note": ""
+    },
+    {
+     "id": "n5_a44",
+     "ja": "〜回",
+     "furi": "〜<ruby>回<rt>かい</rt></ruby>",
+     "romaji": "Kai",
+     "es": "veces",
+     "ex": "一日に三回食べます。",
+     "exEs": "Como tres veces al día.",
+     "note": ""
+    },
+    {
+     "id": "n5_a45",
+     "ja": "〜階",
+     "furi": "〜<ruby>階<rt>かい</rt></ruby>",
+     "romaji": "Kai",
+     "es": "piso (planta)",
+     "ex": "二階にあります。",
+     "exEs": "Está en el segundo piso.",
+     "note": ""
+    },
+    {
+     "id": "n5_a46",
+     "ja": "〜番",
+     "furi": "〜<ruby>番<rt>ばん</rt></ruby>",
+     "romaji": "Ban",
+     "es": "número (orden)",
+     "ex": "一番です。",
+     "exEs": "Es el número uno.",
+     "note": ""
+    },
+    {
+     "id": "n5_a47",
+     "ja": "半分",
+     "furi": "<ruby>半分<rt>はんぶん</rt></ruby>",
+     "romaji": "Hanbun",
+     "es": "mitad",
+     "ex": "半分ください。",
+     "exEs": "Deme la mitad.",
+     "note": ""
+    },
+    {
+     "id": "n5_a48",
+     "ja": "全部",
+     "furi": "<ruby>全部<rt>ぜんぶ</rt></ruby>",
+     "romaji": "Zenbu",
+     "es": "todo",
+     "ex": "全部で千円です。",
+     "exEs": "En total son mil yenes.",
+     "note": ""
+    },
+    {
+     "id": "n5_a49",
+     "ja": "少し",
+     "furi": "<ruby>少し<rt>すこし</rt></ruby>",
+     "romaji": "Sukoshi",
+     "es": "un poco",
+     "ex": "少し待ってください。",
+     "exEs": "Espere un poco, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_a50",
+     "ja": "たくさん",
+     "furi": "",
+     "romaji": "Takusan",
+     "es": "mucho",
+     "ex": "たくさん食べました。",
+     "exEs": "Comí mucho.",
+     "note": ""
+    },
+    {
+     "id": "n5_a51",
+     "ja": "多い",
+     "furi": "<ruby>多い<rt>おおい</rt></ruby>",
+     "romaji": "Ooi",
+     "es": "haber mucho",
+     "ex": "人が多いです。",
+     "exEs": "Hay mucha gente.",
+     "note": ""
+    },
+    {
+     "id": "n5_a52",
+     "ja": "少ない",
+     "furi": "<ruby>少ない<rt>すくない</rt></ruby>",
+     "romaji": "Sukunai",
+     "es": "haber poco",
+     "ex": "お金が少ないです。",
+     "exEs": "Tengo poco dinero.",
+     "note": ""
+    },
+    {
+     "id": "n5_a53",
+     "ja": "一番",
+     "furi": "<ruby>一番<rt>いちばん</rt></ruby>",
+     "romaji": "Ichiban",
+     "es": "el más, número uno",
+     "ex": "これが一番好きです。",
+     "exEs": "Este es el que más me gusta.",
+     "note": ""
+    },
+    {
+     "id": "n5_a54",
+     "ja": "初めて",
+     "furi": "<ruby>初めて<rt>はじめて</rt></ruby>",
+     "romaji": "Hajimete",
+     "es": "por primera vez",
+     "ex": "初めて日本に来ました。",
+     "exEs": "Vine a Japón por primera vez.",
+     "note": ""
+    },
+    {
+     "id": "n5_a55",
+     "ja": "同じ",
+     "furi": "<ruby>同じ<rt>おなじ</rt></ruby>",
+     "romaji": "Onaji",
+     "es": "mismo, igual",
+     "ex": "私と同じです。",
+     "exEs": "Es igual que el mío.",
+     "note": ""
+    },
+    {
+     "id": "n5_a56",
+     "ja": "一緒",
+     "furi": "<ruby>一緒<rt>いっしょ</rt></ruby>",
+     "romaji": "Issho",
+     "es": "juntos",
+     "ex": "一緒に行きましょう。",
+     "exEs": "Vayamos juntos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a57",
+     "ja": "全然",
+     "furi": "<ruby>全然<rt>ぜんぜん</rt></ruby>",
+     "romaji": "Zenzen",
+     "es": "para nada (con negación)",
+     "ex": "全然分かりません。",
+     "exEs": "No entiendo nada.",
+     "note": "Va con una forma negativa."
+    },
+    {
+     "id": "n5_a58",
+     "ja": "足す",
+     "furi": "<ruby>足す<rt>たす</rt></ruby>",
+     "romaji": "Tasu",
+     "es": "sumar",
+     "ex": "二に三を足します。",
+     "exEs": "Sumo tres a dos.",
+     "note": ""
+    },
+    {
+     "id": "n5_a59",
+     "ja": "引く",
+     "furi": "<ruby>引く<rt>ひく</rt></ruby>",
+     "romaji": "Hiku",
+     "es": "restar",
+     "ex": "五から二を引きます。",
+     "exEs": "Resto dos de cinco.",
+     "note": ""
+    },
+    {
+     "id": "n5_a60",
+     "ja": "二十歳",
+     "furi": "<ruby>二十歳<rt>はたち</rt></ruby>",
+     "romaji": "Hatachi",
+     "es": "veinte años de edad",
+     "ex": "はたちになりました。",
+     "exEs": "Cumplí veinte años.",
+     "note": "Lectura especial: no se dice nijuusai."
+    },
+    {
+     "id": "n5_a61",
+     "ja": "三百",
+     "furi": "<ruby>三百<rt>さんびゃく</rt></ruby>",
+     "romaji": "Sanbyaku",
+     "es": "trescientos",
+     "ex": "三百円です。",
+     "exEs": "Son trescientos yenes.",
+     "note": "Irregular: hyaku suena byaku."
+    },
+    {
+     "id": "n5_a62",
+     "ja": "六百",
+     "furi": "<ruby>六百<rt>ろっぴゃく</rt></ruby>",
+     "romaji": "Roppyaku",
+     "es": "seiscientos",
+     "ex": "六百円です。",
+     "exEs": "Son seiscientos yenes.",
+     "note": "Irregular: roppyaku."
+    },
+    {
+     "id": "n5_a63",
+     "ja": "八百",
+     "furi": "<ruby>八百<rt>はっぴゃく</rt></ruby>",
+     "romaji": "Happyaku",
+     "es": "ochocientos",
+     "ex": "八百円です。",
+     "exEs": "Son ochocientos yenes.",
+     "note": "Irregular: happyaku."
+    },
+    {
+     "id": "n5_a64",
+     "ja": "三千",
+     "furi": "<ruby>三千<rt>さんぜん</rt></ruby>",
+     "romaji": "Sanzen",
+     "es": "tres mil",
+     "ex": "三千円です。",
+     "exEs": "Son tres mil yenes.",
+     "note": "Irregular: sen suena zen."
+    }
+   ]
+  },
+  {
+   "name": "Tiempo y calendario",
+   "items": [
+    {
+     "id": "n5_b1",
+     "ja": "今日",
+     "furi": "<ruby>今日<rt>きょう</rt></ruby>",
+     "romaji": "Kyou",
+     "es": "hoy",
+     "ex": "今日は暑いです。",
+     "exEs": "Hoy hace calor.",
+     "note": ""
+    },
+    {
+     "id": "n5_b2",
+     "ja": "明日",
+     "furi": "<ruby>明日<rt>あした</rt></ruby>",
+     "romaji": "Ashita",
+     "es": "mañana (día siguiente)",
+     "ex": "明日学校へ行きます。",
+     "exEs": "Mañana voy a la escuela.",
+     "note": ""
+    },
+    {
+     "id": "n5_b3",
+     "ja": "昨日",
+     "furi": "<ruby>昨日<rt>きのう</rt></ruby>",
+     "romaji": "Kinou",
+     "es": "ayer",
+     "ex": "昨日、映画を見ました。",
+     "exEs": "Ayer vi una película.",
+     "note": ""
+    },
+    {
+     "id": "n5_b4",
+     "ja": "今",
+     "furi": "<ruby>今<rt>いま</rt></ruby>",
+     "romaji": "Ima",
+     "es": "ahora",
+     "ex": "今、忙しいです。",
+     "exEs": "Ahora estoy ocupado/a.",
+     "note": ""
+    },
+    {
+     "id": "n5_b5",
+     "ja": "今朝",
+     "furi": "<ruby>今朝<rt>けさ</rt></ruby>",
+     "romaji": "Kesa",
+     "es": "esta mañana",
+     "ex": "今朝、早く起きました。",
+     "exEs": "Esta mañana me levanté temprano.",
+     "note": ""
+    },
+    {
+     "id": "n5_b6",
+     "ja": "今晩",
+     "furi": "<ruby>今晩<rt>こんばん</rt></ruby>",
+     "romaji": "Konban",
+     "es": "esta noche",
+     "ex": "今晩、友達に会います。",
+     "exEs": "Esta noche veo a un amigo.",
+     "note": ""
+    },
+    {
+     "id": "n5_b7",
+     "ja": "毎日",
+     "furi": "<ruby>毎日<rt>まいにち</rt></ruby>",
+     "romaji": "Mainichi",
+     "es": "todos los días",
+     "ex": "毎日勉強します。",
+     "exEs": "Estudio todos los días.",
+     "note": ""
+    },
+    {
+     "id": "n5_b8",
+     "ja": "毎朝",
+     "furi": "<ruby>毎朝<rt>まいあさ</rt></ruby>",
+     "romaji": "Maiasa",
+     "es": "todas las mañanas",
+     "ex": "毎朝コーヒーを飲みます。",
+     "exEs": "Todas las mañanas tomo café.",
+     "note": ""
+    },
+    {
+     "id": "n5_b9",
+     "ja": "毎週",
+     "furi": "<ruby>毎週<rt>まいしゅう</rt></ruby>",
+     "romaji": "Maishuu",
+     "es": "cada semana",
+     "ex": "毎週日曜日に買い物します。",
+     "exEs": "Cada domingo voy de compras.",
+     "note": ""
+    },
+    {
+     "id": "n5_b10",
+     "ja": "毎月",
+     "furi": "<ruby>毎月<rt>まいつき</rt></ruby>",
+     "romaji": "Maitsuki",
+     "es": "cada mes",
+     "ex": "毎月、本を買います。",
+     "exEs": "Cada mes compro libros.",
+     "note": ""
+    },
+    {
+     "id": "n5_b11",
+     "ja": "毎年",
+     "furi": "<ruby>毎年<rt>まいとし</rt></ruby>",
+     "romaji": "Maitoshi",
+     "es": "cada año",
+     "ex": "毎年、日本へ行きます。",
+     "exEs": "Cada año voy a Japón.",
+     "note": ""
+    },
+    {
+     "id": "n5_b12",
+     "ja": "朝",
+     "furi": "<ruby>朝<rt>あさ</rt></ruby>",
+     "romaji": "Asa",
+     "es": "mañana (parte del día)",
+     "ex": "朝ご飯を食べます。",
+     "exEs": "Desayuno.",
+     "note": ""
+    },
+    {
+     "id": "n5_b13",
+     "ja": "昼",
+     "furi": "<ruby>昼<rt>ひる</rt></ruby>",
+     "romaji": "Hiru",
+     "es": "mediodía",
+     "ex": "昼に会いましょう。",
+     "exEs": "Veámonos al mediodía.",
+     "note": ""
+    },
+    {
+     "id": "n5_b14",
+     "ja": "夜",
+     "furi": "<ruby>夜<rt>よる</rt></ruby>",
+     "romaji": "Yoru",
+     "es": "noche",
+     "ex": "夜は静かです。",
+     "exEs": "De noche hay silencio.",
+     "note": ""
+    },
+    {
+     "id": "n5_b15",
+     "ja": "午前",
+     "furi": "<ruby>午前<rt>ごぜん</rt></ruby>",
+     "romaji": "Gozen",
+     "es": "a. m.",
+     "ex": "午前九時に始まります。",
+     "exEs": "Empieza a las nueve de la mañana.",
+     "note": ""
+    },
+    {
+     "id": "n5_b16",
+     "ja": "午後",
+     "furi": "<ruby>午後<rt>ごご</rt></ruby>",
+     "romaji": "Gogo",
+     "es": "p. m.",
+     "ex": "午後は休みです。",
+     "exEs": "Por la tarde descanso.",
+     "note": ""
+    },
+    {
+     "id": "n5_b17",
+     "ja": "時",
+     "furi": "<ruby>時<rt>じ</rt></ruby>",
+     "romaji": "Ji",
+     "es": "hora (en punto)",
+     "ex": "三時です。",
+     "exEs": "Son las tres.",
+     "note": "Se usa tras el número: 一時, 二時…"
+    },
+    {
+     "id": "n5_b18",
+     "ja": "分",
+     "furi": "<ruby>分<rt>ふん</rt></ruby>",
+     "romaji": "Fun",
+     "es": "minuto",
+     "ex": "五分待ちます。",
+     "exEs": "Espero cinco minutos.",
+     "note": "Cambia a pun/fun según el número: 一分 (ippun), 五分 (gofun)."
+    },
+    {
+     "id": "n5_b19",
+     "ja": "時間",
+     "furi": "<ruby>時間<rt>じかん</rt></ruby>",
+     "romaji": "Jikan",
+     "es": "tiempo, duración",
+     "ex": "時間がありません。",
+     "exEs": "No tengo tiempo.",
+     "note": ""
+    },
+    {
+     "id": "n5_b20",
+     "ja": "半",
+     "furi": "<ruby>半<rt>はん</rt></ruby>",
+     "romaji": "Han",
+     "es": "y media",
+     "ex": "三時半です。",
+     "exEs": "Son las tres y media.",
+     "note": ""
+    },
+    {
+     "id": "n5_b21",
+     "ja": "週",
+     "furi": "<ruby>週<rt>しゅう</rt></ruby>",
+     "romaji": "Shuu",
+     "es": "semana",
+     "ex": "一週間休みます。",
+     "exEs": "Descanso una semana.",
+     "note": ""
+    },
+    {
+     "id": "n5_b22",
+     "ja": "今週",
+     "furi": "<ruby>今週<rt>こんしゅう</rt></ruby>",
+     "romaji": "Konshuu",
+     "es": "esta semana",
+     "ex": "今週は忙しいです。",
+     "exEs": "Esta semana estoy ocupado/a.",
+     "note": ""
+    },
+    {
+     "id": "n5_b23",
+     "ja": "来週",
+     "furi": "<ruby>来週<rt>らいしゅう</rt></ruby>",
+     "romaji": "Raishuu",
+     "es": "la semana próxima",
+     "ex": "来週、旅行します。",
+     "exEs": "La semana próxima viajo.",
+     "note": ""
+    },
+    {
+     "id": "n5_b24",
+     "ja": "先週",
+     "furi": "<ruby>先週<rt>せんしゅう</rt></ruby>",
+     "romaji": "Senshuu",
+     "es": "la semana pasada",
+     "ex": "先週、京都へ行きました。",
+     "exEs": "La semana pasada fui a Kioto.",
+     "note": ""
+    },
+    {
+     "id": "n5_b25",
+     "ja": "今月",
+     "furi": "<ruby>今月<rt>こんげつ</rt></ruby>",
+     "romaji": "Kongetsu",
+     "es": "este mes",
+     "ex": "今月は雨が多いです。",
+     "exEs": "Este mes llueve mucho.",
+     "note": ""
+    },
+    {
+     "id": "n5_b26",
+     "ja": "来月",
+     "furi": "<ruby>来月<rt>らいげつ</rt></ruby>",
+     "romaji": "Raigetsu",
+     "es": "el mes próximo",
+     "ex": "来月、日本へ行きます。",
+     "exEs": "El mes próximo voy a Japón.",
+     "note": ""
+    },
+    {
+     "id": "n5_b27",
+     "ja": "先月",
+     "furi": "<ruby>先月<rt>せんげつ</rt></ruby>",
+     "romaji": "Sengetsu",
+     "es": "el mes pasado",
+     "ex": "先月、引っ越しました。",
+     "exEs": "El mes pasado me mudé.",
+     "note": ""
+    },
+    {
+     "id": "n5_b28",
+     "ja": "今年",
+     "furi": "<ruby>今年<rt>ことし</rt></ruby>",
+     "romaji": "Kotoshi",
+     "es": "este año",
+     "ex": "今年は二十歳です。",
+     "exEs": "Este año cumplo veinte.",
+     "note": ""
+    },
+    {
+     "id": "n5_b29",
+     "ja": "来年",
+     "furi": "<ruby>来年<rt>らいねん</rt></ruby>",
+     "romaji": "Rainen",
+     "es": "el año próximo",
+     "ex": "来年、卒業します。",
+     "exEs": "El año próximo me gradúo.",
+     "note": ""
+    },
+    {
+     "id": "n5_b30",
+     "ja": "去年",
+     "furi": "<ruby>去年<rt>きょねん</rt></ruby>",
+     "romaji": "Kyonen",
+     "es": "el año pasado",
+     "ex": "去年、結婚しました。",
+     "exEs": "El año pasado me casé.",
+     "note": ""
+    },
+    {
+     "id": "n5_b31",
+     "ja": "月曜日",
+     "furi": "<ruby>月曜日<rt>げつようび</rt></ruby>",
+     "romaji": "Getsuyoubi",
+     "es": "lunes",
+     "ex": "月曜日は忙しいです。",
+     "exEs": "Los lunes estoy ocupado/a.",
+     "note": ""
+    },
+    {
+     "id": "n5_b32",
+     "ja": "火曜日",
+     "furi": "<ruby>火曜日<rt>かようび</rt></ruby>",
+     "romaji": "Kayoubi",
+     "es": "martes",
+     "ex": "火曜日に会いましょう。",
+     "exEs": "Veámonos el martes.",
+     "note": ""
+    },
+    {
+     "id": "n5_b33",
+     "ja": "水曜日",
+     "furi": "<ruby>水曜日<rt>すいようび</rt></ruby>",
+     "romaji": "Suiyoubi",
+     "es": "miércoles",
+     "ex": "水曜日は休みです。",
+     "exEs": "El miércoles descanso.",
+     "note": ""
+    },
+    {
+     "id": "n5_b34",
+     "ja": "木曜日",
+     "furi": "<ruby>木曜日<rt>もくようび</rt></ruby>",
+     "romaji": "Mokuyoubi",
+     "es": "jueves",
+     "ex": "木曜日に試験があります。",
+     "exEs": "El jueves hay examen.",
+     "note": ""
+    },
+    {
+     "id": "n5_b35",
+     "ja": "金曜日",
+     "furi": "<ruby>金曜日<rt>きんようび</rt></ruby>",
+     "romaji": "Kinyoubi",
+     "es": "viernes",
+     "ex": "金曜日の夜、飲みます。",
+     "exEs": "El viernes por la noche bebo algo.",
+     "note": ""
+    },
+    {
+     "id": "n5_b36",
+     "ja": "土曜日",
+     "furi": "<ruby>土曜日<rt>どようび</rt></ruby>",
+     "romaji": "Doyoubi",
+     "es": "sábado",
+     "ex": "土曜日は暇です。",
+     "exEs": "El sábado estoy libre.",
+     "note": ""
+    },
+    {
+     "id": "n5_b37",
+     "ja": "日曜日",
+     "furi": "<ruby>日曜日<rt>にちようび</rt></ruby>",
+     "romaji": "Nichiyoubi",
+     "es": "domingo",
+     "ex": "日曜日に買い物します。",
+     "exEs": "El domingo voy de compras.",
+     "note": ""
+    },
+    {
+     "id": "n5_b38",
+     "ja": "何曜日",
+     "furi": "<ruby>何曜日<rt>なんようび</rt></ruby>",
+     "romaji": "Nanyoubi",
+     "es": "¿qué día de la semana?",
+     "ex": "今日は何曜日ですか。",
+     "exEs": "¿Qué día es hoy?",
+     "note": ""
+    },
+    {
+     "id": "n5_b39",
+     "ja": "日",
+     "furi": "<ruby>日<rt>ひ</rt></ruby>",
+     "romaji": "Hi",
+     "es": "día, sol",
+     "ex": "いい日ですね。",
+     "exEs": "Es un buen día, ¿verdad?",
+     "note": ""
+    },
+    {
+     "id": "n5_b40",
+     "ja": "月",
+     "furi": "<ruby>月<rt>つき</rt></ruby>",
+     "romaji": "Tsuki",
+     "es": "luna, mes",
+     "ex": "月がきれいです。",
+     "exEs": "La luna es bonita.",
+     "note": ""
+    },
+    {
+     "id": "n5_b41",
+     "ja": "一月",
+     "furi": "<ruby>一月<rt>いちがつ</rt></ruby>",
+     "romaji": "Ichigatsu",
+     "es": "enero",
+     "ex": "一月は寒いです。",
+     "exEs": "Enero es frío.",
+     "note": "Los meses se forman con número + 月: 二月 (nigatsu), 三月 (sangatsu)…"
+    },
+    {
+     "id": "n5_b42",
+     "ja": "四月",
+     "furi": "<ruby>四月<rt>しがつ</rt></ruby>",
+     "romaji": "Shigatsu",
+     "es": "abril",
+     "ex": "四月に学校が始まります。",
+     "exEs": "Las clases empiezan en abril.",
+     "note": "Se lee shigatsu, no yongatsu."
+    },
+    {
+     "id": "n5_b43",
+     "ja": "七月",
+     "furi": "<ruby>七月<rt>しちがつ</rt></ruby>",
+     "romaji": "Shichigatsu",
+     "es": "julio",
+     "ex": "七月は暑いです。",
+     "exEs": "Julio es caluroso.",
+     "note": "Se lee shichigatsu."
+    },
+    {
+     "id": "n5_b44",
+     "ja": "九月",
+     "furi": "<ruby>九月<rt>くがつ</rt></ruby>",
+     "romaji": "Kugatsu",
+     "es": "septiembre",
+     "ex": "九月は涼しいです。",
+     "exEs": "Septiembre es fresco.",
+     "note": "Se lee kugatsu, no kyuugatsu."
+    },
+    {
+     "id": "n5_b45",
+     "ja": "十二月",
+     "furi": "<ruby>十二月<rt>じゅうにがつ</rt></ruby>",
+     "romaji": "Juunigatsu",
+     "es": "diciembre",
+     "ex": "十二月は寒いです。",
+     "exEs": "Diciembre es frío.",
+     "note": ""
+    },
+    {
+     "id": "n5_b46",
+     "ja": "何月",
+     "furi": "<ruby>何月<rt>なんがつ</rt></ruby>",
+     "romaji": "Nangatsu",
+     "es": "¿qué mes?",
+     "ex": "何月に行きますか。",
+     "exEs": "¿En qué mes vas?",
+     "note": ""
+    },
+    {
+     "id": "n5_b47",
+     "ja": "何日",
+     "furi": "<ruby>何日<rt>なんにち</rt></ruby>",
+     "romaji": "Nannichi",
+     "es": "¿qué día del mes?",
+     "ex": "今日は何日ですか。",
+     "exEs": "¿Qué fecha es hoy?",
+     "note": ""
+    },
+    {
+     "id": "n5_b48",
+     "ja": "一日",
+     "furi": "<ruby>一日<rt>ついたち</rt></ruby>",
+     "romaji": "Tsuitachi",
+     "es": "primer día del mes",
+     "ex": "一日に会いましょう。",
+     "exEs": "Veámonos el día uno.",
+     "note": "Lectura especial; los días 1–10 son irregulares."
+    },
+    {
+     "id": "n5_b49",
+     "ja": "二日",
+     "furi": "<ruby>二日<rt>ふつか</rt></ruby>",
+     "romaji": "Futsuka",
+     "es": "día dos",
+     "ex": "二日は休みです。",
+     "exEs": "El día dos descanso.",
+     "note": ""
+    },
+    {
+     "id": "n5_b50",
+     "ja": "三日",
+     "furi": "<ruby>三日<rt>みっか</rt></ruby>",
+     "romaji": "Mikka",
+     "es": "día tres",
+     "ex": "三日に行きます。",
+     "exEs": "Voy el día tres.",
+     "note": ""
+    },
+    {
+     "id": "n5_b51",
+     "ja": "四日",
+     "furi": "<ruby>四日<rt>よっか</rt></ruby>",
+     "romaji": "Yokka",
+     "es": "día cuatro",
+     "ex": "四日に帰ります。",
+     "exEs": "Vuelvo el día cuatro.",
+     "note": ""
+    },
+    {
+     "id": "n5_b52",
+     "ja": "五日",
+     "furi": "<ruby>五日<rt>いつか</rt></ruby>",
+     "romaji": "Itsuka",
+     "es": "día cinco",
+     "ex": "五日は雨でした。",
+     "exEs": "El día cinco llovió.",
+     "note": ""
+    },
+    {
+     "id": "n5_b53",
+     "ja": "十日",
+     "furi": "<ruby>十日<rt>とおか</rt></ruby>",
+     "romaji": "Tooka",
+     "es": "día diez",
+     "ex": "十日に会います。",
+     "exEs": "Nos vemos el día diez.",
+     "note": ""
+    },
+    {
+     "id": "n5_b54",
+     "ja": "二十日",
+     "furi": "<ruby>二十日<rt>はつか</rt></ruby>",
+     "romaji": "Hatsuka",
+     "es": "día veinte",
+     "ex": "二十日は私の誕生日です。",
+     "exEs": "El veinte es mi cumpleaños.",
+     "note": ""
+    },
+    {
+     "id": "n5_b55",
+     "ja": "誕生日",
+     "furi": "<ruby>誕生日<rt>たんじょうび</rt></ruby>",
+     "romaji": "Tanjoubi",
+     "es": "cumpleaños",
+     "ex": "誕生日おめでとう。",
+     "exEs": "¡Feliz cumpleaños!",
+     "note": ""
+    },
+    {
+     "id": "n5_b56",
+     "ja": "休み",
+     "furi": "<ruby>休み<rt>やすみ</rt></ruby>",
+     "romaji": "Yasumi",
+     "es": "descanso, vacaciones",
+     "ex": "明日は休みです。",
+     "exEs": "Mañana es día libre.",
+     "note": ""
+    },
+    {
+     "id": "n5_b57",
+     "ja": "春",
+     "furi": "<ruby>春<rt>はる</rt></ruby>",
+     "romaji": "Haru",
+     "es": "primavera",
+     "ex": "春は暖かいです。",
+     "exEs": "La primavera es cálida.",
+     "note": ""
+    },
+    {
+     "id": "n5_b58",
+     "ja": "夏",
+     "furi": "<ruby>夏<rt>なつ</rt></ruby>",
+     "romaji": "Natsu",
+     "es": "verano",
+     "ex": "夏は暑いです。",
+     "exEs": "El verano es caluroso.",
+     "note": ""
+    },
+    {
+     "id": "n5_b59",
+     "ja": "秋",
+     "furi": "<ruby>秋<rt>あき</rt></ruby>",
+     "romaji": "Aki",
+     "es": "otoño",
+     "ex": "秋は涼しいです。",
+     "exEs": "El otoño es fresco.",
+     "note": ""
+    },
+    {
+     "id": "n5_b60",
+     "ja": "冬",
+     "furi": "<ruby>冬<rt>ふゆ</rt></ruby>",
+     "romaji": "Fuyu",
+     "es": "invierno",
+     "ex": "冬は寒いです。",
+     "exEs": "El invierno es frío.",
+     "note": ""
+    },
+    {
+     "id": "n5_b61",
+     "ja": "いつ",
+     "furi": "",
+     "romaji": "Itsu",
+     "es": "¿cuándo?",
+     "ex": "いつ行きますか。",
+     "exEs": "¿Cuándo vas?",
+     "note": ""
+    },
+    {
+     "id": "n5_b62",
+     "ja": "もう",
+     "furi": "",
+     "romaji": "Mou",
+     "es": "ya",
+     "ex": "もう食べました。",
+     "exEs": "Ya comí.",
+     "note": ""
+    },
+    {
+     "id": "n5_b63",
+     "ja": "まだ",
+     "furi": "",
+     "romaji": "Mada",
+     "es": "todavía",
+     "ex": "まだ食べていません。",
+     "exEs": "Todavía no he comido.",
+     "note": ""
+    },
+    {
+     "id": "n5_b64",
+     "ja": "時々",
+     "furi": "<ruby>時々<rt>ときどき</rt></ruby>",
+     "romaji": "Tokidoki",
+     "es": "a veces",
+     "ex": "時々、映画を見ます。",
+     "exEs": "A veces veo películas.",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Verbos de cada día",
+   "items": [
+    {
+     "id": "n5_c1",
+     "ja": "起きる",
+     "furi": "<ruby>起きる<rt>おきる</rt></ruby>",
+     "romaji": "Okiru",
+     "es": "levantarse, despertarse",
+     "ex": "六時に起きます。",
+     "exEs": "Me levanto a las seis.",
+     "note": "Verbo ru (grupo 2): okimasu."
+    },
+    {
+     "id": "n5_c2",
+     "ja": "寝る",
+     "furi": "<ruby>寝る<rt>ねる</rt></ruby>",
+     "romaji": "Neru",
+     "es": "dormir, acostarse",
+     "ex": "十一時に寝ます。",
+     "exEs": "Me acuesto a las once.",
+     "note": ""
+    },
+    {
+     "id": "n5_c3",
+     "ja": "会う",
+     "furi": "<ruby>会う<rt>あう</rt></ruby>",
+     "romaji": "Au",
+     "es": "encontrarse con",
+     "ex": "友達に会います。",
+     "exEs": "Me encuentro con un amigo.",
+     "note": "Se usa con に: 友達に会う."
+    },
+    {
+     "id": "n5_c4",
+     "ja": "開ける",
+     "furi": "<ruby>開ける<rt>あける</rt></ruby>",
+     "romaji": "Akeru",
+     "es": "abrir (algo)",
+     "ex": "窓を開けます。",
+     "exEs": "Abro la ventana.",
+     "note": ""
+    },
+    {
+     "id": "n5_c5",
+     "ja": "閉める",
+     "furi": "<ruby>閉める<rt>しめる</rt></ruby>",
+     "romaji": "Shimeru",
+     "es": "cerrar (algo)",
+     "ex": "ドアを閉めてください。",
+     "exEs": "Cierre la puerta, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_c6",
+     "ja": "教える",
+     "furi": "<ruby>教える<rt>おしえる</rt></ruby>",
+     "romaji": "Oshieru",
+     "es": "enseñar, decir",
+     "ex": "日本語を教えます。",
+     "exEs": "Enseño japonés.",
+     "note": ""
+    },
+    {
+     "id": "n5_c7",
+     "ja": "習う",
+     "furi": "<ruby>習う<rt>ならう</rt></ruby>",
+     "romaji": "Narau",
+     "es": "aprender (de alguien)",
+     "ex": "ピアノを習っています。",
+     "exEs": "Estoy aprendiendo piano.",
+     "note": ""
+    },
+    {
+     "id": "n5_c8",
+     "ja": "勉強する",
+     "furi": "<ruby>勉強する<rt>べんきょうする</rt></ruby>",
+     "romaji": "Benkyou suru",
+     "es": "estudiar",
+     "ex": "毎日日本語を勉強します。",
+     "exEs": "Estudio japonés todos los días.",
+     "note": ""
+    },
+    {
+     "id": "n5_c9",
+     "ja": "働く",
+     "furi": "<ruby>働く<rt>はたらく</rt></ruby>",
+     "romaji": "Hataraku",
+     "es": "trabajar",
+     "ex": "銀行で働いています。",
+     "exEs": "Trabajo en un banco.",
+     "note": ""
+    },
+    {
+     "id": "n5_c10",
+     "ja": "休む",
+     "furi": "<ruby>休む<rt>やすむ</rt></ruby>",
+     "romaji": "Yasumu",
+     "es": "descansar, faltar",
+     "ex": "今日は会社を休みます。",
+     "exEs": "Hoy falto al trabajo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c11",
+     "ja": "話す",
+     "furi": "<ruby>話す<rt>はなす</rt></ruby>",
+     "romaji": "Hanasu",
+     "es": "hablar",
+     "ex": "日本語を話します。",
+     "exEs": "Hablo japonés.",
+     "note": ""
+    },
+    {
+     "id": "n5_c12",
+     "ja": "言う",
+     "furi": "<ruby>言う<rt>いう</rt></ruby>",
+     "romaji": "Iu",
+     "es": "decir",
+     "ex": "何と言いましたか。",
+     "exEs": "¿Qué dijo?",
+     "note": ""
+    },
+    {
+     "id": "n5_c13",
+     "ja": "思う",
+     "furi": "<ruby>思う<rt>おもう</rt></ruby>",
+     "romaji": "Omou",
+     "es": "pensar, creer",
+     "ex": "いいと思います。",
+     "exEs": "Creo que está bien.",
+     "note": ""
+    },
+    {
+     "id": "n5_c14",
+     "ja": "知る",
+     "furi": "<ruby>知る<rt>しる</rt></ruby>",
+     "romaji": "Shiru",
+     "es": "saber, conocer",
+     "ex": "名前を知っています。",
+     "exEs": "Sé su nombre.",
+     "note": "Se usa 知っています (lo sé) y 知りません (no lo sé)."
+    },
+    {
+     "id": "n5_c15",
+     "ja": "分かる",
+     "furi": "<ruby>分かる<rt>わかる</rt></ruby>",
+     "romaji": "Wakaru",
+     "es": "entender",
+     "ex": "日本語が分かります。",
+     "exEs": "Entiendo japonés.",
+     "note": ""
+    },
+    {
+     "id": "n5_c16",
+     "ja": "使う",
+     "furi": "<ruby>使う<rt>つかう</rt></ruby>",
+     "romaji": "Tsukau",
+     "es": "usar",
+     "ex": "ペンを使います。",
+     "exEs": "Uso un bolígrafo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c17",
+     "ja": "作る",
+     "furi": "<ruby>作る<rt>つくる</rt></ruby>",
+     "romaji": "Tsukuru",
+     "es": "hacer, preparar",
+     "ex": "晩ご飯を作ります。",
+     "exEs": "Preparo la cena.",
+     "note": ""
+    },
+    {
+     "id": "n5_c18",
+     "ja": "待つ",
+     "furi": "<ruby>待つ<rt>まつ</rt></ruby>",
+     "romaji": "Matsu",
+     "es": "esperar",
+     "ex": "駅で待ちます。",
+     "exEs": "Espero en la estación.",
+     "note": ""
+    },
+    {
+     "id": "n5_c19",
+     "ja": "持つ",
+     "furi": "<ruby>持つ<rt>もつ</rt></ruby>",
+     "romaji": "Motsu",
+     "es": "llevar, tener en la mano",
+     "ex": "かばんを持ちます。",
+     "exEs": "Llevo la mochila.",
+     "note": ""
+    },
+    {
+     "id": "n5_c20",
+     "ja": "立つ",
+     "furi": "<ruby>立つ<rt>たつ</rt></ruby>",
+     "romaji": "Tatsu",
+     "es": "ponerse de pie",
+     "ex": "ここに立ってください。",
+     "exEs": "Póngase de pie aquí.",
+     "note": ""
+    },
+    {
+     "id": "n5_c21",
+     "ja": "座る",
+     "furi": "<ruby>座る<rt>すわる</rt></ruby>",
+     "romaji": "Suwaru",
+     "es": "sentarse",
+     "ex": "椅子に座ります。",
+     "exEs": "Me siento en la silla.",
+     "note": ""
+    },
+    {
+     "id": "n5_c22",
+     "ja": "入る",
+     "furi": "<ruby>入る<rt>はいる</rt></ruby>",
+     "romaji": "Hairu",
+     "es": "entrar",
+     "ex": "部屋に入ります。",
+     "exEs": "Entro en la habitación.",
+     "note": ""
+    },
+    {
+     "id": "n5_c23",
+     "ja": "出る",
+     "furi": "<ruby>出る<rt>でる</rt></ruby>",
+     "romaji": "Deru",
+     "es": "salir",
+     "ex": "七時に家を出ます。",
+     "exEs": "Salgo de casa a las siete.",
+     "note": ""
+    },
+    {
+     "id": "n5_c24",
+     "ja": "着く",
+     "furi": "<ruby>着く<rt>つく</rt></ruby>",
+     "romaji": "Tsuku",
+     "es": "llegar",
+     "ex": "駅に着きました。",
+     "exEs": "Llegué a la estación.",
+     "note": ""
+    },
+    {
+     "id": "n5_c25",
+     "ja": "始まる",
+     "furi": "<ruby>始まる<rt>はじまる</rt></ruby>",
+     "romaji": "Hajimaru",
+     "es": "empezar (algo solo)",
+     "ex": "授業が始まります。",
+     "exEs": "Empieza la clase.",
+     "note": ""
+    },
+    {
+     "id": "n5_c26",
+     "ja": "終わる",
+     "furi": "<ruby>終わる<rt>おわる</rt></ruby>",
+     "romaji": "Owaru",
+     "es": "terminar (algo solo)",
+     "ex": "仕事が終わりました。",
+     "exEs": "Terminó el trabajo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c27",
+     "ja": "遊ぶ",
+     "furi": "<ruby>遊ぶ<rt>あそぶ</rt></ruby>",
+     "romaji": "Asobu",
+     "es": "jugar, divertirse",
+     "ex": "公園で遊びます。",
+     "exEs": "Juego en el parque.",
+     "note": ""
+    },
+    {
+     "id": "n5_c28",
+     "ja": "泳ぐ",
+     "furi": "<ruby>泳ぐ<rt>およぐ</rt></ruby>",
+     "romaji": "Oyogu",
+     "es": "nadar",
+     "ex": "海で泳ぎます。",
+     "exEs": "Nado en el mar.",
+     "note": ""
+    },
+    {
+     "id": "n5_c29",
+     "ja": "走る",
+     "furi": "<ruby>走る<rt>はしる</rt></ruby>",
+     "romaji": "Hashiru",
+     "es": "correr",
+     "ex": "毎朝走ります。",
+     "exEs": "Corro todas las mañanas.",
+     "note": ""
+    },
+    {
+     "id": "n5_c30",
+     "ja": "歌う",
+     "furi": "<ruby>歌う<rt>うたう</rt></ruby>",
+     "romaji": "Utau",
+     "es": "cantar",
+     "ex": "歌を歌います。",
+     "exEs": "Canto una canción.",
+     "note": ""
+    },
+    {
+     "id": "n5_c31",
+     "ja": "洗う",
+     "furi": "<ruby>洗う<rt>あらう</rt></ruby>",
+     "romaji": "Arau",
+     "es": "lavar",
+     "ex": "手を洗います。",
+     "exEs": "Me lavo las manos.",
+     "note": ""
+    },
+    {
+     "id": "n5_c32",
+     "ja": "着る",
+     "furi": "<ruby>着る<rt>きる</rt></ruby>",
+     "romaji": "Kiru",
+     "es": "ponerse (ropa de arriba)",
+     "ex": "シャツを着ます。",
+     "exEs": "Me pongo una camisa.",
+     "note": ""
+    },
+    {
+     "id": "n5_c33",
+     "ja": "脱ぐ",
+     "furi": "<ruby>脱ぐ<rt>ぬぐ</rt></ruby>",
+     "romaji": "Nugu",
+     "es": "quitarse (ropa)",
+     "ex": "靴を脱いでください。",
+     "exEs": "Quítese los zapatos, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_c34",
+     "ja": "履く",
+     "furi": "<ruby>履く<rt>はく</rt></ruby>",
+     "romaji": "Haku",
+     "es": "ponerse (zapatos, pantalones)",
+     "ex": "靴を履きます。",
+     "exEs": "Me pongo los zapatos.",
+     "note": ""
+    },
+    {
+     "id": "n5_c35",
+     "ja": "つける",
+     "furi": "",
+     "romaji": "Tsukeru",
+     "es": "encender, poner",
+     "ex": "電気をつけます。",
+     "exEs": "Enciendo la luz.",
+     "note": ""
+    },
+    {
+     "id": "n5_c36",
+     "ja": "消す",
+     "furi": "<ruby>消す<rt>けす</rt></ruby>",
+     "romaji": "Kesu",
+     "es": "apagar, borrar",
+     "ex": "電気を消します。",
+     "exEs": "Apago la luz.",
+     "note": ""
+    },
+    {
+     "id": "n5_c37",
+     "ja": "置く",
+     "furi": "<ruby>置く<rt>おく</rt></ruby>",
+     "romaji": "Oku",
+     "es": "poner, dejar",
+     "ex": "机の上に置きます。",
+     "exEs": "Lo dejo sobre el escritorio.",
+     "note": ""
+    },
+    {
+     "id": "n5_c38",
+     "ja": "取る",
+     "furi": "<ruby>取る<rt>とる</rt></ruby>",
+     "romaji": "Toru",
+     "es": "tomar, coger",
+     "ex": "塩を取ってください。",
+     "exEs": "Alcánceme la sal, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_c39",
+     "ja": "貸す",
+     "furi": "<ruby>貸す<rt>かす</rt></ruby>",
+     "romaji": "Kasu",
+     "es": "prestar",
+     "ex": "本を貸します。",
+     "exEs": "Presto un libro.",
+     "note": ""
+    },
+    {
+     "id": "n5_c40",
+     "ja": "借りる",
+     "furi": "<ruby>借りる<rt>かりる</rt></ruby>",
+     "romaji": "Kariru",
+     "es": "pedir prestado",
+     "ex": "図書館で本を借ります。",
+     "exEs": "Pido prestados libros en la biblioteca.",
+     "note": ""
+    },
+    {
+     "id": "n5_c41",
+     "ja": "返す",
+     "furi": "<ruby>返す<rt>かえす</rt></ruby>",
+     "romaji": "Kaesu",
+     "es": "devolver",
+     "ex": "本を返します。",
+     "exEs": "Devuelvo el libro.",
+     "note": ""
+    },
+    {
+     "id": "n5_c42",
+     "ja": "あげる",
+     "furi": "",
+     "romaji": "Ageru",
+     "es": "dar (a otro)",
+     "ex": "友達にプレゼントをあげます。",
+     "exEs": "Le doy un regalo a un amigo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c43",
+     "ja": "もらう",
+     "furi": "",
+     "romaji": "Morau",
+     "es": "recibir",
+     "ex": "友達にもらいました。",
+     "exEs": "Lo recibí de un amigo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c44",
+     "ja": "呼ぶ",
+     "furi": "<ruby>呼ぶ<rt>よぶ</rt></ruby>",
+     "romaji": "Yobu",
+     "es": "llamar",
+     "ex": "タクシーを呼びます。",
+     "exEs": "Llamo un taxi.",
+     "note": ""
+    },
+    {
+     "id": "n5_c45",
+     "ja": "答える",
+     "furi": "<ruby>答える<rt>こたえる</rt></ruby>",
+     "romaji": "Kotaeru",
+     "es": "responder",
+     "ex": "質問に答えてください。",
+     "exEs": "Responda la pregunta, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_c46",
+     "ja": "質問する",
+     "furi": "<ruby>質問する<rt>しつもんする</rt></ruby>",
+     "romaji": "Shitsumon suru",
+     "es": "preguntar",
+     "ex": "先生に質問します。",
+     "exEs": "Le pregunto al profesor.",
+     "note": ""
+    },
+    {
+     "id": "n5_c47",
+     "ja": "忘れる",
+     "furi": "<ruby>忘れる<rt>わすれる</rt></ruby>",
+     "romaji": "Wasureru",
+     "es": "olvidar",
+     "ex": "かぎを忘れました。",
+     "exEs": "Olvidé la llave.",
+     "note": ""
+    },
+    {
+     "id": "n5_c48",
+     "ja": "覚える",
+     "furi": "<ruby>覚える<rt>おぼえる</rt></ruby>",
+     "romaji": "Oboeru",
+     "es": "memorizar, recordar",
+     "ex": "単語を覚えます。",
+     "exEs": "Memorizo vocabulario.",
+     "note": ""
+    },
+    {
+     "id": "n5_c49",
+     "ja": "住む",
+     "furi": "<ruby>住む<rt>すむ</rt></ruby>",
+     "romaji": "Sumu",
+     "es": "vivir (residir)",
+     "ex": "東京に住んでいます。",
+     "exEs": "Vivo en Tokio.",
+     "note": ""
+    },
+    {
+     "id": "n5_c50",
+     "ja": "結婚する",
+     "furi": "<ruby>結婚する<rt>けっこんする</rt></ruby>",
+     "romaji": "Kekkon suru",
+     "es": "casarse",
+     "ex": "来年結婚します。",
+     "exEs": "El año próximo me caso.",
+     "note": ""
+    },
+    {
+     "id": "n5_c51",
+     "ja": "笑う",
+     "furi": "<ruby>笑う<rt>わらう</rt></ruby>",
+     "romaji": "Warau",
+     "es": "reír",
+     "ex": "みんなで笑いました。",
+     "exEs": "Nos reímos todos.",
+     "note": ""
+    },
+    {
+     "id": "n5_c52",
+     "ja": "泣く",
+     "furi": "<ruby>泣く<rt>なく</rt></ruby>",
+     "romaji": "Naku",
+     "es": "llorar",
+     "ex": "赤ちゃんが泣いています。",
+     "exEs": "El bebé está llorando.",
+     "note": ""
+    },
+    {
+     "id": "n5_c53",
+     "ja": "疲れる",
+     "furi": "<ruby>疲れる<rt>つかれる</rt></ruby>",
+     "romaji": "Tsukareru",
+     "es": "cansarse",
+     "ex": "今日は疲れました。",
+     "exEs": "Hoy estoy cansado/a.",
+     "note": ""
+    },
+    {
+     "id": "n5_c54",
+     "ja": "掃除する",
+     "furi": "<ruby>掃除する<rt>そうじする</rt></ruby>",
+     "romaji": "Souji suru",
+     "es": "limpiar",
+     "ex": "部屋を掃除します。",
+     "exEs": "Limpio la habitación.",
+     "note": ""
+    },
+    {
+     "id": "n5_c55",
+     "ja": "洗濯する",
+     "furi": "<ruby>洗濯する<rt>せんたくする</rt></ruby>",
+     "romaji": "Sentaku suru",
+     "es": "lavar la ropa",
+     "ex": "日曜日に洗濯します。",
+     "exEs": "Lavo la ropa los domingos.",
+     "note": ""
+    },
+    {
+     "id": "n5_c56",
+     "ja": "料理する",
+     "furi": "<ruby>料理する<rt>りょうりする</rt></ruby>",
+     "romaji": "Ryouri suru",
+     "es": "cocinar",
+     "ex": "毎日料理します。",
+     "exEs": "Cocino todos los días.",
+     "note": ""
+    },
+    {
+     "id": "n5_c57",
+     "ja": "散歩する",
+     "furi": "<ruby>散歩する<rt>さんぽする</rt></ruby>",
+     "romaji": "Sanpo suru",
+     "es": "pasear",
+     "ex": "公園を散歩します。",
+     "exEs": "Paseo por el parque.",
+     "note": ""
+    },
+    {
+     "id": "n5_c58",
+     "ja": "旅行する",
+     "furi": "<ruby>旅行する<rt>りょこうする</rt></ruby>",
+     "romaji": "Ryokou suru",
+     "es": "viajar",
+     "ex": "日本を旅行します。",
+     "exEs": "Viajo por Japón.",
+     "note": ""
+    },
+    {
+     "id": "n5_c59",
+     "ja": "電話する",
+     "furi": "<ruby>電話する<rt>でんわする</rt></ruby>",
+     "romaji": "Denwa suru",
+     "es": "llamar por teléfono",
+     "ex": "母に電話します。",
+     "exEs": "Llamo a mi madre.",
+     "note": ""
+    },
+    {
+     "id": "n5_c60",
+     "ja": "買い物する",
+     "furi": "<ruby>買い物する<rt>かいものする</rt></ruby>",
+     "romaji": "Kaimono suru",
+     "es": "ir de compras",
+     "ex": "駅の近くで買い物します。",
+     "exEs": "Compro cerca de la estación.",
+     "note": ""
+    },
+    {
+     "id": "n5_c61",
+     "ja": "見せる",
+     "furi": "<ruby>見せる<rt>みせる</rt></ruby>",
+     "romaji": "Miseru",
+     "es": "mostrar",
+     "ex": "写真を見せます。",
+     "exEs": "Muestro una foto.",
+     "note": ""
+    },
+    {
+     "id": "n5_c62",
+     "ja": "送る",
+     "furi": "<ruby>送る<rt>おくる</rt></ruby>",
+     "romaji": "Okuru",
+     "es": "enviar",
+     "ex": "メールを送ります。",
+     "exEs": "Envío un correo.",
+     "note": ""
+    },
+    {
+     "id": "n5_c63",
+     "ja": "撮る",
+     "furi": "<ruby>撮る<rt>とる</rt></ruby>",
+     "romaji": "Toru",
+     "es": "tomar (una foto)",
+     "ex": "写真を撮ります。",
+     "exEs": "Tomo una foto.",
+     "note": "Suena igual que 取る (tomar); la foto se escribe con este kanji."
+    },
+    {
+     "id": "n5_c64",
+     "ja": "乗り換える",
+     "furi": "<ruby>乗り換える<rt>のりかえる</rt></ruby>",
+     "romaji": "Norikaeru",
+     "es": "hacer transbordo",
+     "ex": "新宿で乗り換えます。",
+     "exEs": "Hago transbordo en Shinjuku.",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Adjetivos y descripciones",
+   "items": [
+    {
+     "id": "n5_d1",
+     "ja": "長い",
+     "furi": "<ruby>長い<rt>ながい</rt></ruby>",
+     "romaji": "Nagai",
+     "es": "largo",
+     "ex": "髪が長いです。",
+     "exEs": "Tiene el pelo largo.",
+     "note": "Adjetivo i: termina en い."
+    },
+    {
+     "id": "n5_d2",
+     "ja": "短い",
+     "furi": "<ruby>短い<rt>みじかい</rt></ruby>",
+     "romaji": "Mijikai",
+     "es": "corto",
+     "ex": "この鉛筆は短いです。",
+     "exEs": "Este lápiz es corto.",
+     "note": ""
+    },
+    {
+     "id": "n5_d3",
+     "ja": "重い",
+     "furi": "<ruby>重い<rt>おもい</rt></ruby>",
+     "romaji": "Omoi",
+     "es": "pesado",
+     "ex": "かばんが重いです。",
+     "exEs": "La mochila pesa.",
+     "note": ""
+    },
+    {
+     "id": "n5_d4",
+     "ja": "軽い",
+     "furi": "<ruby>軽い<rt>かるい</rt></ruby>",
+     "romaji": "Karui",
+     "es": "ligero",
+     "ex": "この本は軽いです。",
+     "exEs": "Este libro es ligero.",
+     "note": ""
+    },
+    {
+     "id": "n5_d5",
+     "ja": "強い",
+     "furi": "<ruby>強い<rt>つよい</rt></ruby>",
+     "romaji": "Tsuyoi",
+     "es": "fuerte",
+     "ex": "風が強いです。",
+     "exEs": "El viento es fuerte.",
+     "note": ""
+    },
+    {
+     "id": "n5_d6",
+     "ja": "弱い",
+     "furi": "<ruby>弱い<rt>よわい</rt></ruby>",
+     "romaji": "Yowai",
+     "es": "débil",
+     "ex": "体が弱いです。",
+     "exEs": "Tengo la salud frágil.",
+     "note": ""
+    },
+    {
+     "id": "n5_d7",
+     "ja": "早い",
+     "furi": "<ruby>早い<rt>はやい</rt></ruby>",
+     "romaji": "Hayai",
+     "es": "temprano",
+     "ex": "朝は早いです。",
+     "exEs": "Me levanto temprano.",
+     "note": "Suena igual que 速い (rápido)."
+    },
+    {
+     "id": "n5_d8",
+     "ja": "速い",
+     "furi": "<ruby>速い<rt>はやい</rt></ruby>",
+     "romaji": "Hayai",
+     "es": "rápido",
+     "ex": "新幹線は速いです。",
+     "exEs": "El shinkansen es rápido.",
+     "note": ""
+    },
+    {
+     "id": "n5_d9",
+     "ja": "遅い",
+     "furi": "<ruby>遅い<rt>おそい</rt></ruby>",
+     "romaji": "Osoi",
+     "es": "tarde, lento",
+     "ex": "今日は遅いです。",
+     "exEs": "Hoy es tarde.",
+     "note": ""
+    },
+    {
+     "id": "n5_d10",
+     "ja": "暑い",
+     "furi": "<ruby>暑い<rt>あつい</rt></ruby>",
+     "romaji": "Atsui",
+     "es": "caluroso (clima)",
+     "ex": "今日は暑いです。",
+     "exEs": "Hoy hace calor.",
+     "note": "Para el tiempo atmosférico."
+    },
+    {
+     "id": "n5_d11",
+     "ja": "寒い",
+     "furi": "<ruby>寒い<rt>さむい</rt></ruby>",
+     "romaji": "Samui",
+     "es": "frío (clima)",
+     "ex": "冬は寒いです。",
+     "exEs": "En invierno hace frío.",
+     "note": ""
+    },
+    {
+     "id": "n5_d12",
+     "ja": "熱い",
+     "furi": "<ruby>熱い<rt>あつい</rt></ruby>",
+     "romaji": "Atsui",
+     "es": "caliente (cosas)",
+     "ex": "お茶が熱いです。",
+     "exEs": "El té está caliente.",
+     "note": "Para objetos y líquidos."
+    },
+    {
+     "id": "n5_d13",
+     "ja": "冷たい",
+     "furi": "<ruby>冷たい<rt>つめたい</rt></ruby>",
+     "romaji": "Tsumetai",
+     "es": "frío (al tacto)",
+     "ex": "冷たい水をください。",
+     "exEs": "Deme agua fría.",
+     "note": ""
+    },
+    {
+     "id": "n5_d14",
+     "ja": "暖かい",
+     "furi": "<ruby>暖かい<rt>あたたかい</rt></ruby>",
+     "romaji": "Atatakai",
+     "es": "templado, cálido",
+     "ex": "春は暖かいです。",
+     "exEs": "La primavera es cálida.",
+     "note": ""
+    },
+    {
+     "id": "n5_d15",
+     "ja": "涼しい",
+     "furi": "<ruby>涼しい<rt>すずしい</rt></ruby>",
+     "romaji": "Suzushii",
+     "es": "fresco",
+     "ex": "秋は涼しいです。",
+     "exEs": "El otoño es fresco.",
+     "note": ""
+    },
+    {
+     "id": "n5_d16",
+     "ja": "明るい",
+     "furi": "<ruby>明るい<rt>あかるい</rt></ruby>",
+     "romaji": "Akarui",
+     "es": "luminoso, alegre",
+     "ex": "部屋が明るいです。",
+     "exEs": "La habitación es luminosa.",
+     "note": ""
+    },
+    {
+     "id": "n5_d17",
+     "ja": "暗い",
+     "furi": "<ruby>暗い<rt>くらい</rt></ruby>",
+     "romaji": "Kurai",
+     "es": "oscuro",
+     "ex": "夜は暗いです。",
+     "exEs": "De noche está oscuro.",
+     "note": ""
+    },
+    {
+     "id": "n5_d18",
+     "ja": "広い",
+     "furi": "<ruby>広い<rt>ひろい</rt></ruby>",
+     "romaji": "Hiroi",
+     "es": "amplio",
+     "ex": "広い公園です。",
+     "exEs": "Es un parque amplio.",
+     "note": ""
+    },
+    {
+     "id": "n5_d19",
+     "ja": "狭い",
+     "furi": "<ruby>狭い<rt>せまい</rt></ruby>",
+     "romaji": "Semai",
+     "es": "estrecho",
+     "ex": "部屋が狭いです。",
+     "exEs": "La habitación es estrecha.",
+     "note": ""
+    },
+    {
+     "id": "n5_d20",
+     "ja": "近い",
+     "furi": "<ruby>近い<rt>ちかい</rt></ruby>",
+     "romaji": "Chikai",
+     "es": "cerca",
+     "ex": "駅は近いです。",
+     "exEs": "La estación está cerca.",
+     "note": ""
+    },
+    {
+     "id": "n5_d21",
+     "ja": "遠い",
+     "furi": "<ruby>遠い<rt>とおい</rt></ruby>",
+     "romaji": "Tooi",
+     "es": "lejos",
+     "ex": "学校は遠いです。",
+     "exEs": "La escuela está lejos.",
+     "note": ""
+    },
+    {
+     "id": "n5_d22",
+     "ja": "忙しい",
+     "furi": "<ruby>忙しい<rt>いそがしい</rt></ruby>",
+     "romaji": "Isogashii",
+     "es": "ocupado",
+     "ex": "今週は忙しいです。",
+     "exEs": "Esta semana estoy ocupado/a.",
+     "note": ""
+    },
+    {
+     "id": "n5_d23",
+     "ja": "楽しい",
+     "furi": "<ruby>楽しい<rt>たのしい</rt></ruby>",
+     "romaji": "Tanoshii",
+     "es": "divertido",
+     "ex": "旅行は楽しいです。",
+     "exEs": "Viajar es divertido.",
+     "note": ""
+    },
+    {
+     "id": "n5_d24",
+     "ja": "面白い",
+     "furi": "<ruby>面白い<rt>おもしろい</rt></ruby>",
+     "romaji": "Omoshiroi",
+     "es": "interesante, gracioso",
+     "ex": "この本は面白いです。",
+     "exEs": "Este libro es interesante.",
+     "note": ""
+    },
+    {
+     "id": "n5_d25",
+     "ja": "つまらない",
+     "furi": "",
+     "romaji": "Tsumaranai",
+     "es": "aburrido",
+     "ex": "映画はつまらなかったです。",
+     "exEs": "La película fue aburrida.",
+     "note": ""
+    },
+    {
+     "id": "n5_d26",
+     "ja": "難しい",
+     "furi": "<ruby>難しい<rt>むずかしい</rt></ruby>",
+     "romaji": "Muzukashii",
+     "es": "difícil",
+     "ex": "日本語は難しいです。",
+     "exEs": "El japonés es difícil.",
+     "note": ""
+    },
+    {
+     "id": "n5_d27",
+     "ja": "易しい",
+     "furi": "<ruby>易しい<rt>やさしい</rt></ruby>",
+     "romaji": "Yasashii",
+     "es": "fácil",
+     "ex": "この問題は易しいです。",
+     "exEs": "Este problema es fácil.",
+     "note": "También se usa 優しい (amable), con la misma pronunciación."
+    },
+    {
+     "id": "n5_d28",
+     "ja": "嬉しい",
+     "furi": "<ruby>嬉しい<rt>うれしい</rt></ruby>",
+     "romaji": "Ureshii",
+     "es": "contento",
+     "ex": "会えて嬉しいです。",
+     "exEs": "Me alegra verte.",
+     "note": ""
+    },
+    {
+     "id": "n5_d29",
+     "ja": "悲しい",
+     "furi": "<ruby>悲しい<rt>かなしい</rt></ruby>",
+     "romaji": "Kanashii",
+     "es": "triste",
+     "ex": "悲しい映画でした。",
+     "exEs": "Fue una película triste.",
+     "note": ""
+    },
+    {
+     "id": "n5_d30",
+     "ja": "痛い",
+     "furi": "<ruby>痛い<rt>いたい</rt></ruby>",
+     "romaji": "Itai",
+     "es": "doloroso",
+     "ex": "頭が痛いです。",
+     "exEs": "Me duele la cabeza.",
+     "note": ""
+    },
+    {
+     "id": "n5_d31",
+     "ja": "眠い",
+     "furi": "<ruby>眠い<rt>ねむい</rt></ruby>",
+     "romaji": "Nemui",
+     "es": "con sueño",
+     "ex": "とても眠いです。",
+     "exEs": "Tengo mucho sueño.",
+     "note": ""
+    },
+    {
+     "id": "n5_d32",
+     "ja": "怖い",
+     "furi": "<ruby>怖い<rt>こわい</rt></ruby>",
+     "romaji": "Kowai",
+     "es": "que da miedo",
+     "ex": "犬が怖いです。",
+     "exEs": "Los perros me dan miedo.",
+     "note": ""
+    },
+    {
+     "id": "n5_d33",
+     "ja": "可愛い",
+     "furi": "<ruby>可愛い<rt>かわいい</rt></ruby>",
+     "romaji": "Kawaii",
+     "es": "bonito, tierno",
+     "ex": "可愛い猫ですね。",
+     "exEs": "Qué gato tan tierno.",
+     "note": ""
+    },
+    {
+     "id": "n5_d34",
+     "ja": "汚い",
+     "furi": "<ruby>汚い<rt>きたない</rt></ruby>",
+     "romaji": "Kitanai",
+     "es": "sucio",
+     "ex": "部屋が汚いです。",
+     "exEs": "La habitación está sucia.",
+     "note": ""
+    },
+    {
+     "id": "n5_d35",
+     "ja": "若い",
+     "furi": "<ruby>若い<rt>わかい</rt></ruby>",
+     "romaji": "Wakai",
+     "es": "joven",
+     "ex": "先生は若いです。",
+     "exEs": "El profesor es joven.",
+     "note": ""
+    },
+    {
+     "id": "n5_d36",
+     "ja": "赤い",
+     "furi": "<ruby>赤い<rt>あかい</rt></ruby>",
+     "romaji": "Akai",
+     "es": "rojo",
+     "ex": "赤い花です。",
+     "exEs": "Es una flor roja.",
+     "note": ""
+    },
+    {
+     "id": "n5_d37",
+     "ja": "青い",
+     "furi": "<ruby>青い<rt>あおい</rt></ruby>",
+     "romaji": "Aoi",
+     "es": "azul",
+     "ex": "空が青いです。",
+     "exEs": "El cielo es azul.",
+     "note": ""
+    },
+    {
+     "id": "n5_d38",
+     "ja": "白い",
+     "furi": "<ruby>白い<rt>しろい</rt></ruby>",
+     "romaji": "Shiroi",
+     "es": "blanco",
+     "ex": "白いシャツです。",
+     "exEs": "Es una camisa blanca.",
+     "note": ""
+    },
+    {
+     "id": "n5_d39",
+     "ja": "黒い",
+     "furi": "<ruby>黒い<rt>くろい</rt></ruby>",
+     "romaji": "Kuroi",
+     "es": "negro",
+     "ex": "黒い猫がいます。",
+     "exEs": "Hay un gato negro.",
+     "note": ""
+    },
+    {
+     "id": "n5_d40",
+     "ja": "黄色い",
+     "furi": "<ruby>黄色い<rt>きいろい</rt></ruby>",
+     "romaji": "Kiiroi",
+     "es": "amarillo",
+     "ex": "黄色い花です。",
+     "exEs": "Es una flor amarilla.",
+     "note": ""
+    },
+    {
+     "id": "n5_d41",
+     "ja": "茶色",
+     "furi": "<ruby>茶色<rt>ちゃいろ</rt></ruby>",
+     "romaji": "Chairo",
+     "es": "marrón",
+     "ex": "茶色のかばんです。",
+     "exEs": "Es una mochila marrón.",
+     "note": ""
+    },
+    {
+     "id": "n5_d42",
+     "ja": "緑",
+     "furi": "<ruby>緑<rt>みどり</rt></ruby>",
+     "romaji": "Midori",
+     "es": "verde",
+     "ex": "緑のお茶です。",
+     "exEs": "Es té verde.",
+     "note": ""
+    },
+    {
+     "id": "n5_d43",
+     "ja": "綺麗",
+     "furi": "<ruby>綺麗<rt>きれい</rt></ruby>",
+     "romaji": "Kirei",
+     "es": "bonito, limpio",
+     "ex": "綺麗な花ですね。",
+     "exEs": "Qué flor tan bonita.",
+     "note": "Adjetivo na: se une al sustantivo con な."
+    },
+    {
+     "id": "n5_d44",
+     "ja": "静か",
+     "furi": "<ruby>静か<rt>しずか</rt></ruby>",
+     "romaji": "Shizuka",
+     "es": "tranquilo, silencioso",
+     "ex": "静かな町です。",
+     "exEs": "Es un pueblo tranquilo.",
+     "note": ""
+    },
+    {
+     "id": "n5_d45",
+     "ja": "賑やか",
+     "furi": "<ruby>賑やか<rt>にぎやか</rt></ruby>",
+     "romaji": "Nigiyaka",
+     "es": "animado, concurrido",
+     "ex": "賑やかな町です。",
+     "exEs": "Es una ciudad animada.",
+     "note": ""
+    },
+    {
+     "id": "n5_d46",
+     "ja": "有名",
+     "furi": "<ruby>有名<rt>ゆうめい</rt></ruby>",
+     "romaji": "Yuumei",
+     "es": "famoso",
+     "ex": "有名な先生です。",
+     "exEs": "Es un profesor famoso.",
+     "note": ""
+    },
+    {
+     "id": "n5_d47",
+     "ja": "親切",
+     "furi": "<ruby>親切<rt>しんせつ</rt></ruby>",
+     "romaji": "Shinsetsu",
+     "es": "amable",
+     "ex": "親切な人です。",
+     "exEs": "Es una persona amable.",
+     "note": ""
+    },
+    {
+     "id": "n5_d48",
+     "ja": "元気",
+     "furi": "<ruby>元気<rt>げんき</rt></ruby>",
+     "romaji": "Genki",
+     "es": "con energía, bien",
+     "ex": "元気ですか。",
+     "exEs": "¿Cómo estás?",
+     "note": ""
+    },
+    {
+     "id": "n5_d49",
+     "ja": "好き",
+     "furi": "<ruby>好き<rt>すき</rt></ruby>",
+     "romaji": "Suki",
+     "es": "gustar",
+     "ex": "猫が好きです。",
+     "exEs": "Me gustan los gatos.",
+     "note": "Con が: 猫が好き (me gustan los gatos)."
+    },
+    {
+     "id": "n5_d50",
+     "ja": "嫌い",
+     "furi": "<ruby>嫌い<rt>きらい</rt></ruby>",
+     "romaji": "Kirai",
+     "es": "no gustar, odiar",
+     "ex": "野菜が嫌いです。",
+     "exEs": "No me gustan las verduras.",
+     "note": ""
+    },
+    {
+     "id": "n5_d51",
+     "ja": "上手",
+     "furi": "<ruby>上手<rt>じょうず</rt></ruby>",
+     "romaji": "Jouzu",
+     "es": "hábil, bueno en algo",
+     "ex": "日本語が上手ですね。",
+     "exEs": "Hablas bien japonés.",
+     "note": ""
+    },
+    {
+     "id": "n5_d52",
+     "ja": "下手",
+     "furi": "<ruby>下手<rt>へた</rt></ruby>",
+     "romaji": "Heta",
+     "es": "torpe, malo en algo",
+     "ex": "歌が下手です。",
+     "exEs": "Canto mal.",
+     "note": ""
+    },
+    {
+     "id": "n5_d53",
+     "ja": "便利",
+     "furi": "<ruby>便利<rt>べんり</rt></ruby>",
+     "romaji": "Benri",
+     "es": "práctico",
+     "ex": "スマホは便利です。",
+     "exEs": "El móvil es práctico.",
+     "note": ""
+    },
+    {
+     "id": "n5_d54",
+     "ja": "大丈夫",
+     "furi": "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>",
+     "romaji": "Daijoubu",
+     "es": "bien, no hay problema",
+     "ex": "大丈夫ですか。",
+     "exEs": "¿Estás bien?",
+     "note": ""
+    },
+    {
+     "id": "n5_d55",
+     "ja": "大変",
+     "furi": "<ruby>大変<rt>たいへん</rt></ruby>",
+     "romaji": "Taihen",
+     "es": "difícil, duro",
+     "ex": "仕事は大変です。",
+     "exEs": "El trabajo es duro.",
+     "note": ""
+    },
+    {
+     "id": "n5_d56",
+     "ja": "暇",
+     "furi": "<ruby>暇<rt>ひま</rt></ruby>",
+     "romaji": "Hima",
+     "es": "libre, sin quehacer",
+     "ex": "今日は暇です。",
+     "exEs": "Hoy estoy libre.",
+     "note": ""
+    },
+    {
+     "id": "n5_d57",
+     "ja": "丈夫",
+     "furi": "<ruby>丈夫<rt>じょうぶ</rt></ruby>",
+     "romaji": "Joubu",
+     "es": "resistente, sano",
+     "ex": "丈夫なかばんです。",
+     "exEs": "Es una mochila resistente.",
+     "note": ""
+    },
+    {
+     "id": "n5_d58",
+     "ja": "いろいろ",
+     "furi": "",
+     "romaji": "Iroiro",
+     "es": "variado",
+     "ex": "いろいろな店があります。",
+     "exEs": "Hay tiendas variadas.",
+     "note": ""
+    },
+    {
+     "id": "n5_d59",
+     "ja": "特別",
+     "furi": "<ruby>特別<rt>とくべつ</rt></ruby>",
+     "romaji": "Tokubetsu",
+     "es": "especial",
+     "ex": "特別な日です。",
+     "exEs": "Es un día especial.",
+     "note": ""
+    },
+    {
+     "id": "n5_d60",
+     "ja": "大切",
+     "furi": "<ruby>大切<rt>たいせつ</rt></ruby>",
+     "romaji": "Taisetsu",
+     "es": "importante, valioso",
+     "ex": "家族は大切です。",
+     "exEs": "La familia es importante.",
+     "note": ""
+    },
+    {
+     "id": "n5_d61",
+     "ja": "上",
+     "furi": "<ruby>上<rt>うえ</rt></ruby>",
+     "romaji": "Ue",
+     "es": "arriba, encima",
+     "ex": "机の上に本があります。",
+     "exEs": "Hay un libro sobre el escritorio.",
+     "note": ""
+    },
+    {
+     "id": "n5_d62",
+     "ja": "下",
+     "furi": "<ruby>下<rt>した</rt></ruby>",
+     "romaji": "Shita",
+     "es": "abajo, debajo",
+     "ex": "椅子の下に猫がいます。",
+     "exEs": "Hay un gato debajo de la silla.",
+     "note": ""
+    },
+    {
+     "id": "n5_d63",
+     "ja": "中",
+     "furi": "<ruby>中<rt>なか</rt></ruby>",
+     "romaji": "Naka",
+     "es": "dentro",
+     "ex": "かばんの中にあります。",
+     "exEs": "Está dentro de la mochila.",
+     "note": ""
+    },
+    {
+     "id": "n5_d64",
+     "ja": "前",
+     "furi": "<ruby>前<rt>まえ</rt></ruby>",
+     "romaji": "Mae",
+     "es": "delante, antes",
+     "ex": "駅の前にいます。",
+     "exEs": "Estoy delante de la estación.",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Cuerpo, salud y objetos",
+   "items": [
+    {
+     "id": "n5_e1",
+     "ja": "体",
+     "furi": "<ruby>体<rt>からだ</rt></ruby>",
+     "romaji": "Karada",
+     "es": "cuerpo",
+     "ex": "体が大きいです。",
+     "exEs": "Tiene el cuerpo grande.",
+     "note": ""
+    },
+    {
+     "id": "n5_e2",
+     "ja": "頭",
+     "furi": "<ruby>頭<rt>あたま</rt></ruby>",
+     "romaji": "Atama",
+     "es": "cabeza",
+     "ex": "頭が痛いです。",
+     "exEs": "Me duele la cabeza.",
+     "note": ""
+    },
+    {
+     "id": "n5_e3",
+     "ja": "顔",
+     "furi": "<ruby>顔<rt>かお</rt></ruby>",
+     "romaji": "Kao",
+     "es": "cara",
+     "ex": "顔を洗います。",
+     "exEs": "Me lavo la cara.",
+     "note": ""
+    },
+    {
+     "id": "n5_e4",
+     "ja": "目",
+     "furi": "<ruby>目<rt>め</rt></ruby>",
+     "romaji": "Me",
+     "es": "ojo",
+     "ex": "目が大きいです。",
+     "exEs": "Tiene los ojos grandes.",
+     "note": ""
+    },
+    {
+     "id": "n5_e5",
+     "ja": "耳",
+     "furi": "<ruby>耳<rt>みみ</rt></ruby>",
+     "romaji": "Mimi",
+     "es": "oreja, oído",
+     "ex": "耳が痛いです。",
+     "exEs": "Me duele el oído.",
+     "note": ""
+    },
+    {
+     "id": "n5_e6",
+     "ja": "鼻",
+     "furi": "<ruby>鼻<rt>はな</rt></ruby>",
+     "romaji": "Hana",
+     "es": "nariz",
+     "ex": "鼻が高いです。",
+     "exEs": "Tiene la nariz alta.",
+     "note": "Suena igual que 花 (flor)."
+    },
+    {
+     "id": "n5_e7",
+     "ja": "口",
+     "furi": "<ruby>口<rt>くち</rt></ruby>",
+     "romaji": "Kuchi",
+     "es": "boca",
+     "ex": "口を開けてください。",
+     "exEs": "Abra la boca, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_e8",
+     "ja": "歯",
+     "furi": "<ruby>歯<rt>は</rt></ruby>",
+     "romaji": "Ha",
+     "es": "diente",
+     "ex": "歯を磨きます。",
+     "exEs": "Me cepillo los dientes.",
+     "note": ""
+    },
+    {
+     "id": "n5_e9",
+     "ja": "髪",
+     "furi": "<ruby>髪<rt>かみ</rt></ruby>",
+     "romaji": "Kami",
+     "es": "cabello",
+     "ex": "髪が長いです。",
+     "exEs": "Tiene el pelo largo.",
+     "note": ""
+    },
+    {
+     "id": "n5_e10",
+     "ja": "首",
+     "furi": "<ruby>首<rt>くび</rt></ruby>",
+     "romaji": "Kubi",
+     "es": "cuello",
+     "ex": "首が痛いです。",
+     "exEs": "Me duele el cuello.",
+     "note": ""
+    },
+    {
+     "id": "n5_e11",
+     "ja": "肩",
+     "furi": "<ruby>肩<rt>かた</rt></ruby>",
+     "romaji": "Kata",
+     "es": "hombro",
+     "ex": "肩が痛いです。",
+     "exEs": "Me duele el hombro.",
+     "note": ""
+    },
+    {
+     "id": "n5_e12",
+     "ja": "手",
+     "furi": "<ruby>手<rt>て</rt></ruby>",
+     "romaji": "Te",
+     "es": "mano",
+     "ex": "手を洗います。",
+     "exEs": "Me lavo las manos.",
+     "note": ""
+    },
+    {
+     "id": "n5_e13",
+     "ja": "指",
+     "furi": "<ruby>指<rt>ゆび</rt></ruby>",
+     "romaji": "Yubi",
+     "es": "dedo",
+     "ex": "指が痛いです。",
+     "exEs": "Me duele el dedo.",
+     "note": ""
+    },
+    {
+     "id": "n5_e14",
+     "ja": "腕",
+     "furi": "<ruby>腕<rt>うで</rt></ruby>",
+     "romaji": "Ude",
+     "es": "brazo",
+     "ex": "腕が長いです。",
+     "exEs": "Tiene los brazos largos.",
+     "note": ""
+    },
+    {
+     "id": "n5_e15",
+     "ja": "足",
+     "furi": "<ruby>足<rt>あし</rt></ruby>",
+     "romaji": "Ashi",
+     "es": "pie, pierna",
+     "ex": "足が痛いです。",
+     "exEs": "Me duelen las piernas.",
+     "note": ""
+    },
+    {
+     "id": "n5_e16",
+     "ja": "背",
+     "furi": "<ruby>背<rt>せ</rt></ruby>",
+     "romaji": "Se",
+     "es": "espalda, estatura",
+     "ex": "背が高いです。",
+     "exEs": "Es alto/a.",
+     "note": "Para decir «es alto»: 背が高い."
+    },
+    {
+     "id": "n5_e17",
+     "ja": "お腹",
+     "furi": "<ruby>お腹<rt>おなか</rt></ruby>",
+     "romaji": "Onaka",
+     "es": "barriga, estómago",
+     "ex": "お腹が痛いです。",
+     "exEs": "Me duele el estómago.",
+     "note": ""
+    },
+    {
+     "id": "n5_e18",
+     "ja": "胸",
+     "furi": "<ruby>胸<rt>むね</rt></ruby>",
+     "romaji": "Mune",
+     "es": "pecho",
+     "ex": "胸が痛いです。",
+     "exEs": "Me duele el pecho.",
+     "note": ""
+    },
+    {
+     "id": "n5_e19",
+     "ja": "声",
+     "furi": "<ruby>声<rt>こえ</rt></ruby>",
+     "romaji": "Koe",
+     "es": "voz",
+     "ex": "声が大きいです。",
+     "exEs": "Tiene la voz alta.",
+     "note": ""
+    },
+    {
+     "id": "n5_e20",
+     "ja": "病気",
+     "furi": "<ruby>病気<rt>びょうき</rt></ruby>",
+     "romaji": "Byouki",
+     "es": "enfermedad",
+     "ex": "病気になりました。",
+     "exEs": "Me enfermé.",
+     "note": ""
+    },
+    {
+     "id": "n5_e21",
+     "ja": "風邪",
+     "furi": "<ruby>風邪<rt>かぜ</rt></ruby>",
+     "romaji": "Kaze",
+     "es": "resfriado",
+     "ex": "風邪をひきました。",
+     "exEs": "Me resfrié.",
+     "note": "Se dice 風邪をひく (coger un resfriado)."
+    },
+    {
+     "id": "n5_e22",
+     "ja": "熱",
+     "furi": "<ruby>熱<rt>ねつ</rt></ruby>",
+     "romaji": "Netsu",
+     "es": "fiebre",
+     "ex": "熱があります。",
+     "exEs": "Tengo fiebre.",
+     "note": ""
+    },
+    {
+     "id": "n5_e23",
+     "ja": "咳",
+     "furi": "<ruby>咳<rt>せき</rt></ruby>",
+     "romaji": "Seki",
+     "es": "tos",
+     "ex": "咳が出ます。",
+     "exEs": "Tengo tos.",
+     "note": ""
+    },
+    {
+     "id": "n5_e24",
+     "ja": "薬",
+     "furi": "<ruby>薬<rt>くすり</rt></ruby>",
+     "romaji": "Kusuri",
+     "es": "medicina",
+     "ex": "薬を飲みます。",
+     "exEs": "Tomo la medicina.",
+     "note": ""
+    },
+    {
+     "id": "n5_e25",
+     "ja": "痛み止め",
+     "furi": "<ruby>痛み止め<rt>いたみどめ</rt></ruby>",
+     "romaji": "Itamidome",
+     "es": "analgésico",
+     "ex": "痛み止めをください。",
+     "exEs": "Deme un analgésico.",
+     "note": ""
+    },
+    {
+     "id": "n5_e26",
+     "ja": "運動",
+     "furi": "<ruby>運動<rt>うんどう</rt></ruby>",
+     "romaji": "Undou",
+     "es": "ejercicio",
+     "ex": "毎日運動します。",
+     "exEs": "Hago ejercicio todos los días.",
+     "note": ""
+    },
+    {
+     "id": "n5_e27",
+     "ja": "お大事に",
+     "furi": "<ruby>お大事に<rt>おだいじに</rt></ruby>",
+     "romaji": "Odaiji ni",
+     "es": "que se mejore",
+     "ex": "お大事に。",
+     "exEs": "Que se mejore.",
+     "note": ""
+    },
+    {
+     "id": "n5_e28",
+     "ja": "入院する",
+     "furi": "<ruby>入院する<rt>にゅういんする</rt></ruby>",
+     "romaji": "Nyuuin suru",
+     "es": "ingresar al hospital",
+     "ex": "来週入院します。",
+     "exEs": "La semana próxima ingreso al hospital.",
+     "note": ""
+    },
+    {
+     "id": "n5_e29",
+     "ja": "休憩",
+     "furi": "<ruby>休憩<rt>きゅうけい</rt></ruby>",
+     "romaji": "Kyuukei",
+     "es": "descanso breve",
+     "ex": "少し休憩しましょう。",
+     "exEs": "Descansemos un poco.",
+     "note": ""
+    },
+    {
+     "id": "n5_e30",
+     "ja": "服",
+     "furi": "<ruby>服<rt>ふく</rt></ruby>",
+     "romaji": "Fuku",
+     "es": "ropa",
+     "ex": "新しい服を買います。",
+     "exEs": "Compro ropa nueva.",
+     "note": ""
+    },
+    {
+     "id": "n5_e31",
+     "ja": "シャツ",
+     "furi": "",
+     "romaji": "Shatsu",
+     "es": "camisa",
+     "ex": "白いシャツを着ます。",
+     "exEs": "Me pongo una camisa blanca.",
+     "note": ""
+    },
+    {
+     "id": "n5_e32",
+     "ja": "ズボン",
+     "furi": "",
+     "romaji": "Zubon",
+     "es": "pantalón",
+     "ex": "黒いズボンを履きます。",
+     "exEs": "Me pongo pantalones negros.",
+     "note": ""
+    },
+    {
+     "id": "n5_e33",
+     "ja": "スカート",
+     "furi": "",
+     "romaji": "Sukaato",
+     "es": "falda",
+     "ex": "赤いスカートです。",
+     "exEs": "Es una falda roja.",
+     "note": ""
+    },
+    {
+     "id": "n5_e34",
+     "ja": "靴",
+     "furi": "<ruby>靴<rt>くつ</rt></ruby>",
+     "romaji": "Kutsu",
+     "es": "zapatos",
+     "ex": "靴を脱ぎます。",
+     "exEs": "Me quito los zapatos.",
+     "note": ""
+    },
+    {
+     "id": "n5_e35",
+     "ja": "靴下",
+     "furi": "<ruby>靴下<rt>くつした</rt></ruby>",
+     "romaji": "Kutsushita",
+     "es": "calcetines",
+     "ex": "靴下を履きます。",
+     "exEs": "Me pongo los calcetines.",
+     "note": ""
+    },
+    {
+     "id": "n5_e36",
+     "ja": "帽子",
+     "furi": "<ruby>帽子<rt>ぼうし</rt></ruby>",
+     "romaji": "Boushi",
+     "es": "sombrero, gorra",
+     "ex": "帽子をかぶります。",
+     "exEs": "Me pongo una gorra.",
+     "note": ""
+    },
+    {
+     "id": "n5_e37",
+     "ja": "眼鏡",
+     "furi": "<ruby>眼鏡<rt>めがね</rt></ruby>",
+     "romaji": "Megane",
+     "es": "gafas",
+     "ex": "眼鏡をかけます。",
+     "exEs": "Me pongo las gafas.",
+     "note": ""
+    },
+    {
+     "id": "n5_e38",
+     "ja": "傘",
+     "furi": "<ruby>傘<rt>かさ</rt></ruby>",
+     "romaji": "Kasa",
+     "es": "paraguas",
+     "ex": "傘を持っていきます。",
+     "exEs": "Llevo el paraguas.",
+     "note": ""
+    },
+    {
+     "id": "n5_e39",
+     "ja": "かばん",
+     "furi": "",
+     "romaji": "Kaban",
+     "es": "bolso, mochila",
+     "ex": "かばんの中に本があります。",
+     "exEs": "Hay un libro en la mochila.",
+     "note": ""
+    },
+    {
+     "id": "n5_e40",
+     "ja": "財布",
+     "furi": "<ruby>財布<rt>さいふ</rt></ruby>",
+     "romaji": "Saifu",
+     "es": "cartera",
+     "ex": "財布を忘れました。",
+     "exEs": "Olvidé la cartera.",
+     "note": ""
+    },
+    {
+     "id": "n5_e41",
+     "ja": "時計",
+     "furi": "<ruby>時計<rt>とけい</rt></ruby>",
+     "romaji": "Tokei",
+     "es": "reloj",
+     "ex": "新しい時計です。",
+     "exEs": "Es un reloj nuevo.",
+     "note": ""
+    },
+    {
+     "id": "n5_e42",
+     "ja": "携帯",
+     "furi": "<ruby>携帯<rt>けいたい</rt></ruby>",
+     "romaji": "Keitai",
+     "es": "móvil",
+     "ex": "携帯を忘れました。",
+     "exEs": "Olvidé el móvil.",
+     "note": ""
+    },
+    {
+     "id": "n5_e43",
+     "ja": "鍵",
+     "furi": "<ruby>鍵<rt>かぎ</rt></ruby>",
+     "romaji": "Kagi",
+     "es": "llave",
+     "ex": "鍵を持っています。",
+     "exEs": "Tengo la llave.",
+     "note": ""
+    },
+    {
+     "id": "n5_e44",
+     "ja": "切符",
+     "furi": "<ruby>切符<rt>きっぷ</rt></ruby>",
+     "romaji": "Kippu",
+     "es": "billete",
+     "ex": "切符を買います。",
+     "exEs": "Compro un billete.",
+     "note": ""
+    },
+    {
+     "id": "n5_e45",
+     "ja": "手紙",
+     "furi": "<ruby>手紙<rt>てがみ</rt></ruby>",
+     "romaji": "Tegami",
+     "es": "carta",
+     "ex": "手紙を書きます。",
+     "exEs": "Escribo una carta.",
+     "note": ""
+    },
+    {
+     "id": "n5_e46",
+     "ja": "写真",
+     "furi": "<ruby>写真<rt>しゃしん</rt></ruby>",
+     "romaji": "Shashin",
+     "es": "fotografía",
+     "ex": "写真を撮ります。",
+     "exEs": "Tomo una foto.",
+     "note": ""
+    },
+    {
+     "id": "n5_e47",
+     "ja": "お金",
+     "furi": "<ruby>お金<rt>おかね</rt></ruby>",
+     "romaji": "Okane",
+     "es": "dinero",
+     "ex": "お金がありません。",
+     "exEs": "No tengo dinero.",
+     "note": ""
+    },
+    {
+     "id": "n5_e48",
+     "ja": "荷物",
+     "furi": "<ruby>荷物<rt>にもつ</rt></ruby>",
+     "romaji": "Nimotsu",
+     "es": "equipaje",
+     "ex": "荷物が重いです。",
+     "exEs": "El equipaje pesa.",
+     "note": ""
+    },
+    {
+     "id": "n5_e49",
+     "ja": "プレゼント",
+     "furi": "",
+     "romaji": "Purezento",
+     "es": "regalo",
+     "ex": "誕生日のプレゼントです。",
+     "exEs": "Es un regalo de cumpleaños.",
+     "note": ""
+    },
+    {
+     "id": "n5_e50",
+     "ja": "辞書",
+     "furi": "<ruby>辞書<rt>じしょ</rt></ruby>",
+     "romaji": "Jisho",
+     "es": "diccionario",
+     "ex": "辞書を使います。",
+     "exEs": "Uso el diccionario.",
+     "note": ""
+    },
+    {
+     "id": "n5_e51",
+     "ja": "本",
+     "furi": "<ruby>本<rt>ほん</rt></ruby>",
+     "romaji": "Hon",
+     "es": "libro",
+     "ex": "本を読みます。",
+     "exEs": "Leo un libro.",
+     "note": ""
+    },
+    {
+     "id": "n5_e52",
+     "ja": "新聞",
+     "furi": "<ruby>新聞<rt>しんぶん</rt></ruby>",
+     "romaji": "Shinbun",
+     "es": "periódico",
+     "ex": "新聞を読みます。",
+     "exEs": "Leo el periódico.",
+     "note": ""
+    },
+    {
+     "id": "n5_e53",
+     "ja": "雑誌",
+     "furi": "<ruby>雑誌<rt>ざっし</rt></ruby>",
+     "romaji": "Zasshi",
+     "es": "revista",
+     "ex": "雑誌を買います。",
+     "exEs": "Compro una revista.",
+     "note": ""
+    },
+    {
+     "id": "n5_e54",
+     "ja": "鉛筆",
+     "furi": "<ruby>鉛筆<rt>えんぴつ</rt></ruby>",
+     "romaji": "Enpitsu",
+     "es": "lápiz",
+     "ex": "鉛筆で書きます。",
+     "exEs": "Escribo con lápiz.",
+     "note": ""
+    },
+    {
+     "id": "n5_e55",
+     "ja": "ペン",
+     "furi": "",
+     "romaji": "Pen",
+     "es": "bolígrafo",
+     "ex": "ペンを貸してください。",
+     "exEs": "Présteme un bolígrafo.",
+     "note": ""
+    },
+    {
+     "id": "n5_e56",
+     "ja": "紙",
+     "furi": "<ruby>紙<rt>かみ</rt></ruby>",
+     "romaji": "Kami",
+     "es": "papel",
+     "ex": "紙に書きます。",
+     "exEs": "Escribo en papel.",
+     "note": ""
+    },
+    {
+     "id": "n5_e57",
+     "ja": "テレビ",
+     "furi": "",
+     "romaji": "Terebi",
+     "es": "televisión",
+     "ex": "テレビを見ます。",
+     "exEs": "Veo la televisión.",
+     "note": ""
+    },
+    {
+     "id": "n5_e58",
+     "ja": "電話",
+     "furi": "<ruby>電話<rt>でんわ</rt></ruby>",
+     "romaji": "Denwa",
+     "es": "teléfono",
+     "ex": "電話が鳴っています。",
+     "exEs": "Está sonando el teléfono.",
+     "note": ""
+    },
+    {
+     "id": "n5_e59",
+     "ja": "パソコン",
+     "furi": "",
+     "romaji": "Pasokon",
+     "es": "ordenador",
+     "ex": "パソコンを使います。",
+     "exEs": "Uso el ordenador.",
+     "note": ""
+    },
+    {
+     "id": "n5_e60",
+     "ja": "カメラ",
+     "furi": "",
+     "romaji": "Kamera",
+     "es": "cámara",
+     "ex": "カメラを持っています。",
+     "exEs": "Tengo una cámara.",
+     "note": ""
+    },
+    {
+     "id": "n5_e61",
+     "ja": "映画",
+     "furi": "<ruby>映画<rt>えいが</rt></ruby>",
+     "romaji": "Eiga",
+     "es": "película",
+     "ex": "映画を見ます。",
+     "exEs": "Veo una película.",
+     "note": ""
+    },
+    {
+     "id": "n5_e62",
+     "ja": "音楽",
+     "furi": "<ruby>音楽<rt>おんがく</rt></ruby>",
+     "romaji": "Ongaku",
+     "es": "música",
+     "ex": "音楽を聞きます。",
+     "exEs": "Escucho música.",
+     "note": ""
+    },
+    {
+     "id": "n5_e63",
+     "ja": "絵",
+     "furi": "<ruby>絵<rt>え</rt></ruby>",
+     "romaji": "E",
+     "es": "dibujo, pintura",
+     "ex": "絵を描きます。",
+     "exEs": "Dibujo.",
+     "note": ""
+    },
+    {
+     "id": "n5_e64",
+     "ja": "漢字",
+     "furi": "<ruby>漢字<rt>かんじ</rt></ruby>",
+     "romaji": "Kanji",
+     "es": "kanji (caracteres chinos)",
+     "ex": "漢字を書きます。",
+     "exEs": "Escribo kanji.",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Naturaleza, clima y lugares",
+   "items": [
+    {
+     "id": "n5_f1",
+     "ja": "天気",
+     "furi": "<ruby>天気<rt>てんき</rt></ruby>",
+     "romaji": "Tenki",
+     "es": "tiempo (clima)",
+     "ex": "今日は天気がいいです。",
+     "exEs": "Hoy hace buen tiempo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f2",
+     "ja": "雨",
+     "furi": "<ruby>雨<rt>あめ</rt></ruby>",
+     "romaji": "Ame",
+     "es": "lluvia",
+     "ex": "雨が降っています。",
+     "exEs": "Está lloviendo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f3",
+     "ja": "雪",
+     "furi": "<ruby>雪<rt>ゆき</rt></ruby>",
+     "romaji": "Yuki",
+     "es": "nieve",
+     "ex": "雪が降ります。",
+     "exEs": "Nieva.",
+     "note": ""
+    },
+    {
+     "id": "n5_f4",
+     "ja": "風",
+     "furi": "<ruby>風<rt>かぜ</rt></ruby>",
+     "romaji": "Kaze",
+     "es": "viento",
+     "ex": "風が強いです。",
+     "exEs": "Hay mucho viento.",
+     "note": "Suena igual que 風邪 (resfriado)."
+    },
+    {
+     "id": "n5_f5",
+     "ja": "晴れ",
+     "furi": "<ruby>晴れ<rt>はれ</rt></ruby>",
+     "romaji": "Hare",
+     "es": "despejado",
+     "ex": "明日は晴れです。",
+     "exEs": "Mañana estará despejado.",
+     "note": ""
+    },
+    {
+     "id": "n5_f6",
+     "ja": "曇り",
+     "furi": "<ruby>曇り<rt>くもり</rt></ruby>",
+     "romaji": "Kumori",
+     "es": "nublado",
+     "ex": "今日は曇りです。",
+     "exEs": "Hoy está nublado.",
+     "note": ""
+    },
+    {
+     "id": "n5_f7",
+     "ja": "空",
+     "furi": "<ruby>空<rt>そら</rt></ruby>",
+     "romaji": "Sora",
+     "es": "cielo",
+     "ex": "空が青いです。",
+     "exEs": "El cielo es azul.",
+     "note": ""
+    },
+    {
+     "id": "n5_f8",
+     "ja": "海",
+     "furi": "<ruby>海<rt>うみ</rt></ruby>",
+     "romaji": "Umi",
+     "es": "mar",
+     "ex": "海へ行きます。",
+     "exEs": "Voy al mar.",
+     "note": ""
+    },
+    {
+     "id": "n5_f9",
+     "ja": "湖",
+     "furi": "<ruby>湖<rt>みずうみ</rt></ruby>",
+     "romaji": "Mizuumi",
+     "es": "lago",
+     "ex": "湖は広いです。",
+     "exEs": "El lago es amplio.",
+     "note": ""
+    },
+    {
+     "id": "n5_f10",
+     "ja": "森",
+     "furi": "<ruby>森<rt>もり</rt></ruby>",
+     "romaji": "Mori",
+     "es": "bosque",
+     "ex": "森を歩きます。",
+     "exEs": "Camino por el bosque.",
+     "note": ""
+    },
+    {
+     "id": "n5_f11",
+     "ja": "島",
+     "furi": "<ruby>島<rt>しま</rt></ruby>",
+     "romaji": "Shima",
+     "es": "isla",
+     "ex": "小さい島です。",
+     "exEs": "Es una isla pequeña.",
+     "note": ""
+    },
+    {
+     "id": "n5_f12",
+     "ja": "星",
+     "furi": "<ruby>星<rt>ほし</rt></ruby>",
+     "romaji": "Hoshi",
+     "es": "estrella",
+     "ex": "星がきれいです。",
+     "exEs": "Las estrellas son bonitas.",
+     "note": ""
+    },
+    {
+     "id": "n5_f13",
+     "ja": "太陽",
+     "furi": "<ruby>太陽<rt>たいよう</rt></ruby>",
+     "romaji": "Taiyou",
+     "es": "sol",
+     "ex": "太陽が出ています。",
+     "exEs": "Ha salido el sol.",
+     "note": ""
+    },
+    {
+     "id": "n5_f14",
+     "ja": "台風",
+     "furi": "<ruby>台風<rt>たいふう</rt></ruby>",
+     "romaji": "Taifuu",
+     "es": "tifón",
+     "ex": "台風が来ます。",
+     "exEs": "Viene un tifón.",
+     "note": ""
+    },
+    {
+     "id": "n5_f15",
+     "ja": "降る",
+     "furi": "<ruby>降る<rt>ふる</rt></ruby>",
+     "romaji": "Furu",
+     "es": "caer (lluvia, nieve)",
+     "ex": "雨が降ります。",
+     "exEs": "Llueve.",
+     "note": ""
+    },
+    {
+     "id": "n5_f16",
+     "ja": "吹く",
+     "furi": "<ruby>吹く<rt>ふく</rt></ruby>",
+     "romaji": "Fuku",
+     "es": "soplar",
+     "ex": "風が吹きます。",
+     "exEs": "Sopla el viento.",
+     "note": ""
+    },
+    {
+     "id": "n5_f17",
+     "ja": "晴れる",
+     "furi": "<ruby>晴れる<rt>はれる</rt></ruby>",
+     "romaji": "Hareru",
+     "es": "despejarse",
+     "ex": "明日は晴れるでしょう。",
+     "exEs": "Mañana se despejará.",
+     "note": ""
+    },
+    {
+     "id": "n5_f18",
+     "ja": "曇る",
+     "furi": "<ruby>曇る<rt>くもる</rt></ruby>",
+     "romaji": "Kumoru",
+     "es": "nublarse",
+     "ex": "午後は曇ります。",
+     "exEs": "Por la tarde se nubla.",
+     "note": ""
+    },
+    {
+     "id": "n5_f19",
+     "ja": "季節",
+     "furi": "<ruby>季節<rt>きせつ</rt></ruby>",
+     "romaji": "Kisetsu",
+     "es": "estación del año",
+     "ex": "好きな季節は春です。",
+     "exEs": "Mi estación favorita es la primavera.",
+     "note": ""
+    },
+    {
+     "id": "n5_f20",
+     "ja": "国",
+     "furi": "<ruby>国<rt>くに</rt></ruby>",
+     "romaji": "Kuni",
+     "es": "país",
+     "ex": "どこの国ですか。",
+     "exEs": "¿De qué país eres?",
+     "note": ""
+    },
+    {
+     "id": "n5_f21",
+     "ja": "町",
+     "furi": "<ruby>町<rt>まち</rt></ruby>",
+     "romaji": "Machi",
+     "es": "pueblo, ciudad",
+     "ex": "静かな町です。",
+     "exEs": "Es un pueblo tranquilo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f22",
+     "ja": "村",
+     "furi": "<ruby>村<rt>むら</rt></ruby>",
+     "romaji": "Mura",
+     "es": "aldea",
+     "ex": "小さい村です。",
+     "exEs": "Es una aldea pequeña.",
+     "note": ""
+    },
+    {
+     "id": "n5_f23",
+     "ja": "東京",
+     "furi": "<ruby>東京<rt>とうきょう</rt></ruby>",
+     "romaji": "Toukyou",
+     "es": "Tokio",
+     "ex": "東京に住んでいます。",
+     "exEs": "Vivo en Tokio.",
+     "note": ""
+    },
+    {
+     "id": "n5_f24",
+     "ja": "日本",
+     "furi": "<ruby>日本<rt>にほん</rt></ruby>",
+     "romaji": "Nihon",
+     "es": "Japón",
+     "ex": "日本へ行きます。",
+     "exEs": "Voy a Japón.",
+     "note": "También se lee Nippon."
+    },
+    {
+     "id": "n5_f25",
+     "ja": "外国",
+     "furi": "<ruby>外国<rt>がいこく</rt></ruby>",
+     "romaji": "Gaikoku",
+     "es": "país extranjero",
+     "ex": "外国へ行きたいです。",
+     "exEs": "Quiero ir al extranjero.",
+     "note": ""
+    },
+    {
+     "id": "n5_f26",
+     "ja": "中国",
+     "furi": "<ruby>中国<rt>ちゅうごく</rt></ruby>",
+     "romaji": "Chuugoku",
+     "es": "China",
+     "ex": "中国へ行きました。",
+     "exEs": "Fui a China.",
+     "note": ""
+    },
+    {
+     "id": "n5_f27",
+     "ja": "韓国",
+     "furi": "<ruby>韓国<rt>かんこく</rt></ruby>",
+     "romaji": "Kankoku",
+     "es": "Corea del Sur",
+     "ex": "韓国の料理が好きです。",
+     "exEs": "Me gusta la comida coreana.",
+     "note": ""
+    },
+    {
+     "id": "n5_f28",
+     "ja": "アメリカ",
+     "furi": "",
+     "romaji": "Amerika",
+     "es": "Estados Unidos",
+     "ex": "アメリカから来ました。",
+     "exEs": "Vengo de Estados Unidos.",
+     "note": ""
+    },
+    {
+     "id": "n5_f29",
+     "ja": "スペイン",
+     "furi": "",
+     "romaji": "Supein",
+     "es": "España",
+     "ex": "スペインに住んでいます。",
+     "exEs": "Vivo en España.",
+     "note": ""
+    },
+    {
+     "id": "n5_f30",
+     "ja": "メキシコ",
+     "furi": "",
+     "romaji": "Mekishiko",
+     "es": "México",
+     "ex": "メキシコの料理です。",
+     "exEs": "Es comida mexicana.",
+     "note": ""
+    },
+    {
+     "id": "n5_f31",
+     "ja": "ベネズエラ",
+     "furi": "",
+     "romaji": "Benezuera",
+     "es": "Venezuela",
+     "ex": "ベネズエラから来ました。",
+     "exEs": "Vengo de Venezuela.",
+     "note": ""
+    },
+    {
+     "id": "n5_f32",
+     "ja": "教室",
+     "furi": "<ruby>教室<rt>きょうしつ</rt></ruby>",
+     "romaji": "Kyoushitsu",
+     "es": "aula",
+     "ex": "教室に入ります。",
+     "exEs": "Entro al aula.",
+     "note": ""
+    },
+    {
+     "id": "n5_f33",
+     "ja": "トイレ",
+     "furi": "",
+     "romaji": "Toire",
+     "es": "baño",
+     "ex": "トイレはどこですか。",
+     "exEs": "¿Dónde está el baño?",
+     "note": ""
+    },
+    {
+     "id": "n5_f34",
+     "ja": "玄関",
+     "furi": "<ruby>玄関<rt>げんかん</rt></ruby>",
+     "romaji": "Genkan",
+     "es": "entrada de la casa",
+     "ex": "玄関で靴を脱ぎます。",
+     "exEs": "Me quito los zapatos en la entrada.",
+     "note": ""
+    },
+    {
+     "id": "n5_f35",
+     "ja": "庭",
+     "furi": "<ruby>庭<rt>にわ</rt></ruby>",
+     "romaji": "Niwa",
+     "es": "jardín",
+     "ex": "庭に花があります。",
+     "exEs": "Hay flores en el jardín.",
+     "note": ""
+    },
+    {
+     "id": "n5_f36",
+     "ja": "階段",
+     "furi": "<ruby>階段<rt>かいだん</rt></ruby>",
+     "romaji": "Kaidan",
+     "es": "escalera",
+     "ex": "階段を上ります。",
+     "exEs": "Subo las escaleras.",
+     "note": ""
+    },
+    {
+     "id": "n5_f37",
+     "ja": "入口",
+     "furi": "<ruby>入口<rt>いりぐち</rt></ruby>",
+     "romaji": "Iriguchi",
+     "es": "entrada",
+     "ex": "入口はどこですか。",
+     "exEs": "¿Dónde está la entrada?",
+     "note": ""
+    },
+    {
+     "id": "n5_f38",
+     "ja": "出口",
+     "furi": "<ruby>出口<rt>でぐち</rt></ruby>",
+     "romaji": "Deguchi",
+     "es": "salida",
+     "ex": "出口はあそこです。",
+     "exEs": "La salida está allí.",
+     "note": ""
+    },
+    {
+     "id": "n5_f39",
+     "ja": "交差点",
+     "furi": "<ruby>交差点<rt>こうさてん</rt></ruby>",
+     "romaji": "Kousaten",
+     "es": "cruce",
+     "ex": "交差点を右に曲がります。",
+     "exEs": "Giro a la derecha en el cruce.",
+     "note": ""
+    },
+    {
+     "id": "n5_f40",
+     "ja": "信号",
+     "furi": "<ruby>信号<rt>しんごう</rt></ruby>",
+     "romaji": "Shingou",
+     "es": "semáforo",
+     "ex": "信号を渡ります。",
+     "exEs": "Cruzo el semáforo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f41",
+     "ja": "橋",
+     "furi": "<ruby>橋<rt>はし</rt></ruby>",
+     "romaji": "Hashi",
+     "es": "puente",
+     "ex": "橋を渡ります。",
+     "exEs": "Cruzo el puente.",
+     "note": ""
+    },
+    {
+     "id": "n5_f42",
+     "ja": "隣",
+     "furi": "<ruby>隣<rt>となり</rt></ruby>",
+     "romaji": "Tonari",
+     "es": "al lado, vecino",
+     "ex": "隣の家です。",
+     "exEs": "Es la casa de al lado.",
+     "note": ""
+    },
+    {
+     "id": "n5_f43",
+     "ja": "後ろ",
+     "furi": "<ruby>後ろ<rt>うしろ</rt></ruby>",
+     "romaji": "Ushiro",
+     "es": "detrás",
+     "ex": "私の後ろにいます。",
+     "exEs": "Está detrás de mí.",
+     "note": ""
+    },
+    {
+     "id": "n5_f44",
+     "ja": "横",
+     "furi": "<ruby>横<rt>よこ</rt></ruby>",
+     "romaji": "Yoko",
+     "es": "costado, al lado",
+     "ex": "駅の横にあります。",
+     "exEs": "Está al lado de la estación.",
+     "note": ""
+    },
+    {
+     "id": "n5_f45",
+     "ja": "間",
+     "furi": "<ruby>間<rt>あいだ</rt></ruby>",
+     "romaji": "Aida",
+     "es": "entre",
+     "ex": "銀行と駅の間です。",
+     "exEs": "Está entre el banco y la estación.",
+     "note": ""
+    },
+    {
+     "id": "n5_f46",
+     "ja": "北",
+     "furi": "<ruby>北<rt>きた</rt></ruby>",
+     "romaji": "Kita",
+     "es": "norte",
+     "ex": "北へ行きます。",
+     "exEs": "Voy hacia el norte.",
+     "note": ""
+    },
+    {
+     "id": "n5_f47",
+     "ja": "南",
+     "furi": "<ruby>南<rt>みなみ</rt></ruby>",
+     "romaji": "Minami",
+     "es": "sur",
+     "ex": "南は暖かいです。",
+     "exEs": "El sur es cálido.",
+     "note": ""
+    },
+    {
+     "id": "n5_f48",
+     "ja": "東",
+     "furi": "<ruby>東<rt>ひがし</rt></ruby>",
+     "romaji": "Higashi",
+     "es": "este",
+     "ex": "東の空です。",
+     "exEs": "Es el cielo del este.",
+     "note": ""
+    },
+    {
+     "id": "n5_f49",
+     "ja": "西",
+     "furi": "<ruby>西<rt>にし</rt></ruby>",
+     "romaji": "Nishi",
+     "es": "oeste",
+     "ex": "西へ行きます。",
+     "exEs": "Voy hacia el oeste.",
+     "note": ""
+    },
+    {
+     "id": "n5_f50",
+     "ja": "地図",
+     "furi": "<ruby>地図<rt>ちず</rt></ruby>",
+     "romaji": "Chizu",
+     "es": "mapa",
+     "ex": "地図を見ます。",
+     "exEs": "Miro el mapa.",
+     "note": ""
+    },
+    {
+     "id": "n5_f51",
+     "ja": "住所",
+     "furi": "<ruby>住所<rt>じゅうしょ</rt></ruby>",
+     "romaji": "Juusho",
+     "es": "dirección",
+     "ex": "住所を書いてください。",
+     "exEs": "Escriba su dirección, por favor.",
+     "note": ""
+    },
+    {
+     "id": "n5_f52",
+     "ja": "映画館",
+     "furi": "<ruby>映画館<rt>えいがかん</rt></ruby>",
+     "romaji": "Eigakan",
+     "es": "cine",
+     "ex": "映画館へ行きます。",
+     "exEs": "Voy al cine.",
+     "note": ""
+    },
+    {
+     "id": "n5_f53",
+     "ja": "動物園",
+     "furi": "<ruby>動物園<rt>どうぶつえん</rt></ruby>",
+     "romaji": "Doubutsuen",
+     "es": "zoológico",
+     "ex": "動物園へ行きます。",
+     "exEs": "Voy al zoológico.",
+     "note": ""
+    },
+    {
+     "id": "n5_f54",
+     "ja": "美術館",
+     "furi": "<ruby>美術館<rt>びじゅつかん</rt></ruby>",
+     "romaji": "Bijutsukan",
+     "es": "museo de arte",
+     "ex": "美術館は静かです。",
+     "exEs": "El museo es tranquilo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f55",
+     "ja": "神社",
+     "furi": "<ruby>神社<rt>じんじゃ</rt></ruby>",
+     "romaji": "Jinja",
+     "es": "santuario sintoísta",
+     "ex": "神社へ行きます。",
+     "exEs": "Voy al santuario.",
+     "note": ""
+    },
+    {
+     "id": "n5_f56",
+     "ja": "お寺",
+     "furi": "<ruby>お寺<rt>おてら</rt></ruby>",
+     "romaji": "Otera",
+     "es": "templo budista",
+     "ex": "お寺を見ます。",
+     "exEs": "Visito un templo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f57",
+     "ja": "城",
+     "furi": "<ruby>城<rt>しろ</rt></ruby>",
+     "romaji": "Shiro",
+     "es": "castillo",
+     "ex": "大きい城です。",
+     "exEs": "Es un castillo grande.",
+     "note": ""
+    },
+    {
+     "id": "n5_f58",
+     "ja": "温泉",
+     "furi": "<ruby>温泉<rt>おんせん</rt></ruby>",
+     "romaji": "Onsen",
+     "es": "aguas termales",
+     "ex": "温泉に入ります。",
+     "exEs": "Me baño en aguas termales.",
+     "note": ""
+    },
+    {
+     "id": "n5_f59",
+     "ja": "港",
+     "furi": "<ruby>港<rt>みなと</rt></ruby>",
+     "romaji": "Minato",
+     "es": "puerto",
+     "ex": "港へ行きます。",
+     "exEs": "Voy al puerto.",
+     "note": ""
+    },
+    {
+     "id": "n5_f60",
+     "ja": "会社",
+     "furi": "<ruby>会社<rt>かいしゃ</rt></ruby>",
+     "romaji": "Kaisha",
+     "es": "empresa",
+     "ex": "会社へ行きます。",
+     "exEs": "Voy a la empresa.",
+     "note": ""
+    },
+    {
+     "id": "n5_f61",
+     "ja": "工場",
+     "furi": "<ruby>工場<rt>こうじょう</rt></ruby>",
+     "romaji": "Koujou",
+     "es": "fábrica",
+     "ex": "工場で働きます。",
+     "exEs": "Trabajo en una fábrica.",
+     "note": ""
+    },
+    {
+     "id": "n5_f62",
+     "ja": "動物",
+     "furi": "<ruby>動物<rt>どうぶつ</rt></ruby>",
+     "romaji": "Doubutsu",
+     "es": "animal",
+     "ex": "動物が好きです。",
+     "exEs": "Me gustan los animales.",
+     "note": ""
+    },
+    {
+     "id": "n5_f63",
+     "ja": "馬",
+     "furi": "<ruby>馬<rt>うま</rt></ruby>",
+     "romaji": "Uma",
+     "es": "caballo",
+     "ex": "馬に乗ります。",
+     "exEs": "Monto a caballo.",
+     "note": ""
+    },
+    {
+     "id": "n5_f64",
+     "ja": "牛",
+     "furi": "<ruby>牛<rt>うし</rt></ruby>",
+     "romaji": "Ushi",
+     "es": "vaca",
+     "ex": "牛を見ます。",
+     "exEs": "Veo una vaca.",
+     "note": ""
+    }
+   ]
+  }
+ ]
+}

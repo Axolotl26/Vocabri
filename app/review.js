@@ -1,5 +1,6 @@
 // Vocabri — módulo "review" (generado a partir de app.js)
 import { S } from './core/shared.js';
+import { renderFront } from './cardFace.js';
 import { isMastered, itemsFor, readStored } from './core/dataRegistry.js';
 import { LEECH_LAPSES, REVIEW_SESSION_CAP, REVIEW_XP, fmtWhen, getDailyGoalTarget, getDueCards, getDueTodayCount, getNextDueTime, getXpToday, srsForecast, srsGapText, srsGrade, srsInterval, srsInvalidate, srsLog, srsNextInterval, srsRetention7, srsWouldApply } from './state.js';
 import { shortcutAllowed, activationKeyFree } from './shortcuts.js';
@@ -214,7 +215,7 @@ export function showReviewCard(){
   updateReviewProgress();
 
   const item = S.reviewCurrent;
-  reviewEl('reviewFrontText').textContent = item[0];
+  renderFront(reviewEl('reviewFrontText'), item);
   reviewEl('reviewBackText').textContent = item[1];
   window.currentReviewKey = item[3];
 

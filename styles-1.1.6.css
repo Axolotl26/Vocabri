@@ -1104,3 +1104,251 @@ button, a, summary, [role="button"], .snCard, .snOpt, .rvMode, .navItem{ touch-a
   }
   img, svg{ -webkit-touch-callout:none; -webkit-user-drag:none; }
 }
+
+/* ===== Cursos de otros idiomas (japonés) ===== */
+.catLangHead{ width:100%; flex:0 0 100%; margin:8px 0 2px; font-weight:900; font-size:.8rem; letter-spacing:.04em; text-transform:uppercase; opacity:.75; }
+.catBeta{ font-style:normal; font-size:.62rem; font-weight:900; padding:1px 6px; margin-left:4px; border-radius:999px; background:var(--tab,#F43F5E); color:#fff; vertical-align:middle; }
+#frontText.jaFront, #reviewFrontText.jaFront{ display:flex; flex-direction:column; align-items:center; gap:6px; line-height:1.25; }
+.jaFront .jaText{ font-size:clamp(2rem, 9vw, 3rem); font-weight:800; font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif; }
+.jaFront .jaText ruby{ ruby-position:over; }
+.jaFront .jaText rt{ font-size:.38em; font-weight:700; opacity:.85; }
+.jaFront .jaRomaji{ font-size:1rem; font-weight:700; opacity:.7; letter-spacing:.02em; }
+
+/* Calcar (1.2.0) */
+.traceModal{ width:min(92vw,420px); }
+.traceBoard{ position:relative; width:100%; aspect-ratio:1; border-radius:18px; background:var(--card,#fff); border:2px dashed rgba(127,127,127,.4); container-type:inline-size; overflow:hidden; touch-action:none; }
+.traceGuide{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif; line-height:1; color:rgba(127,127,127,.28); pointer-events:none; user-select:none; }
+#traceCanvas{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; cursor:crosshair; }
+.traceBtns{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.traceBtns .nav{ flex:1 1 0; min-width:0; padding-inline:8px; font-size:.9rem; }
+
+/* Abecedario japonés + velo de nubes (1.2.0) */
+.knTabs{ display:flex; gap:8px; margin:10px 0 6px; }
+.knTab{ flex:1; cursor:pointer; font:inherit; font-weight:900; padding:9px 6px; border-radius:14px; color:var(--ink); background:var(--paper); border:2.5px solid color-mix(in srgb,#F472B6 45%,#000); }
+.knTab.isSel{ background:#F472B6; color:#2b0b1b; }
+.knGroups{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-bottom:10px; }
+.knGroup{ cursor:pointer; font:inherit; display:flex; flex-direction:column; align-items:center; gap:1px; padding:7px 4px; border-radius:12px; color:var(--ink); background:var(--paper); border:2px solid rgba(127,127,127,.4); }
+.knGroup b{ font-size:.8rem; } .knGroup small{ font-size:.68rem; opacity:.75; }
+.knGroup.isSel{ border-color:#F472B6; box-shadow:0 0 0 2px #F472B655; }
+.knGroup.isDone small{ color:#16a34a; font-weight:900; opacity:1; }
+.knBig{ font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif; font-size:4.4rem; line-height:1.1; min-width:112px; text-align:center; }
+.knKey b{ font-size:1.5rem; font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif; }
+.knKey.isSeen{ box-shadow:inset 0 0 0 2px #F472B688; }
+.knWordsHead{ margin:14px 0 6px; font-weight:900; font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; opacity:.75; }
+.knWord{ cursor:pointer; font:inherit; display:flex; align-items:baseline; gap:8px; width:100%; text-align:left; padding:8px 12px; margin-bottom:6px; border-radius:14px; color:var(--ink); background:var(--paper); border:2px solid rgba(127,127,127,.35); }
+.knWord b{ font-size:1.2rem; } .knWord small{ opacity:.8; }
+#knPractice{ margin-top:14px; }
+.knQPrompt{ display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 14px; }
+.knQBig{ font-size:4.2rem; line-height:1.1; font-weight:900; font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif; }
+.knQOpts{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.knOpt{ cursor:pointer; font:inherit; font-size:1.3rem; font-weight:900; padding:16px 8px; border-radius:16px; color:var(--ink); background:var(--paper); border:2.5px solid color-mix(in srgb,#F472B6 45%,#000); box-shadow:0 3px 0 color-mix(in srgb,#F472B6 45%,#000); }
+.knOptJa{ font-size:2rem; font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif; }
+.knOpt.isRight{ background:#86efac; color:#052e16; } .knOpt.isWrong{ background:#fca5a5; color:#450a0a; }
+.knQFb{ min-height:1.6em; text-align:center; font-weight:900; margin:10px 0; }
+.knQEndTx{ text-align:center; font-size:1.1rem; margin:16px 0; }
+.kanaLocked #pathWrap{ filter:blur(5px) saturate(.8); pointer-events:none; user-select:none; }
+#stageMapView{ position:relative; }
+.kvCloud svg{ display:block; width:100%; height:auto; }
+.kvCloud.c1{ width:62%; left:-10%; top:34%; } .kvCloud.c2{ width:70%; right:-14%; top:58%; } .kvCloud.c3{ width:55%; left:8%; top:82%; }
+.kvSkip{ display:block; width:100%; margin-top:10px; cursor:pointer; font:inherit; font-size:.85rem; font-weight:800; background:none; border:none; color:inherit; opacity:.75; text-decoration:underline; }
+@media (prefers-reduced-motion:no-preference){ .kvCloud.c1{ animation:kvDrift 14s ease-in-out infinite alternate; } .kvCloud.c2{ animation:kvDrift 18s ease-in-out infinite alternate-reverse; } @keyframes kvDrift{ to{ transform:translateX(18px); } } }
+
+/* Paneles por idioma en Ajustes (1.2.0) */
+#catSelector{ display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+.langPanel{ padding:10px; border-radius:18px; border:2px solid rgba(127,127,127,.35); background:rgba(127,127,127,.07); }
+.langPanel.isActive{ border-color:var(--tab,#F472B6); box-shadow:0 0 0 2px color-mix(in srgb,var(--tab,#F472B6) 30%,transparent); }
+.langPanelHead{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.langPanelEmoji{ font-size:1.5rem; }
+.langPanelTx{ flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.2; }
+.langPanelTx small{ opacity:.7; font-size:.72rem; }
+.langPanelBadge{ display:none; font-size:.66rem; font-weight:900; padding:2px 8px; border-radius:999px; background:var(--tab,#F472B6); color:#fff; }
+.langPanel.isActive .langPanelBadge{ display:inline-block; }
+.langCourses{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.langCourses .catSelectorBtn{ width:100%; }
+.langOpts{ margin-top:10px; padding-top:10px; border-top:2px dashed rgba(127,127,127,.35); display:flex; flex-direction:column; gap:8px; }
+.langOptsTitle{ font-weight:900; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; opacity:.7; }
+.langOpt{ cursor:pointer; font:inherit; font-weight:800; font-size:.85rem; text-align:left; padding:10px 12px; border-radius:14px; color:inherit; background:rgba(127,127,127,.12); border:2px solid rgba(127,127,127,.35); }
+
+/* Velo de nubes: mismo estilo que los modales de la app (1.2.0) */
+.kanaVeil{ --cl:color-mix(in srgb,#F9A8D4 38%,var(--paper)); position:sticky; top:0; z-index:30; overflow:clip; background:linear-gradient(180deg,color-mix(in srgb,var(--paper) 62%,transparent),color-mix(in srgb,var(--paper) 18%,transparent)); }
+.kvCloud{ position:absolute; color:var(--cl); opacity:.97; filter:drop-shadow(0 6px 0 color-mix(in srgb,var(--cl) 55%,#000)); }
+.kvCloud svg{ display:block; width:100%; height:auto; }
+.kvCard h3{ margin:0 0 6px; } .kvCard p{ margin:0 0 14px; }
+.knVoiceNote{ margin:6px 0 10px !important; padding:8px 12px; border-radius:14px; background:color-mix(in srgb,#F59E0B 18%,var(--paper)); border:2px solid #F59E0B88; font-size:.8rem; line-height:1.35; text-align:left; }
+
+/* Orden de trazos (1.2.0) */
+.traceStrokesSvg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.traceStroke{ fill:none; stroke:#F43F5E; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+.traceNum{ font-size:7px; font-weight:900; fill:#F43F5E; font-family:system-ui,sans-serif; }
+
+/* Arreglos 1.2.0: scroll del abecedario japonés, panel de idiomas, cartel del velo */
+#kanaView{ --tab:#F472B6; --tabE:color-mix(in srgb, var(--tab) 45%, #000);
+  position:relative; max-width:640px; margin:0 auto; width:100%; padding:10px 0 28px; text-align:left;
+  height:100%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; -ms-overflow-style:none; }
+#kanaView::-webkit-scrollbar{ width:0; height:0; display:none; }
+body:has(#kanaView:not([style*="none"])){ --gc:#F472B6; }
+#catSelector[hidden]{ display:none !important; }
+.kanaVeil{ box-sizing:border-box; padding-top:150px; display:flow-root; }
+.kvCard{ --ma:#F472B6; width:min(88%,340px); margin:0 auto; text-align:center; }
+.kvCard h3{ margin:0 0 6px; } .kvCard p{ margin:0 0 14px; }
+.kvCard .gModalEmoji{ width:92px; height:92px; margin:-70px auto 10px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--paper); border:4px solid color-mix(in srgb,#F472B6 45%,#000); box-shadow:0 5px 0 color-mix(in srgb,#F472B6 45%,#000); }
+.kvCard .gModalEmoji svg{ width:62px; height:62px; }
+
+/* Práctica del abecedario con el estilo de los demás paneles (1.2.0) */
+#kanaView{ --kE:color-mix(in srgb,#F472B6 45%,#000); }
+.knQCard{ position:relative; margin-top:22px; padding:34px 16px 20px; border-radius:28px; border:3px solid var(--kE); text-align:center;
+  background:radial-gradient(circle at 1px 1px, color-mix(in srgb,#F472B6 18%,transparent) 1.4px, transparent 1.6px) 0 0/18px 18px,
+             linear-gradient(180deg, color-mix(in srgb,#F472B6 11%,var(--paper)), var(--paper) 55%);
+  box-shadow:0 8px 0 var(--kE), 0 18px 28px rgba(0,0,0,.22); }
+.knQTag{ position:absolute; top:-2px; left:50%; transform:translate(-50%,-50%); padding:5px 16px; border-radius:999px; font-weight:900; font-size:.78rem; letter-spacing:.08em; white-space:nowrap;
+  color:#3B0A22; background:linear-gradient(180deg,#F9A8D4,#F472B6); border:2.5px solid var(--kE); box-shadow:0 3px 0 var(--kE); }
+.knQBar{ height:10px; border-radius:999px; background:color-mix(in srgb,#F472B6 18%,var(--paper)); border:2px solid var(--kE); overflow:hidden; margin:4px 0 6px; }
+.knQBar i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#F9A8D4,#F472B6); transition:width .3s ease; }
+.knQProgTx{ margin:2px 0 6px; font-size:.78rem; font-weight:800; opacity:.75; }
+.knQPrompt{ margin:6px 0 16px; }
+.knQPrompt .knQBig{ display:inline-flex; align-items:center; justify-content:center; min-width:120px; padding:6px 22px; border-radius:22px; background:var(--paper); border:3px solid var(--kE); box-shadow:0 5px 0 var(--kE); }
+.knQPrompt small{ font-size:.85rem; font-weight:800; opacity:.8; }
+.knOpt{ border-radius:18px; border:3px solid var(--kE); box-shadow:0 5px 0 var(--kE); transition:transform .08s ease, box-shadow .08s ease; }
+.knOpt:active:not(:disabled){ transform:translateY(4px); box-shadow:0 1px 0 var(--kE); }
+.knOpt.isRight{ border-color:#15803d; box-shadow:0 5px 0 #15803d; } .knOpt.isWrong{ border-color:#b91c1c; box-shadow:0 5px 0 #b91c1c; }
+.knQCard .nav{ width:100%; }
+
+/* ===== 1.2.0 t4d: botones del calcado, Escuchar/Siguiente y ruta de práctica del abecedario ===== */
+.traceBtns{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.gModal .traceBtns button.nav, .gModal .traceBtns button.nav + button.nav{ margin:0; flex:1 1 calc(50% - 5px); min-width:0; width:auto; min-height:50px; padding:0 10px; box-sizing:border-box;
+  display:flex; align-items:center; justify-content:center; gap:6px; font:inherit; font-size:.95rem; font-weight:900; line-height:1.1; white-space:nowrap; text-align:center; }
+.gModal .traceBtns #traceClose{ flex:1 1 100%; }
+
+#kanaView{ --kE:color-mix(in srgb,#F472B6 45%,#000); }
+.knListen{ cursor:pointer; font:inherit; font-weight:900; font-size:1.05rem; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:56px; padding:0 26px; border-radius:18px;
+  color:#3B0A22; background:linear-gradient(180deg,#F9A8D4,#F472B6); border:3px solid var(--kE); box-shadow:0 5px 0 var(--kE); transition:transform .08s ease, box-shadow .08s ease; }
+.knListen:active{ transform:translateY(4px); box-shadow:0 1px 0 var(--kE); }
+.knListen .knSpk{ flex:none; }
+.knBtns{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.knBtns #knPlay{ grid-column:1 / -1; width:100%; }
+.knBtns .abcBtn{ font-size:.85rem; min-height:48px; padding:8px 4px; }
+.knListenRow{ display:flex; gap:10px; justify-content:center; align-items:stretch; margin:6px 0 12px; flex-wrap:wrap; }
+.knListenAlt{ cursor:pointer; font:inherit; font-weight:900; font-size:.95rem; min-height:56px; padding:0 18px; border-radius:18px; color:var(--ink); background:var(--paper); border:3px solid var(--kE); box-shadow:0 5px 0 var(--kE); display:inline-flex; align-items:center; gap:6px; }
+.knListenAlt:active{ transform:translateY(4px); box-shadow:0 1px 0 var(--kE); }
+
+.knNextBtn{ cursor:pointer; font:inherit; font-weight:900; font-size:1.1rem; width:100%; min-height:58px; border-radius:18px; color:#3B0A22; background:linear-gradient(180deg,#F9A8D4,#F472B6); border:3px solid var(--kE); box-shadow:0 6px 0 var(--kE);
+  display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .08s ease, box-shadow .08s ease; }
+.knNextBtn:active{ transform:translateY(5px); box-shadow:0 1px 0 var(--kE); }
+.knGhost{ cursor:pointer; font:inherit; font-weight:800; font-size:.92rem; width:100%; min-height:46px; margin-top:10px; border-radius:16px; color:var(--ink); background:var(--paper); border:2.5px solid var(--kE); box-shadow:0 3px 0 var(--kE); }
+.knFoot{ margin-top:16px; display:flex; flex-direction:column; gap:0; text-align:left; }
+.knFb{ margin:0 -6px; padding:12px 12px 14px; border-radius:20px; display:flex; flex-direction:column; gap:12px; animation:knUp .22s ease; }
+.knFb.isOk{ background:color-mix(in srgb,#22c55e 22%,var(--paper)); border:2.5px solid #15803d; }
+.knFb.isBad{ background:color-mix(in srgb,#ef4444 20%,var(--paper)); border:2.5px solid #b91c1c; }
+.knFbTx{ display:flex; align-items:center; gap:10px; font-weight:900; font-size:1.02rem; }
+.knFbIc{ flex:none; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; color:#fff; font-size:1rem; }
+.knFb.isOk .knFbIc{ background:#16a34a; } .knFb.isBad .knFbIc{ background:#dc2626; }
+.knFb.isOk .knNextBtn{ background:linear-gradient(180deg,#86efac,#22c55e); border-color:#15803d; box-shadow:0 6px 0 #15803d; color:#052e16; }
+.knFb.isBad .knNextBtn{ background:linear-gradient(180deg,#fca5a5,#ef4444); border-color:#b91c1c; box-shadow:0 6px 0 #b91c1c; color:#450a0a; }
+@keyframes knUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+.knQAsk{ margin:4px 0 14px; font-size:.9rem; font-weight:800; opacity:.85; }
+.knQOpts.isOne{ grid-template-columns:1fr; }
+.knOptEs{ font-size:1rem; } .knOptWord{ font-size:1.5rem; }
+.knQWord{ font-size:3rem !important; } .knQEs{ font-size:1.6rem !important; }
+.knDots{ display:flex; gap:6px; justify-content:center; margin-bottom:6px; }
+.knDots i{ width:9px; height:9px; border-radius:50%; background:color-mix(in srgb,#F472B6 25%,var(--paper)); border:1.5px solid var(--kE); }
+.knDots i.on{ background:#F472B6; transform:scale(1.25); } .knDots i.past{ background:var(--kE); }
+.knIntroKick{ margin:0 0 4px; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.06em; opacity:.7; }
+.knIntroRom{ font-size:2.2rem; font-weight:900; line-height:1.1; margin:4px 0 2px; }
+.knIntroEs{ font-weight:800; opacity:.85; margin-bottom:4px; }
+.knIntroEx{ margin:8px 0; padding:8px 12px; border-radius:14px; border:2px dashed var(--kE); background:color-mix(in srgb,#F472B6 10%,var(--paper)); }
+.knIntroNote{ margin:6px 0 10px; font-size:.82rem; opacity:.8; }
+.knTypeBox{ margin:0 0 4px; }
+.knTypeIn{ width:100%; box-sizing:border-box; font:inherit; font-size:1.5rem; font-weight:900; text-align:center; padding:12px; border-radius:16px; color:var(--ink); background:var(--paper); border:3px solid var(--kE); box-shadow:0 4px 0 var(--kE); }
+.knTypeIn.isRight{ border-color:#15803d; background:color-mix(in srgb,#22c55e 25%,var(--paper)); } .knTypeIn.isWrong{ border-color:#b91c1c; background:color-mix(in srgb,#ef4444 22%,var(--paper)); }
+.knTypeIn.isShake{ animation:knShake .35s; }
+@keyframes knShake{ 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
+.knResH{ margin:6px 0 4px; font-size:1.5rem; font-weight:900; } .knResP{ margin:0 0 6px; font-weight:700; line-height:1.4; }
+.knExamBadge{ font-size:3.4rem; line-height:1; margin:4px 0; } .knExamBadge.isWin{ animation:knPop .6s ease; }
+.knResStars{ display:flex; justify-content:center; gap:6px; font-size:3rem; margin:4px 0; }
+.knResStars i{ font-style:normal; color:color-mix(in srgb,var(--ink) 18%,var(--paper)); }
+.knResStars i.on{ color:#FBBF24; text-shadow:0 3px 0 #B45309; animation:knPop .5s ease both; animation-delay:var(--d,0s); }
+@keyframes knPop{ 0%{ transform:scale(.2) rotate(-25deg); opacity:0; } 70%{ transform:scale(1.25); opacity:1; } 100%{ transform:scale(1); } }
+
+.knRouteSum{ margin:6px 0 10px; padding:10px 14px; border-radius:18px; border:2.5px solid var(--kE); background:var(--paper); }
+.knSumTop{ display:flex; justify-content:space-between; font-weight:900; } .knSumTop span{ color:#D97706; }
+.knModeTabs{ margin-top:4px; }
+
+/* ===== 1.2.0 t4f: ascenso al monte Fuji en 2.5D (escena de 420 de ancho escalada) ===== */
+#kanaView{ padding-inline:14px; box-sizing:border-box; }
+.knClimb{ position:relative; margin:14px 0 8px; border-radius:26px; border:3px solid var(--kE); overflow:hidden; box-shadow:0 6px 0 var(--kE);
+  background:linear-gradient(180deg,#fda4af 0,#fdba74 6%,#fde68a 12%,#bae6fd 30%,#a5d8e8 62%,#86d4c0 100%); }
+.knScene{ position:absolute; left:0; top:0; width:420px; transform-origin:0 0; }
+.fjSvg{ position:absolute; left:0; top:0; display:block; pointer-events:none; }
+.fjDone{ filter:drop-shadow(0 0 5px rgba(251,191,36,.9)); }
+.knCloudB{ position:absolute; width:170px; color:#fff; opacity:.9; pointer-events:none; z-index:2; filter:drop-shadow(0 6px 0 rgba(120,100,160,.25)); }
+.knCloudB svg{ display:block; width:100%; height:auto; }
+@media (prefers-reduced-motion:no-preference){ .knCloudB.c0{ animation:knCl 16s ease-in-out infinite alternate; } .knCloudB.c1{ animation:knCl 21s ease-in-out infinite alternate-reverse; } @keyframes knCl{ to{ transform:translateX(26px); } } }
+/* carteles de madera */
+.knSign{ position:absolute; left:50%; width:296px; margin-left:-148px; height:60px; box-sizing:border-box; z-index:4; display:flex; align-items:center; gap:10px; padding:0 12px; border-radius:14px; color:#3a1d08;
+  border:3px solid #7a4b22; box-shadow:0 7px 0 #7a4b22, 0 14px 18px rgba(0,0,0,.3);
+  background:repeating-linear-gradient(90deg,rgba(90,50,15,.07) 0 2px,transparent 2px 9px),linear-gradient(180deg,#e8b56f,#c98b47); }
+.knSign::before,.knSign::after{ content:""; position:absolute; top:50%; width:7px; height:7px; margin-top:-3.5px; border-radius:50%; background:#7a4b22; }
+.knSign::before{ left:5px; } .knSign::after{ right:5px; }
+.knSignDot{ flex:none; width:16px; height:16px; border-radius:50%; background:#F472B6; border:3px solid #9d2461; }
+.knSign.isKata .knSignDot{ background:#818CF8; border-color:#3730a3; }
+.knSignTx{ flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.1; text-shadow:0 1px 0 rgba(255,255,255,.35); }
+.knSignTx small{ font-size:.62rem; font-weight:900; letter-spacing:.08em; opacity:.75; } .knSignTx b{ font-size:.9rem; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.knSignCount{ flex:none; font-size:.78rem; font-weight:900; padding:2px 9px; border-radius:999px; background:rgba(255,255,255,.6); }
+.knSignCount.isDone{ background:#bbf7d0; color:#14532d; }
+.knSign.knSummit{ width:210px; margin-left:-105px; height:52px; flex-direction:column; justify-content:center; gap:0; text-align:center; line-height:1.15; }
+.knSummit b{ font-size:1.05rem; } .knSummit small{ font-size:.7rem; font-weight:800; opacity:.8; } .knSummit.isOn{ background:linear-gradient(180deg,#fde68a,#fbbf24); }
+/* nodos: pastillas con plataforma de piedra */
+.knNode{ position:absolute; width:96px; margin:0; padding:0; border:0; background:none; cursor:pointer; font:inherit; color:#fff; display:flex; flex-direction:column; align-items:center; z-index:5; -webkit-tap-highlight-color:transparent; }
+.knPlat{ position:absolute; left:50%; top:12px; width:90px; height:46px; margin-left:-45px; border-radius:50%; background:radial-gradient(70% 70% at 50% 30%,#a79fc4,#6b6384); box-shadow:0 8px 0 #3b3350, 0 14px 16px rgba(0,0,0,.35); }
+.knPuck{ --bg:#F472B6; --rim:#fbcfe8; --edge:#9d2461; --ink:#3b0a22; position:relative; margin-top:9px; width:64px; height:54px; border-radius:50%; border:3px solid var(--rim); box-sizing:border-box; display:grid; place-items:center; font-size:1.55rem; font-weight:900; line-height:1; color:var(--ink);
+  font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+  background:radial-gradient(70% 55% at 34% 24%,rgba(255,255,255,.6),rgba(255,255,255,0) 70%),linear-gradient(180deg,transparent 55%,rgba(0,0,0,.16)),var(--bg);
+  box-shadow:0 8px 0 var(--edge), 0 14px 18px rgba(0,0,0,.38); transition:transform .12s ease, box-shadow .12s ease; }
+.knNode.isKata .knPuck{ --bg:#818CF8; --rim:#c7d2fe; --edge:#3730a3; --ink:#1e1b4b; }
+.knNode.s-done .knPuck{ --bg:#FBBF24; --rim:#fde68a; --edge:#b45309; --ink:#451a03; }
+.knNode.s-lock .knPuck{ --bg:#cbd5e1; --rim:#e2e8f0; --edge:#64748b; --ink:#334155; font-size:1.3rem; }
+.knNode.t-exam .knPuck{ width:76px; height:62px; font-size:1.9rem; }
+.knNode:active .knPuck{ transform:translateY(6px); box-shadow:0 2px 0 var(--edge), 0 4px 8px rgba(0,0,0,.3); }
+.knStars{ display:flex; gap:1px; margin-top:8px; font-size:.95rem; line-height:1; height:1em; } .knStars i{ font-style:normal; color:rgba(255,255,255,.45); text-shadow:0 1px 2px rgba(0,0,0,.5); } .knStars i.on{ color:#FBBF24; text-shadow:0 1px 0 #92400e,0 2px 4px rgba(0,0,0,.4); }
+.knStarsOff{ visibility:hidden; }
+.knLbl{ display:flex; flex-direction:column; align-items:center; max-width:94px; margin-top:4px; padding:2px 8px 3px; border-radius:10px; background:rgba(18,10,34,.62); box-shadow:0 2px 0 rgba(0,0,0,.25); line-height:1.15; text-align:center; }
+.knLbl b{ font-size:.72rem; font-weight:900; color:#fff; white-space:nowrap; }
+.knLbl small{ max-width:78px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.62rem; font-weight:800; color:#e9e3ff; }
+.knNode.isCur::before{ content:"¡EMPIEZA!"; position:absolute; top:-24px; left:50%; transform:translateX(-50%); padding:3px 10px; border-radius:12px; font-size:.68rem; font-weight:900; white-space:nowrap; color:#9d2461; background:#fff; border:2.5px solid #9d2461; box-shadow:0 3px 0 #9d2461; z-index:2; }
+.knNode.isCur .knPuck::after{ content:""; position:absolute; inset:-9px; border-radius:50%; border:4px solid #fff; opacity:0; pointer-events:none; }
+@media (prefers-reduced-motion:no-preference){ .knNode.isCur .knPuck::after{ animation:knRing 1.7s ease-out infinite; } @keyframes knRing{ 0%{ opacity:.9; transform:scale(.8); } 100%{ opacity:0; transform:scale(1.5); } } .knNode.isCur .knPuck{ animation:knBob 1.5s ease-in-out infinite; } @keyframes knBob{ 50%{ transform:translateY(-4px); } } }
+/* botones laterales: ir a mi nodo / ir a la cima */
+.knFab{ position:fixed; bottom:calc(92px + env(safe-area-inset-bottom,0px)); z-index:40; width:64px; height:64px; padding:0; cursor:pointer; font:inherit; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; color:#3B0A22;
+  background:linear-gradient(180deg,#F9A8D4,#F472B6); border:3px solid var(--kE); box-shadow:0 5px 0 var(--kE), 0 12px 18px rgba(0,0,0,.35); transition:transform .08s ease, box-shadow .08s ease; }
+.knFab span{ font-size:.6rem; font-weight:900; letter-spacing:.02em; }
+.knFab:active{ transform:translateY(4px); box-shadow:0 1px 0 var(--kE); }
+.knFab.l{ left:max(10px,2vw); } .knFab.r{ right:max(10px,2vw); }
+.knFab.r{ background:linear-gradient(180deg,#c7d2fe,#818CF8); }
+
+/* ===== 1.2.0 t5: selector de idioma en Ajustes (inglés / japonés) ===== */
+.langSwitch{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+.langSwBtn{ cursor:pointer; font:inherit; display:flex; align-items:center; gap:9px; text-align:left; padding:10px 11px; border-radius:16px; color:inherit;
+  border:2.5px solid rgba(127,127,127,.38); background:rgba(127,127,127,.08); transition:transform .12s, border-color .15s, background .15s; }
+.langSwBtn.sel{ border-color:var(--secondary,#F59E0B); background:color-mix(in srgb,var(--secondary,#F59E0B) 18%,transparent); box-shadow:0 3px 0 color-mix(in srgb,var(--secondary,#F59E0B) 55%,#000); }
+.langSwBtn[data-lang="ja"].sel{ border-color:#F472B6; background:color-mix(in srgb,#F472B6 18%,transparent); box-shadow:0 3px 0 color-mix(in srgb,#F472B6 50%,#000); }
+.langSwBtn.busy{ opacity:.6; pointer-events:none; }
+.langSwIc{ font-size:1.5rem; line-height:1; }
+.langSwTx{ display:flex; flex-direction:column; line-height:1.15; min-width:0; } .langSwTx b{ font-weight:900; font-size:.95rem; } .langSwTx small{ font-size:.68rem; opacity:.72; }
+.langOpts[hidden]{ display:none !important; }
+.modeRowOff, .msRow.isOff{ opacity:.55; filter:saturate(.5); cursor:not-allowed; }
+/* En japonés se oculta lo que aún solo existe en inglés (retos, evento semanal, mapa de situaciones, tarjetas propias) */
+html[data-lang="ja"] #eventBtn, html[data-lang="ja"] #challengeBtn{ display:none !important; }
+html[data-lang="ja"] #myCardsView > *{ display:none !important; }
+html[data-lang="ja"] #myCardsView::before{ content:"Mis tarjetas, el traductor guardado y las tarjetas propias funcionan por ahora solo con inglés. Cambia de idioma en Ajustes → Idioma que estudias."; display:block; margin:40px auto; max-width:420px; padding:18px; text-align:center; font-weight:800; line-height:1.4; border-radius:20px; border:2.5px dashed rgba(127,127,127,.5); }
+
+/* t5: la ruta del Fuji usa todo el ancho (como el mapa general); el resto del panel conserva su columna de 640px */
+.wrap:has(#kanaView:not([style*="none"])){ max-width:none; padding-left:0; padding-right:0; }
+#kanaView{ max-width:none; padding-inline:0; }
+#kanaView > *:not(#knRoute){ max-width:640px; margin-inline:auto; width:100%; box-sizing:border-box; padding-inline:14px; }
+#kanaView #knRoute{ max-width:none; }
+#knRoute > .hint, #knRoute > .knRouteSum{ max-width:612px; margin-inline:auto; width:calc(100% - 28px); box-sizing:border-box; }
+.knClimb{ margin-inline:0; border-inline:0; border-radius:24px 24px 0 0; }
+#kanaView > .knVoiceNote{ margin:6px auto 10px !important; width:calc(100% - 28px); padding-inline:12px; }
+#knRoute > .dictSub{ margin:2px auto 16px !important; }
+html[data-lang="ja"] #missionsHallBtn, html[data-lang="ja"] #missionBanner{ display:none !important; }
