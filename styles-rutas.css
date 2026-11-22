@@ -1,0 +1,59 @@
+
+/* ===== 1.1.6 · Rutas por objetivo ===== */
+.rtEntry{ display:flex; justify-content:center; margin:-2px 0 12px; }
+.rtChip{ display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:999px; cursor:pointer;
+  border:2.5px solid color-mix(in srgb, #38BDF8 45%, #000); box-shadow:0 3px 0 color-mix(in srgb, #38BDF8 45%, #000);
+  background:color-mix(in srgb, #38BDF8 22%, var(--paper)); color:var(--ink); font:inherit; font-size:13.5px; font-weight:900;
+  transition:transform .12s, box-shadow .12s; }
+.rtChip:active{ transform:translateY(2px); box-shadow:0 1px 0 color-mix(in srgb, #38BDF8 45%, #000); }
+
+.rtModal{ --tab:#38BDF8; --tabE:color-mix(in srgb, var(--tab) 45%, #000);
+  text-align:left; max-width:560px; max-height:min(88vh, 740px); display:flex; flex-direction:column;
+  border:3px solid var(--tabE); box-shadow:0 6px 0 var(--tabE), var(--elev3); }
+.rtHead{ flex:none; }
+.rtHead h3{ display:flex; align-items:center; gap:10px; font-size:1.25rem; font-weight:900; }
+.rtHeadIcon{ display:inline-grid; place-items:center; width:38px; height:38px; border-radius:13px; font-size:1.15rem;
+  background:color-mix(in srgb, var(--tab) 30%, var(--paper)); border:3px solid var(--tabE); box-shadow:0 3px 0 var(--tabE); }
+.rtBody{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:2px 4px 6px 2px; }
+.rtIntro{ margin:0 0 12px !important; font-size:.9rem !important; line-height:1.4; }
+.rtLabel{ margin:12px 0 8px; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+.rtGoals{ display:flex; flex-direction:column; gap:8px; }
+.rtGoal, .rtDay{ cursor:pointer; color:var(--ink); font-family:var(--font-ui); background:var(--paper);
+  border:3px solid var(--tabE); box-shadow:0 4px 0 var(--tabE); transition:transform .12s, box-shadow .12s, background .15s; }
+.rtGoal{ width:100%; display:flex; align-items:center; gap:12px; text-align:left; padding:10px 12px; border-radius:16px; }
+.rtGoal[aria-pressed="true"], .rtDay[aria-pressed="true"]{ background:color-mix(in srgb, var(--tab) 28%, var(--paper)); }
+.rtGoal:active, .rtDay:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--tabE); }
+.rtGoalIc{ flex:none; display:inline-grid; place-items:center; width:42px; height:42px; border-radius:14px; font-size:1.35rem;
+  background:color-mix(in srgb, var(--tab) 22%, var(--paper)); border:2.5px solid var(--tabE); }
+.rtGoalTx{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.rtGoalTx strong{ font-size:.98rem; }
+.rtGoalTx small{ font-size:.76rem; color:var(--muted); line-height:1.3; }
+.rtDays{ display:flex; gap:8px; }
+.rtDay{ flex:1; padding:9px 6px; border-radius:14px; font-weight:900; font-size:.92rem; width:auto !important; }
+.rtPreview{ margin:14px 0 4px !important; padding:10px 12px; border-radius:14px; font-size:.9rem !important; text-align:center;
+  background:color-mix(in srgb, var(--tab) 14%, var(--paper)); border:2px dashed var(--tabE); color:var(--ink) !important; }
+.rtCreate{ margin-top:10px; width:100%; }
+.rtCreate[disabled]{ opacity:.5; cursor:not-allowed; }
+
+.rtHero{ display:flex; align-items:center; gap:12px; margin:2px 0 12px; }
+.rtHero strong{ display:block; font-size:1.08rem; }
+.rtHero small{ display:block; font-size:.8rem; color:var(--muted); }
+.rtBar{ height:16px; border-radius:99px; overflow:hidden; background:color-mix(in srgb, var(--ink) 10%, var(--paper)); border:3px solid var(--tabE); }
+.rtBar i{ display:block; height:100%; background:var(--tab); transition:width .4s ease; }
+.rtStat{ margin:8px 0 12px !important; font-size:.85rem !important; font-weight:800; text-align:center; color:var(--ink) !important; }
+.rtDone{ margin:0 0 12px !important; padding:10px 12px; border-radius:14px; text-align:center; font-size:.9rem !important; font-weight:800;
+  background:color-mix(in srgb, #22C55E 18%, var(--paper)); border:2.5px solid color-mix(in srgb, #22C55E 50%, #000); color:var(--ink) !important; }
+.rtList{ list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:6px; }
+.rtRow{ display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:14px; background:color-mix(in srgb, var(--ink) 6%, var(--paper)); border:2px solid var(--line); }
+.rtRow.isNext{ border-color:var(--tabE); background:color-mix(in srgb, var(--tab) 18%, var(--paper)); box-shadow:0 3px 0 var(--tabE); }
+.rtRow.isDone{ opacity:.75; }
+.rtDayNo{ flex:none; min-width:52px; font-weight:900; font-size:.9rem; }
+.rtDayInfo{ flex:1; font-size:.82rem; color:var(--muted); }
+.rtGo{ flex:none; width:auto !important; padding:6px 14px; border-radius:999px; cursor:pointer; font:inherit; font-size:.82rem; font-weight:900; color:var(--ink);
+  background:var(--paper); border:2.5px solid var(--tabE); box-shadow:0 3px 0 var(--tabE); }
+.rtRow.isNext .rtGo{ background:var(--tab); }
+.rtGo:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--tabE); }
+.rtReset{ width:100% !important; padding:9px 12px; border-radius:14px; cursor:pointer; font:inherit; font-size:.82rem; font-weight:800; color:var(--muted);
+  background:transparent; border:2px dashed var(--line); }
+@media (max-width:430px){ .rtDays{ gap:6px; } .rtDay{ font-size:.85rem; } }
+@media (prefers-reduced-motion:reduce){ .rtChip, .rtGoal, .rtDay, .rtBar i{ transition:none; } }

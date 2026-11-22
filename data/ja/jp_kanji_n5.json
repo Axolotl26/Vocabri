@@ -1,0 +1,1068 @@
+{
+ "course": "jp_kanji_n5",
+ "lang": "ja",
+ "name": "Kanji N5",
+ "version": "1.2.0-beta",
+ "zones": [
+  {
+   "name": "Números y calendario",
+   "items": [
+    {
+     "id": "kj1_4e00",
+     "ja": "一",
+     "furi": "",
+     "romaji": "ichi / hito",
+     "es": "uno",
+     "ex": "一つください。",
+     "exEs": "Uno, por favor.",
+     "note": "On: イチ · Kun: ひと(つ) · 1 trazos"
+    },
+    {
+     "id": "kj2_4e8c",
+     "ja": "二",
+     "furi": "",
+     "romaji": "ni / futa",
+     "es": "dos",
+     "ex": "二人で行きます。",
+     "exEs": "Vamos los dos.",
+     "note": "On: ニ · Kun: ふた(つ) · 2 trazos"
+    },
+    {
+     "id": "kj3_4e09",
+     "ja": "三",
+     "furi": "",
+     "romaji": "san / mi",
+     "es": "tres",
+     "ex": "三時に会いましょう。",
+     "exEs": "Veámonos a las tres.",
+     "note": "On: サン · Kun: み(つ) · 3 trazos"
+    },
+    {
+     "id": "kj4_56db",
+     "ja": "四",
+     "furi": "",
+     "romaji": "shi / yon / yo",
+     "es": "cuatro",
+     "ex": "四月に日本へ行きます。",
+     "exEs": "En abril voy a Japón.",
+     "note": "On: シ · Kun: よん / よ(つ) · 5 trazos"
+    },
+    {
+     "id": "kj5_4e94",
+     "ja": "五",
+     "furi": "",
+     "romaji": "go / itsu",
+     "es": "cinco",
+     "ex": "五人います。",
+     "exEs": "Hay cinco personas.",
+     "note": "On: ゴ · Kun: いつ(つ) · 4 trazos"
+    },
+    {
+     "id": "kj6_516d",
+     "ja": "六",
+     "furi": "",
+     "romaji": "roku / mu",
+     "es": "seis",
+     "ex": "六時に起きます。",
+     "exEs": "Me levanto a las seis.",
+     "note": "On: ロク · Kun: む(っつ) · 4 trazos"
+    },
+    {
+     "id": "kj7_4e03",
+     "ja": "七",
+     "furi": "",
+     "romaji": "shichi / nana",
+     "es": "siete",
+     "ex": "七つあります。",
+     "exEs": "Hay siete.",
+     "note": "On: シチ · Kun: なな(つ) · 2 trazos"
+    },
+    {
+     "id": "kj8_516b",
+     "ja": "八",
+     "furi": "",
+     "romaji": "hachi / ya",
+     "es": "ocho",
+     "ex": "八時です。",
+     "exEs": "Son las ocho.",
+     "note": "On: ハチ · Kun: や(っつ) · 2 trazos"
+    },
+    {
+     "id": "kj9_4e5d",
+     "ja": "九",
+     "furi": "",
+     "romaji": "kyuu / ku / kokono",
+     "es": "nueve",
+     "ex": "九月は涼しいです。",
+     "exEs": "Septiembre es fresco.",
+     "note": "On: キュウ, ク · Kun: ここの(つ) · 2 trazos"
+    },
+    {
+     "id": "kj10_5341",
+     "ja": "十",
+     "furi": "",
+     "romaji": "juu / too",
+     "es": "diez",
+     "ex": "十分待ちます。",
+     "exEs": "Espero diez minutos.",
+     "note": "On: ジュウ · Kun: とお · 2 trazos"
+    },
+    {
+     "id": "kj11_767e",
+     "ja": "百",
+     "furi": "",
+     "romaji": "hyaku",
+     "es": "cien",
+     "ex": "百円です。",
+     "exEs": "Son cien yenes.",
+     "note": "On: ヒャク · 6 trazos"
+    },
+    {
+     "id": "kj12_5343",
+     "ja": "千",
+     "furi": "",
+     "romaji": "sen / chi",
+     "es": "mil",
+     "ex": "千円です。",
+     "exEs": "Son mil yenes.",
+     "note": "On: セン · Kun: ち · 3 trazos"
+    },
+    {
+     "id": "kj13_4e07",
+     "ja": "万",
+     "furi": "",
+     "romaji": "man",
+     "es": "diez mil",
+     "ex": "一万円です。",
+     "exEs": "Son diez mil yenes.",
+     "note": "On: マン · 3 trazos"
+    },
+    {
+     "id": "kj14_5186",
+     "ja": "円",
+     "furi": "",
+     "romaji": "en",
+     "es": "yen",
+     "ex": "五百円です。",
+     "exEs": "Son quinientos yenes.",
+     "note": "On: エン · 4 trazos"
+    },
+    {
+     "id": "kj15_5e74",
+     "ja": "年",
+     "furi": "",
+     "romaji": "nen / toshi",
+     "es": "año",
+     "ex": "来年、日本へ行きます。",
+     "exEs": "El año próximo voy a Japón.",
+     "note": "On: ネン · Kun: とし · 6 trazos"
+    },
+    {
+     "id": "kj16_6708",
+     "ja": "月",
+     "furi": "",
+     "romaji": "getsu / gatsu / tsuki",
+     "es": "luna, mes",
+     "ex": "三月に卒業します。",
+     "exEs": "Me gradúo en marzo.",
+     "note": "On: ゲツ, ガツ · Kun: つき · 4 trazos"
+    },
+    {
+     "id": "kj17_65e5",
+     "ja": "日",
+     "furi": "",
+     "romaji": "nichi / jitsu / hi / ka",
+     "es": "día, sol",
+     "ex": "今日は日曜日です。",
+     "exEs": "Hoy es domingo.",
+     "note": "On: ニチ, ジツ · Kun: ひ, か · 4 trazos"
+    },
+    {
+     "id": "kj18_706b",
+     "ja": "火",
+     "furi": "",
+     "romaji": "ka / hi",
+     "es": "fuego",
+     "ex": "火曜日は忙しいです。",
+     "exEs": "Los martes estoy ocupado/a.",
+     "note": "On: カ · Kun: ひ · 4 trazos"
+    },
+    {
+     "id": "kj19_6c34",
+     "ja": "水",
+     "furi": "",
+     "romaji": "sui / mizu",
+     "es": "agua",
+     "ex": "水を飲みます。",
+     "exEs": "Bebo agua.",
+     "note": "On: スイ · Kun: みず · 4 trazos"
+    },
+    {
+     "id": "kj20_6728",
+     "ja": "木",
+     "furi": "",
+     "romaji": "moku / ki",
+     "es": "árbol, madera",
+     "ex": "大きい木があります。",
+     "exEs": "Hay un árbol grande.",
+     "note": "On: モク · Kun: き · 4 trazos"
+    },
+    {
+     "id": "kj21_91d1",
+     "ja": "金",
+     "furi": "",
+     "romaji": "kin / kane",
+     "es": "oro, dinero",
+     "ex": "金曜日に会います。",
+     "exEs": "Nos vemos el viernes.",
+     "note": "On: キン · Kun: かね · 8 trazos"
+    },
+    {
+     "id": "kj22_571f",
+     "ja": "土",
+     "furi": "",
+     "romaji": "do / tsuchi",
+     "es": "tierra",
+     "ex": "土曜日は休みです。",
+     "exEs": "El sábado descanso.",
+     "note": "On: ド · Kun: つち · 3 trazos"
+    },
+    {
+     "id": "kj23_66dc",
+     "ja": "曜",
+     "furi": "",
+     "romaji": "you",
+     "es": "día de la semana",
+     "ex": "何曜日ですか。",
+     "exEs": "¿Qué día de la semana es?",
+     "note": "On: ヨウ · 18 trazos"
+    },
+    {
+     "id": "kj24_4eca",
+     "ja": "今",
+     "furi": "",
+     "romaji": "kon / ima",
+     "es": "ahora",
+     "ex": "今、何時ですか。",
+     "exEs": "¿Qué hora es ahora?",
+     "note": "On: コン · Kun: いま · 4 trazos"
+    }
+   ]
+  },
+  {
+   "name": "Personas, cuerpo y naturaleza",
+   "items": [
+    {
+     "id": "kj1_4eba",
+     "ja": "人",
+     "furi": "",
+     "romaji": "jin / nin / hito",
+     "es": "persona",
+     "ex": "あの人は先生です。",
+     "exEs": "Esa persona es profesor/a.",
+     "note": "On: ジン, ニン · Kun: ひと · 2 trazos"
+    },
+    {
+     "id": "kj2_5b50",
+     "ja": "子",
+     "furi": "",
+     "romaji": "shi / ko",
+     "es": "niño/a",
+     "ex": "子供が三人います。",
+     "exEs": "Tengo tres hijos.",
+     "note": "On: シ · Kun: こ · 3 trazos"
+    },
+    {
+     "id": "kj3_5973",
+     "ja": "女",
+     "furi": "",
+     "romaji": "jo / onna",
+     "es": "mujer",
+     "ex": "女の人です。",
+     "exEs": "Es una mujer.",
+     "note": "On: ジョ · Kun: おんな · 3 trazos"
+    },
+    {
+     "id": "kj4_7537",
+     "ja": "男",
+     "furi": "",
+     "romaji": "dan / otoko",
+     "es": "hombre",
+     "ex": "男の子がいます。",
+     "exEs": "Hay un niño.",
+     "note": "On: ダン · Kun: おとこ · 7 trazos"
+    },
+    {
+     "id": "kj5_7236",
+     "ja": "父",
+     "furi": "",
+     "romaji": "fu / chichi",
+     "es": "padre",
+     "ex": "父は医者です。",
+     "exEs": "Mi padre es médico.",
+     "note": "On: フ · Kun: ちち · 4 trazos"
+    },
+    {
+     "id": "kj6_6bcd",
+     "ja": "母",
+     "furi": "",
+     "romaji": "bo / haha",
+     "es": "madre",
+     "ex": "母は料理が上手です。",
+     "exEs": "Mi madre cocina bien.",
+     "note": "On: ボ · Kun: はは · 5 trazos"
+    },
+    {
+     "id": "kj7_53cb",
+     "ja": "友",
+     "furi": "",
+     "romaji": "yuu / tomo",
+     "es": "amigo",
+     "ex": "友達と映画を見ます。",
+     "exEs": "Veo una película con un amigo.",
+     "note": "On: ユウ · Kun: とも · 4 trazos"
+    },
+    {
+     "id": "kj8_5148",
+     "ja": "先",
+     "furi": "",
+     "romaji": "sen / saki",
+     "es": "antes, anterior",
+     "ex": "先生は親切です。",
+     "exEs": "El profesor es amable.",
+     "note": "On: セン · Kun: さき · 6 trazos"
+    },
+    {
+     "id": "kj9_751f",
+     "ja": "生",
+     "furi": "",
+     "romaji": "sei / shou / iki / umare / nama",
+     "es": "vida, nacer",
+     "ex": "学生です。",
+     "exEs": "Soy estudiante.",
+     "note": "On: セイ, ショウ · Kun: い(きる), う(まれる), なま · 5 trazos"
+    },
+    {
+     "id": "kj10_79c1",
+     "ja": "私",
+     "furi": "",
+     "romaji": "shi / watashi",
+     "es": "yo",
+     "ex": "私は学生です。",
+     "exEs": "Soy estudiante.",
+     "note": "On: シ · Kun: わたし · 7 trazos"
+    },
+    {
+     "id": "kj11_540d",
+     "ja": "名",
+     "furi": "",
+     "romaji": "mei / na",
+     "es": "nombre",
+     "ex": "名前を書いてください。",
+     "exEs": "Escriba su nombre.",
+     "note": "On: メイ · Kun: な · 6 trazos"
+    },
+    {
+     "id": "kj12_4f55",
+     "ja": "何",
+     "furi": "",
+     "romaji": "ka / nani / nan",
+     "es": "qué",
+     "ex": "何ですか。",
+     "exEs": "¿Qué es?",
+     "note": "On: カ · Kun: なに, なん · 7 trazos"
+    },
+    {
+     "id": "kj13_76ee",
+     "ja": "目",
+     "furi": "",
+     "romaji": "moku / me",
+     "es": "ojo",
+     "ex": "目が大きいです。",
+     "exEs": "Tiene los ojos grandes.",
+     "note": "On: モク · Kun: め · 5 trazos"
+    },
+    {
+     "id": "kj14_8033",
+     "ja": "耳",
+     "furi": "",
+     "romaji": "ji / mimi",
+     "es": "oreja",
+     "ex": "耳が痛いです。",
+     "exEs": "Me duele el oído.",
+     "note": "On: ジ · Kun: みみ · 6 trazos"
+    },
+    {
+     "id": "kj15_53e3",
+     "ja": "口",
+     "furi": "",
+     "romaji": "kou / ku / kuchi",
+     "es": "boca",
+     "ex": "口を開けてください。",
+     "exEs": "Abra la boca.",
+     "note": "On: コウ, ク · Kun: くち · 3 trazos"
+    },
+    {
+     "id": "kj16_624b",
+     "ja": "手",
+     "furi": "",
+     "romaji": "shu / te",
+     "es": "mano",
+     "ex": "手を洗います。",
+     "exEs": "Me lavo las manos.",
+     "note": "On: シュ · Kun: て · 4 trazos"
+    },
+    {
+     "id": "kj17_8db3",
+     "ja": "足",
+     "furi": "",
+     "romaji": "soku / ashi",
+     "es": "pie, pierna",
+     "ex": "足が痛いです。",
+     "exEs": "Me duelen las piernas.",
+     "note": "On: ソク · Kun: あし · 7 trazos"
+    },
+    {
+     "id": "kj18_529b",
+     "ja": "力",
+     "furi": "",
+     "romaji": "ryoku / chikara",
+     "es": "fuerza",
+     "ex": "力が強いです。",
+     "exEs": "Tiene mucha fuerza.",
+     "note": "On: リョク · Kun: ちから · 2 trazos"
+    },
+    {
+     "id": "kj19_6c17",
+     "ja": "気",
+     "furi": "",
+     "romaji": "ki",
+     "es": "ánimo, aire",
+     "ex": "お元気ですか。",
+     "exEs": "¿Cómo está usted?",
+     "note": "On: キ · 6 trazos"
+    },
+    {
+     "id": "kj20_5929",
+     "ja": "天",
+     "furi": "",
+     "romaji": "ten",
+     "es": "cielo",
+     "ex": "天気がいいです。",
+     "exEs": "Hace buen tiempo.",
+     "note": "On: テン · 4 trazos"
+    },
+    {
+     "id": "kj21_96e8",
+     "ja": "雨",
+     "furi": "",
+     "romaji": "u / ame",
+     "es": "lluvia",
+     "ex": "雨が降っています。",
+     "exEs": "Está lloviendo.",
+     "note": "On: ウ · Kun: あめ · 8 trazos"
+    },
+    {
+     "id": "kj22_5c71",
+     "ja": "山",
+     "furi": "",
+     "romaji": "san / yama",
+     "es": "montaña",
+     "ex": "山に登ります。",
+     "exEs": "Subo una montaña.",
+     "note": "On: サン · Kun: やま · 3 trazos"
+    },
+    {
+     "id": "kj23_5ddd",
+     "ja": "川",
+     "furi": "",
+     "romaji": "sen / kawa",
+     "es": "río",
+     "ex": "川は広いです。",
+     "exEs": "El río es ancho.",
+     "note": "On: セン · Kun: かわ · 3 trazos"
+    },
+    {
+     "id": "kj24_82b1",
+     "ja": "花",
+     "furi": "",
+     "romaji": "ka / hana",
+     "es": "flor",
+     "ex": "花がきれいです。",
+     "exEs": "Las flores son bonitas.",
+     "note": "On: カ · Kun: はな · 7 trazos"
+    }
+   ]
+  },
+  {
+   "name": "Lugares y acciones",
+   "items": [
+    {
+     "id": "kj1_5927",
+     "ja": "大",
+     "furi": "",
+     "romaji": "dai / oo",
+     "es": "grande",
+     "ex": "大きい犬です。",
+     "exEs": "Es un perro grande.",
+     "note": "On: ダイ · Kun: おお(きい) · 3 trazos"
+    },
+    {
+     "id": "kj2_5c0f",
+     "ja": "小",
+     "furi": "",
+     "romaji": "shou / chii",
+     "es": "pequeño",
+     "ex": "小さい家です。",
+     "exEs": "Es una casa pequeña.",
+     "note": "On: ショウ · Kun: ちい(さい) · 3 trazos"
+    },
+    {
+     "id": "kj3_4e2d",
+     "ja": "中",
+     "furi": "",
+     "romaji": "chuu / naka",
+     "es": "dentro, centro",
+     "ex": "かばんの中です。",
+     "exEs": "Está dentro de la mochila.",
+     "note": "On: チュウ · Kun: なか · 4 trazos"
+    },
+    {
+     "id": "kj4_4e0a",
+     "ja": "上",
+     "furi": "",
+     "romaji": "jou / ue",
+     "es": "arriba",
+     "ex": "机の上にあります。",
+     "exEs": "Está sobre el escritorio.",
+     "note": "On: ジョウ · Kun: うえ · 3 trazos"
+    },
+    {
+     "id": "kj5_4e0b",
+     "ja": "下",
+     "furi": "",
+     "romaji": "ka / shita",
+     "es": "abajo",
+     "ex": "椅子の下にいます。",
+     "exEs": "Está debajo de la silla.",
+     "note": "On: カ · Kun: した · 3 trazos"
+    },
+    {
+     "id": "kj6_5de6",
+     "ja": "左",
+     "furi": "",
+     "romaji": "sa / hidari",
+     "es": "izquierda",
+     "ex": "左に曲がります。",
+     "exEs": "Giro a la izquierda.",
+     "note": "On: サ · Kun: ひだり · 5 trazos"
+    },
+    {
+     "id": "kj7_53f3",
+     "ja": "右",
+     "furi": "",
+     "romaji": "yuu / migi",
+     "es": "derecha",
+     "ex": "右に曲がります。",
+     "exEs": "Giro a la derecha.",
+     "note": "On: ユウ · Kun: みぎ · 5 trazos"
+    },
+    {
+     "id": "kj8_5317",
+     "ja": "北",
+     "furi": "",
+     "romaji": "hoku / kita",
+     "es": "norte",
+     "ex": "北へ行きます。",
+     "exEs": "Voy hacia el norte.",
+     "note": "On: ホク · Kun: きた · 5 trazos"
+    },
+    {
+     "id": "kj9_5357",
+     "ja": "南",
+     "furi": "",
+     "romaji": "nan / minami",
+     "es": "sur",
+     "ex": "南は暖かいです。",
+     "exEs": "El sur es cálido.",
+     "note": "On: ナン · Kun: みなみ · 9 trazos"
+    },
+    {
+     "id": "kj10_6771",
+     "ja": "東",
+     "furi": "",
+     "romaji": "tou / higashi",
+     "es": "este",
+     "ex": "東京は大きい町です。",
+     "exEs": "Tokio es una ciudad grande.",
+     "note": "On: トウ · Kun: ひがし · 8 trazos"
+    },
+    {
+     "id": "kj11_897f",
+     "ja": "西",
+     "furi": "",
+     "romaji": "sei / sai / nishi",
+     "es": "oeste",
+     "ex": "西へ行きます。",
+     "exEs": "Voy hacia el oeste.",
+     "note": "On: セイ, サイ · Kun: にし · 6 trazos"
+    },
+    {
+     "id": "kj12_5916",
+     "ja": "外",
+     "furi": "",
+     "romaji": "gai / soto",
+     "es": "afuera",
+     "ex": "外国へ行きます。",
+     "exEs": "Voy al extranjero.",
+     "note": "On: ガイ · Kun: そと · 5 trazos"
+    },
+    {
+     "id": "kj13_56fd",
+     "ja": "国",
+     "furi": "",
+     "romaji": "koku / kuni",
+     "es": "país",
+     "ex": "どこの国ですか。",
+     "exEs": "¿De qué país es?",
+     "note": "On: コク · Kun: くに · 8 trazos"
+    },
+    {
+     "id": "kj14_5b66",
+     "ja": "学",
+     "furi": "",
+     "romaji": "gaku / mana",
+     "es": "estudiar",
+     "ex": "学校へ行きます。",
+     "exEs": "Voy a la escuela.",
+     "note": "On: ガク · Kun: まな(ぶ) · 8 trazos"
+    },
+    {
+     "id": "kj15_6821",
+     "ja": "校",
+     "furi": "",
+     "romaji": "kou",
+     "es": "escuela",
+     "ex": "学校は駅の近くです。",
+     "exEs": "La escuela está cerca de la estación.",
+     "note": "On: コウ · 10 trazos"
+    },
+    {
+     "id": "kj16_9580",
+     "ja": "門",
+     "furi": "",
+     "romaji": "mon",
+     "es": "puerta, portón",
+     "ex": "学校の門です。",
+     "exEs": "Es el portón de la escuela.",
+     "note": "On: モン · 8 trazos"
+    },
+    {
+     "id": "kj17_99c5",
+     "ja": "駅",
+     "furi": "",
+     "romaji": "eki",
+     "es": "estación",
+     "ex": "駅で待ちます。",
+     "exEs": "Espero en la estación.",
+     "note": "On: エキ · 14 trazos"
+    },
+    {
+     "id": "kj18_5e97",
+     "ja": "店",
+     "furi": "",
+     "romaji": "ten / mise",
+     "es": "tienda",
+     "ex": "あの店は安いです。",
+     "exEs": "Esa tienda es barata.",
+     "note": "On: テン · Kun: みせ · 8 trazos"
+    },
+    {
+     "id": "kj19_4f1a",
+     "ja": "会",
+     "furi": "",
+     "romaji": "kai / a",
+     "es": "reunirse",
+     "ex": "友達に会います。",
+     "exEs": "Me encuentro con un amigo.",
+     "note": "On: カイ · Kun: あ(う) · 6 trazos"
+    },
+    {
+     "id": "kj20_884c",
+     "ja": "行",
+     "furi": "",
+     "romaji": "kou / i",
+     "es": "ir",
+     "ex": "学校へ行きます。",
+     "exEs": "Voy a la escuela.",
+     "note": "On: コウ · Kun: い(く) · 6 trazos"
+    },
+    {
+     "id": "kj21_6765",
+     "ja": "来",
+     "furi": "",
+     "romaji": "rai / ku",
+     "es": "venir",
+     "ex": "友達が来ます。",
+     "exEs": "Viene un amigo.",
+     "note": "On: ライ · Kun: く(る) · 7 trazos"
+    },
+    {
+     "id": "kj22_51fa",
+     "ja": "出",
+     "furi": "",
+     "romaji": "shutsu / de",
+     "es": "salir",
+     "ex": "七時に家を出ます。",
+     "exEs": "Salgo de casa a las siete.",
+     "note": "On: シュツ · Kun: で(る) · 5 trazos"
+    },
+    {
+     "id": "kj23_5165",
+     "ja": "入",
+     "furi": "",
+     "romaji": "nyuu / hai",
+     "es": "entrar",
+     "ex": "部屋に入ります。",
+     "exEs": "Entro en la habitación.",
+     "note": "On: ニュウ · Kun: はい(る) · 2 trazos"
+    },
+    {
+     "id": "kj24_98df",
+     "ja": "食",
+     "furi": "",
+     "romaji": "shoku / ta",
+     "es": "comer",
+     "ex": "朝ご飯を食べます。",
+     "exEs": "Desayuno.",
+     "note": "On: ショク · Kun: た(べる) · 9 trazos"
+    },
+    {
+     "id": "kj25_98f2",
+     "ja": "飲",
+     "furi": "",
+     "romaji": "in / no",
+     "es": "beber",
+     "ex": "水を飲みます。",
+     "exEs": "Bebo agua.",
+     "note": "On: イン · Kun: の(む) · 12 trazos"
+    },
+    {
+     "id": "kj26_898b",
+     "ja": "見",
+     "furi": "",
+     "romaji": "ken / mi",
+     "es": "ver",
+     "ex": "映画を見ます。",
+     "exEs": "Veo una película.",
+     "note": "On: ケン · Kun: み(る) · 7 trazos"
+    },
+    {
+     "id": "kj27_805e",
+     "ja": "聞",
+     "furi": "",
+     "romaji": "bun / ki",
+     "es": "oír, preguntar",
+     "ex": "音楽を聞きます。",
+     "exEs": "Escucho música.",
+     "note": "On: ブン · Kun: き(く) · 14 trazos"
+    },
+    {
+     "id": "kj28_8aad",
+     "ja": "読",
+     "furi": "",
+     "romaji": "doku / yo",
+     "es": "leer",
+     "ex": "本を読みます。",
+     "exEs": "Leo un libro.",
+     "note": "On: ドク · Kun: よ(む) · 14 trazos"
+    },
+    {
+     "id": "kj29_66f8",
+     "ja": "書",
+     "furi": "",
+     "romaji": "sho / ka",
+     "es": "escribir",
+     "ex": "手紙を書きます。",
+     "exEs": "Escribo una carta.",
+     "note": "On: ショ · Kun: か(く) · 10 trazos"
+    },
+    {
+     "id": "kj30_8a71",
+     "ja": "話",
+     "furi": "",
+     "romaji": "wa / hana",
+     "es": "hablar, charla",
+     "ex": "日本語を話します。",
+     "exEs": "Hablo japonés.",
+     "note": "On: ワ · Kun: はな(す) · 13 trazos"
+    },
+    {
+     "id": "kj31_8cb7",
+     "ja": "買",
+     "furi": "",
+     "romaji": "bai / ka",
+     "es": "comprar",
+     "ex": "本を買います。",
+     "exEs": "Compro un libro.",
+     "note": "On: バイ · Kun: か(う) · 12 trazos"
+    },
+    {
+     "id": "kj32_4f11",
+     "ja": "休",
+     "furi": "",
+     "romaji": "kyuu / yasu",
+     "es": "descansar",
+     "ex": "明日は休みです。",
+     "exEs": "Mañana es día libre.",
+     "note": "On: キュウ · Kun: やす(む) · 6 trazos"
+    }
+   ]
+  },
+  {
+   "name": "Tiempo y descripciones",
+   "items": [
+    {
+     "id": "kj1_6642",
+     "ja": "時",
+     "furi": "",
+     "romaji": "ji / toki",
+     "es": "hora, tiempo",
+     "ex": "三時です。",
+     "exEs": "Son las tres.",
+     "note": "On: ジ · Kun: とき · 10 trazos"
+    },
+    {
+     "id": "kj2_5206",
+     "ja": "分",
+     "furi": "",
+     "romaji": "bun / fun / wa",
+     "es": "minuto, entender",
+     "ex": "五分待ちます。",
+     "exEs": "Espero cinco minutos.",
+     "note": "On: ブン, フン · Kun: わ(かる) · 4 trazos"
+    },
+    {
+     "id": "kj3_534a",
+     "ja": "半",
+     "furi": "",
+     "romaji": "han",
+     "es": "mitad",
+     "ex": "三時半です。",
+     "exEs": "Son las tres y media.",
+     "note": "On: ハン · 5 trazos"
+    },
+    {
+     "id": "kj4_5348",
+     "ja": "午",
+     "furi": "",
+     "romaji": "go",
+     "es": "mediodía",
+     "ex": "午前九時です。",
+     "exEs": "Son las nueve de la mañana.",
+     "note": "On: ゴ · 4 trazos"
+    },
+    {
+     "id": "kj5_524d",
+     "ja": "前",
+     "furi": "",
+     "romaji": "zen / mae",
+     "es": "delante, antes",
+     "ex": "駅の前にいます。",
+     "exEs": "Estoy delante de la estación.",
+     "note": "On: ゼン · Kun: まえ · 9 trazos"
+    },
+    {
+     "id": "kj6_5f8c",
+     "ja": "後",
+     "furi": "",
+     "romaji": "go / ato / ushi",
+     "es": "detrás, después",
+     "ex": "午後は休みです。",
+     "exEs": "Por la tarde descanso.",
+     "note": "On: ゴ · Kun: あと, うし(ろ) · 9 trazos"
+    },
+    {
+     "id": "kj7_9593",
+     "ja": "間",
+     "furi": "",
+     "romaji": "kan / aida",
+     "es": "intervalo, entre",
+     "ex": "時間がありません。",
+     "exEs": "No tengo tiempo.",
+     "note": "On: カン · Kun: あいだ · 12 trazos"
+    },
+    {
+     "id": "kj8_6bce",
+     "ja": "毎",
+     "furi": "",
+     "romaji": "mai",
+     "es": "cada",
+     "ex": "毎日勉強します。",
+     "exEs": "Estudio todos los días.",
+     "note": "On: マイ · 6 trazos"
+    },
+    {
+     "id": "kj9_9ad8",
+     "ja": "高",
+     "furi": "",
+     "romaji": "kou / taka",
+     "es": "alto, caro",
+     "ex": "この時計は高いです。",
+     "exEs": "Este reloj es caro.",
+     "note": "On: コウ · Kun: たか(い) · 10 trazos"
+    },
+    {
+     "id": "kj10_5b89",
+     "ja": "安",
+     "furi": "",
+     "romaji": "an / yasu",
+     "es": "barato, seguro",
+     "ex": "あの店は安いです。",
+     "exEs": "Esa tienda es barata.",
+     "note": "On: アン · Kun: やす(い) · 6 trazos"
+    },
+    {
+     "id": "kj11_9577",
+     "ja": "長",
+     "furi": "",
+     "romaji": "chou / naga",
+     "es": "largo",
+     "ex": "髪が長いです。",
+     "exEs": "Tiene el pelo largo.",
+     "note": "On: チョウ · Kun: なが(い) · 8 trazos"
+    },
+    {
+     "id": "kj12_65b0",
+     "ja": "新",
+     "furi": "",
+     "romaji": "shin / atara",
+     "es": "nuevo",
+     "ex": "新しい靴です。",
+     "exEs": "Son zapatos nuevos.",
+     "note": "On: シン · Kun: あたら(しい) · 13 trazos"
+    },
+    {
+     "id": "kj13_53e4",
+     "ja": "古",
+     "furi": "",
+     "romaji": "ko / furu",
+     "es": "viejo",
+     "ex": "古い本です。",
+     "exEs": "Es un libro viejo.",
+     "note": "On: コ · Kun: ふる(い) · 5 trazos"
+    },
+    {
+     "id": "kj14_767d",
+     "ja": "白",
+     "furi": "",
+     "romaji": "haku / shiro",
+     "es": "blanco",
+     "ex": "白いシャツです。",
+     "exEs": "Es una camisa blanca.",
+     "note": "On: ハク · Kun: しろ(い) · 5 trazos"
+    },
+    {
+     "id": "kj15_672c",
+     "ja": "本",
+     "furi": "",
+     "romaji": "hon / moto",
+     "es": "libro, origen",
+     "ex": "本を読みます。",
+     "exEs": "Leo un libro.",
+     "note": "On: ホン · Kun: もと · 5 trazos"
+    },
+    {
+     "id": "kj16_8a9e",
+     "ja": "語",
+     "furi": "",
+     "romaji": "go",
+     "es": "idioma, palabra",
+     "ex": "日本語が好きです。",
+     "exEs": "Me gusta el japonés.",
+     "note": "On: ゴ · 14 trazos"
+    },
+    {
+     "id": "kj17_96fb",
+     "ja": "電",
+     "furi": "",
+     "romaji": "den",
+     "es": "electricidad",
+     "ex": "電車に乗ります。",
+     "exEs": "Subo al tren.",
+     "note": "On: デン · 13 trazos"
+    },
+    {
+     "id": "kj18_8eca",
+     "ja": "車",
+     "furi": "",
+     "romaji": "sha / kuruma",
+     "es": "coche, vehículo",
+     "ex": "車があります。",
+     "exEs": "Tengo coche.",
+     "note": "On: シャ · Kun: くるま · 7 trazos"
+    },
+    {
+     "id": "kj19_9b5a",
+     "ja": "魚",
+     "furi": "",
+     "romaji": "gyo / sakana",
+     "es": "pez",
+     "ex": "魚を食べます。",
+     "exEs": "Como pescado.",
+     "note": "On: ギョ · Kun: さかな · 11 trazos"
+    },
+    {
+     "id": "kj20_8089",
+     "ja": "肉",
+     "furi": "",
+     "romaji": "niku",
+     "es": "carne",
+     "ex": "肉が好きです。",
+     "exEs": "Me gusta la carne.",
+     "note": "On: ニク · 6 trazos"
+    },
+    {
+     "id": "kj21_7c73",
+     "ja": "米",
+     "furi": "",
+     "romaji": "bei / mai / kome",
+     "es": "arroz",
+     "ex": "米を買います。",
+     "exEs": "Compro arroz.",
+     "note": "On: ベイ, マイ · Kun: こめ · 6 trazos"
+    },
+    {
+     "id": "kj22_8336",
+     "ja": "茶",
+     "furi": "",
+     "romaji": "cha / sa",
+     "es": "té",
+     "ex": "お茶を飲みます。",
+     "exEs": "Bebo té.",
+     "note": "On: チャ, サ · 9 trazos"
+    },
+    {
+     "id": "kj23_72ac",
+     "ja": "犬",
+     "furi": "",
+     "romaji": "ken / inu",
+     "es": "perro",
+     "ex": "犬が好きです。",
+     "exEs": "Me gustan los perros.",
+     "note": "On: ケン · Kun: いぬ · 4 trazos"
+    },
+    {
+     "id": "kj24_9031",
+     "ja": "週",
+     "furi": "",
+     "romaji": "shuu",
+     "es": "semana",
+     "ex": "来週、旅行します。",
+     "exEs": "La semana próxima viajo.",
+     "note": "On: シュウ · 11 trazos"
+    }
+   ]
+  }
+ ]
+}

@@ -9,7 +9,7 @@
  *  When you change any shipped file, bump CACHE_VERSION (and the ?v= in index.html)
  *  so installed apps detect the new version and show "✨ Nueva versión disponible".
  */
-const CACHE_VERSION = '1.1.9';
+const CACHE_VERSION = '1.2.0';
 const CACHE_PREFIX = 'vocabri-';
 const CACHE_NAME = CACHE_PREFIX + 'shell-' + CACHE_VERSION;
 
@@ -27,8 +27,16 @@ const PRECACHE_URLS = [
   './config.js',
   './firebase.js',
   './base_de_datos_de_frases_vocabri.json',
-  './styles-1.1.6.css?v=1.1.6-r64',
+  './data/ja/jp_kana.json',
+  './data/ja/jp_n5.json',
+  './data/ja/jp_kanji_n5.json',
+  './data/ja/jp_n4.json',
+  './styles-1.1.6.css?v=1.1.6-r85',
   './app/updater.js',
+  './app/trace.js',
+  './app/kana.js',
+  './app/fuji.js',
+  './app/lang.js',
   './app/core/version.js',
   './app/main.js',
   './app/core/shared.js',
@@ -63,6 +71,7 @@ const PRECACHE_URLS = [
   './app/events.js',
   './app/cloze.js',
   './app/core/cloze.js',
+  './app/core/course.js',
   './app/core/events.js',
   './app/core/challenge.js',
   './app/core/unlocks.js',
@@ -98,6 +107,8 @@ const PRECACHE_URLS = [
   './app/routes.js',
   './app/scenes.js',
   './app/alphabet.js',
+  './app/courses.js',
+  './app/cardFace.js',
   './app/modes.js',
   './assets/origin-logo.png',
   './assets/ajolote_logo.webp',

@@ -51,8 +51,24 @@ export const MASTER_CATEGORIES = [
     description: 'Speaking, writing y estrategias de examen', color: '#14B8A6',
     source: 'exam_prep', jsonKey: 'exam_prep', unlockLevel: 8,   // se desbloquea al llegar al nivel 8 (permanente)
     zones: { sizes: [24, 24, 24, 28], names: ['Speaking: Opiniones y Argumentos', 'Writing: Estructura y Conectores', 'Listening y Reading: Estrategias', 'Vocabulario Académico'] }
+  },
+  // ── Cursos de otro idioma: se cargan bajo demanda desde dataUrl y tienen su propio progreso (las claves llevan el id del curso) ──
+  {
+    id: 'jp_n5', name: 'Japonés N5', emoji: '🌸', shortLabel: 'Japonés N5', lang: 'ja', dataUrl: './data/ja/jp_n5.json', beta: true,
+    description: 'Primeros pasos en japonés: saludos, familia, ciudad y comida', color: '#F43F5E',
+    source: 'jp_n5', jsonKey: null, zones: null
+  },
+  {
+    id: 'jp_kanji_n5', name: 'Kanji N5', emoji: '🌸', shortLabel: 'Kanji N5', lang: 'ja', dataUrl: './data/ja/jp_kanji_n5.json', beta: true,
+    description: '104 kanji básicos con lecturas, ejemplos y orden de trazos', color: '#F59E0B',
+    source: 'jp_kanji_n5', jsonKey: null, zones: null
+  },
+  {
+    id: 'jp_n4', name: 'Japonés N4', emoji: '🌸', shortLabel: 'Japonés N4', lang: 'ja', dataUrl: './data/ja/jp_n4.json', beta: true,
+    description: 'Katakana, vida urbana, trabajo y sentimientos', color: '#EC4899',
+    source: 'jp_n4', jsonKey: null, zones: null
   }
-].map(c => Object.freeze({ ...c, label: c.emoji + ' ' + c.name }));
+].map(c => Object.freeze({ lang: 'en', ...c, label: c.emoji + ' ' + c.name }));
 
 // Color / emoji de la "categoría" de tarjetas propias del usuario (no es una categoría maestra)
 export const CUSTOM_CATEGORY = Object.freeze({ id: 'custom', emoji: '🃏', color: '#FB923C', label: 'Mis tarjetas' });
@@ -62,7 +78,13 @@ export const START_NODE_BY_LEVEL = { beginner: 0, intermediate: 3, advanced: 6 }
 
 export function getMasterCategories() { return [...MASTER_CATEGORIES]; }
 export function getMasterCategory(catId) { return MASTER_CATEGORIES.find(c => c.id === catId) || null; }
-export function getValidCategoryIds() { return MASTER_CATEGORIES.map(c => c.id); }
+/** Ids de las categorías de INGLÉS (las que alimentan «Todas», estadísticas y rutas). Los cursos de otros idiomas se piden con getCourseIds(). */
+export function getValidCategoryIds() { return MASTER_CATEGORIES.filter(c => c.lang === 'en').map(c => c.id); }
+export function getCourseIds() { return MASTER_CATEGORIES.filter(c => c.lang !== 'en').map(c => c.id); }
+export function getCategoryLang(catId) { const c = getMasterCategory(catId); return c ? c.lang : 'en'; }
+export function getCategoryDataUrl(catId) { const c = getMasterCategory(catId); return c && c.dataUrl ? c.dataUrl : null; }
+export function getLanguages() { return [{ id: 'en', name: 'Inglés', emoji: '🌍' }, { id: 'ja', name: 'Japonés', emoji: '🌸' }]; }
+export function getCategoriesByLang(lang) { return MASTER_CATEGORIES.filter(c => c.lang === lang); }
 export function isValidCategory(catId) { return MASTER_CATEGORIES.some(c => c.id === catId); }
 export function getStartNode(level) {
   const n = (level || 'beginner').toLowerCase();
@@ -106,7 +128,7 @@ export function getValidFoci() { return getValidCategoryIds(); }
 const API = {
   getMasterCategories, getMasterCategory, getStartNode, getValidCategoryIds, getValidLevels,
   isValidCategory, isValidLevel, getCategoryEmoji, getCategoryShortLabel, getCategoryLabel,
-  getCategoryColor, getJsonCategories, getJsonCategoryMap, getZonesMap, getCategories, getValidFoci
+  getCategoryColor, getCourseIds, getCategoryLang, getCategoryDataUrl, getLanguages, getCategoriesByLang, getJsonCategories, getJsonCategoryMap, getZonesMap, getCategories, getValidFoci
 };
 if (typeof window !== 'undefined') window.VocabriCategories = API;
 export default API;

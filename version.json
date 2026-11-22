@@ -1,17 +1,14 @@
 {
-  "version": "1.1.9",
-  "date": "2026-11-18",
-  "title": "Retos, eventos y escenas con decisiones",
+  "version": "1.2.0",
+  "date": "2026-11-22",
+  "title": "Japonés",
   "changes": [
-    "Retos con un amigo: un duelo de 10 frases iguales para los dos; el resultado viaja en un enlace (por WhatsApp, por ejemplo), sin servidor y sin cuentas. Da un XP pequeño con tope diario",
-    "Evento de la semana: un tema distinto cada semana con meta de 15 frases diferentes; al cumplirla ganas una insignia permanente y +100 XP",
-    "Nuevo modo «Completa el hueco» en Repasar → Modos de práctica: elige la palabra que falta en 10 frases (3 XP por acierto, máximo 30 al día)",
-    "Nueva ruta «Voy al médico» para practicar frases de consultorio y farmacia",
-    "6 escenas nuevas con decisiones: tú eliges el tono (formal, normal o brusco) y la otra persona reacciona distinto. Nuevo filtro «Decisiones» en la lista de escenas",
-    "Las escenas muestran «escribiendo…» antes de cada mensaje y la conversación baja sola para no tapar lo último que se dijo",
-    "Animaciones más fluidas en móviles: se quitó el desenfoque de fondo, el mapa deja quietas nubes e islas mientras haces scroll y los botones responden al primer toque",
-    "Ya no aparece el recuadro azul de «Copiar» al mantener presionado un botón o tarjeta en el teléfono",
-    "Progreso siempre abre en la pestaña Resumen",
-    "Términos y privacidad actualizados con retos y eventos"
+    "Japonés: un selector de idioma en Ajustes cambia de golpe las categorías, la meta diaria, el progreso, el repaso, el traductor y el abecedario (kana). Inglés y japonés van completamente separados",
+    "Cursos Japonés N5, Kanji N5 y Japonés N4 con furigana, romaji y trazos de kanji; el abecedario japonés es un mapa 2.5D hacia el Monte Fuji con hiragana y katakana",
+    "«Escucha y escribe» y «Completa el hueco» ya funcionan en japonés (escribe en romaji o en japonés; el hueco se elige entre 4 palabras)",
+    "Traductor japonés ⇄ español, con intento de traducción del navegador y varios servicios de respaldo; puedes añadir tu correo para ampliar el límite gratuito",
+    "Escenas y Rutas aparecen como «Próximamente» en japonés",
+    "Mapa del Fuji más ancho, con colinas desenfocadas y pinos solo en las laderas; se adapta a móviles, tablets y pantallas grandes",
+    "Términos y privacidad actualizados con las atribuciones del contenido en japonés"
   ]
 }

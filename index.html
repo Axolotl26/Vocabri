@@ -12,6 +12,8 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/origin-logo.png">
 <meta name="apple-mobile-web-app-title" content="Vocabri">
+<meta name="color-scheme" content="dark light">
+<meta name="darkreader-lock">
 <meta name="theme-color" content="#0b0f19">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -189,16 +191,11 @@
         <button class="nav setBtn hover-scale focus-glow" id="cbBtn" type="button" aria-pressed="false" style="margin-top:8px;">👁️ Paleta para daltonismo: No</button>
       </div>
       <div class="setSec" style="--i:2;">
-        <div class="setTitle">Categoría</div>
-        <button class="nav setBtn hover-scale focus-glow" id="catSelectorBtn" type="button">📚 Categoría: <span id="catSelectorLabel">General</span></button>
-        <div class="catSelector" id="catSelector" hidden>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="general" type="button">🌍 General</button>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="travel" type="button">✈️ Viajes y supervivencia</button>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="academic" type="button">🎓 Académico</button>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="business" type="button">💼 Negocios y Profesional</button>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="pop" type="button">🎮 Cultura pop y Gaming</button>
-          <button class="catSelectorBtn hover-scale focus-glow" data-cat="health" type="button">🩺 Médico y Salud</button>
-        </div>
+        <div class="setTitle">Idioma que estudias</div>
+        <div class="langSwitch" id="langSwitch" role="radiogroup" aria-label="Idioma que estudias"></div>
+        <button class="nav setBtn hover-scale focus-glow" id="catSelectorBtn" type="button">📚 Curso: <span id="catSelectorLabel">General</span></button>
+        <div class="catSelector" id="catSelector" hidden></div>
+        <div class="langOpts" id="langExtras" hidden></div>
       </div>
       <div class="setSec" style="--i:3;">
         <div class="setTitle">Preferencias</div>
@@ -209,7 +206,7 @@
         <p class="setStatus notifStatus" id="notifStatus" role="status" aria-live="polite"></p>
       </div>
       <div class="setSec" style="--i:3;">
-        <div class="setTitle">Meta diaria</div>
+        <div class="setTitle" id="goalTitle">Meta diaria</div>
         <div class="goalRow">
           <button class="goalOpt hover-scale focus-glow" data-goal="100" type="button">Relajado<br><small>100 XP (≈10 palabras)</small></button>
           <button class="goalOpt hover-scale focus-glow" data-goal="200" type="button">Normal<br><small>200 XP (≈20 palabras)</small></button>
@@ -346,6 +343,7 @@
         </div>
         <div class="flipHint">↻</div>
       </div>
+      <button class="nav hover-scale focus-glow" id="traceBtn" type="button" style="display:none; margin:8px auto 0;">✍ Calcar</button>
       <div class="actionZone" id="actionZone">
         <button class="showAnswerBtn hover-scale focus-glow" id="showAnswerBtn" type="button">Mostrar respuesta</button>
         <p class="flipCoach" id="flipCoach" style="display:none;">👆 Toca la tarjeta o el botón para ver la respuesta</p>
@@ -363,6 +361,14 @@
         <button class="miniBtn hover-scale focus-glow" id="shuffleBtn" type="button" style="display:none;">🔀 Mezclar</button>
       </div>
       <p class="hint">Dominadas en esta sección: <span id="masteredCount">0</span>/<span id="totalCount">0</span></p>
+    </div>
+  </div>
+
+  <div class="gModalOverlay" id="traceOverlay" style="display:none;" role="dialog" aria-label="Calcar el carácter">
+    <div class="gModal traceModal">
+      <div class="traceBoard"><div class="traceGuide" id="traceGuide" lang="ja" aria-hidden="true"></div><svg id="traceStrokes" class="traceStrokesSvg" viewBox="0 0 109 109" aria-hidden="true"></svg><canvas id="traceCanvas" aria-label="Zona de dibujo"></canvas></div>
+      <p class="hint">Dibuja con el dedo sobre la guía. No se puntúa: es para entrenar la mano y el orden de los trazos.</p>
+      <div class="traceBtns"><button class="nav hover-scale focus-glow" id="traceClear" type="button">Borrar</button><button class="nav hover-scale focus-glow" id="traceStrokesBtn" type="button" style="display:none;">▶ Trazos</button><button class="nav hover-scale focus-glow" id="traceGuideBtn" type="button">Ocultar guía</button><button class="nav hover-scale focus-glow" id="traceClose" type="button">Cerrar</button></div>
     </div>
   </div>
 
@@ -576,7 +582,7 @@
   <div id="translatorView" style="display:none;">
     <div class="viewHeader">
       <h2 style="margin:0 0 4px; font-family:var(--font-ui); color:var(--ink);">Traductor</h2>
-      <p class="hint" style="margin:0 0 16px; text-align:left;">Traduce frases entre inglés y español y guárdalas en tus tarjetas.</p>
+      <p class="hint" id="trSub" style="margin:0 0 16px; text-align:left;">Traduce frases entre inglés y español y guárdalas en tus tarjetas.</p>
     </div>
     <div class="translatorDirRow">
       <span id="trFromLabel">Inglés</span>
@@ -761,7 +767,12 @@
         </section>
 
         <section class="legalSection">
-          <h4><span class="legalNum">5</span>Exención de Garantía</h4>
+          <h4><span class="legalNum">5</span>Atribuciones (japonés)</h4>
+          <p>Los trazos de los caracteres japoneses proceden de <strong>KanjiVG</strong> (Ulrich Apel y colaboradores), con licencia <strong>Creative Commons Atribución-CompartirIgual 3.0</strong>. El resto del contenido del curso de japonés es propio de Vocabri.</p>
+        </section>
+
+        <section class="legalSection">
+          <h4><span class="legalNum">6</span>Exención de Garantía</h4>
           <p>El software se proporciona <strong>«tal cual» (<em>as is</em>)</strong>, sin garantías de ningún tipo, expresas o implícitas, incluidas las de comerciabilidad, idoneidad para un propósito particular y no infracción. En ningún caso los autores serán responsables de reclamaciones, daños u otras responsabilidades derivadas del uso del software, incluida la pérdida de datos de progreso.</p>
         </section>
       </div>

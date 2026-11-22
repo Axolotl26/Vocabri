@@ -1,0 +1,1138 @@
+{
+ "course": "jp_n4",
+ "lang": "ja",
+ "name": "Japonés N4",
+ "version": "1.2.0-beta",
+ "zones": [
+  {
+   "name": "Katakana, Vida Urbana y Transporte",
+   "items": [
+    {
+     "id": "j25_1",
+     "ja": "アイスクリーム",
+     "furi": "",
+     "romaji": "Aisukuriimu",
+     "es": "Helado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_2",
+     "ja": "コーヒー",
+     "furi": "",
+     "romaji": "Koohii",
+     "es": "Café",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_3",
+     "ja": "サンドイッチ",
+     "furi": "",
+     "romaji": "Sandoicchi",
+     "es": "Sándwich",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_4",
+     "ja": "ジュース",
+     "furi": "",
+     "romaji": "Juusu",
+     "es": "Jugo / Zumo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_5",
+     "ja": "ビール",
+     "furi": "",
+     "romaji": "Biiru",
+     "es": "Cerveza",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_6",
+     "ja": "ケーキ",
+     "furi": "",
+     "romaji": "Keeki",
+     "es": "Pastel / Torta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_7",
+     "ja": "ハンバーガー",
+     "furi": "",
+     "romaji": "Hanbaagaa",
+     "es": "Hamburguesa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j25_8",
+     "ja": "パスタ",
+     "furi": "",
+     "romaji": "Pasuta",
+     "es": "Pasta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_1",
+     "ja": "パソコン",
+     "furi": "",
+     "romaji": "Pasokon",
+     "es": "Computadora personal",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_2",
+     "ja": "スマホ",
+     "furi": "",
+     "romaji": "Sumaho",
+     "es": "Teléfono inteligente",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_3",
+     "ja": "カメラ",
+     "furi": "",
+     "romaji": "Kamera",
+     "es": "Cámara",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_4",
+     "ja": "テレビ",
+     "furi": "",
+     "romaji": "Terebi",
+     "es": "Televisión",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_5",
+     "ja": "エアコン",
+     "furi": "",
+     "romaji": "Eakon",
+     "es": "Aire acondicionado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_6",
+     "ja": "ノート",
+     "furi": "",
+     "romaji": "Nooto",
+     "es": "Cuaderno",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_7",
+     "ja": "ペン",
+     "furi": "",
+     "romaji": "Pen",
+     "es": "Bolígrafo / Pluma",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j26_8",
+     "ja": "トイレ",
+     "furi": "",
+     "romaji": "Toire",
+     "es": "Baño / Servicios",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_1",
+     "ja": "切符",
+     "furi": "<ruby>切符<rt>きっぷ</rt></ruby>",
+     "romaji": "Kippu",
+     "es": "Boleto / Ticket",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_2",
+     "ja": "乗り場",
+     "furi": "<ruby>乗<rt>の</rt></ruby>り<ruby>場<rt>ば</rt></ruby>",
+     "romaji": "Noriba",
+     "es": "Parada / Andén de abordaje",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_3",
+     "ja": "定期券",
+     "furi": "<ruby>定期券<rt>ていきけん</rt></ruby>",
+     "romaji": "Teikiken",
+     "es": "Abono de transporte (pase mensual)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_4",
+     "ja": "自転車",
+     "furi": "<ruby>自転車<rt>じてんしゃ</rt></ruby>",
+     "romaji": "Jitensha",
+     "es": "Bicicleta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_5",
+     "ja": "飛行機",
+     "furi": "<ruby>飛行機<rt>ひこうき</rt></ruby>",
+     "romaji": "Hikouki",
+     "es": "Avión",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_6",
+     "ja": "地下鉄",
+     "furi": "<ruby>地下鉄<rt>ちかてつ</rt></ruby>",
+     "romaji": "Chikatetsu",
+     "es": "Metro / Subterráneo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_7",
+     "ja": "乗り換え",
+     "furi": "<ruby>乗<rt>の</rt></ruby>り<ruby>換<rt>か</rt></ruby>え",
+     "romaji": "Norikae",
+     "es": "Transbordo / Trasbordo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j27_8",
+     "ja": "発車",
+     "furi": "<ruby>発車<rt>はっしゃ</rt></ruby>",
+     "romaji": "Hassha",
+     "es": "Salida del vehículo / Partida",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_1",
+     "ja": "前",
+     "furi": "<ruby>前<rt>まえ</rt></ruby>",
+     "romaji": "Mae",
+     "es": "Delante / Frente a",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_2",
+     "ja": "後ろ",
+     "furi": "<ruby>後<rt>うしろ</rt></ruby>",
+     "romaji": "Ushiro",
+     "es": "Detrás de",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_3",
+     "ja": "中",
+     "furi": "<ruby>中<rt>なか</rt></ruby>",
+     "romaji": "Naka",
+     "es": "Dentro / Adentro",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_4",
+     "ja": "外",
+     "furi": "<ruby>外<rt>そと</rt></ruby>",
+     "romaji": "Soto",
+     "es": "Fuera / Afuera",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_5",
+     "ja": "隣",
+     "furi": "<ruby>隣<rt>となり</rt></ruby>",
+     "romaji": "Tonari",
+     "es": "Al lado (mismo tipo de objeto)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_6",
+     "ja": "横",
+     "furi": "<ruby>横<rt>よこ</rt></ruby>",
+     "romaji": "Yoko",
+     "es": "Al lado / De lado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_7",
+     "ja": "間",
+     "furi": "<ruby>間<rt>あいだ</rt></ruby>",
+     "romaji": "Aida",
+     "es": "Entre (dos objetos)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j28_8",
+     "ja": "向かい",
+     "furi": "<ruby>向<rt>むか</rt></ruby>い",
+     "romaji": "Mukai",
+     "es": "Enfrente de / Al lado opuesto",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_1",
+     "ja": "天気",
+     "furi": "<ruby>天気<rt>てんき</rt></ruby>",
+     "romaji": "Tenki",
+     "es": "Clima / Tiempo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_2",
+     "ja": "雨",
+     "furi": "<ruby>雨<rt>あめ</rt></ruby>",
+     "romaji": "Ame",
+     "es": "Lluvia",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_3",
+     "ja": "雪",
+     "furi": "<ruby>雪<rt>ゆき</rt></ruby>",
+     "romaji": "Yuki",
+     "es": "Nieve",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_4",
+     "ja": "晴れ",
+     "furi": "<ruby>晴<rt>はれ</rt></ruby>",
+     "romaji": "Hare",
+     "es": "Día soleado / Despejado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_5",
+     "ja": "春",
+     "furi": "<ruby>春<rt>はる</rt></ruby>",
+     "romaji": "Haru",
+     "es": "Primavera",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_6",
+     "ja": "夏",
+     "furi": "<ruby>夏<rt>なつ</rt></ruby>",
+     "romaji": "Natsu",
+     "es": "Verano",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_7",
+     "ja": "秋",
+     "furi": "<ruby>秋<rt>あき</rt></ruby>",
+     "romaji": "Aki",
+     "es": "Otoño",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j29_8",
+     "ja": "冬",
+     "furi": "<ruby>冬<rt>ふゆ</rt></ruby>",
+     "romaji": "Fuyu",
+     "es": "Invierno",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_1",
+     "ja": "服",
+     "furi": "<ruby>服<rt>ふく</rt></ruby>",
+     "romaji": "Fuku",
+     "es": "Ropa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_2",
+     "ja": "靴",
+     "furi": "<ruby>靴<rt>くつ</rt></ruby>",
+     "romaji": "Kutsu",
+     "es": "Zapatos",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_3",
+     "ja": "帽子",
+     "furi": "<ruby>帽子<rt>ぼうし</rt></ruby>",
+     "romaji": "Boushi",
+     "es": "Sombrero / Gorra",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_4",
+     "ja": "鞄",
+     "furi": "<ruby>鞄<rt>かばん</rt></ruby>",
+     "romaji": "Kaban",
+     "es": "Bolso / Mochila",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_5",
+     "ja": "傘",
+     "furi": "<ruby>傘<rt>かさ</rt></ruby>",
+     "romaji": "Kasa",
+     "es": "Paraguas",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_6",
+     "ja": "時計",
+     "furi": "<ruby>時計<rt>とけい</rt></ruby>",
+     "romaji": "Tokei",
+     "es": "Reloj",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_7",
+     "ja": "眼鏡",
+     "furi": "<ruby>眼鏡<rt>めがね</rt></ruby>",
+     "romaji": "Megane",
+     "es": "Gafas / Lentes",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j30_8",
+     "ja": "財布",
+     "furi": "<ruby>財布<rt>さいふ</rt></ruby>",
+     "romaji": "Saifu",
+     "es": "Billetera / Monedero",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_1",
+     "ja": "円",
+     "furi": "<ruby>円<rt>えん</rt></ruby>",
+     "romaji": "En",
+     "es": "Yen (moneda japonesa)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_2",
+     "ja": "お金",
+     "furi": "お<ruby>金<rt>かね</rt></ruby>",
+     "romaji": "Okane",
+     "es": "Dinero",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_3",
+     "ja": "買い物",
+     "furi": "<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>",
+     "romaji": "Kaimono",
+     "es": "Compras",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_4",
+     "ja": "現金",
+     "furi": "<ruby>現金<rt>げんきん</rt></ruby>",
+     "romaji": "Genkin",
+     "es": "Dinero en efectivo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_5",
+     "ja": "カード",
+     "furi": "",
+     "romaji": "Kaado",
+     "es": "Tarjeta (crédito/débito)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_6",
+     "ja": "領収書",
+     "furi": "<ruby>領収書<rt>りょうしゅうしょ</rt></ruby>",
+     "romaji": "Ryoushuusho",
+     "es": "Recibo / Factura",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_7",
+     "ja": "袋",
+     "furi": "<ruby>袋<rt>ふくろ</rt></ruby>",
+     "romaji": "Fukuro",
+     "es": "Bolsa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j31_8",
+     "ja": "お釣り",
+     "furi": "お<ruby>釣<rt>つ</rt></ruby>り",
+     "romaji": "Otsuri",
+     "es": "Cambio / Vueltas del dinero",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "name": "Trabajo, Ocio y Sentimientos",
+   "items": [
+    {
+     "id": "j33_1",
+     "ja": "会議",
+     "furi": "<ruby>会議<rt>かいぎ</rt></ruby>",
+     "romaji": "Kaigi",
+     "es": "Reunión / Junta de trabajo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_2",
+     "ja": "アルバイト",
+     "furi": "",
+     "romaji": "Arubaito",
+     "es": "Trabajo de medio tiempo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_3",
+     "ja": "工場",
+     "furi": "<ruby>工場<rt>こうじょう</rt></ruby>",
+     "romaji": "Koujou",
+     "es": "Fábrica / Planta",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_4",
+     "ja": "試験",
+     "furi": "<ruby>試験<rt>しけん</rt></ruby>",
+     "romaji": "Shiken",
+     "es": "Examen / Prueba",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_5",
+     "ja": "宿題",
+     "furi": "<ruby>宿題<rt>しゅくだい</rt></ruby>",
+     "romaji": "Shukudai",
+     "es": "Tarea de la escuela",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_6",
+     "ja": "残業",
+     "furi": "<ruby>残業<rt>ざんぎょう</rt></ruby>",
+     "romaji": "Zangyou",
+     "es": "Horas extra de trabajo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_7",
+     "ja": "書類",
+     "furi": "<ruby>書類<rt>しょるい</rt></ruby>",
+     "romaji": "Shorui",
+     "es": "Documentos / Papeles",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j33_8",
+     "ja": "社長",
+     "furi": "<ruby>社長<rt>しゃちょう</rt></ruby>",
+     "romaji": "Shachou",
+     "es": "Presidente de la empresa",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_1",
+     "ja": "お祭り",
+     "furi": "お<ruby>祭<rt>まつ</rt></ruby>り",
+     "romaji": "Omatsuri",
+     "es": "Festival tradicional",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_2",
+     "ja": "コンサート",
+     "furi": "",
+     "romaji": "Konsaato",
+     "es": "Concierto",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_3",
+     "ja": "旅行",
+     "furi": "<ruby>旅行<rt>りょこう</rt></ruby>",
+     "romaji": "Ryokou",
+     "es": "Viaje / Turismo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_4",
+     "ja": "趣味",
+     "furi": "<ruby>趣味<rt>しゅみ</rt></ruby>",
+     "romaji": "Shumi",
+     "es": "Pasatiempo / Hobby",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_5",
+     "ja": "映画",
+     "furi": "<ruby>映画<rt>えいが</rt></ruby>",
+     "romaji": "Eiga",
+     "es": "Película",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_6",
+     "ja": "音楽",
+     "furi": "<ruby>音楽<rt>おんがく</rt></ruby>",
+     "romaji": "Ongaku",
+     "es": "Música",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_7",
+     "ja": "写真",
+     "furi": "<ruby>写真<rt>しゃしん</rt></ruby>",
+     "romaji": "Shashin",
+     "es": "Fotografía",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j34_8",
+     "ja": "スポーツ",
+     "furi": "",
+     "romaji": "Supootsu",
+     "es": "Deporte",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_1",
+     "ja": "嬉しい",
+     "furi": "<ruby>嬉<rt>うれ</rt></ruby>しい",
+     "romaji": "Ureshii",
+     "es": "Feliz / Contento",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_2",
+     "ja": "悲しい",
+     "furi": "<ruby>悲<rt>かな</rt></ruby>しい",
+     "romaji": "Kanashii",
+     "es": "Triste",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_3",
+     "ja": "怖い",
+     "furi": "<ruby>怖<rt>こわ</rt></ruby>い",
+     "romaji": "Kowai",
+     "es": "Asustado / Temeroso",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_4",
+     "ja": "面白い",
+     "furi": "<ruby>面白<rt>おもしろ</rt></ruby>い",
+     "romaji": "Omoshiroi",
+     "es": "Interesante / Divertido",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_5",
+     "ja": "つまらない",
+     "furi": "",
+     "romaji": "Tsumaranai",
+     "es": "Aburrido",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_6",
+     "ja": "元気",
+     "furi": "<ruby>元気<rt>げんき</rt></ruby>",
+     "romaji": "Genki",
+     "es": "Con energía / Animoso",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_7",
+     "ja": "心配",
+     "furi": "<ruby>心配<rt>しんぱい</rt></ruby>",
+     "romaji": "Shinpai",
+     "es": "Preocupado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j35_8",
+     "ja": "びっくりする",
+     "furi": "",
+     "romaji": "Bikkuri suru",
+     "es": "Sorprenderse",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_1",
+     "ja": "病気",
+     "furi": "<ruby>病気<rt>びょうき</rt></ruby>",
+     "romaji": "Byouki",
+     "es": "Enfermedad",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_2",
+     "ja": "痛い",
+     "furi": "<ruby>痛<rt>いた</rt></ruby>い",
+     "romaji": "Itai",
+     "es": "Doloroso / Me duele",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_3",
+     "ja": "疲れた",
+     "furi": "<ruby>疲<rt>つか</rt></ruby>れた",
+     "romaji": "Tsukareta",
+     "es": "Cansado / Agotado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_4",
+     "ja": "熱",
+     "furi": "<ruby>熱<rt>ねつ</rt></ruby>",
+     "romaji": "Netsu",
+     "es": "Fiebre",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_5",
+     "ja": "薬",
+     "furi": "<ruby>薬<rt>くすり</rt></ruby>",
+     "romaji": "Kusuri",
+     "es": "Medicina",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_6",
+     "ja": "頭痛",
+     "furi": "<ruby>頭痛<rt>ずつう</rt></ruby>",
+     "romaji": "Zutsuu",
+     "es": "Dolor de cabeza",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_7",
+     "ja": "怪我",
+     "furi": "<ruby>怪我<rt>けが</rt></ruby>",
+     "romaji": "Kega",
+     "es": "Herida / Lesión",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j36_8",
+     "ja": "休む",
+     "furi": "<ruby>休<rt>やす</rt></ruby>む",
+     "romaji": "Yasumu",
+     "es": "Descansar / Faltar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_1",
+     "ja": "毎日",
+     "furi": "<ruby>毎日<rt>まいにち</rt></ruby>",
+     "romaji": "Mainichi",
+     "es": "Todos los días",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_2",
+     "ja": "いつも",
+     "furi": "",
+     "romaji": "Itsumo",
+     "es": "Siempre",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_3",
+     "ja": "ときどき",
+     "furi": "",
+     "romaji": "Tokidoki",
+     "es": "A veces",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_4",
+     "ja": "たまに",
+     "furi": "",
+     "romaji": "Tamani",
+     "es": "De vez en cuando",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_5",
+     "ja": "ぜんぜん",
+     "furi": "",
+     "romaji": "Zenzen",
+     "es": "Para nada / Nunca (con negativo)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_6",
+     "ja": "今週",
+     "furi": "<ruby>今週<rt>こんしゅう</rt></ruby>",
+     "romaji": "Konshuu",
+     "es": "Esta semana",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_7",
+     "ja": "来月",
+     "furi": "<ruby>来月<rt>らいげつ</rt></ruby>",
+     "romaji": "Raigetsu",
+     "es": "El próximo mes",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j37_8",
+     "ja": "去年",
+     "furi": "<ruby>去年<rt>きょねん</rt></ruby>",
+     "romaji": "Kyonen",
+     "es": "El año pasado",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_1",
+     "ja": "始める",
+     "furi": "<ruby>始<rt>はじ</rt></ruby>める",
+     "romaji": "Hajimeru",
+     "es": "Empezar / Comenzar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_2",
+     "ja": "終わる",
+     "furi": "<ruby>終<rt>お</rt></ruby>わる",
+     "romaji": "Owaru",
+     "es": "Terminar / Finalizar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_3",
+     "ja": "覚える",
+     "furi": "<ruby>覚<rt>おぼ</rt></ruby>える",
+     "romaji": "Oboeru",
+     "es": "Memorizar / Recordar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_4",
+     "ja": "忘れる",
+     "furi": "<ruby>忘<rt>わす</rt></ruby>れる",
+     "romaji": "Wasureru",
+     "es": "Olvidar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_5",
+     "ja": "教える",
+     "furi": "<ruby>教<rt>おし</rt></ruby>える",
+     "romaji": "Oshieru",
+     "es": "Enseñar / Informar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_6",
+     "ja": "習う",
+     "furi": "<ruby>習<rt>なら</rt></ruby>う",
+     "romaji": "Narau",
+     "es": "Aprender (con un profesor)",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_7",
+     "ja": "考える",
+     "furi": "<ruby>考<rt>かんが</rt></ruby>える",
+     "romaji": "Kangaeru",
+     "es": "Pensar / Reflexionar",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j38_8",
+     "ja": "調べる",
+     "furi": "<ruby>調<rt>しら</rt></ruby>べる",
+     "romaji": "Shiraberu",
+     "es": "Investigar / Buscar datos",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_1",
+     "ja": "だから",
+     "furi": "",
+     "romaji": "Dakara",
+     "es": "Por lo tanto / Por eso",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_2",
+     "ja": "けれど",
+     "furi": "",
+     "romaji": "Keredo",
+     "es": "Sin embargo / Pero",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_3",
+     "ja": "そして",
+     "furi": "",
+     "romaji": "Soshite",
+     "es": "Y luego / Además",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_4",
+     "ja": "それから",
+     "furi": "",
+     "romaji": "Sorekara",
+     "es": "Después de eso",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_5",
+     "ja": "〜から",
+     "furi": "",
+     "romaji": "...kara",
+     "es": "Porque... / Debido a...",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_6",
+     "ja": "〜けど",
+     "furi": "",
+     "romaji": "...kedo",
+     "es": "...pero / aunque...",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_7",
+     "ja": "例えば",
+     "furi": "<ruby>例<rt>たと</rt></ruby>えば",
+     "romaji": "Tatoeba",
+     "es": "Por ejemplo",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    },
+    {
+     "id": "j39_8",
+     "ja": "特に",
+     "furi": "<ruby>特<rt>とく</rt></ruby>に",
+     "romaji": "Tokuni",
+     "es": "Especialmente / En particular",
+     "ex": "",
+     "exEs": "",
+     "note": ""
+    }
+   ]
+  }
+ ]
+}

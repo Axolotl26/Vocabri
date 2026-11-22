@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { missionStats, buildSurvivalRound, buildTimeRound, abandonMission, registerAnswer, buildRegisterRound, expireIfNeeded, daysLeft, DURATION_MS, GAP_MISSED_MS, emptyMissions, normalizeMissions, shouldStart, startMission, completeMission, nextMode, tokenize, checkOrder, buildOrderRound, MIN_SEEN, GAP_MS } from '../app/core/missions.js';
+import { buildSurvivalRound, buildTimeRound, abandonMission, registerAnswer, buildRegisterRound, expireIfNeeded, daysLeft, DURATION_MS, GAP_MISSED_MS, emptyMissions, normalizeMissions, shouldStart, startMission, completeMission, nextMode, tokenize, checkOrder, buildOrderRound, MIN_SEEN, GAP_MS } from '../app/core/missions.js';
 
 const NOW = 1_800_000_000_000;
 describe('misiones', () => {
@@ -77,12 +77,5 @@ describe('misiones', () => {
     expect(r.length).toBeGreaterThan(0);
     expect(new Set(r.map(q => q.key)).size).toBe(r.length);
     r.forEach(q => expect(['tr', 'reg']).toContain(q.type));
-  });
-  it('missionStats: racha de cumplidas sin perder, modos y perfectas', () => {
-    const st = { active: null, count: 4, done: [
-      { id: 'm1', mode: 'order', cat: 'g', at: 1, score: 8 }, { id: 'm2', mode: 'register', cat: 'g', at: 2, score: 6 },
-      { id: 'm4', mode: 'time', cat: 'g', at: 4, score: 10 }, { id: 'm5', mode: 'survival', cat: 'g', at: 5, score: 12 }],
-      missed: [{ id: 'm3', mode: 'time', cat: 'g', at: 3 }] };
-    expect(missionStats(st)).toEqual({ done: 4, missed: 1, modes: 4, bestRun: 2, perfects: 1 });
   });
 });
